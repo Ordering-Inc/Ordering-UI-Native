@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useLanguage, useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
 import { Cart } from '../Cart';
-import { OIcon, OText } from '../shared';
+import { OButton, OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View } from 'react-native';
 
 export const CartContent = (props: any) => {
 	const {
 		carts,
-		isOrderStateCarts
+		isOrderStateCarts,
+		onNavigationRedirect
 	} = props
 
 	const theme = useTheme();
@@ -22,9 +23,6 @@ export const CartContent = (props: any) => {
 		<CCContainer>
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
-					{/* <OText size={24} lineHeight={36} weight={'600'} style={{ marginBottom: 20 }}>
-						{carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
-					</OText> */}
 					{carts.map((cart: any, i: number) => (
 						<CCList key={i} style={{ overflow: 'visible' }}>
 							{cart.products.length > 0 && (
@@ -48,14 +46,22 @@ export const CartContent = (props: any) => {
 			)}
 			{(!carts || carts?.length === 0) && (
 				<CCNotCarts>
-					{/* <OIcon
-            url={props.icon}
-            width={200}
-            height={122}
-          /> */}
 					<OText size={24} style={{ textAlign: 'center' }}>
 						{t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
 					</OText>
+					<OButton
+						text={t('START_SHOPPING', 'Start shopping')}
+						bgColor={theme.colors.primary}
+						borderColor={theme.colors.primary}
+						textStyle={{
+							color: theme.colors.white,
+							fontSize: 14,
+							paddingRight: 0
+						}}
+						style={{ height: 35, marginVertical: 20, borderRadius: 8 }}
+						imgRightSrc={null}
+						onClick={() => onNavigationRedirect('BusinessList')}
+					/>
 				</CCNotCarts>
 			)}
 			<Spinner visible={isCartsLoading} />

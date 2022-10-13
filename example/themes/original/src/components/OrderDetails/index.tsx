@@ -68,6 +68,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
     statusBar: {
       height: 12,
+      borderRadius: 8
     },
     logo: {
       width: 75,
