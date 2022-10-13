@@ -68,7 +68,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
-          const products = categoryState.products?.filter((product: any) => category?.children?.some((cat: any) => cat?.category_id === product?.category_id)) || []
+          const products = categoryState.products?.filter((product: any) => category?.children?.some((cat: any) => cat?.category_id === product?.category_id) || product.category_id === category.id) || []
           return (
             <View key={`category${category.id}`} style={{ alignItems: 'flex-start', flex: 1 }}>
               {
