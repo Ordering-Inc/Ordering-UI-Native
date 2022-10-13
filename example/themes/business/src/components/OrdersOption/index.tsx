@@ -413,6 +413,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     scrollRefTab.current?.scrollTo({ animated: true });
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
+    setTags({ values: [] })
   }, [currentTabSelected])
 
   useEffect(() => {
