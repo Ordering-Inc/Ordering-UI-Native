@@ -150,7 +150,7 @@ const WalletsUI = (props: any) => {
                     onPress={() => handleChangeTab(wallet)}
                   >
                     <OTab isSelected={tabSelected === wallet.type}>
-                      <OText size={18}>
+                      <OText size={18} color={tabSelected === wallet.type && theme.colors.primary}>
                         {walletName[wallet.type]?.name}
                       </OText>
                     </OTab>
@@ -165,7 +165,7 @@ const WalletsUI = (props: any) => {
                       <OText size={20}>
                         {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
                       </OText>
-                      {loyaltyLevel.image ? (
+                      {/* {loyaltyLevel.image ? (
                         <FastImage
                           style={styles.logoStyle}
                           source={{
@@ -180,7 +180,7 @@ const WalletsUI = (props: any) => {
                           source={theme.images.dummies.loyaltyLevel}
                           resizeMode='contain'
                         />
-                      )}
+                      )} */}
                       <OText
                         size={22}
                         weight='bold'

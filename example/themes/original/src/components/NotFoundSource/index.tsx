@@ -20,7 +20,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
 	const theme = useTheme();
 
 	const errorImage = image || theme.images.general.notFound
-	const isUrl = errorImage.includes('http')
+	const isUrl = typeof errorImage === 'string' && errorImage.includes('http')
 
 	return (
 		<NotFound>
