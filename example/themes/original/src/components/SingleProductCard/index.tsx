@@ -13,7 +13,7 @@ import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, R
 import { StyleSheet, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-import { OButton, OText } from '../shared';
+import { OButton, OIcon, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
@@ -179,8 +179,10 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								)}
 							</View>
 							<PricesContainer>
-								<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
-								{product?.offer_price !== null && product?.in_offer && (
+								{!!product?.price && (
+									<OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+								)}
+								{product?.offer_price !== null && !!product?.in_offer && (
 									<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 								)}
 							</PricesContainer>
@@ -204,7 +206,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							)}
 						</CardInfo>
 						<LogoWrapper>
-							{product?.ribbon?.enabled && (
+							{!!product?.ribbon?.enabled && (
 								<RibbonBox
 									bgColor={product?.ribbon?.color}
 									isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
@@ -222,16 +224,21 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									</OText>
 								</RibbonBox>
 							)}
-							{(product?.images || theme?.images?.dummies?.product) && (
-								<FastImage
-									style={styles.productStyle}
-									source={{
-										uri: optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_250,c_limit'),
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
-							)}
+							{product?.images ? (
+                <FastImage
+                  style={styles.productStyle}
+                  source={{
+                    uri: optimizeImage(product?.images, 'h_250,c_limit'),
+                    priority: FastImage.priority.normal,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+              ) : (
+                <OIcon
+                  src={theme?.images?.dummies?.product}
+                  style={styles.productStyle}
+                />
+              )}
 						</LogoWrapper>
 
 						{(isSoldOut || maxProductQuantity <= 0) && (

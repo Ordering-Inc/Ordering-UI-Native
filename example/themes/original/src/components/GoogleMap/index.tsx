@@ -89,7 +89,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       return
     }
 
-    if (distance <= maxLimitLocation) {
+    const _maxLimitLocation = typeof maxLimitLocation === 'string' ? parseInt(maxLimitLocation, 10) : maxLimitLocation
+
+    if (distance <= _maxLimitLocation) {
       setMarkerPosition(curPos)
       setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
     } else {
@@ -153,6 +155,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     Geocoder.init(googleMapsApiKey)
   }, [])
 
+  useEffect(() => {
+    mapRef.current.animateToRegion({
+      ...region,
+      latitude: location?.lat,
+      longitude: location?.lng,
+    })
+  }, [location])
 
   useEffect(() => {
     if (saveLocation) {

@@ -58,6 +58,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		saveAddress,
 		isGuestUser,
 		isRequiredField,
+		showField,
 		isFromProductsList,
 		hasAddressDefault,
 		afterSignup,
@@ -641,129 +642,138 @@ const AddressFormUI = (props: AddressFormParams) => {
 							)}
 
 							<View style={{ flexDirection: 'row', flexBasis: '50%' }}>
-								<Controller
-									control={control}
-									name="internal_number"
-									rules={{
-										required:
-											isRequiredField && isRequiredField('internal_number')
-												? t(
-													`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`,
-													`The field internal number is required`,
-												)
-												: null,
-									}}
-									defaultValue={
-										address?.internal_number ||
-										formState.changes?.internal_number ||
-										addressState?.address?.internal_number ||
-										''
-									}
-									render={() => (
-										<OInput
-											name="internal_number"
-											placeholder={t('INTERNAL_NUMBER', 'Internal number')}
-											onChange={(text: string) => {
-												handleChangeInput(text);
-												setValue('internal_number', text);
-											}}
-											value={
-												address?.internal_number ||
-												formState.changes?.internal_number ||
-												addressState?.address?.internal_number ||
-												''
-											}
-											style={{ ...styles.inputsStyle, marginRight: 24 }}
-											forwardRef={internalNumberRef}
-											returnKeyType="next"
-											onSubmitEditing={() => zipCodeRef?.current?.focus?.()}
-											blurOnSubmit={false}
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="zipcode"
-									rules={{
-										required:
-											isRequiredField && isRequiredField('zipcode')
-												? t(
-													`VALIDATION_ERROR_ZIP_CODE_REQUIRED`,
-													`The field Zip Code is required`,
-												)
-												: null,
-									}}
-									defaultValue={
-										address?.zipcode ||
-										formState.changes?.zipcode ||
-										addressState.address.zipcode ||
-										''
-									}
-									render={() => (
-										<OInput
-											name="zipcode"
-											placeholder={t('ZIP_CODE', 'Zip code')}
-											onChange={(text: string) => {
-												handleChangeInput(text);
-												setValue('zipcode', text);
-											}}
-											value={
-												address?.zipcode ||
-												formState.changes?.zipcode ||
-												addressState.address.zipcode ||
-												''
-											}
-											style={styles.inputsStyle}
-											forwardRef={zipCodeRef}
-											returnKeyType="next"
-											onSubmitEditing={() => addressNotesRef?.current?.focus?.()}
-											blurOnSubmit={false}
-										/>
-									)}
-								/>
-							</View>
-
-							<Controller
-								control={control}
-								name="address_notes"
-								rules={{
-									required:
-										isRequiredField && isRequiredField('address_notes')
-											? t(
-												`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`,
-												`The field address notes is required`,
-											)
-											: null,
-								}}
-								defaultValue={
-									address?.address_notes ||
-									formState.changes?.address_notes ||
-									addressState.address.address_notes ||
-									''
-								}
-								render={() => (
-									<OInput
-										name="address_notes"
-										placeholder={t('ADDRESS_NOTES', 'Address notes')}
-										onChange={(text: any) => {
-											handleChangeInput(text);
-											setValue('address_notes', text);
+								{showField && showField('internal_number') && (
+									<Controller
+										control={control}
+										name="internal_number"
+										rules={{
+											required:
+												isRequiredField && isRequiredField('internal_number')
+													? t(
+														`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`,
+														`The field internal number is required`,
+													)
+													: null,
 										}}
-										value={
-											address?.address_notes ||
-											formState.changes?.address_notes ||
-											addressState.address.address_notes ||
+										defaultValue={
+											address?.internal_number ||
+											formState.changes?.internal_number ||
+											addressState?.address?.internal_number ||
 											''
 										}
-										multiline
-										style={styles.textAreaStyles}
-										returnKeyType="done"
-										forwardRef={addressNotesRef}
-										blurOnSubmit
+										render={() => (
+											<OInput
+												name="internal_number"
+												placeholder={t('INTERNAL_NUMBER', 'Internal number')}
+												onChange={(text: string) => {
+													handleChangeInput(text);
+													setValue('internal_number', text);
+												}}
+												value={
+													address?.internal_number ||
+													formState.changes?.internal_number ||
+													addressState?.address?.internal_number ||
+													''
+												}
+												style={{
+													...styles.inputsStyle,
+													marginRight: showField('internal_number') && showField('zipcode') ? 24 : 0
+												}}
+												forwardRef={internalNumberRef}
+												returnKeyType="next"
+												onSubmitEditing={() => zipCodeRef?.current?.focus?.()}
+												blurOnSubmit={false}
+											/>
+										)}
 									/>
 								)}
-							/>
+
+								{showField && showField('zipcode') && (
+									<Controller
+										control={control}
+										name="zipcode"
+										rules={{
+											required:
+												isRequiredField && isRequiredField('zipcode')
+													? t(
+														`VALIDATION_ERROR_ZIP_CODE_REQUIRED`,
+														`The field Zip Code is required`,
+													)
+													: null,
+										}}
+										defaultValue={
+											address?.zipcode ||
+											formState.changes?.zipcode ||
+											addressState.address.zipcode ||
+											''
+										}
+										render={() => (
+											<OInput
+												name="zipcode"
+												placeholder={t('ZIP_CODE', 'Zip code')}
+												onChange={(text: string) => {
+													handleChangeInput(text);
+													setValue('zipcode', text);
+												}}
+												value={
+													address?.zipcode ||
+													formState.changes?.zipcode ||
+													addressState.address.zipcode ||
+													''
+												}
+												style={styles.inputsStyle}
+												forwardRef={zipCodeRef}
+												returnKeyType="next"
+												onSubmitEditing={() => addressNotesRef?.current?.focus?.()}
+												blurOnSubmit={false}
+											/>
+										)}
+									/>
+								)}
+							</View>
+
+							{showField && showField('address_notes') && (
+								<Controller
+									control={control}
+									name="address_notes"
+									rules={{
+										required:
+											isRequiredField && isRequiredField('address_notes')
+												? t(
+													`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`,
+													`The field address notes is required`,
+												)
+												: null,
+									}}
+									defaultValue={
+										address?.address_notes ||
+										formState.changes?.address_notes ||
+										addressState.address.address_notes ||
+										''
+									}
+									render={() => (
+										<OInput
+											name="address_notes"
+											placeholder={t('ADDRESS_NOTES', 'Address notes')}
+											onChange={(text: any) => {
+												handleChangeInput(text);
+												setValue('address_notes', text);
+											}}
+											value={
+												address?.address_notes ||
+												formState.changes?.address_notes ||
+												addressState.address.address_notes ||
+												''
+											}
+											multiline
+											style={styles.textAreaStyles}
+											returnKeyType="done"
+											forwardRef={addressNotesRef}
+											blurOnSubmit
+										/>
+									)}
+								/>
+							)}
 						</FormInput>
 						<IconsContainer>
 							{tagsName.map((tag) => (

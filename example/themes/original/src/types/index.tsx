@@ -80,6 +80,7 @@ export interface AddressFormParams {
 	saveAddress?: any,
 	userCustomerSetup?: boolean,
 	isRequiredField?: (field: string) => {},
+	showField?: (field: string) => {},
 	isGuestUser?: boolean,
 	useValidationFileds?: boolean,
 	isSelectedAfterAdd?: boolean,
