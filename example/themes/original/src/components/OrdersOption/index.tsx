@@ -48,7 +48,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		hideOrders,
 		BusinessControllerSkeletons,
 		businesses,
-		businessPaginationProps
+		businessPaginationProps,
+		handleUpdateProducts
 	} = props
 
 	const theme = useTheme();
@@ -232,6 +233,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 				<PreviousProductsOrdered
 					products={products}
 					onProductClick={onProductClick}
+					handleUpdateProducts={handleUpdateProducts}
 					isBusinessesSearchList={!!businessesSearchList}
 				/>
 			)}
