@@ -68,7 +68,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const [, t] = useLanguage()
 	const [orderState] = useOrder()
-	const [{ parsePrice, optimizeImage }] = useUtils()
+	const [{ parsePrice, optimizeImage, parseDate }] = useUtils()
 
 	const [isActive, setActiveState] = useState(false)
 	// const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
@@ -152,31 +152,44 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								)}
 							</ProductImage>
 						)}
-						{isCartProduct && !isCartPending && getProductMax && (
-							<ProductInfo>
-								<RNPickerSelect
-									items={productOptions}
-									onValueChange={handleChangeQuantity}
-									value={product.quantity.toString()}
-									style={pickerStyle}
-									useNativeAndroidPickerStyle={false}
-									placeholder={{}}
-									Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.textNormal} width={8} /></View>}
-									disabled={orderState.loading}
-								/>
-							</ProductInfo>
-						)}
-						{isFromCheckout && (
-							<ProductQuantity>
-								<OText size={12} lineHeight={18}>
-									{product?.quantity}
+						{!!product?.calendar_event ? (
+							<View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
+								<View>
+									<OText size={12} lineHeight={18} weight={'400'} numberOfLines={1}>{product?.name}</OText>
+								</View>
+								<OText size={10} color={theme.colors.textSecondary} style={{ marginTop: 3 }}>
+									{parseDate(product?.calendar_event?.start, { outputFormat: 'hh:mm a' })} - {parseDate(product?.calendar_event?.end, { outputFormat: 'hh:mm a' })}
 								</OText>
-							</ProductQuantity>
+							</View>
+						): (
+							<>
+								{isCartProduct && !isCartPending && getProductMax && (
+									<ProductInfo>
+										<RNPickerSelect
+											items={productOptions}
+											onValueChange={handleChangeQuantity}
+											value={product.quantity.toString()}
+											style={pickerStyle}
+											useNativeAndroidPickerStyle={false}
+											placeholder={{}}
+											Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.textNormal} width={8} /></View>}
+											disabled={orderState.loading}
+										/>
+									</ProductInfo>
+								)}
+								{isFromCheckout && (
+									<ProductQuantity>
+										<OText size={12} lineHeight={18}>
+											{product?.quantity}
+										</OText>
+									</ProductQuantity>
+								)}
+								<View style={{ flex: 1 }}>
+									<OText size={12} lineHeight={18} weight={'400'}>{product.name}</OText>
+								</View>
+							</>
 						)}
-						<View style={{ flex: 1 }}>
-							<OText size={12} lineHeight={18} weight={'400'}>{product.name}</OText>
-						</View>
-						<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
+						<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', maxWidth: 100 }}>
 							<View style={{ flexDirection: 'row' }}>
 								<OText size={12} lineHeight={18} weight={'400'}>{parsePrice(product.total || product.price)}</OText>
 								{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
