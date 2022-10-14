@@ -11,6 +11,7 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
   const {
     products,
     onProductClick,
+    handleUpdateProducts,
     isBusinessesSearchList
   } = props
 
@@ -28,12 +29,14 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
         {products?.map((product: any) => (
             <SingleProductCard
               key={product?.id}
+              isProductId
               isSoldOut={(product.inventoried && !product.quantity)}
               product={product}
               businessId={product?.business?.id}
               onProductClick={onProductClick}
               style={style}
               productAddedToCartLength={0}
+              handleUpdateProducts={handleUpdateProducts}
             />
         ))}
       </>

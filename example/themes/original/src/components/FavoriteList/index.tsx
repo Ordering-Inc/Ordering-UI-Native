@@ -14,6 +14,7 @@ import { Container, WrappButton } from './styles'
 import { OButton } from '../shared';
 import { BusinessController } from '../BusinessController';
 import { SingleProductCard } from '../SingleProductCard';
+import { NotFoundSource } from '../NotFoundSource';
 import moment from 'moment';
 
 
@@ -224,6 +225,12 @@ const FavoriteListUI = (props: FavoriteParams) => {
               <BusinessSkeleton key={i} />
             ))
           )}
+          {!favoriteList?.loading && !favoriteList?.favorites?.length && (
+            <NotFoundSource
+              content={t('NOT_FOUND_FAVORITES_LIST', 'No favorites to show at this time.')
+              }
+            />
+          )}
         </>
       )}
 
@@ -250,6 +257,12 @@ const FavoriteListUI = (props: FavoriteParams) => {
               <OrderSkeleton key={i} />
             ))
           )}
+          {!favoriteList?.loading && !favoriteList?.favorites?.length && (
+            <NotFoundSource
+              content={t('NOT_FOUND_FAVORITES_LIST', 'No favorites to show at this time.')
+              }
+            />
+          )}
         </>
       )}
 
@@ -270,6 +283,12 @@ const FavoriteListUI = (props: FavoriteParams) => {
             [...Array(5).keys()].map(i => (
               <ProductSkeleton key={i} />
             ))
+          )}
+          {!favoriteList?.loading && !favoriteList?.favorites?.length && (
+            <NotFoundSource
+              content={t('NOT_FOUND_FAVORITES_LIST', 'No favorites to show at this time.')
+              }
+            />
           )}
         </>
       )}

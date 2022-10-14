@@ -306,6 +306,7 @@ export interface SingleProductCardParams {
 	enableIntersection?: boolean;
 	navigation?: any;
 	isPreviously?: any;
+	isProductId?: any;
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -360,6 +361,7 @@ export interface OrdersOptionParams {
 	refreshOrders?: boolean,
 	setRefreshOrders?: (value: boolean) => void,
 	handleUpdateOrderList?: (orderId: number, changes: any) => {},
+	handleUpdateProducts?: (productId: number, changes: any) => {},
 	isBusiness?: boolean,
 	isProducts?: boolean,
 	businessOrderIds?: any,
@@ -764,6 +766,8 @@ export interface OrderItAgainParams {
 
 export interface PreviousProductsOrderedParams {
 	products?: any,
+	isProductId?: boolean
 	onProductClick?: any,
 	isBusinessesSearchList?: boolean
+	handleUpdateProducts?: any
 }
