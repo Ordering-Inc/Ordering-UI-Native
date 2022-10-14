@@ -92,6 +92,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
+  const [enableProduct, setEnableProduct] = useState(true)
 
   const onSubmit = () => {
     if (Object.values(stars).some((value: any) => value === 0)) {
@@ -105,6 +106,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     handleReviewState && handleReviewState(order?.id)
     setIsReviewed && setIsReviewed(true)
     setAlertState({ ...alertState, success: true })
+    !enableProduct && navigation?.canGoBack() && navigation.goBack()
   }
 
   const qualificationList = [
@@ -141,7 +143,16 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     if (!order?.review) {
       onSubmit()
     } else {
-      onNavigationRedirect('ReviewProducts', { order: order })
+      skipOrderReview()
+    }
+  }
+
+  const skipOrderReview = () => {
+    if (enableProduct) onNavigationRedirect('ReviewProducts', { order: order })
+    else if (order?.driver && !order?.user_review) {
+      onNavigationRedirect('ReviewDriver', { order: order })
+    } else {
+      navigation?.canGoBack() && navigation.goBack()
     }
   }
 
@@ -186,6 +197,10 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     _comment = _comments + extraComment
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
+
+  useEffect(() => {
+    setEnableProduct(!order?.products.every(product => product?.deleted))
+  }, [order])
 
   return (
     <>
@@ -296,7 +311,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={() => onNavigationRedirect('ReviewProducts', { order: order })}
+            onPress={() => skipOrderReview()}
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
