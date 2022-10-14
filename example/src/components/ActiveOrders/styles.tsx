@@ -1,10 +1,6 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
-export const ActiveOrdersContainer = styled.ScrollView`
-  margin-bottom: 20px;
-  height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '450px'};
-  max-height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '220px'};
-`
+export const ActiveOrdersContainer = styled.ScrollView``
 
 export const Card = styled.TouchableOpacity`
   flex: 1;
@@ -13,25 +9,24 @@ export const Card = styled.TouchableOpacity`
   margin-right: 10px;
   min-width: 320px;
   width: 320px;
-  height: ${({ isMiniCard }: { isMiniCard: boolean }) => !isMiniCard ? '100px' : '200px'};
+  margin-bottom: 10px;
+  ${({ isMiniCard }: { isMiniCard: boolean }) => !isMiniCard && css`
+    padding: 10px 0;
+  `};
 `
 
 export const Map = styled.View`
   flex: 1;
-  height: 125px;
-  margin-bottom: 10px;
 `
 
 export const Information = styled.View`
   flex-direction: row;
   flex: 1;
-  height: 100px;
   align-items: center;
   padding: 10px;
 `
 
-export const Logo = styled.View`
-`
+export const Logo = styled.View``
 
 export const OrderInformation = styled.View`
   flex-direction: row;
@@ -40,8 +35,7 @@ export const OrderInformation = styled.View`
   padding-left: 10px;
 `
 
-export const BusinessInformation = styled.View`
-`
+export const BusinessInformation = styled.View``
 
 export const Price = styled.View`
   justify-content: space-between;
