@@ -74,7 +74,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
         />
-        {order?.products?.map((product: any) => (
+        {order?.products?.map((product: any) => !product?.deleted && (
           <SingleProductReview
             key={product.id}
             product={product}
