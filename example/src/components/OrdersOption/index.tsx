@@ -102,46 +102,71 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   }
 
   useEffect(() => {
+    const length = orders.filter((order : any) => orderStatus.includes(order.status)).length
+
     setOrdersLength && setOrdersLength({
       ...ordersLength,
-      [activeOrders ? 'activeOrdersLength' : 'previousOrdersLength']: orders.length
+      [activeOrders ? 'activeOrdersLength' : 'previousOrdersLength']: length
     })
-  }, [orders.length])
+    ordersLength[activeOrders ? 'activeOrdersLength' : 'previousOrdersLength'] = length
+  }, [orders])
 
   useEffect(() => {
-    setOrdersFiltered(filterForOrders === 'preorders' ? orders.filter((order : any) => order.status === 13) : orders.filter((order : any) => orderStatus.includes(order.status) && order.status !== 13))
+    setOrdersFiltered(filterForOrders === 'preorders'
+      ? orders.filter((order : any) => order.status === 13)
+      : orders.filter((order : any) => orderStatus.includes(order.status) && order.status !== 13)
+    )
   }, [filterForOrders, orders])
 
   return (
-    <>
+    <View style={{ marginBottom: 20 }}>
       <OptionTitle>
-        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0)) && !isLoadingFirstRender && (
-          <>
-            <TouchableOpacity onPress={() => setFilterForOrders('active-orders')}>
-              <OText size={16} color={filterForOrders === 'active-orders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} mRight={10} >
-                {titleContent || (activeOrders
-                  ? t('ACTIVE_ORDERS', 'Active Orders')
-                  : t('PREVIOUS_ORDERS', 'Previous Orders'))}
-              </OText>
-            </TouchableOpacity>
-            {activeOrders && orders.filter((order : any) => order.status === 13)?.length > 0 && (
-            <TouchableOpacity onPress={() => setFilterForOrders('preorders')}>
-              <OText size={16} color={filterForOrders === 'preorders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} >
-                {t('PREORDERS', 'Preorders')}
-              </OText>
-            </TouchableOpacity>
-            )}
-          </>
+        <TouchableOpacity onPress={() => setFilterForOrders('active-orders')}>
+          <OText size={16} color={filterForOrders === 'active-orders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} mRight={10} >
+            {titleContent || (activeOrders
+              ? t('ACTIVE_ORDERS', 'Active Orders')
+              : t('PREVIOUS_ORDERS', 'Previous Orders'))}
+          </OText>
+        </TouchableOpacity>
+        {activeOrders && orders.filter((order : any) => order.status === 13)?.length > 0 && (
+          <TouchableOpacity onPress={() => setFilterForOrders('preorders')}>
+            <OText size={16} color={filterForOrders === 'preorders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} >
+              {t('PREORDERS', 'Preorders')}
+            </OText>
+          </TouchableOpacity>
         )}
       </OptionTitle>
-      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength !== 0 && (
-        <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-          image={imageFails}
-          conditioned
-        />
+      {!loading && !error && orders.length > 0 && !isLoadingFirstRender && (
+        activeOrders ? (
+          <ActiveOrders
+            orders={ordersFiltered}
+            pagination={pagination}
+            loadMoreOrders={loadMoreOrders}
+            reorderLoading={reorderLoading}
+            customArray={customArray}
+            getOrderStatus={getOrderStatus}
+            onNavigationRedirect={onNavigationRedirect}
+            setScreen={setScreen}
+            screen={screen}
+            isPreorders={filterForOrders === 'preorders'}
+            preordersLength={orders.filter((order : any) => order.status === 13)?.length}
+          />
+        ) : (
+          <PreviousOrders
+            reorderLoading={reorderLoading}
+            orders={ordersFiltered}
+            pagination={pagination}
+            loadMoreOrders={loadMoreOrders}
+            getOrderStatus={getOrderStatus}
+            onNavigationRedirect={onNavigationRedirect}
+            handleReorder={handleReorder}
+          />
+        )
       )}
-      {!loading && orders.length === 0 && !isLoadingFirstRender && ordersLength.previousOrdersLength === 0 && (
+      {!loading &&
+        !isLoadingFirstRender &&
+        ordersLength[activeOrders ? 'activeOrdersLength' : 'previousOrdersLength'] === 0 &&
+      (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
@@ -179,34 +204,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           )}
         </>
       )}
-      {!loading && !error && orders.length > 0 && !isLoadingFirstRender && (
-        activeOrders ? (
-          <ActiveOrders
-            orders={ordersFiltered}
-            pagination={pagination}
-            loadMoreOrders={loadMoreOrders}
-            reorderLoading={reorderLoading}
-            customArray={customArray}
-            getOrderStatus={getOrderStatus}
-            onNavigationRedirect={onNavigationRedirect}
-            setScreen={setScreen}
-            screen={screen}
-            isPreorders={filterForOrders === 'preorders'}
-            preordersLength={orders.filter((order : any) => order.status === 13)?.length}
-          />
-        ) : (
-          <PreviousOrders
-            reorderLoading={reorderLoading}
-            orders={ordersFiltered}
-            pagination={pagination}
-            loadMoreOrders={loadMoreOrders}
-            getOrderStatus={getOrderStatus}
-            onNavigationRedirect={onNavigationRedirect}
-            handleReorder={handleReorder}
-          />
-        )
-      )}
-    </>
+    </View>
   )
 }
 
