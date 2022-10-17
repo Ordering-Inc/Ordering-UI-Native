@@ -56,7 +56,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
     content: Array<string>;
     key?: string | null;
   }>({ open: false, content: [], key: null });
-
+  const distanceUnit = configState?.configs?.distance_unit?.value
+  console.log(distanceUnit)
   const {
     hasLocation,
     initialPosition,
@@ -475,9 +476,19 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 src={theme.images.general.arrow_distance}
                 style={styles.arrowDistance}
               />
-              <OText size={12} numberOfLines={3}>{`${(
-                distancesFromTwoPlacesKm
-              ).toFixed(2)} ${t('KM', 'KM')}`}</OText>
+              {distanceUnit === 'mi' ? (
+                <OText size={12} numberOfLines={3}>{`${(
+                  distancesFromTwoPlacesKm / 1.609
+                ).toFixed(2)} ${t('MI', 'Mi')}`}</OText>
+              ) : distanceUnit === 'ft' ? (
+                <OText size={12} numberOfLines={3}>{`${(
+                  distancesFromTwoPlacesKm * 3280.84
+                ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
+              ) : (
+                <OText size={12} numberOfLines={3}>{`${(
+                  distancesFromTwoPlacesKm
+                ).toFixed(2)} ${t('KM', 'Km')}`}</OText>
+              )}
             </View>
             <View style={{ width: '75%', paddingRight: 20 }}>
               <OText
