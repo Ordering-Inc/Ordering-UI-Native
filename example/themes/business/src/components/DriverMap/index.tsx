@@ -57,7 +57,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
   const distanceUnit = configState?.configs?.distance_unit?.value
-  console.log(distanceUnit)
+
   const {
     hasLocation,
     initialPosition,
