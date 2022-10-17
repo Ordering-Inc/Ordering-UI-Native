@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLanguage } from 'ordering-components/native'
-import { OText, OButton, OInput } from '../shared'
+import { OText, OButton, OInput, OIcon } from '../shared'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AntDesignIcons from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native'
@@ -37,6 +37,18 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
       flexDirection: 'row',
       justifyContent: 'center',
       marginVertical: 10,
+    },
+    logoWrapper: {
+      shadowColor: theme.colors.black,
+      shadowRadius: 3,
+      shadowOffset: { width: 1, height: 4 },
+      elevation: 3,
+      borderRadius: 8,
+      shadowOpacity: 0.1,
+      overflow: 'hidden',
+      width: 80,
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
   })
 
@@ -100,6 +112,13 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
+        <View style={styles.logoWrapper}>
+          <OIcon
+            url={product?.images}
+            width={80}
+            height={80}
+          />
+        </View>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
@@ -129,7 +148,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
               style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
               imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
               imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-              onClick={() => handleChangeComment(commentItem) }
+              onClick={() => handleChangeComment(commentItem)}
             />
           ))}
         </CommentsButtonGroup>
