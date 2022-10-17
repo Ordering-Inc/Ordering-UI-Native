@@ -69,6 +69,7 @@ export const ProductOptionsUI = (props: any) => {
 		handleChangeSuboptionState,
 		handleChangeCommentState,
 		productObject,
+		productAddedToCartLength
 	} = props;
 
 	const theme = useTheme();
@@ -406,14 +407,14 @@ export const ProductOptionsUI = (props: any) => {
 										? t('UPDATE', 'Update')
 										: t('ADD', 'Add')
 								}`}
-							isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order))}
+							isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order))}
 							textStyle={{
 								color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
 								fontSize: orderState.loading || editMode ? 10 : 14
 							}}
 							style={{
-								backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
-								borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
+								backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
+								borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
 								opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
 								borderRadius: 7.6,
 								height: 44,
@@ -995,15 +996,15 @@ export const ProductOptionsUI = (props: any) => {
 							<OText size={16} lineHeight={24} weight={'600'}>
 								{productCart.total ? parsePrice(productCart?.total) : ''}
 							</OText>
-							{product?.minimum_per_order && productCart?.quantity <= product?.minimum_per_order && productCart?.quantity !== 1 && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
-							{product?.maximum_per_order && productCart?.quantity >= product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
+							{product?.minimum_per_order && (productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order && productCart?.quantity !== 1 && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
+							{product?.maximum_per_order && (productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
 						</View>
 						{productCart && !isSoldOut && maxProductQuantity > 0 && (
 							<>
 								<View style={styles.quantityControl}>
 									<TouchableOpacity
 										onPress={decrement}
-										disabled={productCart.quantity === 1 || !productCart.quantity || isSoldOut || (productCart?.quantity <= product?.minimum_per_order)}>
+										disabled={productCart.quantity === 1 || !productCart.quantity || isSoldOut || ((productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order)}>
 										<OIcon
 											src={theme.images.general.minus}
 											width={16}
@@ -1044,8 +1045,8 @@ export const ProductOptionsUI = (props: any) => {
 										onPress={increment}
 										disabled={
 											maxProductQuantity <= 0 ||
-											productCart.quantity >= maxProductQuantity ||
-											(productCart.quantity >= product?.maximum_per_order && product?.maximum_per_order) ||
+											(productCart?.quantity + productAddedToCartLength) >= maxProductQuantity ||
+											((productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && product?.maximum_per_order) ||
 											isSoldOut
 										}>
 										<OIcon
@@ -1053,8 +1054,8 @@ export const ProductOptionsUI = (props: any) => {
 											width={16}
 											color={
 												maxProductQuantity <= 0 ||
-													productCart.quantity >= maxProductQuantity ||
-													(productCart.quantity >= product?.maximum_per_order && product?.maximum_per_order) ||
+												(productCart?.quantity + productAddedToCartLength) >= maxProductQuantity ||
+													((productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && product?.maximum_per_order) ||
 													isSoldOut
 													? theme.colors.backgroundGray
 													: theme.colors.backgroundDark
