@@ -5,6 +5,8 @@ import {
 	useOrder,
 	useUtils,
 	useSession,
+	ToastType,
+	useToast,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -96,6 +98,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [{ auth }] = useSession()
 	const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
 	const [orderState] = useOrder()
+	const [, { showToast }] = useToast()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 
 	const editMode = typeof product?.code !== 'undefined';
@@ -136,6 +139,14 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		}
 	}
 
+	const handleClickproduct = () => {
+		if (productAddedToCartLength && product?.maximum_per_order && productAddedToCartLength >= product?.maximum_per_order) {
+			showToast(ToastType.Error, t('PRODUCT_ON_MAXIMUM_ORDER', 'The product is on maximum order'))
+			return
+		}
+		onProductClick?.(product)
+	}
+
 	return (
 		<InView style={{ minHeight: hideAddButton ? 125 : 190 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
@@ -146,7 +157,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
 						(style && { ...style }),
 					]}
-					onPress={() => onProductClick?.(product)}
+					onPress={() => handleClickproduct()}
 				>
 					<View style={{ flexDirection: 'row' }}>
 						{productAddedToCartLength > 0 && (
@@ -251,7 +262,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					</View>
 					{!hideAddButton && (
 						<OButton
-							onClick={() => onProductClick?.(product)}
+							onClick={() => handleClickproduct()}
 							style={{
 								width: '100%',
 								borderRadius: 7.6,

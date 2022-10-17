@@ -138,6 +138,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
+		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)
 		if (product?.type === 'service' && professionalSelected) {
 			setCurrentProduct(product)
 			setOpenService(true)
@@ -147,6 +148,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			product: product,
 			businessSlug: business.slug,
 			businessId: business.id,
+			productAddedToCartLength
 		})
 	}
 
