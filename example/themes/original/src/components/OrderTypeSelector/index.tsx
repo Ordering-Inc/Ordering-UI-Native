@@ -53,7 +53,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	}
 
 	useEffect(() => {
-		handleChangeType(typeSelected)
+		handleChangeType && handleChangeType(typeSelected)
 	}, [typeSelected])
 
 	return (
