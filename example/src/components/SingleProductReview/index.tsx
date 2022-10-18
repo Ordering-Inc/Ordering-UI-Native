@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useLanguage } from 'ordering-components/native'
+import { useLanguage, useUtils } from 'ordering-components/native'
 import { OText, OButton, OInput, OIcon } from '../shared'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AntDesignIcons from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native'
 import { SingleProductReviewParams } from '../../types'
-import {
-  Placeholder,
-  PlaceholderLine,
-  Fade
-} from "rn-placeholder";
+import FastImage from 'react-native-fast-image'
 
 import {
   ProductContainer,
@@ -17,8 +13,7 @@ import {
   LikeHandsActionContainer,
   LikeHandsButton,
   CommentsButtonGroup,
-  LogoWrapper,
-  PlaceHolderWrapper
+  LogoWrapper
 } from './styles'
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
@@ -30,6 +25,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
 
   const [, t] = useLanguage()
   const theme = useTheme()
+  const [{ optimizeImage }] = useUtils()
 
   const styles = StyleSheet.create({
     inputTextArea: {
@@ -44,6 +40,12 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
       flexDirection: 'row',
       justifyContent: 'center',
       marginVertical: 10,
+    },
+    productStyle: {
+      width: 80,
+      height: 80,
+      marginLeft: 'auto',
+      marginRight: 'auto'
     }
   })
 
@@ -107,21 +109,24 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
-        {!product ? (
-          <Placeholder style={{ marginTop: 30 }} Animation={Fade}>
-            <PlaceHolderWrapper>
-              <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
-            </PlaceHolderWrapper>
-          </Placeholder>
-        ) : (
-          <LogoWrapper>
+        <LogoWrapper>
+          {product?.images ? (
+            <FastImage
+              style={styles.productStyle}
+              source={{
+                uri: optimizeImage(product?.images, 'h_250,c_limit'),
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+          ) : (
             <OIcon
-              url={product?.images || theme.images.general.not_found}
+              src={theme?.images?.dummies?.product}
               width={80}
               height={80}
             />
-          </LogoWrapper>
-        )}
+          )}
+        </LogoWrapper>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>

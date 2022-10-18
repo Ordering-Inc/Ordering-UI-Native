@@ -14,13 +14,6 @@ export const LikeHandsActionContainer = styled.View`
   flex-direction: row;
 `
 
-export const PlaceHolderWrapper = styled.View`
-  width: 100%;
-  flexDirection: row; 
-  marginLeft: auto;
-  marginRight: auto;
-`
-
 export const LogoWrapper = styled.View`
   shadowRadius: 3;
   shadowOffset: { width: 1, height: 4 };
