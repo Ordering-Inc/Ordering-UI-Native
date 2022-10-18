@@ -14,6 +14,13 @@ export const LikeHandsActionContainer = styled.View`
   flex-direction: row;
 `
 
+export const LogoWrapper = styled.View`
+  borderRadius: 8;
+  width: 80;
+  marginLeft: auto;
+  marginRight: auto;
+`
+
 export const LikeHandsButton = styled.TouchableOpacity`
   ${(props: any) => props.isLike && css`
     margin-horizontal: 15px;

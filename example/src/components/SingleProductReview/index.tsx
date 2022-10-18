@@ -12,6 +12,7 @@ import {
   LikeHandsActionContainer,
   LikeHandsButton,
   CommentsButtonGroup,
+  LogoWrapper
 } from './styles'
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
@@ -37,19 +38,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
       flexDirection: 'row',
       justifyContent: 'center',
       marginVertical: 10,
-    },
-    logoWrapper: {
-      shadowColor: theme.colors.black,
-      shadowRadius: 3,
-      shadowOffset: { width: 1, height: 4 },
-      elevation: 3,
-      borderRadius: 8,
-      shadowOpacity: 0.1,
-      overflow: 'hidden',
-      width: 80,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+    }
   })
 
   const [comments, setComments] = useState<Array<any>>([])
@@ -112,13 +101,13 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
-        <View style={styles.logoWrapper}>
+        <LogoWrapper>
           <OIcon
-            url={product?.images}
+            url={product?.images || theme.images.general.not_found}
             width={80}
             height={80}
           />
-        </View>
+        </LogoWrapper>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
