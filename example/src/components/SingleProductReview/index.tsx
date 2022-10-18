@@ -5,6 +5,11 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AntDesignIcons from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native'
 import { SingleProductReviewParams } from '../../types'
+import {
+  Placeholder,
+  PlaceholderLine,
+  Fade
+} from "rn-placeholder";
 
 import {
   ProductContainer,
@@ -12,7 +17,8 @@ import {
   LikeHandsActionContainer,
   LikeHandsButton,
   CommentsButtonGroup,
-  LogoWrapper
+  LogoWrapper,
+  PlaceHolderWrapper
 } from './styles'
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
@@ -101,13 +107,21 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
-        <LogoWrapper>
-          <OIcon
-            url={product?.images || theme.images.general.not_found}
-            width={80}
-            height={80}
-          />
-        </LogoWrapper>
+        {!product ? (
+          <Placeholder style={{ marginTop: 30 }} Animation={Fade}>
+            <PlaceHolderWrapper>
+              <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
+            </PlaceHolderWrapper>
+          </Placeholder>
+        ) : (
+          <LogoWrapper>
+            <OIcon
+              url={product?.images || theme.images.general.not_found}
+              width={80}
+              height={80}
+            />
+          </LogoWrapper>
+        )}
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
