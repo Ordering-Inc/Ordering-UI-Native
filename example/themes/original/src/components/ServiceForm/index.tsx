@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'styled-components/native'
 import { Platform, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
-import { OText, OButton, OModal } from '../shared'
+import { OText, OButton, OModal, OIcon } from '../shared'
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import SelectDropdown from 'react-native-select-dropdown'
@@ -241,13 +241,21 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   return (
     <>
       <Container>
-        <ProfessionalPhoto
-          source={{
-            uri:
-            product?.images ||
-              optimizeImage(theme?.images?.dummies?.product, 'h_250,c_limit'),
-          }}
-        />
+        {!!product?.images ? (
+          <ProfessionalPhoto
+            source={{
+              uri: product?.images
+            }}
+          />
+        ) : (
+          <OIcon
+            src={theme?.images?.dummies?.product}
+            cover={false}
+            style={{ alignSelf: 'center' }}
+            width={200}
+            height={200}
+          />
+        )}
         <InfoWrapper>
           <OText
             size={20}
@@ -301,14 +309,22 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               onPress={() => setIsOpen(true)}
             >
               <View style={{ flexDirection: 'row' }}>
-                <FastImage
-                  style={styles.photoStyle}
-                  source={{
-                    uri: optimizeImage(currentProfessional?.photo, 'h_250,c_limit'),
-                    priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
+                {!!currentProfessional?.photo ? (
+                  <FastImage
+                    style={styles.photoStyle}
+                    source={{
+                      uri: optimizeImage(currentProfessional?.photo, 'h_250,c_limit'),
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <OIcon
+                    src={theme?.images?.general?.user}
+                    cover={false}
+                    style={styles.photoStyle}
+                  />
+                )}
                 <View style={{ marginLeft: 14 }}>
                   <OText
                     size={14}
@@ -532,14 +548,22 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               onPress={() => handleChangeProfessional(professional)}
             >
               <View style={{ flexDirection: 'row' }}>
-                <FastImage
-                  style={styles.photoStyle}
-                  source={{
-                    uri: optimizeImage(professional?.photo, 'h_250,c_limit'),
-                    priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
+                {!!professional?.photo ? (
+                  <FastImage
+                    style={styles.photoStyle}
+                    source={{
+                      uri: optimizeImage(professional?.photo, 'h_250,c_limit'),
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <OIcon
+                    src={theme?.images?.general?.user}
+                    cover={false}
+                    style={styles.photoStyle}
+                  />
+                )}
                 <View style={{ marginLeft: 14 }}>
                   <OText
                     size={14}
