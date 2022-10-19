@@ -149,7 +149,7 @@ export const BusinessItemAccordion = (props: any) => {
 						<OButton
 							onClick={handleClickCheckout}
 							textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-							style={{ width: 160, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+							style={{ width: 180, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
 							text={t('CHECKOUT', 'Checkout')}
 							bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
 							borderColor={theme.colors.primary}
