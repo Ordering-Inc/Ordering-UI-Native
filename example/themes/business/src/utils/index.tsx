@@ -345,3 +345,11 @@ export const getOrderStatus = (s: string, t: any) => {
 
   return objectStatus && objectStatus;
 };
+
+export const transformDistance = (value : number, distanceUnit?: string) => {
+  return distanceUnit === 'mi'
+    ? (value / 1.609).toFixed(2)
+    : distanceUnit === 'ft'
+      ? (value * 3280.84).toFixed(0)
+      : (value).toFixed(2)
+}

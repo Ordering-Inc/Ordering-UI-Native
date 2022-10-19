@@ -13,6 +13,7 @@ import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
 import { FloatingButton } from '../FloatingButton';
 import { showLocation } from 'react-native-map-link';
+import { transformDistance } from '../../utils';
 
 export const DriverMap = (props: GoogleMapsParams) => {
   const {
@@ -476,19 +477,10 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 src={theme.images.general.arrow_distance}
                 style={styles.arrowDistance}
               />
-              {distanceUnit === 'mi' ? (
-                <OText size={12} numberOfLines={3}>{`${(
-                  distancesFromTwoPlacesKm / 1.609
-                ).toFixed(2)} ${t('MI', 'Mi')}`}</OText>
-              ) : distanceUnit === 'ft' ? (
-                <OText size={12} numberOfLines={3}>{`${(
-                  distancesFromTwoPlacesKm * 3280.84
-                ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
-              ) : (
-                <OText size={12} numberOfLines={3}>{`${(
-                  distancesFromTwoPlacesKm
-                ).toFixed(2)} ${t('KM', 'Km')}`}</OText>
-              )}
+              <OText size={12} numberOfLines={3}>
+                {`${transformDistance(distancesFromTwoPlacesKm, distanceUnit)} ${t(distanceUnit.toUpperCase(), distanceUnit)}`} 
+              </OText>
+
             </View>
             <View style={{ width: '75%', paddingRight: 20 }}>
               <OText
