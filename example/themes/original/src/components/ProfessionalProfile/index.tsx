@@ -6,7 +6,7 @@ import CalendarPicker from 'react-native-calendar-picker'
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import moment from 'moment'
 import SelectDropdown from 'react-native-select-dropdown'
-import { OButton, OText } from '../shared'
+import { OButton, OText, OIcon } from '../shared'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ProfessionalProfileParams } from '../../types'
@@ -58,6 +58,9 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
       height: 40,
       marginBottom: 30
     },
+    photoStyle: {
+      alignSelf: 'center'
+    }
   })
 
   const onDateChange = (date: any) => {
@@ -151,13 +154,21 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
 
   return (
     <Container>
-			<ProfessionalPhoto
-				source={{
-					uri:
-          professional?.photo ||
-						optimizeImage(theme.images.general.user, 'h_250,c_limit'),
-				}}
-      />
+      {!!professional?.photo ? (
+        <ProfessionalPhoto
+          source={{
+            uri: professional?.photo
+          }}
+        />
+      ) : (
+        <OIcon
+          src={theme.images.general.user}
+          style={styles.photoStyle}
+          cover={false}
+          width={200}
+          height={200}
+        />
+      )}
       <InfoWrapper>
         <OText
           size={20}

@@ -97,7 +97,8 @@ export const ProfessionalFilter = (props: ProfessionalFilterParams) => {
                 />
               ) : (
                 <OIcon
-                  src={theme?.images?.dummies?.product}
+                  src={theme?.images?.general?.user}
+                  cover={false}
                   style={styles.photoStyle}
                 />
               )}
