@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useLanguage } from 'ordering-components/native'
-import { OText, OButton, OInput } from '../shared'
+import { useLanguage, useUtils } from 'ordering-components/native'
+import { OText, OButton, OInput, OIcon } from '../shared'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AntDesignIcons from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native'
 import { SingleProductReviewParams } from '../../types'
+import FastImage from 'react-native-fast-image'
 
 import {
   ProductContainer,
@@ -12,6 +13,7 @@ import {
   LikeHandsActionContainer,
   LikeHandsButton,
   CommentsButtonGroup,
+  LogoWrapper
 } from './styles'
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
@@ -23,6 +25,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
 
   const [, t] = useLanguage()
   const theme = useTheme()
+  const [{ optimizeImage }] = useUtils()
 
   const styles = StyleSheet.create({
     inputTextArea: {
@@ -38,6 +41,12 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
       justifyContent: 'center',
       marginVertical: 10,
     },
+    productStyle: {
+      width: 80,
+      height: 80,
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }
   })
 
   const [comments, setComments] = useState<Array<any>>([])
@@ -100,6 +109,24 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
+        <LogoWrapper>
+          {product?.images ? (
+            <FastImage
+              style={styles.productStyle}
+              source={{
+                uri: optimizeImage(product?.images, 'h_250,c_limit'),
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+          ) : (
+            <OIcon
+              src={theme?.images?.dummies?.product}
+              width={80}
+              height={80}
+            />
+          )}
+        </LogoWrapper>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
@@ -129,7 +156,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
               style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
               imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
               imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-              onClick={() => handleChangeComment(commentItem) }
+              onClick={() => handleChangeComment(commentItem)}
             />
           ))}
         </CommentsButtonGroup>
