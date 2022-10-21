@@ -14,18 +14,6 @@ export const LikeHandsActionContainer = styled.View`
   flex-direction: row;
 `
 
-export const LogoWrapper = styled.View`
-  shadowRadius: 3;
-  shadowOffset: { width: 1, height: 4 };
-  elevation: 3;
-  borderRadius: 8;
-  shadowOpacity: 0.1;
-  overflow: hidden;
-  width: 80;
-  marginLeft: auto;
-  marginRight: auto;
-`
-
 export const LikeHandsButton = styled.TouchableOpacity`
   ${(props: any) => props.isLike && css`
     margin-horizontal: 15px;

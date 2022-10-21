@@ -40,12 +40,6 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
       flexDirection: 'row',
       justifyContent: 'center',
       marginVertical: 10,
-    },
-    productStyle: {
-      width: 80,
-      height: 80,
-      marginLeft: 'auto',
-      marginRight: 'auto'
     }
   })
 
@@ -109,24 +103,6 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   return (
     <>
       <ProductContainer>
-        <LogoWrapper>
-          {product?.images ? (
-            <FastImage
-              style={styles.productStyle}
-              source={{
-                uri: optimizeImage(product?.images, 'h_250,c_limit'),
-                priority: FastImage.priority.normal,
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-          ) : (
-            <OIcon
-              src={theme?.images?.dummies?.product}
-              width={80}
-              height={80}
-            />
-          )}
-        </LogoWrapper>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
