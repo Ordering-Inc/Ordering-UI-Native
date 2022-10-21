@@ -1,7 +1,8 @@
 import React from 'react'
 import {
   BusinessInformation as BusinessInformationController,
-  useLanguage
+  useLanguage,
+  useConfig
 } from 'ordering-components/native'
 import { OText } from '../shared'
 import {
@@ -26,6 +27,8 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
   } = props
   const [, t] = useLanguage()
   const theme = useTheme()
+	const [{ configs }] = useConfig();
+
   const daysOfWeek = [
     t('SUNDAY_ABBREVIATION', 'Sun'),
     t('MONDAY_ABBREVIATION', 'Mon'),
@@ -35,9 +38,13 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     t('FRIDAY_ABBREVIATION', 'Fri'),
     t('SATURDAY_ABBREVIATION', 'Sat')
   ]
-  const scheduleFormatted = ({ hour, minute } : {hour : number | string, minute : number | string}) => {
-    const checkTime = (val : number | string) => val < 10 ? `0${val}` : val
-    return `${checkTime(hour)}:${checkTime(minute)}`
+  const is12hours = configs?.format_time?.value?.includes('12')
+
+  const scheduleFormatted = ({ hour, minute } : { hour : number | string, minute : number | string}) => {
+    const checkTime = (val: number | string) => (val < 10 ? `0${val}` : val);
+		const zz = hour === 0 ? t('AM', 'AM') : hour >= 12 ? t('PM', 'PM') : t('AM', 'AM');
+		const h = parseInt(`${hour}`);
+		return is12hours ? `${h === 0 ? 12 : h > 12 ? h - 12 : h}:${checkTime(minute)} ${zz}` : `${checkTime(hour)}:${checkTime(minute)}`;
   }
 
   return (
