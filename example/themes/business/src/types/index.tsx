@@ -568,6 +568,7 @@ export interface AcceptOrRejectOrderParams {
 export interface MapViewParams {
   onNavigationRedirect: (page: string, params?: any) => void,
   getBusinessLocations: () => void,
+  setDriverLocation: (location: any) => void,
   isLoadingBusinessMarkers?: boolean,
   markerGroups: Array<any>,
   customerMarkerGroups: Array<any>,

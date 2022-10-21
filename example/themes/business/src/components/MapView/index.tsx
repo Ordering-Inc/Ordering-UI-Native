@@ -21,6 +21,7 @@ const MapViewComponent = (props: MapViewParams) => {
     customerMarkerGroups,
     alertState,
     setAlertState,
+    setDriverLocation,
     onNavigationRedirect,
     getBusinessLocations,
   } = props;
@@ -210,6 +211,16 @@ const MapViewComponent = (props: MapViewParams) => {
       </Marker>
     )
   }
+
+  useEffect(() => {
+    if (userLocation.latitude !== 0 && userLocation.longitude !== 0) {
+      const location = {
+        lat: userLocation.latitude,
+        lng: userLocation.longitude
+      }
+      setDriverLocation({ location })
+    }
+  }, [userLocation])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
