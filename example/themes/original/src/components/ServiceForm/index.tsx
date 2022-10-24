@@ -303,58 +303,62 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               {t('REQUIRED', 'Required')}
             </OText>
           </View>
-          {currentProfessional && (
-            <TouchableOpacity
-              style={styles.professionalSelect}
-              onPress={() => setIsOpen(true)}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                {!!currentProfessional?.photo ? (
-                  <FastImage
-                    style={styles.photoStyle}
-                    source={{
-                      uri: optimizeImage(currentProfessional?.photo, 'h_250,c_limit'),
-                      priority: FastImage.priority.normal,
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}
-                  />
-                ) : (
-                  <OIcon
-                    src={theme?.images?.general?.user}
-                    cover={false}
-                    style={styles.photoStyle}
-                  />
-                )}
-                <View style={{ marginLeft: 14 }}>
-                  <OText
-                    size={14}
-                    weight={'400'}
-                    lineHeight={22}
-                  >
-                    {currentProfessional?.name} {currentProfessional?.lastname}
-                  </OText>
-                  <OText
-                    size={12}
-                    weight={'400'}
-                    lineHeight={17}
-                    color={isBusyTime(currentProfessional) ? theme.colors.danger5 : theme.colors.success500}
-                  >
-                    {isBusyTime(currentProfessional)
-                      ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
-                      : t('AVAILABLE', 'Available')
-                    }
-                  </OText>
+          <TouchableOpacity
+            style={styles.professionalSelect}
+            onPress={() => setIsOpen(true)}
+          >
+            {!!currentProfessional ? (
+              <>
+                <View style={{ flexDirection: 'row' }}>
+                  {!!currentProfessional?.photo ? (
+                    <FastImage
+                      style={styles.photoStyle}
+                      source={{
+                        uri: optimizeImage(currentProfessional?.photo, 'h_250,c_limit'),
+                        priority: FastImage.priority.normal,
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  ) : (
+                    <OIcon
+                      src={theme?.images?.general?.user}
+                      cover={false}
+                      style={styles.photoStyle}
+                    />
+                  )}
+                  <View style={{ marginLeft: 14 }}>
+                    <OText
+                      size={14}
+                      weight={'400'}
+                      lineHeight={22}
+                    >
+                      {currentProfessional?.name} {currentProfessional?.lastname}
+                    </OText>
+                    <OText
+                      size={12}
+                      weight={'400'}
+                      lineHeight={17}
+                      color={isBusyTime(currentProfessional) ? theme.colors.danger5 : theme.colors.success500}
+                    >
+                      {isBusyTime(currentProfessional)
+                        ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
+                        : t('AVAILABLE', 'Available')
+                      }
+                    </OText>
+                  </View>
                 </View>
-              </View>
-              <View style={{ marginLeft: 5 }}>
-                <IconAntDesign
-                  name='down'
-                  color={theme.colors.textThird}
-                  size={12}
-                />
-              </View>
-            </TouchableOpacity>
-          )}
+              </>
+            ) : (
+              <OText size={12}>{t('SELECT_PROFESSIONAL', 'Select professional')}</OText>
+            )}
+            <View style={{ marginLeft: 5 }}>
+              <IconAntDesign
+                name='down'
+                color={theme.colors.textThird}
+                size={12}
+              />
+            </View>
+          </TouchableOpacity>
         </ProfessionalWrapper>
         <ScheduleWrapper>
           <View
@@ -464,8 +468,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
             </CalendarWrapper>
           ) : (
             <OText
-              size={20}
-              style={{ marginBottom: 30 }}
+              size={16}
+              style={{ marginBottom: 30, textAlign: 'center' }}
+              color={theme?.colors?.disabled}
               weight={Platform.OS === 'ios' ? '600' : 'bold'}
             >
               {t('NO_SCHEDULE', 'No schedule')}
@@ -541,7 +546,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               {t('ANY_OROFESSIONAL_MEMBER', 'Any professional member')}
             </OText>
           </View>
-          {professionalList?.map((professional: any) => professional?.products?.includes(product?.id) && (
+          {professionalList?.map((professional: any) => (
             <TouchableOpacity
               key={professional?.id}
               style={styles.professionalItem}
