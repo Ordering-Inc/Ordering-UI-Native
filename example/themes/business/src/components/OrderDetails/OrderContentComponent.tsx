@@ -337,9 +337,14 @@ export const OrderContentComponent = (props: OrderContent) => {
               </OText>
             )}
             {!!order?.comment && (
-              <OText style={{ fontStyle: 'italic', opacity: 0.6, marginBottom: 5 }}>
-                {order?.comment}
-              </OText>
+              <>
+                <OText weight='500' style={{ marginBottom: 5 }}>
+                  {t('ORDER_COMMENT', 'Order Comment')}
+                </OText>
+                <OText style={{ fontStyle: 'italic', opacity: 0.6, marginBottom: 20 }}>
+                  {order?.comment}
+                </OText>
+              </>
             )}
           </View>
         )}
