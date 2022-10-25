@@ -488,8 +488,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 size={13}
                 numberOfLines={2}
                 adjustsFontSizeToFit>
-                {`${travelTime.toFixed(2)} - ${isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
-                  } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
+                {`${travelTime.toFixed(2)} - ${isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')}`}
               </OText>
             </View>
           </View>
