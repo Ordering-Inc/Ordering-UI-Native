@@ -537,6 +537,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
 	const businessProductslistingProps = {
 		...props,
+		isForceSearch: Platform.OS === 'ios',
 		UIComponent: BusinessProductsListingUI
 	}
 	return (
