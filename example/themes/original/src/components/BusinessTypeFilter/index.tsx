@@ -198,9 +198,9 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									isOpenAllCategories && setIsOpenAllCategories(false)
 								}}
 							>
-								{(item.image || defaultImage(item.name)) ? (
+								{(defaultImage(item.name) || item.image) ? (
 									<OIcon
-										url={item.image || defaultImage(item.name)}
+										url={defaultImage(item.name) || item.image}
 										style={styles.logo}
 									/>
 								) : (
