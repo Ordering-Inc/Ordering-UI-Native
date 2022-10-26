@@ -51,6 +51,7 @@ import { LastOrders } from './src/components/LastOrders';
 import { MultiCheckout } from './src/components/MultiCheckout'
 import { MultiOrdersDetails } from './src/components/MultiOrdersDetails'
 import NavBar from './src/components/NavBar';
+import { NotificationsList } from './src/components/Notifications'
 import { BusinessTypeFilter } from './src/components/BusinessTypeFilter';
 import { BusinessController } from './src/components/BusinessController';
 import { BusinessFeaturedController } from './src/components/BusinessFeaturedController';
@@ -183,6 +184,7 @@ export {
 	OrderDetails,
 	OrderProgress,
 	BusinessPreorder,
+	NotificationsList,
 	UserProfileForm,
 	ReviewOrder,
 	ReviewProducts,

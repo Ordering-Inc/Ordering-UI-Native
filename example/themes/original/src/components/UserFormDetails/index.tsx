@@ -10,7 +10,6 @@ import { OText, OButton, OInput } from '../shared';
 
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
-import CheckBox from '@react-native-community/checkbox';
 
 export const UserFormDetailsUI = (props: any) => {
 	const {
@@ -18,7 +17,6 @@ export const UserFormDetailsUI = (props: any) => {
 		formState,
 		showField,
 		requiredFields,
-		onClose,
 		setIsSubmit,
 		cleanFormState,
 		onCloseProfile,
@@ -29,11 +27,9 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton,
 		setWillVerifyOtpState,
-		handleChangePromotions,
 	} = props;
 
 	const theme = useTheme();
-
 
 	const styles = StyleSheet.create({
 		btnOutline: {
@@ -64,10 +60,6 @@ export const UserFormDetailsUI = (props: any) => {
 			paddingStart: 0,
 			paddingBottom: 0,
 			marginBottom: -0,
-		},
-		checkBoxStyle: {
-			width: 25,
-			height: 25,
 		}
 	});
 
@@ -79,7 +71,7 @@ export const UserFormDetailsUI = (props: any) => {
 	const [{ user }] = useSession();
 	const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
 	const [isValid, setIsValid] = useState(false)
-  const [isChanged, setIsChanged] = useState(false)
+	const [isChanged, setIsChanged] = useState(false)
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
@@ -243,10 +235,10 @@ export const UserFormDetailsUI = (props: any) => {
 
 	useEffect(() => {
 		if (!requiredFields || formState?.changes?.length === 0) return
-			const _isValid = requiredFields.every((key: any) => formState?.changes[key])
-			setIsValid(_isValid)
-		}, [formState?.changes, requiredFields])
-	
+		const _isValid = requiredFields.every((key: any) => formState?.changes[key])
+		setIsValid(_isValid)
+	}, [formState?.changes, requiredFields])
+
 	return (
 		<>
 			<UDForm>
@@ -333,7 +325,7 @@ export const UserFormDetailsUI = (props: any) => {
 									),
 							)}
 
-							{!!showInputPhoneNumber &&((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
+							{!!showInputPhoneNumber && ((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
 									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
 									<PhoneInputNumber
@@ -395,39 +387,6 @@ export const UserFormDetailsUI = (props: any) => {
 									defaultValue=''
 								/>
 							)}
-							{!requiredFields && (
-								<Controller
-									control={control}
-									render={({ onChange, value }: any) => (
-										<TouchableOpacity
-											style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}
-											onPress={() => {
-												onChange(!value)
-												handleChangePromotions(!value)
-											}}
-										>
-											<CheckBox
-												value={value}
-												boxType={'square'}
-												tintColors={{
-													true: theme.colors.primary,
-													false: theme.colors.disabled
-												}}
-												tintColor={theme.colors.disabled}
-												onCheckColor={theme.colors.primary}
-												onTintColor={theme.colors.primary}
-												style={Platform.OS === 'ios' && styles.checkBoxStyle}
-											/>
-											<OText style={{ fontSize: 14, paddingHorizontal: 5, paddingLeft: 10 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
-										</TouchableOpacity>
-									)}
-									name='promotions'
-									defaultValue={formState?.result?.result
-										? !!formState?.result?.result?.settings?.notification?.newsletter
-										: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
-								/>
-							)}
-
 						</UDWrapper>
 					)}
 				{validationFields?.loading && (
