@@ -141,7 +141,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
 
   const handleSaveService = () => {
     const updated = {
-      serviceTime: dateSelected,
+      serviceTime: moment(dateSelected).utc().format('YYYY-MM-DD HH:mm:00'),
       professional: currentProfessional
     }
     handleSave && handleSave(updated)
