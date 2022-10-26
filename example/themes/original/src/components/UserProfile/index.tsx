@@ -17,7 +17,7 @@ import { LanguageSelector } from '../LanguageSelector'
 import MessageCircle from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FastImage from 'react-native-fast-image'
 import { OAlert } from '../../../../../src/components/shared'
 
@@ -111,6 +111,7 @@ const ProfileListUI = (props: ProfileParams) => {
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 	const IsPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -199,6 +200,12 @@ const ProfileListUI = (props: ProfileParams) => {
 						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
 					</ListItem>
+					{isChewLayout && (
+						<ListItem onPress={() => onRedirect('MyOrders', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<FontAwesome name='list-alt' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_ORDERS', 'My Orders')}</OText>
+						</ListItem>
+					)}
 					{isWalletEnabled && (
 						<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
