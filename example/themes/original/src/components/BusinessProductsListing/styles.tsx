@@ -1,8 +1,5 @@
 import styled, { css } from 'styled-components/native'
 
-export const ContainerSafeAreaView = styled.SafeAreaView`
-`
-
 export const WrapHeader = styled.View`
   position: relative;
 `
@@ -14,7 +11,6 @@ export const TopHeader = styled.View`
   z-index: 1;
   height: 60px;
   min-height: 60px;
-  margin-top: ${(props : any) => props.isIos ? '0' : '40px'};
 `
 export const AddressInput = styled.TouchableOpacity`
   flex: 1;
