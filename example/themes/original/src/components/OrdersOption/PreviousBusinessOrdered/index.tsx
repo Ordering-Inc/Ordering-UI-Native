@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { PreviousBusinessOrderedParams } from '../../../types';
 
-const BusinessControllerList = ({ businesses, onBusinessClick, navigation, orderState, style }: any) => {
+const BusinessControllerList = ({ businesses, onBusinessClick, navigation, orderState, handleCustomUpdate, style }: any) => {
   return (
     <>
       {businesses?.result?.map((business: any, i: number) => (
@@ -31,6 +31,7 @@ const BusinessControllerList = ({ businesses, onBusinessClick, navigation, order
           businessDeliveryTime={business?.delivery_time}
           businessPickupTime={business?.pickup_time}
           businessDistance={business?.distance}
+          handleCustomUpdate={handleCustomUpdate}
           style={style}
         />
       ))}
@@ -92,6 +93,7 @@ export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) =>
     businesses,
     onNavigationRedirect,
     isBusinessesSearchList,
+    handleUpdateBusinesses,
   } = props
 
   const [orderState] = useOrder()
@@ -117,6 +119,7 @@ export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) =>
               orderState={orderState}
               navigation={navigation}
               businesses={businesses}
+              handleCustomUpdate={handleUpdateBusinesses}
             />
           )}
         </>
@@ -130,6 +133,7 @@ export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) =>
               orderState={orderState}
               navigation={navigation}
               businesses={businesses}
+              handleCustomUpdate={handleUpdateBusinesses}
             />
           )}
         </ListWrapper>
