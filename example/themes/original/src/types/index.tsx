@@ -216,6 +216,7 @@ export interface BusinessControllerParams {
 	setFavoriteIds?: any;
 	handleUpdateBusinessList?: any;
 	enableIntersection?: boolean;
+	handleCustomUpdate?: (businessId: number, changes: any) => {};
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -362,6 +363,7 @@ export interface OrdersOptionParams {
 	setRefreshOrders?: (value: boolean) => void,
 	handleUpdateOrderList?: (orderId: number, changes: any) => {},
 	handleUpdateProducts?: (productId: number, changes: any) => {},
+	handleUpdateBusinesses?: (businessId: number, changes: any) => {},
 	isBusiness?: boolean,
 	isProducts?: boolean,
 	businessOrderIds?: any,
@@ -726,6 +728,7 @@ export interface PreviousBusinessOrderedParams {
 	isBusinessesSearchList?: any,
 	businessLoading?: boolean,
 	businesses?: any
+  handleUpdateBusinesses?: (businessId: number, changes: any) => {},
 }
 
 export interface ServiceFormParams {
