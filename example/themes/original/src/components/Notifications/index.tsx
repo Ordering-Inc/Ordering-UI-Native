@@ -65,7 +65,8 @@ const NotificationsUI = (props: any) => {
 	}, [singleNotifications.result])
 
 	useEffect(() => {
-		handleChangePromotions(notificationsList, 'single'
+		const isSingle = true
+		handleChangePromotions(notificationsList, isSingle)
 	}, [notificationsList])
 
 	return (
