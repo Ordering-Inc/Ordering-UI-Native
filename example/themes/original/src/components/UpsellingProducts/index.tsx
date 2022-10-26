@@ -72,9 +72,15 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		},
 		btnBackArrow: {
 			borderWidth: 0,
+			width: 26,
+			height: 26,
 			backgroundColor: theme.colors.clear,
+			borderColor: theme.colors.clear,
 			shadowColor: theme.colors.clear,
-			padding: 40,
+			paddingLeft: 0,
+			paddingRight: 0,
+			marginLeft: 20,
+			marginBottom: 10
 		},
 	})
 
