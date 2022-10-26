@@ -21,7 +21,7 @@ const NotificationsUI = (props: any) => {
 	const {
 		navigation,
 		singleNotifications,
-		handleSingleNotifications,
+		handleChangePromotions,
 		userData
 	} = props
 
@@ -65,7 +65,7 @@ const NotificationsUI = (props: any) => {
 	}, [singleNotifications.result])
 
 	useEffect(() => {
-		handleSingleNotifications(notificationsList)
+		handleChangePromotions(notificationsList, 'single'
 	}, [notificationsList])
 
 	return (

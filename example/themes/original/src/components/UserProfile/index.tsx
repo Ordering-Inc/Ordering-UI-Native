@@ -232,7 +232,7 @@ const ProfileListUI = (props: ProfileParams) => {
 								animationSpeed={400}
 								onToggle={() => handleChangePromotions(!(user && (!!user?.settings?.notification?.newsletter ||
 									!!user?.settings?.sms?.newsletter ||
-									!!user?.settings?.email?.newsletter)))}
+									!!user?.settings?.email?.newsletter)), 'group')}
 							/>
 						</NotificationsWrapper>
 					</ListItem>
