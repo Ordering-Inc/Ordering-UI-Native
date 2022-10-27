@@ -251,7 +251,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				<Animated.View style={{ position: 'relative' }}>
 					<TopHeader
 						style={{
-							marginTop: Platform.OS === 'ios' ? insets.top : '40px'
+							marginTop: Platform.OS === 'ios' ? insets.top : 40
 						}}
 					>
 						{!isOpenSearchBar && (
