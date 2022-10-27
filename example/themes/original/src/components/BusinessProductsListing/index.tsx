@@ -140,7 +140,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)
+		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0) || 0
 		if (product?.type === 'service' && business?.professionals?.length > 0) {
 			setCurrentProduct(product)
 			setOpenService(true)
@@ -251,7 +251,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				<Animated.View style={{ position: 'relative' }}>
 					<TopHeader
 						style={{
-							marginTop: Platform.OS === 'ios' ? insets.top : '40px'
+							marginTop: Platform.OS === 'ios' ? insets.top : 40
 						}}
 					>
 						{!isOpenSearchBar && (

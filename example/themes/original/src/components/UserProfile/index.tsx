@@ -29,21 +29,25 @@ import {
 	CenterView,
 	Actions,
 	ListWrap,
-	ListItem
+	ListItem,
+	NotificationsWrapper,
+	NotificationBadge
 } from './styles';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import styled from 'styled-components';
+import ToggleSwitch from 'toggle-switch-react-native';
 
 const ProfileListUI = (props: ProfileParams) => {
 	const {
 		navigation,
-		formState,
+		notificationsGroup,
 		handleRemoveAccount,
-		removeAccountState
+		removeAccountState,
+		handleChangePromotions,
 	} = props;
 
 	const theme = useTheme();
-
 
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {
@@ -108,8 +112,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const { top, bottom } = useSafeAreaInsets();
 
 	const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
-
-  const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 	const IsPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
 	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
 	const onRedirect = (route: string, params?: any) => {
@@ -117,14 +120,12 @@ const ProfileListUI = (props: ProfileParams) => {
 	}
 
 	useEffect(() => {
-		if (formState.result.result && !formState.loading) {
-			if (formState.result?.error) {
-				showToast(ToastType.Error, formState.result.result);
-			} else {
+		if (notificationsGroup.result.result && !notificationsGroup.loading) {
+			if (!notificationsGroup.result?.error) {
 				showToast(ToastType.Success, t('UPDATE_SUCCESSFULLY', 'Update successfully'));
 			}
 		}
-	}, [formState.result])
+	}, [notificationsGroup.result])
 
 	useEffect(() => {
 		if (Object.keys(errors).length > 0) {
@@ -140,21 +141,20 @@ const ProfileListUI = (props: ProfileParams) => {
 	}, [errors]);
 
 	const detailProps = {
-
 		goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
 		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
 	}
 
 	const onRemoveAccount = () => {
 		setConfirm({
-      open: true,
-      content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
-      title: t('ACCOUNT_ALERT', 'Account alert'),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleRemoveAccount && handleRemoveAccount(user?.id)
-      }
-    })
+			open: true,
+			content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
+			title: t('ACCOUNT_ALERT', 'Account alert'),
+			handleOnAccept: () => {
+				setConfirm({ ...confirm, open: false })
+				handleRemoveAccount && handleRemoveAccount(user?.id)
+			}
+		})
 	}
 
 	useEffect(() => {
@@ -189,7 +189,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				</View>
 			</CenterView>
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32 }} />
-			<Spinner visible={formState?.loading} />
+			<Spinner visible={notificationsGroup?.loading} />
 			<ListWrap style={{ ...styles.pagePadding }}>
 				<Actions>
 					<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
@@ -222,6 +222,27 @@ const ProfileListUI = (props: ProfileParams) => {
 						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
 					</ListItem>
+					<ListItem onPress={() => navigation.navigate('Notifications', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+						<NotificationBadge style={{ borderRadius: 100 / 2 }} />
+						<Ionicons name='notifications-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('NOTIFICATIONS', 'Notifications')}
+						</OText>
+						<NotificationsWrapper>
+							<ToggleSwitch
+								isOn={user && (!!user?.settings?.notification?.newsletter ||
+									!!user?.settings?.sms?.newsletter ||
+									!!user?.settings?.email?.newsletter)}
+								onColor={theme.colors.primary}
+								size="small"
+								disabled={notificationsGroup?.loading}
+								offColor={theme.colors.disabled}
+								animationSpeed={400}
+								onToggle={() => handleChangePromotions(!(user && (!!user?.settings?.notification?.newsletter ||
+									!!user?.settings?.sms?.newsletter ||
+									!!user?.settings?.email?.newsletter)))}
+							/>
+						</NotificationsWrapper>
+					</ListItem>
 					<ListItem onPress={() => navigation.navigate('Sessions')} activeOpacity={0.7}>
 						<Ionicons name='md-list-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SESSIONS', 'Sessions')}</OText>
@@ -244,13 +265,13 @@ const ProfileListUI = (props: ProfileParams) => {
 				</Actions>
 			</ListWrap>
 			<OAlert
-        open={confirm.open}
-        title={confirm.title}
-        content={confirm.content}
-        onAccept={confirm.handleOnAccept}
-        onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
-        onClose={() => setConfirm({ ...confirm, open: false, title: null })}
-      />
+				open={confirm.open}
+				title={confirm.title}
+				content={confirm.content}
+				onAccept={confirm.handleOnAccept}
+				onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+				onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+			/>
 		</View>
 	);
 };
