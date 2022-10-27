@@ -47,6 +47,8 @@ export interface ProfileParams {
 	isVerifiedPhone?: any;
 	handleRemoveAccount?: any;
 	removeAccountState?: any;
+	handleChangePromotions?: any;
+	notificationsGroup?: any;
 }
 
 export interface AddressListParams {
@@ -655,10 +657,10 @@ export interface PlaceSpotParams {
 	spotNumberDefault?: any,
 	vehicleDefault?: any,
 	spotNumber?: any,
-    setSpotNumber?: any,
+	setSpotNumber?: any,
 	orderTypes?: any,
 	placesState?: any,
-	handleChangePlace? : any,
+	handleChangePlace?: any,
 	spotState?: any,
 	vehicle?: any,
 	setVehicle?: any,
