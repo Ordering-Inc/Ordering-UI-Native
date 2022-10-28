@@ -26,7 +26,7 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
   const [, t] = useLanguage()
   const theme = useTheme()
   const { width } = Dimensions.get('window');
-  const productsFilterd = productList?.length > 0 && productList?.sort((a: any, b:any) => moment(b?.last_ordered_date).valueOf() - moment(a?.last_ordered_date).valueOf()).filter((product : any) => product?.name?.toLowerCase()?.includes(searchValue?.toLowerCase()))
+  const productsFilterd = productList?.length > 0 && productList.filter((product : any) => !searchValue || product?.name?.toLowerCase()?.includes(searchValue?.toLowerCase()))?.sort((a: any, b:any) => moment(b?.last_ordered_date).valueOf() - moment(a?.last_ordered_date).valueOf())
   return (
     <Container hide={productsFilterd?.length === 0}>
       <OText
