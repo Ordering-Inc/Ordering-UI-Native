@@ -31,7 +31,8 @@ import {
   Map,
   Divider,
   OrderAction,
-  PlaceSpotWrapper
+  PlaceSpotWrapper,
+  ProfessionalPhoto
 } from './styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -876,6 +877,26 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderAction>
             </HeaderInfo>
             <OrderProducts>
+              {!!order?.products[0]?.calendar_event?.professional && (
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                  {!!order?.products[0]?.calendar_event?.professional?.photo ? (
+                    <ProfessionalPhoto
+                      source={{
+                        uri: order?.products[0]?.calendar_event?.professional?.photo
+                      }}
+                      imageStyle={{ borderRadius: 8 }}
+                    />
+                  ) : (
+                    <OIcon
+                      src={theme.images.general.user}
+                      cover={false}
+                      width={82}
+                      height={82}
+                    />
+                  )}
+                  <OText size={12} lineHeight={18} weight={'500'} numberOfLines={1}>{order?.products[0]?.calendar_event?.professional?.name} {order?.products[0]?.calendar_event?.professional?.lastname}</OText>
+                </View>
+              )}
               {order?.products?.length &&
                 order?.products.map((product: any, i: number) => (
                   <ProductItemAccordion
