@@ -1110,7 +1110,7 @@ export const ProductOptionsUI = (props: any) => {
 export const ProductForm = (props: any) => {
 	const productOptionsProps = {
 		...props,
-		productCart: { quantity: props?.product?.minimum_per_order || 1 },
+		productCart: { ...props.productCart, quantity: props?.product?.minimum_per_order || 1 },
 		UIComponent: ProductOptionsUI,
 	};
 
