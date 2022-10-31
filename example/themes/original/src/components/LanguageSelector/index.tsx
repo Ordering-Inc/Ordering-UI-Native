@@ -1,5 +1,5 @@
 import React from 'react'
-import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
+import { LanguageSelector as LanguageSelectorController, useOrder, useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { Platform, StyleSheet, View } from 'react-native'
 
@@ -11,6 +11,7 @@ import { OIcon } from '../shared'
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 	const [orderState] = useOrder()
+	const [state] = useLanguage()
 
 	const theme = useTheme();
 
@@ -74,7 +75,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 						useNativeAndroidPickerStyle={false}
 						placeholder={{}}
 						Icon={() => <View style={pickerStyle ? pickerStyle.icon : _pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.white} style={{ width: '100%' }} /></View>}
-						disabled={orderState.loading}
+						disabled={orderState.loading || state.loading}
 					/>
 				</>
 			) : <DummyContainer />}
