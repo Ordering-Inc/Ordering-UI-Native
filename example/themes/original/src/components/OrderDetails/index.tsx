@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, StyleSheet, BackHandler, Platform, Linking, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { _setStoreData } from '../../providers/StoreUtil';
@@ -95,6 +95,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       display: 'flex',
       alignItems: 'center',
       flexDirection: 'row'
+    },
+    professionalBlock: {
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      marginVertical: 10,
+      paddingVertical: 5
     }
   });
 
@@ -448,6 +454,59 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     lat: parseFloat(location?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
     lng: parseFloat(location?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
   } : location)
+
+  const getProductList = () => {
+    const professionalList = order?.products.reduce((prev: any, current: any) => {
+      const found = prev.find((item: any) => item.id === current?.calendar_event?.professional?.id)
+      if (found || !current?.calendar_event) {
+        return prev
+      }
+      return [...prev, current?.calendar_event?.professional]
+    }, [])
+
+    return (
+      <>
+        {professionalList?.length > 0 && professionalList.map((professional: any, i: number) => (
+          <View key={i} style={styles.professionalBlock}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+              {professional?.photo ? (
+                <ProfessionalPhoto
+                  source={{
+                    uri: professional?.photo
+                  }}
+                  imageStyle={{ borderRadius: 8 }}
+                />
+              ) : (
+                <OIcon
+                  src={theme.images.general.user}
+                  cover={false}
+                  width={80}
+                  height={80}
+                />
+              )}
+              <OText size={12} lineHeight={18} weight={'500'} numberOfLines={1}>{professional?.name} {professional?.lastname}</OText>
+            </View>
+            {order?.products.filter((product: any) => product?.calendar_event?.professional?.id === professional?.id).map((product: any, i: number) => (
+              <ProductItemAccordion
+                key={product?.id || i}
+                product={product}
+                isFromCheckout
+              />
+            ))}
+          </View>
+        ))}
+        {order?.products.filter((product: any) => !product?.calendar_event).map((product: any, i: number) => (
+          <ProductItemAccordion
+            key={product?.id || i}
+            product={product}
+            isFromCheckout
+          />
+        ))}
+      </>
+    )
+  }
+
+  const sortedProductList = useMemo(() => getProductList(), [order?.products])
 
   useEffect(() => {
     if (driverLocation) {
@@ -877,34 +936,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderAction>
             </HeaderInfo>
             <OrderProducts>
-              {!!order?.products[0]?.calendar_event?.professional && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                  {!!order?.products[0]?.calendar_event?.professional?.photo ? (
-                    <ProfessionalPhoto
-                      source={{
-                        uri: order?.products[0]?.calendar_event?.professional?.photo
-                      }}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  ) : (
-                    <OIcon
-                      src={theme.images.general.user}
-                      cover={false}
-                      width={82}
-                      height={82}
-                    />
-                  )}
-                  <OText size={12} lineHeight={18} weight={'500'} numberOfLines={1}>{order?.products[0]?.calendar_event?.professional?.name} {order?.products[0]?.calendar_event?.professional?.lastname}</OText>
-                </View>
-              )}
-              {order?.products?.length &&
-                order?.products.map((product: any, i: number) => (
-                  <ProductItemAccordion
-                    key={product?.id || i}
-                    product={product}
-                    isFromCheckout
-                  />
-                ))}
+              {sortedProductList}
             </OrderProducts>
             <OrderBill>
               <View style={{ height: 1, backgroundColor: theme.colors.border, marginBottom: 17 }} />
