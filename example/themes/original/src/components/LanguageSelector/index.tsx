@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder, useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
-import { Platform, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container, DummyContainer } from './styles'
@@ -9,10 +9,17 @@ import { LanguageSelectorParams } from '../../types'
 import { OIcon } from '../shared'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
+	const {
+		languagesState,
+		currentLanguage,
+		handleChangeLanguage,
+		iconColor,
+		pickerStyle
+	} = props
 
 	const [orderState] = useOrder()
 	const [state] = useLanguage()
-
+	const [languagePressed, setLanguagePressed] = useState(currentLanguage)
 	const theme = useTheme();
 
 	const _pickerStyle = StyleSheet.create({
@@ -42,14 +49,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 			color: theme.colors.secundaryContrast
 		}
 	})
-
-	const {
-		languagesState,
-		currentLanguage,
-		handleChangeLanguage,
-		iconColor,
-		pickerStyle
-	} = props
+	
+	const changeLanguage = (lang : string) => {
+		setLanguagePressed(lang)
+		handleChangeLanguage(lang)
+	}
 
 	const _languages = languagesState?.languages?.map((language: any) => {
 		return {
@@ -68,14 +72,14 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 				<>
 					{iconColor && <OIcon src={theme.images.general.language} color={iconColor} style={{ marginEnd: 14 }} width={16} />}
 					<RNPickerSelect
-						onValueChange={handleChangeLanguage}
+						onValueChange={changeLanguage}
 						items={_languages || []}
 						value={currentLanguage}
 						style={pickerStyle ? pickerStyle : _pickerStyle}
 						useNativeAndroidPickerStyle={false}
 						placeholder={{}}
 						Icon={() => <View style={pickerStyle ? pickerStyle.icon : _pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.white} style={{ width: '100%' }} /></View>}
-						disabled={orderState.loading || state.loading}
+						disabled={orderState.loading || state.loading || state?.language?.code !== languagePressed}
 					/>
 				</>
 			) : <DummyContainer />}
