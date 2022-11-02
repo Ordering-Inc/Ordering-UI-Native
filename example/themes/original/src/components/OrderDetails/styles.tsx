@@ -136,9 +136,9 @@ export const PlaceSpotWrapper = styled.View`
 export const ProfessionalPhoto = styled.ImageBackground`
   width: 100%;
   position: relative;
-  max-height: 82px;
-  height: 82px;
-  width: 82px;
+  max-height: 80px;
+  height: 80px;
+  width: 80px;
   resize-mode: cover;
   margin-right: 10px;
 `;
