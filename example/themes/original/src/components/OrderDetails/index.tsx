@@ -10,6 +10,7 @@ import {
   useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import { showLocation } from 'react-native-map-link';
 import {
   OrderDetailsContainer,
   Header,
@@ -116,6 +117,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const { order, businessData } = props.order;
   const mapValidStatuses = [9, 19, 23]
   const placeSpotTypes = [3, 4, 5]
+  const directionTypes = [2, 3, 4, 5]
 
   const walletName: any = {
     cash: {
@@ -743,6 +745,26 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {order?.business?.address}
                 </OText>
               </View>
+              {directionTypes.includes(order?.delivery_type) && (
+                <OButton
+                  text={t('GET_DIRECTIONS', 'Get Directions')}
+                  imgRightSrc=''
+                  textStyle={{ color: theme.colors.white }}
+                  style={{
+                    alignSelf: 'center',
+                    borderRadius: 10,
+                    marginTop: 30
+                  }}
+                  onClick={() => showLocation({
+                    latitude: order?.business?.location?.lat,
+                    longitude: order?.business?.location?.lng,
+                    naverCallerName: 'com.reactnativeappstemplate5',
+                    dialogTitle: t('GET_DIRECTIONS', 'Get Directions'),
+                    dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+                    cancelText: t('CANCEL', 'Cancel'),
+                  })}
+                />
+              )}
             </OrderBusiness>
             
             {placeSpotTypes.includes(order?.delivery_type) && (
