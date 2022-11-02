@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useOrder, useSession, useLanguage } from 'ordering-components/native';
+import { useOrder, useSession, useLanguage, useConfig } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
 import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
@@ -15,6 +15,8 @@ export const BusinessesListing = (props: any) => {
   const [, t] = useLanguage();
   const [{ auth }] = useSession()
   const [, { getLastOrderHasNoReview }] = useOrder();
+  const [{ configs }] = useConfig()
+  const isShowReviewsPopupEnabled = configs?.show_reviews_popups_enabled?.value === '1'
 
   const [, setIsReviewed] = useState()
   const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
@@ -73,8 +75,9 @@ export const BusinessesListing = (props: any) => {
   }
 
   useEffect(() => {
+    if (!isShowReviewsPopupEnabled) return
     (checkNotificationStatus?.checked && auth) && _getLastOrderHasNoReview()
-  }, [checkNotificationStatus, auth])
+  }, [checkNotificationStatus, auth, isShowReviewsPopupEnabled])
 
   return (
     <>
