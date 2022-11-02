@@ -741,7 +741,10 @@ export interface ServiceFormParams {
 	maxProductQuantity: any,
 	businessSlug?: string,
 	onClose: any,
-	professionalList: any
+	professionalList: any,
+	productObject?: any,
+	professionalListState?: any,
+	isCartProduct?: any
 }
 
 export interface ProfessionalFilterParams {
