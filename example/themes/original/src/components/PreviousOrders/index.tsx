@@ -19,7 +19,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 		handleReorder,
 		reorderLoading,
 		orderID,
-		handleUpdateOrderList
+		handleUpdateOrderList,
+		loading
 	} = props;
 
 	const theme = useTheme();
@@ -42,7 +43,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 					handleUpdateOrderList={handleUpdateOrderList}
 				/>
 			))}
-			{pagination.totalPages && pagination.currentPage < pagination.totalPages && (
+			{!loading && pagination.totalPages && pagination.currentPage < pagination.totalPages && (
 				<WrappButton>
 					<OButton
 						onClick={loadMoreOrders}

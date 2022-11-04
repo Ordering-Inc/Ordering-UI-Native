@@ -22,6 +22,7 @@ import { BusinessProductsList } from '../BusinessProductsList'
 import { BusinessProductsListingParams } from '../../types'
 import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { useIsFocused } from '@react-navigation/native';
 
 import {
 	TopHeader,
@@ -75,6 +76,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ parsePrice }] = useUtils()
 	const [, { showToast }] = useToast()
 	const [{ configs }] = useConfig()
+	const isFocused = useIsFocused();
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
 	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
@@ -242,6 +244,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	useEffect(() => {
 		removeCartByReOrder()
 	}, [currentCart])
+
+	useEffect(() => {
+		if (!isFocused) {
+			handleChangeSearch('')
+			setIsOpenSearchBar(false)
+		}
+	}, [isFocused])
 
 	return (
 		<>
