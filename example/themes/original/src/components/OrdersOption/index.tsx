@@ -49,7 +49,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		BusinessControllerSkeletons,
 		businesses,
 		businessPaginationProps,
-		handleUpdateProducts
+		handleUpdateProducts,
+		handleUpdateBusinesses
 	} = props
 
 	const theme = useTheme();
@@ -228,6 +229,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					onNavigationRedirect={onNavigationRedirect}
 					isBusinessesSearchList={!!businessesSearchList}
 					businesses={businesses}
+					handleUpdateBusinesses={handleUpdateBusinesses}
 				/>
 			)}
 

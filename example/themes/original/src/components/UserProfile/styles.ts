@@ -1,4 +1,7 @@
+import { useTheme } from 'styled-components';
 import styled from 'styled-components/native'
+
+const theme = useTheme();
 
 export const CenterView = styled.View`
 	flex-direction: row;
@@ -40,3 +43,17 @@ export const ListItem = styled.TouchableOpacity`
 	margin-bottom: 24px;
 `
 
+export const NotificationsWrapper = styled.View`
+	position: absolute;
+  right: 0;
+`
+
+export const NotificationBadge = styled.View`
+    width: 10px;
+    height: 10px;
+	z-index: 2000;
+    background-color: ${theme.colors.red};
+    position: absolute;
+    left: -2px;
+    top: 3px;
+  `;

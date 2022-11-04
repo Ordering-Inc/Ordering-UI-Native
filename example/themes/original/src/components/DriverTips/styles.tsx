@@ -26,11 +26,12 @@ export const DTCard = styled.View`
   text-transform: capitalize;
   min-height: 55px;
   min-width: 55px;
-  max-width: 55px;
+  max-width: 80px;
   max-height: 55px;
   margin-right: 10px;
   margin-left: 10px;
   margin-top: 10px;
+  padding-horizontal: 10px;
 
   ${(props: any) => props.isActive && css`
     background-color: ${(props: any) => props.theme.colors.primary};

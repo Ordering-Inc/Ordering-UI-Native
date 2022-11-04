@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -69,6 +70,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		onBusinessClick
 	} = props
 
+	const insets = useSafeAreaInsets()
 	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
@@ -140,8 +142,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)
-		if (product?.type === 'service' && professionalSelected) {
+		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0) || 0
+		if (product?.type === 'service' && business?.professionals?.length > 0) {
 			setCurrentProduct(product)
 			setOpenService(true)
 			return
@@ -254,12 +256,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<ContainerSafeAreaView
-				style={{ flex: 1 }}
-				isOpenFiltProducts={isOpenFiltProducts}
-			>
+			<View style={{ flex: 1 }}>
 				<Animated.View style={{ position: 'relative' }}>
-					<TopHeader isIos={Platform.OS === 'ios'}>
+					<TopHeader
+						style={{
+							marginTop: Platform.OS === 'ios' ? insets.top : 40
+						}}
+					>
 						{!isOpenSearchBar && (
 							<>
 								<TopActions onPress={() => handleBackNavigation()}>
@@ -521,7 +524,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onAccept={() => setAlertState({ open: false, content: [] })}
 					onClose={() => setAlertState({ open: false, content: [] })}
 				/>
-			</ContainerSafeAreaView>
+			</View>
 			<OModal
 				open={openService}
 				onClose={() => setOpenService(false)}
@@ -546,6 +549,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
 	const businessProductslistingProps = {
 		...props,
+		isForceSearch: Platform.OS === 'ios',
 		UIComponent: BusinessProductsListingUI
 	}
 	return (

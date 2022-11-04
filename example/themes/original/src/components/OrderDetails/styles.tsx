@@ -132,3 +132,13 @@ export const OrderAction = styled.View`
 export const PlaceSpotWrapper = styled.View`
   padding-horizontal: 40px;
 `
+
+export const ProfessionalPhoto = styled.ImageBackground`
+  width: 100%;
+  position: relative;
+  max-height: 80px;
+  height: 80px;
+  width: 80px;
+  resize-mode: cover;
+  margin-right: 10px;
+`;
