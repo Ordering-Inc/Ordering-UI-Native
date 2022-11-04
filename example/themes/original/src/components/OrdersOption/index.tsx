@@ -262,38 +262,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					)}
 				</>
 			)}
-			{loading && !hideOrders && (
-				<>
-					{!activeOrders ? (
-						<Placeholder style={{ marginTop: 30 }} Animation={Fade}>
-							<View style={{ width: '100%', flexDirection: 'row' }}>
-								<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
-								<Placeholder>
-									<PlaceholderLine width={30} style={{ marginTop: 5 }} />
-									<PlaceholderLine width={50} />
-									<PlaceholderLine width={70} />
-								</Placeholder>
-							</View>
-						</Placeholder>
-					) : (
-						<View style={{ marginTop: 30 }}>
-							{[...Array(5)].map((item, i) => (
-								<Placeholder key={i} Animation={Fade}>
-									<View style={{ width: '100%', flexDirection: 'row' }}>
-										<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 20 }} />
-										<Placeholder>
-											<PlaceholderLine width={30} style={{ marginTop: 5 }} />
-											<PlaceholderLine width={50} />
-											<PlaceholderLine width={20} />
-										</Placeholder>
-									</View>
-								</Placeholder>
-							))}
-						</View>
-					)}
-				</>
-			)}
-			{!loading && !error && orders.length > 0 && !hideOrders && (
+			{!error && orders.length > 0 && !hideOrders && (
 				preOrders ? (
 					<ActiveOrders
 						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
@@ -325,8 +294,40 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						onNavigationRedirect={onNavigationRedirect}
 						handleReorder={handleReorder}
 						handleUpdateOrderList={handleUpdateOrderList}
+						loading={loading}
 					/>
 				)
+			)}
+			{loading && !hideOrders && (
+				<>
+					{!activeOrders ? (
+						<Placeholder style={{ marginTop: 30 }} Animation={Fade}>
+							<View style={{ width: '100%', flexDirection: 'row' }}>
+								<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
+								<Placeholder>
+									<PlaceholderLine width={30} style={{ marginTop: 5 }} />
+									<PlaceholderLine width={50} />
+									<PlaceholderLine width={70} />
+								</Placeholder>
+							</View>
+						</Placeholder>
+					) : (
+						<View style={{ marginTop: 30 }}>
+							{[...Array(5)].map((item, i) => (
+								<Placeholder key={i} Animation={Fade}>
+									<View style={{ width: '100%', flexDirection: 'row' }}>
+										<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 20 }} />
+										<Placeholder>
+											<PlaceholderLine width={30} style={{ marginTop: 5 }} />
+											<PlaceholderLine width={50} />
+											<PlaceholderLine width={20} />
+										</Placeholder>
+									</View>
+								</Placeholder>
+							))}
+						</View>
+					)}
+				</>
 			)}
 		</>
 	)
