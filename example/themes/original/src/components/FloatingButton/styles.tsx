@@ -12,7 +12,7 @@ export const Container = styled.View`
   width: 100%;
   justify-content: space-between;
   background-color: #FFF;
-  z-index: 1000;
+  z-index: 9999;
   justify-content: space-between;
 `
 
