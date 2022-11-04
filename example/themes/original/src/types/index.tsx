@@ -396,6 +396,7 @@ export interface PreviousOrdersParams {
 	getOrderStatus?: any,
 	orderID?: number
 	reorderLoading?: boolean,
+	loading?: boolean,
 	loadMoreOrders?: () => {},
 	handleReorder?: (orderId: number) => {},
 	onNavigationRedirect?: (route: string, params?: any) => {}

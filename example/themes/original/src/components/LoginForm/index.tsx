@@ -719,8 +719,9 @@ const LoginFormUI = (props: LoginParams) => {
 					)}
 
 				{configs && Object.keys(configs).length > 0 ? (
-					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-						(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value && facebookLoginEnabled) ||
+					((configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled) ||
+					((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) &&
 					(
 						<>
 							<View

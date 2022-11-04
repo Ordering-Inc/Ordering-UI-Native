@@ -64,6 +64,12 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
     return found
   }
 
+  const handleChangeQualification = (index: number) => {
+    if (qualification === index) return
+    setQualification(index)
+    setComments([])
+  }
+
   const handleChangeComment = (commentItem: any) => {
     const found = comments.find((comment: any) => comment?.key === commentItem.key)
     if (found) {
@@ -132,11 +138,11 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
           <LikeHandsActionContainer>
             <LikeHandsButton
               isLike
-              onPress={() => setQualification(5)}
+              onPress={() => handleChangeQualification(5)}
             >
               <AntDesignIcons name='like2' size={20} color={qualification === 5 ? theme.colors.primary : theme.colors.lightGray} />
             </LikeHandsButton>
-            <LikeHandsButton onPress={() => setQualification(1)}>
+            <LikeHandsButton onPress={() => handleChangeQualification(1)}>
               <AntDesignIcons name='dislike2' size={20} color={qualification === 1 ? theme.colors.primary : theme.colors.lightGray} />
             </LikeHandsButton>
           </LikeHandsActionContainer>
