@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
-  View,
-  Keyboard,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  I18nManager,
-  SafeAreaView,
-  Platform,
-  Button
+	View,
+	Keyboard,
+	TextInput,
+	TouchableOpacity,
+	StyleSheet,
+	Dimensions,
+	I18nManager,
+	SafeAreaView,
+	Platform,
+	Button
 } from 'react-native';
 import {
 	ProductForm as ProductOptions,
@@ -459,13 +459,13 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
 			scrollViewRef.current.scrollToEnd({ animated: true })
-    })
-    return () => {
-      keyboardDidShowListener.remove()
-    }
-  }, [])
+		})
+		return () => {
+			keyboardDidShowListener.remove()
+		}
+	}, [])
 
 
 	return (
@@ -530,7 +530,7 @@ export const ProductOptionsUI = (props: any) => {
 										>
 											{String(img).includes('image') ? (
 												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 3 / 2 }}
 													source={{
 														uri: optimizeImage(img, 'h_1024,c_limit'),
 														priority: FastImage.priority.normal,
@@ -1054,7 +1054,7 @@ export const ProductOptionsUI = (props: any) => {
 											width={16}
 											color={
 												maxProductQuantity <= 0 ||
-												(productCart?.quantity + productAddedToCartLength) >= maxProductQuantity ||
+													(productCart?.quantity + productAddedToCartLength) >= maxProductQuantity ||
 													((productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && product?.maximum_per_order) ||
 													isSoldOut
 													? theme.colors.backgroundGray
@@ -1108,20 +1108,20 @@ export const ProductOptionsUI = (props: any) => {
 
 
 export const ProductForm = (props: any) => {
-  const productOptionsProps = {
-    ...props,
-    productCart: {
-      ...props.productCart,
-      quantity: props.productCart?.code
-        ? props.productCart?.quantity
-        : props?.product?.minimum_per_order || 1
-    },
-    UIComponent: ProductOptionsUI
-  }
+	const productOptionsProps = {
+		...props,
+		productCart: {
+			...props.productCart,
+			quantity: props.productCart?.code
+				? props.productCart?.quantity
+				: props?.product?.minimum_per_order || 1
+		},
+		UIComponent: ProductOptionsUI
+	}
 
-  return <ProductOptions {...productOptionsProps} />
+	return <ProductOptions {...productOptionsProps} />
 };
 
 ProductForm.defaultProps = {
-  productAddedToCartLength: 0
+	productAddedToCartLength: 0
 }
