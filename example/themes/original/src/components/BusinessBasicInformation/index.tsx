@@ -57,12 +57,12 @@ export const BusinessBasicInformation = (
 			height: isChewLayout ? 170 : 260,
 		},
 		logoStyle: {
-      width: 72,
-      height: 72,
-      borderRadius: 7.6,
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start'
-    },
+			width: 72,
+			height: 72,
+			borderRadius: 7.6,
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start'
+		},
 		businessInfo: {
 			paddingHorizontal: 40,
 			paddingTop: isChewLayout ? 0 : 56,
@@ -271,9 +271,11 @@ export const BusinessBasicInformation = (
 						? styles.businesInfoheaderStyle
 						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 				}
-				{...(!loading && { source: {
-					uri: header || optimizeImage(businessState?.business?.header || theme?.images?.dummies?.businessHeader, 'h_250,c_limit')
-				}})}
+				{...(!loading && {
+					source: {
+						uri: header || optimizeImage(businessState?.business?.header || theme?.images?.dummies?.businessHeader, 'h_250,c_limit')
+					}
+				})}
 				imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
 			>
 				{!isBusinessInfoShow && !isChewLayout && (
@@ -304,9 +306,9 @@ export const BusinessBasicInformation = (
 							<FastImage
 								style={styles.logoStyle}
 								source={{
-									uri: logo || optimizeImage(businessState?.business?.logo || theme?.images?.dummies?.businessLogo, 'h_70,c_limit'),
+									uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
 									priority: FastImage.priority.high,
-									cache:FastImage.cacheControl.web
+									cache: FastImage.cacheControl.web
 								}}
 								resizeMode={FastImage.resizeMode.contain}
 							/>
