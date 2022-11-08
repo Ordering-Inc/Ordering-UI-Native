@@ -303,15 +303,21 @@ export const BusinessBasicInformation = (
 				{showLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							<FastImage
-								style={styles.logoStyle}
-								source={{
-									uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
-									priority: FastImage.priority.high,
-									cache: FastImage.cacheControl.web
-								}}
-								resizeMode={FastImage.resizeMode.contain}
-							/>
+							logo || businessState?.business?.logo ?
+								<FastImage
+									style={styles.logoStyle}
+									source={{
+										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
+										priority: FastImage.priority.high,
+										cache: FastImage.cacheControl.web
+									}}
+									resizeMode={FastImage.resizeMode.contain}
+								/>
+								:
+								<OIcon
+									src={theme?.images?.dummies?.businessLogo}
+									style={styles.logoStyle}
+								/>
 						)}
 					</BusinessLogo>
 				)}
