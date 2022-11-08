@@ -57,12 +57,12 @@ export const BusinessBasicInformation = (
 			height: isChewLayout ? 170 : 260,
 		},
 		logoStyle: {
-      width: 72,
-      height: 72,
-      borderRadius: 7.6,
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start'
-    },
+			width: 72,
+			height: 72,
+			borderRadius: 7.6,
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start'
+		},
 		businessInfo: {
 			paddingHorizontal: 40,
 			paddingTop: isChewLayout ? 0 : 56,
@@ -303,15 +303,21 @@ export const BusinessBasicInformation = (
 				{showLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							<FastImage
-								style={styles.logoStyle}
-								source={{
-									uri: logo || optimizeImage(businessState?.business?.logo || theme?.images?.dummies?.businessLogo, 'h_70,c_limit'),
-									priority: FastImage.priority.high,
-									cache:FastImage.cacheControl.web
-								}}
-								resizeMode={FastImage.resizeMode.contain}
-							/>
+							logo || businessState?.business?.logo ?
+								<FastImage
+									style={styles.logoStyle}
+									source={{
+										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
+										priority: FastImage.priority.high,
+										cache: FastImage.cacheControl.web
+									}}
+									resizeMode={FastImage.resizeMode.contain}
+								/>
+								:
+								<OIcon
+									src={theme?.images?.dummies?.businessLogo}
+									style={styles.logoStyle}
+								/>
 						)}
 					</BusinessLogo>
 				)}
