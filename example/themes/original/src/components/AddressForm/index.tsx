@@ -600,10 +600,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 
 								{(
-									(!isEditing && !isGuestUser && !formState.changes?.address) ||
-									(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
-									(isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined) &&
-								(
+									((!isEditing && !isGuestUser && !formState.changes?.address) ||
+										(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
+									(isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) &&
+									(
 										<View style={styles.pinIcon}>
 											<GPSButton
 												apiKey={googleMapsApiKey}
@@ -617,7 +617,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												IconButton={<OIcon src={theme.images.general.pin} width={16} />}
 											/>
 										</View>
-								)}
+									)}
 							</AutocompleteInput>
 
 							{(locationChange || formState.changes?.location) && (
