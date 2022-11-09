@@ -362,7 +362,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					</FiltProductsContainer>
 				)}
 				{isOpenFiltProducts && (
-					<BackgroundGray />
+					<BackgroundGray isIos={Platform.OS === 'ios'} />
 				)}
 				<IOScrollView
 					stickyHeaderIndices={[business?.professionals?.length > 0 ? 3 : 2]}
