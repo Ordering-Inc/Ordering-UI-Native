@@ -38,16 +38,16 @@ export const FiltProductsContainer = styled.ScrollView`
   position: absolute;
   width: 100%;
   z-index: 2000;
-  top: ${(props : any) => props.isIos ? '40px': '80px'};
+  top: 80px;
   margin-top: 20px;
 `
 
 export const BackgroundGray = styled.View`
   flex: 1;
-  height: 100%;
+  height: ${(props: any) => props.isIos ? '80%' : '100%'};
   background-color: rgba(0,0,0,0.5);
-  position: absolute; 
-  margin-top: 100px; 
+  position: absolute;
+  margin-top: 100px;
   z-index: 100;
   width: 100%;
 `
