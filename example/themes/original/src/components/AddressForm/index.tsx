@@ -602,7 +602,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								{(
 									((!isEditing && !isGuestUser && !formState.changes?.address) ||
 										(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
-									(isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) &&
+									(isGuestUser && !formState.changes?.address)) &&
 									(
 										<View style={styles.pinIcon}>
 											<GPSButton
