@@ -528,13 +528,13 @@ export const ProductOptionsUI = (props: any) => {
 											style={styles.slide1}
 											key={i}
 										>
-											{String(img).includes('image') ? (
+											{String(img).includes('image') || typeof img === 'number' ? (
 												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
-													source={{
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 3 / 2 }}
+													source={typeof img !== 'number' ? {
 														uri: optimizeImage(img, 'h_1024,c_limit'),
 														priority: FastImage.priority.normal,
-													}}
+													} : img}
 												/>
 											) : (
 												<>
