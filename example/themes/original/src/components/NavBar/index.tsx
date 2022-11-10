@@ -9,7 +9,7 @@ const TitleWrapper = styled.View`
   padding-horizontal: 10px;
 `
 const TitleTopWrapper = styled.View`
-  flex-grow: 1;
+  flex: 1;
   flex-direction: row;
   align-items: center;
 `
@@ -40,7 +40,8 @@ interface Props {
 	style?: ViewStyle,
 	titleWrapStyle?: ViewStyle,
 	paddingTop?: number,
-	isVertical?: boolean
+	isVertical?: boolean,
+	noMargin?: any
 }
 
 const NavBar = (props: Props) => {
@@ -96,10 +97,9 @@ const NavBar = (props: Props) => {
 						style={
 							{
 								textAlign: props.titleAlign ? props.titleAlign : 'center',
-								marginRight: props.showCall ? 0 : 40,
+								marginRight: (props.showCall || !!props.noMargin) ? 0 : 40,
 								color: props.titleColor || theme.colors.textNormal,
 								paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
-								width: '100%',
 								...props.titleStyle,
 							}
 						}
