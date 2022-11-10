@@ -172,10 +172,17 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
         <InnerContainer>
           {(!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
             <Logo style={styles.logoWrapper}>
-              <OIcon
-                url={optimizeImage(order.business?.logo || theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
-                style={styles.logo}
-              />
+              {!!order.business?.logo ? (
+                <OIcon
+                  url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                  style={styles.logo}
+                />
+              ) : (
+                <OIcon
+                  src={optimizeImage(theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                  style={styles.logo}
+                />
+              )}
             </Logo>
           )}
           <CardInfoWrapper>
