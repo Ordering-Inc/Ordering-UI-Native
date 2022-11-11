@@ -36,6 +36,7 @@ export const MyOrders = (props: any) => {
     { key: 'products', value: t('PRODUCTS', 'Products') }
   ]
   const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+  const showNavbar = theme?.bar_menu?.components?.orders?.hidden
 
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
@@ -72,47 +73,48 @@ export const MyOrders = (props: any) => {
         onRefresh={() => handleOnRefresh()}
       />
     }>
-      {isChewLayout && (
+      {(isChewLayout || showNavbar) && (
         <View style={{
           width: '100%',
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 40
+          paddingHorizontal: 40,
+          marginTop: Platform.OS === 'android' ? 50 : 30,
         }}>
+          <OButton
+            imgLeftStyle={{ width: 18 }}
+            imgRightSrc={null}
+            style={{
+              borderWidth: 0,
+              width: 26,
+              height: 26,
+              backgroundColor: '#FFF',
+              borderColor: '#FFF',
+              shadowColor: '#FFF',
+              paddingLeft: 0,
+              paddingRight: 0
+            }}
+            onClick={goToBack}
+            icon={AntDesignIcon}
+            iconProps={{
+              name: 'arrowleft',
+              size: 26
+            }}
+          />
           <OText
               size={24}
               style={{
-                marginTop: Platform.OS === 'android' ? 50 : 30,
-                paddingHorizontal: 20,
-                textTransform: 'capitalize'
+                textTransform: 'capitalize',
+                marginLeft: 20,
+                top: 2
               }}
             >
-              <OButton
-                imgLeftStyle={{ width: 18 }}
-                imgRightSrc={null}
-                style={{
-                  borderWidth: 0,
-                  width: 26,
-                  height: 26,
-                  backgroundColor: '#FFF',
-                  borderColor: '#FFF',
-                  shadowColor: '#FFF',
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                }}
-                onClick={goToBack}
-                icon={AntDesignIcon}
-                iconProps={{
-                  name: 'arrowleft',
-                  size: 26
-                }}
-              />
               {t('MY_ORDERS', 'My Orders')}
             </OText>
         </View>
       )}
-      {!hideOrders && !isChewLayout && (
+      {!hideOrders && !isChewLayout && !showNavbar && (
         <HeaderTitle text={t('MY_ORDERS', 'My Orders')} />
       )}
       {!allEmpty && (
