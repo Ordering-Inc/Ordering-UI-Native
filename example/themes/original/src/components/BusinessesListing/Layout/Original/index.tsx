@@ -186,7 +186,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			paginationProps.totalPages === paginationProps.currentPage
 		);
 
-		if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
+		if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore && businessesList?.businesses?.length > 0) {
 			getBusinesses();
 		}
 	};
