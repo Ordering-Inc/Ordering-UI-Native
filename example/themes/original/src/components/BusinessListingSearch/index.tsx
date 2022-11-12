@@ -52,7 +52,8 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     brandList,
     onNavigationRedirect,
     handleUpdateBusinessList,
-    handleUpdateProducts
+    handleUpdateProducts,
+    brandId
   } = props
 
   const screenHeight = Dimensions.get('window').height;
@@ -253,6 +254,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           onNavigationRedirect={onNavigationRedirect}
           BusinessControllerSkeletons={BusinessControllerSkeletons}
           businessPaginationProps={paginationProps}
+          franchiseId={brandId}
         />
       )}
 

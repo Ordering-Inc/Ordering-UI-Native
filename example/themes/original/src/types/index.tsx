@@ -645,6 +645,7 @@ export interface BusinessSearchParams {
 	onNavigationRedirect?: any,
 	handleUpdateProducts: any,
 	handleUpdateBusinessList?: any;
+	brandId?: number
 }
 
 export interface NoNetworkParams {
