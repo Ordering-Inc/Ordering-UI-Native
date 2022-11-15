@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -9,10 +9,11 @@ import {
 	useToast,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
+import Lottie from 'lottie-react-native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet, View, TouchableOpacity, Image, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Animated, Easing } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
@@ -43,6 +44,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
+	const [isPressed, setIsPressed] = useState(false)
+	const animationProgress = useRef(new Animated.Value(product?.favorite ? 1 : 0))
 
 	const styles = StyleSheet.create({
 		container: {
@@ -90,6 +93,14 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			textDecorationLine: 'line-through',
 			marginLeft: 7,
 			marginRight: 7
+		},
+		cardAnimation: {
+			elevation: isPressed ? 2 : 0,
+			shadowColor: '#888',
+			shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
+			shadowRadius: 18,
+			shadowOpacity: isPressed ? 0.8 : 0,
+			borderRadius: 12,
 		}
 	});
 
@@ -127,6 +138,12 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const handleChangeFavorite = () => {
 		if (auth) {
+			Animated.timing(animationProgress.current, {
+				toValue: product?.favorite ? 0 : 1,
+				duration: 5000,
+				easing: Easing.linear,
+				useNativeDriver: true
+			}).start();
 			handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
 		} else {
 			navigation && navigation.navigate('Login');
@@ -156,7 +173,12 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 						styles.container,
 						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
 						(style && { ...style }),
+						styles.cardAnimation
 					]}
+					activeOpacity={0.8}
+					delayPressIn={20}
+					onPressIn={() => setIsPressed(true)}
+					onPressOut={() => setIsPressed(false)}
 					onPress={() => handleClickproduct()}
 				>
 					<View style={{ flexDirection: 'row' }}>
@@ -181,6 +203,10 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									<TouchableOpacity
 										onPress={handleChangeFavorite}
 									>
+										<Lottie
+											progress={animationProgress.current}
+											source={theme.images?.general?.heart}
+										/>
 										<IconAntDesign
 											name={product?.favorite ? 'heart' : 'hearto'}
 											color={theme.colors.danger5}
@@ -236,20 +262,20 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								</RibbonBox>
 							)}
 							{product?.images ? (
-                <FastImage
-                  style={styles.productStyle}
-                  source={{
-                    uri: optimizeImage(product?.images, 'h_250,c_limit'),
-                    priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              ) : (
-                <OIcon
-                  src={theme?.images?.dummies?.product}
-                  style={styles.productStyle}
-                />
-              )}
+								<FastImage
+									style={styles.productStyle}
+									source={{
+										uri: optimizeImage(product?.images, 'h_250,c_limit'),
+										priority: FastImage.priority.normal,
+									}}
+									resizeMode={FastImage.resizeMode.cover}
+								/>
+							) : (
+								<OIcon
+									src={theme?.images?.dummies?.product}
+									style={styles.productStyle}
+								/>
+							)}
 						</LogoWrapper>
 
 						{(isSoldOut || maxProductQuantity <= 0) && (

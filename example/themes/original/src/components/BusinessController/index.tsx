@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import Lottie from 'lottie-react-native';
 import {
 	BusinessController as BusinessSingleCard,
 	useUtils,
@@ -11,10 +12,11 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, TouchableOpacity, View, Animated } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Animated, Easing } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
+
 import {
 	Card,
 	BusinessHero,
@@ -54,12 +56,13 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [, { showToast }] = useToast()
 	const [orderState] = useOrder();
-	const [ { auth }] = useSession()
+	const [{ auth }] = useSession()
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
-
+	const [isPressed, setIsPressed] = useState(false)
+	const animationProgress = useRef(new Animated.Value(business?.favorite ? 1 : 0))
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -111,6 +114,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 			alignItems: 'center',
 			justifyContent: 'flex-start',
 		},
+		cardAnimation: {
+			elevation: isPressed ? 8 : 0,
+			shadowColor: '#888',
+			shadowOffset: {width: 0, height: isPressed ? 2 : 0},
+			shadowRadius: 18,
+			shadowOpacity: isPressed ? 0.8 : 0,
+			borderRadius: 12,
+		}
 	});
 
 	const types = ['food', 'laundry', 'alcohol', 'groceries'];
@@ -139,6 +150,12 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	const handleChangeFavorite = () => {
 		if (auth) {
+			Animated.timing(animationProgress.current, {
+				toValue: business?.favorite ? 0 : 1,
+				duration: 5000,
+				easing: Easing.linear,
+				useNativeDriver: true
+			}).start();
 			handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
 		} else {
 			navigation && navigation.navigate('Login');
@@ -152,7 +169,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	return (
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
 			{isIntersectionObserver ? (
-				<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
+				<Card activeOpacity={0.8} delayPressIn={20} onPressIn={() => setIsPressed(true)} onPressOut={() => setIsPressed(false)} onPress={() => handleBusinessClick(business)} style={{...style, ...styles.cardAnimation}}>
 					{business?.ribbon?.enabled && (
 						<RibbonBox
 							bgColor={business?.ribbon?.color}
@@ -222,6 +239,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								<TouchableOpacity
 									onPress={handleChangeFavorite}
 								>
+									<Lottie
+										progress={animationProgress.current}
+										source={theme.images?.general?.heart}
+									/>
 									<IconAntDesign
 										name={business?.favorite ? 'heart' : 'hearto'}
 										color={theme.colors.danger5}

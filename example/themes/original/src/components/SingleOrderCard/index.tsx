@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   SingleOrderCard as SingleOrderCardController,
   useUtils,
   useOrder,
   useLanguage
 } from 'ordering-components/native';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Lottie from 'lottie-react-native';
+import { Animated, Easing, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OButton } from '../shared';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -46,6 +47,8 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   const [reorderSelected, setReorderSelected] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
+	const [isPressed, setIsPressed] = useState(false)
+	const animationProgress = useRef(new Animated.Value(order?.favorite ? 1 : 0))
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
@@ -100,7 +103,15 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     infoText: {
       flexDirection: 'row',
       alignItems: 'center'
-    }
+    },
+    cardAnimation: {
+			elevation: isPressed ? 2 : 0,
+			shadowColor: '#888',
+			shadowOffset: {width: 0, height: isPressed ? 2 : 0},
+			shadowRadius: 18,
+			shadowOpacity: isPressed ? 0.8 : 0,
+			borderRadius: 12,
+		}
   });
 
   const handleReorderClick = (order: any) => {
@@ -154,6 +165,12 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   };
 
   const handleChangeFavorite = () => {
+    Animated.timing(animationProgress.current, {
+      toValue: order?.favorite ? 0 : 1,
+      duration: 5000,
+      easing: Easing.linear,
+      useNativeDriver: true
+    }).start();
     handleFavoriteOrder && handleFavoriteOrder(!order?.favorite)
   };
 
@@ -167,7 +184,11 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     <>
       <Container
         onPress={() => handleClickViewOrder(order?.uuid)}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
+        delayPressIn={20}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+        style={styles.cardAnimation}
       >
         <InnerContainer>
           {(!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
@@ -284,6 +305,10 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   onPress={handleChangeFavorite}
                   style={{ marginTop: 5 }}
                 >
+                  <Lottie
+										progress={animationProgress.current}
+										source={theme.images?.general?.heart}
+									/>
                   <IconAntDesign
                     name={order?.favorite ? 'heart' : 'hearto'}
                     color={theme.colors.danger5}
