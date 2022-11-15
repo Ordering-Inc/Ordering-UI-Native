@@ -52,3 +52,13 @@ export const RecaptchaButton = styled.View`
   align-items: center;
   margin-bottom: 10px;
 `
+export const OTab = styled.View`
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  margin-end: 14px;
+`;
+
+export const TabBtn = styled.TouchableOpacity`
+  min-height: 30px;
+  height: 30px;
+`;
