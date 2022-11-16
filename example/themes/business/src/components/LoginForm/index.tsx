@@ -227,6 +227,31 @@ const LoginFormUI = (props: LoginParams) => {
     handleSubmit(onSubmit)();
   };
 
+  const mainLogin = (values) => {
+    if (loginTab === 'otp') {
+			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
+				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+				return
+			}
+			if (loginTab === 'otp') {
+				generateOtpCode({
+					...values,
+					...phoneInputData.phone
+				})
+			}
+			setWillVerifyOtpState(true)
+		} else {
+			if (phoneInputData.error) {
+				showToast(ToastType.Error, phoneInputData.error);
+				return;
+			}
+			handleButtonLoginClick({
+				...values,
+				...phoneInputData.phone,
+			});
+		}
+  }
+
   const onSubmit = (values: any) => {
     Keyboard.dismiss();
 
@@ -245,11 +270,7 @@ const LoginFormUI = (props: LoginParams) => {
       setSubmitted(true)
       return
     }
-
-    handleButtonLoginClick({
-      ...values,
-      ...phoneInputData.phone
-    });
+    mainLogin(values)
   };
 
   const handleChangeOtpType = (type: string) => {
@@ -396,30 +417,7 @@ const LoginFormUI = (props: LoginParams) => {
     if (values?.project_name) {
       delete values.project_name
     }
-    handleButtonLoginClick({ ...values })
-
-    if (loginTab === 'otp') {
-			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
-				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
-				return
-			}
-			if (loginTab === 'otp') {
-				generateOtpCode({
-					...values,
-					...phoneInputData.phone
-				})
-			}
-			setWillVerifyOtpState(true)
-		} else {
-			if (phoneInputData.error) {
-				showToast(ToastType.Error, phoneInputData.error);
-				return;
-			}
-			handleButtonLoginClick({
-				...values,
-				...phoneInputData.phone,
-			});
-		}
+    mainLogin(values)
     setSubmitted(false)
   }, [ordering, submitted])
 
