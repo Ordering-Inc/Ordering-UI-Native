@@ -7,7 +7,7 @@ import {
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
 import { View, TouchableOpacity, FlatList, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
-import { Placeholder,	PlaceholderLine, Fade } from 'rn-placeholder'
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { OText, OIcon, OModal, OButton } from '../shared'
 import { getIconCard, flatArray } from '../../utils'
 import { StripeElementsForm } from '../StripeElementsForm'
@@ -37,7 +37,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
 
-	const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
+  const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
 
   const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
   const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
@@ -54,52 +54,52 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   }
 
   const getPayIcon = (method: string) => {
-		switch (method) {
-			case 'cash':
-				return theme.images.general.cash
-			case 'card_delivery':
-				return theme.images.general.carddelivery
-			case 'paypal':
-				return theme.images.general.paypal
-			case 'stripe':
-				return theme.images.general.stripe
-			case 'stripe_direct':
-				return theme.images.general.stripecc
-			case 'stripe_connect':
-				return theme.images.general.stripes
-			case 'stripe_redirect':
-				return theme.images.general.stripesb
-			default:
-				return theme.images.general.creditCard
-		}
-	}
+    switch (method) {
+      case 'cash':
+        return theme.images.general.cash
+      case 'card_delivery':
+        return theme.images.general.carddelivery
+      case 'paypal':
+        return theme.images.general.paypal
+      case 'stripe':
+        return theme.images.general.stripe
+      case 'stripe_direct':
+        return theme.images.general.stripecc
+      case 'stripe_connect':
+        return theme.images.general.stripes
+      case 'stripe_redirect':
+        return theme.images.general.stripesb
+      default:
+        return theme.images.general.creditCard
+    }
+  }
 
   const renderPaymethods = ({ item }: any) => {
-		return (
-			<TouchableOpacity
-				onPress={() => handleSelectPaymethod(item)}
-			>
-				<PMItem
-					key={item.id}
-					isActive={paymethodSelected?.paymethod_id === item.paymethod_id}
-				>
-					<OIcon
-						src={getPayIcon(item.paymethod?.gateway)}
-						width={20}
-						height={20}
-						color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : theme.colors.backgroundDark}
-					/>
-					<OText
-						size={10}
-						style={{ margin: 0, marginTop: 4 }}
-						color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : '#000'}
-					>
-						{t(item?.paymethod?.gateway.toUpperCase(), item?.paymethod?.name)}
-					</OText>
-				</PMItem>
-			</TouchableOpacity>
-		)
-	}
+    return (
+      <TouchableOpacity
+        onPress={() => handleSelectPaymethod(item)}
+      >
+        <PMItem
+          key={item.id}
+          isActive={paymethodSelected?.paymethod_id === item.paymethod_id}
+        >
+          <OIcon
+            src={getPayIcon(item.paymethod?.gateway)}
+            width={20}
+            height={20}
+            color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : theme.colors.backgroundDark}
+          />
+          <OText
+            size={10}
+            style={{ margin: 0, marginTop: 4 }}
+            color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : '#000'}
+          >
+            {t(item?.paymethod?.gateway.toUpperCase(), item?.paymethod?.name)}
+          </OText>
+        </PMItem>
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <PMContainer>
@@ -123,10 +123,10 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
       ) : (
         <FlatList
           horizontal
-					showsHorizontalScrollIndicator={false}
-          data={businessPaymethods.result.filter((paymethod: any) => paymethodsAndWallets.paymethods.find((item: any) => item.id === paymethod.paymethod_id))}
-					renderItem={renderPaymethods}
-					keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
+          showsHorizontalScrollIndicator={false}
+          data={businessPaymethods?.result?.filter((paymethod: any) => paymethodsAndWallets.paymethods.find((item: any) => item.id === paymethod.paymethod_id))}
+          renderItem={renderPaymethods}
+          keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
         />
       )}
       {!paymethodsAndWallets.loading && !paymethodsAndWallets.error && paymethodsAndWallets.paymethods.length === 0 && (
@@ -138,22 +138,22 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
       {paymethodSelected?.paymethod?.gateway === 'stripe' && (
         <View>
           <OButton
-						text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-						bgColor={theme.colors.white}
-						borderColor={theme.colors.primary}
-						style={styles.btnAddStyle}
-						textStyle={{ color: theme.colors.primary, fontSize: 12 }}
-						imgRightSrc={null}
-						onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
-					/>
+            text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
+            bgColor={theme.colors.white}
+            borderColor={theme.colors.primary}
+            style={styles.btnAddStyle}
+            textStyle={{ color: theme.colors.primary, fontSize: 12 }}
+            imgRightSrc={null}
+            onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
+          />
           <StripeCardsList
-						paymethod={paymethodSelected?.paymethod}
-						businessId={businessIds[0]}
+            paymethod={paymethodSelected?.paymethod}
+            businessId={businessIds[0]}
             businessIds={businessIds}
-						publicKey={paymethodSelected?.data?.publishable}
-						payType={paymethodSelected?.paymethod?.name}
-						onSelectCard={handlePaymethodDataChange}
-					/>
+            publicKey={paymethodSelected?.data?.publishable}
+            payType={paymethodSelected?.paymethod?.name}
+            onSelectCard={handlePaymethodDataChange}
+          />
         </View>
       )}
 
@@ -170,7 +170,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         </>
       ) : (
         <>
-          {walletsState.result.filter((wallet: any) => paymethodsAndWallets.wallets.find((item: any) => item.type === wallet.type)).map((wallet: any, idx: any) => walletName[wallet.type]?.isActive && (
+          {walletsState?.result?.filter((wallet: any) => paymethodsAndWallets.wallets.find((item: any) => item.type === wallet.type)).map((wallet: any, idx: any) => walletName[wallet.type]?.isActive && (
             <WalletItem
               key={wallet.type}
               isBottomBorder={idx === paymethodsAndWallets.wallets?.length - 1}
@@ -197,40 +197,40 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
       )}
 
       <OModal
-				entireModal
-				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-				open={addCardOpen.stripe}
-				onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
-				style={{ backgroundColor: 'red' }}
-			>
-				<KeyboardAvoidingView
-					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-					keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-					enabled={Platform.OS === 'ios' ? true : false}
-				>
-					<StripeElementsForm
-						toSave
-						businessId={businessIds[0]}
+        entireModal
+        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+        open={addCardOpen.stripe}
+        onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+        style={{ backgroundColor: 'red' }}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <StripeElementsForm
+            toSave
+            businessId={businessIds[0]}
             businessIds={businessIds}
             publicKey={paymethodSelected?.data?.publishable}
-						requirements={props.clientSecret}
-						onSelectCard={handlePaymethodDataChange}
-						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
-					/>
-				</KeyboardAvoidingView>
-			</OModal>
+            requirements={props.clientSecret}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+          />
+        </KeyboardAvoidingView>
+      </OModal>
     </PMContainer>
   )
 }
 
 const styles = StyleSheet.create({
-	btnAddStyle: {
-		marginVertical: 20,
-		borderRadius: 7.6,
-		shadowOpacity: 0,
-		height: 44,
-		borderWidth: 1
-	},
+  btnAddStyle: {
+    marginVertical: 20,
+    borderRadius: 7.6,
+    shadowOpacity: 0,
+    height: 44,
+    borderWidth: 1
+  },
 })
 
 

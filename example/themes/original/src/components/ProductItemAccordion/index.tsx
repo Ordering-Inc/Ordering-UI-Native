@@ -157,9 +157,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							{(product?.images || theme?.images?.dummies?.product) && (
 								<ProductImage>
 									{isFromCheckout ? (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
+										product?.images ?
+											<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} /> :
+											<OIcon url={theme?.images?.dummies?.product} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
 									) : (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={styles.productImage} />
+										product?.images ?
+											<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={styles.productImage} /> :
+											<OIcon url={theme?.images?.dummies?.product} style={styles.productImage} />
 									)}
 								</ProductImage>
 							)}
@@ -172,7 +176,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										{parseDate(product?.calendar_event?.start, { outputFormat: 'hh:mm a' })} - {parseDate(product?.calendar_event?.end, { outputFormat: 'hh:mm a' })}
 									</OText>
 								</View>
-							): (
+							) : (
 								<>
 									{isCartProduct && !isCartPending && getProductMax && (
 										<ProductInfo>
@@ -287,22 +291,22 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				</View>
 			</AccordionSection>
 			<OModal
-        open={isServiceOpen}
-        onClose={() => setIsServiceOpen(false)}
-        entireModal
-      >
-        <ServiceForm
-          isCartProduct
-          isService
-          businessId={product?.business_id}
+				open={isServiceOpen}
+				onClose={() => setIsServiceOpen(false)}
+				entireModal
+			>
+				<ServiceForm
+					isCartProduct
+					isService
+					businessId={product?.business_id}
 					categoryId={product?.category_id}
 					productId={product?.id}
 					productCart={product}
-          onSave={() => setIsServiceOpen(false)}
-          onClose={() => setIsServiceOpen(false)}
-          professionalSelected={product?.calendar_event?.professional}
-        />
-      </OModal>
+					onSave={() => setIsServiceOpen(false)}
+					onClose={() => setIsServiceOpen(false)}
+					professionalSelected={product?.calendar_event?.professional}
+				/>
+			</OModal>
 		</>
 	)
 }
