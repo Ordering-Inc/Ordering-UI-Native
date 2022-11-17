@@ -24,7 +24,6 @@ import {
   WalletTransactionsWrapper
 } from './styles'
 
-import NavBar from '../NavBar'
 import { OButton, OIcon, OText, OModal } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { WalletTransactions } from '../WalletTransactions'
@@ -112,15 +111,7 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-          <NavBar
-            title={isChewLayout ? '' : t('WALLETS', 'Wallets')}
-            titleAlign={'center'}
-            onActionLeft={goToBack}
-            showCall={false}
-            paddingTop={10}
-            btnStyle={{ paddingLeft: 0 }}
-            style={{ flex: 1 }}
-          />
+        <OText size={24}>{t('WALLETS', 'Wallets')}</OText>
           {isChewLayout && (
             <OButton
               text={t('WALLET_HISTORY', 'Wallet history')}
