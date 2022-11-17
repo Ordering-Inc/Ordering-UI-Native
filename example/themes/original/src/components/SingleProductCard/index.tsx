@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -9,17 +9,17 @@ import {
 	useToast,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
-import Lottie from 'lottie-react-native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet, View, TouchableOpacity, Image, Animated, Easing } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
+import { LottieProvider } from '../../providers/LottieProvider';
 
 function SingleProductCardPropsAreEqual(prevProps: any, nextProps: any) {
 	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) &&
@@ -45,7 +45,6 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
 	const [isPressed, setIsPressed] = useState(false)
-	const animationProgress = useRef(new Animated.Value(product?.favorite ? 1 : 0))
 
 	const styles = StyleSheet.create({
 		container: {
@@ -138,12 +137,6 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const handleChangeFavorite = () => {
 		if (auth) {
-			Animated.timing(animationProgress.current, {
-				toValue: product?.favorite ? 0 : 1,
-				duration: 5000,
-				easing: Easing.linear,
-				useNativeDriver: true
-			}).start();
 			handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
 		} else {
 			navigation && navigation.navigate('Login');
@@ -200,19 +193,20 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									{product?.name}
 								</OText>
 								{!isPreviously && (
-									<TouchableOpacity
-										onPress={handleChangeFavorite}
+									<LottieProvider
+										src={theme.images?.general?.heart}
+										onClick={handleChangeFavorite}
+										initialValue={product?.favorite ? 0.5 : 0}
+										toValue={product?.favorite ? 0 : 0.5}
+										style={{ marginTop: 5 }}
+										disableAnimation={!auth}
 									>
-										<Lottie
-											progress={animationProgress.current}
-											source={theme.images?.general?.heart}
-										/>
 										<IconAntDesign
 											name={product?.favorite ? 'heart' : 'hearto'}
 											color={theme.colors.danger5}
 											size={18}
 										/>
-									</TouchableOpacity>
+									</LottieProvider>
 								)}
 							</View>
 							<PricesContainer>

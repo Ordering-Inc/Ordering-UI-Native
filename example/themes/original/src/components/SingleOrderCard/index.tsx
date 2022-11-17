@@ -24,6 +24,7 @@ import {
   UnreadMessageCounter,
   Price
 } from './styles';
+import { LottieProvider } from '../../providers/LottieProvider';
 
 const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const {
@@ -47,8 +48,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   const [reorderSelected, setReorderSelected] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
-	const [isPressed, setIsPressed] = useState(false)
-	const animationProgress = useRef(new Animated.Value(order?.favorite ? 1 : 0))
+  const [isPressed, setIsPressed] = useState(false)
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
@@ -105,13 +105,13 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       alignItems: 'center'
     },
     cardAnimation: {
-			elevation: isPressed ? 2 : 0,
-			shadowColor: '#888',
-			shadowOffset: {width: 0, height: isPressed ? 2 : 0},
-			shadowRadius: 18,
-			shadowOpacity: isPressed ? 0.8 : 0,
-			borderRadius: 12,
-		}
+      elevation: isPressed ? 2 : 0,
+      shadowColor: '#888',
+      shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
+      shadowRadius: 18,
+      shadowOpacity: isPressed ? 0.8 : 0,
+      borderRadius: 12,
+    }
   });
 
   const handleReorderClick = (order: any) => {
@@ -165,12 +165,6 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   };
 
   const handleChangeFavorite = () => {
-    Animated.timing(animationProgress.current, {
-      toValue: order?.favorite ? 0 : 1,
-      duration: 5000,
-      easing: Easing.linear,
-      useNativeDriver: true
-    }).start();
     handleFavoriteOrder && handleFavoriteOrder(!order?.favorite)
   };
 
@@ -301,20 +295,20 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                 </OText>
               </View>
               {!isMessageView && (
-                <TouchableOpacity
-                  onPress={handleChangeFavorite}
+                <LottieProvider
+                  src={theme.images?.general?.heart}
+                  onClick={handleChangeFavorite}
+                  initialValue={order?.favorite ? 0.5 : 0}
+                  toValue={order?.favorite ? 0 : 0.5}
                   style={{ marginTop: 5 }}
                 >
-                  <Lottie
-										progress={animationProgress.current}
-										source={theme.images?.general?.heart}
-									/>
                   <IconAntDesign
                     name={order?.favorite ? 'heart' : 'hearto'}
                     color={theme.colors.danger5}
                     size={16}
+                    style={{ top: 7 }}
                   />
-                </TouchableOpacity>
+                </LottieProvider>
               )}
             </ContentFooter>
           </CardInfoWrapper>

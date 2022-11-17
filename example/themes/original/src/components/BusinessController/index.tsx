@@ -12,7 +12,7 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, TouchableOpacity, View, Animated, Easing } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
@@ -34,6 +34,7 @@ import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
+import { LottieProvider } from '../../providers/LottieProvider';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const {
@@ -62,7 +63,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const theme = useTheme()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 	const [isPressed, setIsPressed] = useState(false)
-	const animationProgress = useRef(new Animated.Value(business?.favorite ? 1 : 0))
+
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -117,7 +118,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		cardAnimation: {
 			elevation: isPressed ? 8 : 0,
 			shadowColor: '#888',
-			shadowOffset: {width: 0, height: isPressed ? 2 : 0},
+			shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
 			shadowRadius: 18,
 			shadowOpacity: isPressed ? 0.8 : 0,
 			borderRadius: 12,
@@ -150,12 +151,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	const handleChangeFavorite = () => {
 		if (auth) {
-			Animated.timing(animationProgress.current, {
-				toValue: business?.favorite ? 0 : 1,
-				duration: 5000,
-				easing: Easing.linear,
-				useNativeDriver: true
-			}).start();
 			handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
 		} else {
 			navigation && navigation.navigate('Login');
@@ -169,7 +164,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	return (
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
 			{isIntersectionObserver ? (
-				<Card activeOpacity={0.8} delayPressIn={20} onPressIn={() => setIsPressed(true)} onPressOut={() => setIsPressed(false)} onPress={() => handleBusinessClick(business)} style={{...style, ...styles.cardAnimation}}>
+				<Card activeOpacity={0.8} delayPressIn={20} onPressIn={() => setIsPressed(true)} onPressOut={() => setIsPressed(false)} onPress={() => handleBusinessClick(business)} style={{ ...style, ...styles.cardAnimation }}>
 					{business?.ribbon?.enabled && (
 						<RibbonBox
 							bgColor={business?.ribbon?.color}
@@ -236,19 +231,21 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										</OText>
 									</Reviews>
 								)}
-								<TouchableOpacity
-									onPress={handleChangeFavorite}
+								<LottieProvider
+									src={theme.images?.general?.heart}
+									onClick={handleChangeFavorite}
+									initialValue={business?.favorite ? 0.5 : 0}
+									disableAnimation={!auth}
+									toValue={business?.favorite ? 0 : 0.5}
 								>
-									<Lottie
-										progress={animationProgress.current}
-										source={theme.images?.general?.heart}
-									/>
-									<IconAntDesign
-										name={business?.favorite ? 'heart' : 'hearto'}
-										color={theme.colors.danger5}
-										size={18}
-									/>
-								</TouchableOpacity>
+									<>
+										<IconAntDesign
+											name={business?.favorite ? 'heart' : 'hearto'}
+											color={theme.colors.danger5}
+											size={18}
+										/>
+									</>
+								</LottieProvider>
 							</ReviewAndFavorite>
 						</BusinessInfo>
 						<OText
