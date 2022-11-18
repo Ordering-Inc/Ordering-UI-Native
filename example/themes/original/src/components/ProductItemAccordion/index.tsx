@@ -191,7 +191,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										)
 									)}
 								</ProductImage>
-								)}
+							)}
 							{!!product?.calendar_event ? (
 								<View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
 									<View>
@@ -201,7 +201,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										{parseDate(product?.calendar_event?.start, { outputFormat: 'hh:mm a' })} - {parseDate(product?.calendar_event?.end, { outputFormat: 'hh:mm a' })}
 									</OText>
 								</View>
-							): (
+							) : (
 								<>
 									{isCartProduct && !isCartPending && getProductMax && (
 										<ProductInfo>
@@ -316,22 +316,22 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				</View>
 			</AccordionSection>
 			<OModal
-        open={isServiceOpen}
-        onClose={() => setIsServiceOpen(false)}
-        entireModal
-      >
-        <ServiceForm
-          isCartProduct
-          isService
-          businessId={product?.business_id}
+				open={isServiceOpen}
+				onClose={() => setIsServiceOpen(false)}
+				entireModal
+			>
+				<ServiceForm
+					isCartProduct
+					isService
+					businessId={product?.business_id}
 					categoryId={product?.category_id}
 					productId={product?.id}
 					productCart={product}
-          onSave={() => setIsServiceOpen(false)}
-          onClose={() => setIsServiceOpen(false)}
-          professionalSelected={product?.calendar_event?.professional}
-        />
-      </OModal>
+					onSave={() => setIsServiceOpen(false)}
+					onClose={() => setIsServiceOpen(false)}
+					professionalSelected={product?.calendar_event?.professional}
+				/>
+			</OModal>
 		</>
 	)
 }
