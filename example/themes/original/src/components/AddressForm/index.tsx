@@ -589,10 +589,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 													borderColor: theme.colors.border,
 													flexGrow: 1,
 													fontSize: 15,
-													paddingHorizontal: 16,
+													paddingLeft: 16,
+													paddingRight: 32,
 													minHeight: 50,
 													fontFamily: 'Poppins-Regular',
-													marginBottom: 24,
+													marginBottom: 24
 												},
 											}}
 										/>
@@ -600,9 +601,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 
 								{(
-									((!isEditing && !isGuestUser && !formState.changes?.address) ||
-										(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
-									(isGuestUser && !formState.changes?.address)) &&
+									((!isEditing && !isGuestUser) ||
+										(isEditing && !isGuestUser)) ||
+									(isGuestUser)) &&
 									(
 										<View style={styles.pinIcon}>
 											<GPSButton

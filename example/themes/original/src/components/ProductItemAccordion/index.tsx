@@ -5,6 +5,7 @@ import { useTheme } from 'styled-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
 import { ServiceForm } from '../ServiceForm';
+import FastImage from 'react-native-fast-image'
 
 import {
 	Accordion,
@@ -157,12 +158,40 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							{(product?.images || theme?.images?.dummies?.product) && (
 								<ProductImage>
 									{isFromCheckout ? (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
+										product?.images ? (
+											<FastImage
+												style={{ ...styles.productImage, ...{ width: 82, height: 82 } }}
+												source={{
+													uri: optimizeImage(product?.images, 'h_100,c_limit'),
+													priority: FastImage.priority.normal,
+												}}
+												resizeMode={FastImage.resizeMode.cover}
+											/>
+										) : (
+											<OIcon
+												src={theme?.images?.dummies?.product}
+												style={{ ...styles.productImage, ...{ width: 82, height: 82 } }}
+											/>
+										)
 									) : (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={styles.productImage} />
+										product?.images ? (
+											<FastImage
+												style={styles.productImage}
+												source={{
+													uri: optimizeImage(product?.images, 'h_100,c_limit'),
+													priority: FastImage.priority.normal,
+												}}
+												resizeMode={FastImage.resizeMode.cover}
+											/>
+										) : (
+											<OIcon
+												src={theme?.images?.dummies?.product}
+												style={styles.productImage}
+											/>
+										)
 									)}
 								</ProductImage>
-							)}
+								)}
 							{!!product?.calendar_event ? (
 								<View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
 									<View>
