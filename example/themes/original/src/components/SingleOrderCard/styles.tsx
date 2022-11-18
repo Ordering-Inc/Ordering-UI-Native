@@ -1,12 +1,5 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.TouchableOpacity`
-  border-radius: 7.6px;
-	box-shadow: 0 1px 2px #0000001A;
-  margin-bottom: 10px;
-  padding-vertical: 5px;
-`
-
 export const InnerContainer = styled.View`
   flex-direction: row;
   width: 100%;

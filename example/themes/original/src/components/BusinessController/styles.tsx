@@ -1,12 +1,5 @@
 import styled, { css } from 'styled-components/native';
 
-export const Card = styled.TouchableOpacity`
-  margin-vertical: 20px;
-  border-radius: 7.6px;
-  width: 100%;
-  position: relative;
-`
-
 export const BusinessHero = styled.View`
   position: relative;
   border-top-right-radius: 7.6px;
