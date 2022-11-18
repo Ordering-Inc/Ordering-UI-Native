@@ -146,7 +146,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 												</AddButton>
 											</View>
 											<View>
-												<OIcon url={product.images} style={styles.imageStyle} />
+												<OIcon url={product?.images || theme?.images?.dummies?.product} style={styles.imageStyle} />
 											</View>
 										</Item>
 									)) : (
