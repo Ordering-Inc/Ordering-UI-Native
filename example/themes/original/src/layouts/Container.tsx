@@ -1,6 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components/native';
-import { Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import styled, { css, useTheme } from 'styled-components/native';
+import { Platform, View } from 'react-native';
 
 const ContainerStyled = styled.ScrollView`
   flex: 1;
@@ -10,17 +11,20 @@ const ContainerStyled = styled.ScrollView`
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
 `;
 
-const SafeAreaStyled = styled.SafeAreaView`
-  flex: 1;
-  background-color: ${(props: any) => props.theme.colors.backgroundPage};
-`;
-
 export const Container = (props: any) => {
+  const theme = useTheme()
+  const insets = useSafeAreaInsets()
   return (
-    <SafeAreaStyled>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: insets.top,
+        backgroundColor: theme.colors.backgroundPage
+      }}
+    >
       <ContainerStyled {...props} ref={props?.forwardRef} keyboardShouldPersistTaps='handled' style={{...props.style}}>
         {props.children}
       </ContainerStyled>
-    </SafeAreaStyled>
+    </View>
   )
 }
