@@ -77,7 +77,7 @@ const WalletsUI = (props: any) => {
       isActive: isWalletCashEnabled
     },
     credit_point: {
-      name: t('CREDITS_POINTS_WALLET', 'Credit Points Wallet'),
+      name: t('POINTS_WALLET', 'Points Wallet'),
       value: 1,
       isActive: isWalletPointsEnabled
     }
