@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+
+
+import React, { useState, useEffect, useRef } from 'react'
 import {
   useLanguage,
   useUtils,
@@ -10,7 +12,8 @@ import {
   View,
   StyleSheet,
   I18nManager,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { ReviewCustomerParams } from '../../types'
@@ -52,12 +55,12 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   const { top, bottom } = useSafeAreaInsets()
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
-
+  const scrollref = useRef<any>()
   const styles = StyleSheet.create({
     photoWrapper: {
       shadowColor: theme.colors.black,
       shadowRadius: 3,
-      shadowOffset: {width: 1, height: 4},
+      shadowOffset: { width: 1, height: 4 },
       elevation: 3,
       borderRadius: 8,
       shadowOpacity: 0.1,
@@ -95,11 +98,11 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   })
 
   const qualificationList = [
-    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
+    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0, parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
     { key: 2, text: t('BAD', 'Bad'), percent: 0.25, parentStyle: { left: '25%' }, isInnerStyle: true, pointerColor: true },
     { key: 3, text: t('OKAY', 'Okay'), percent: 0.5, parentStyle: { left: '50%' }, isInnerStyle: true, pointerColor: true },
     { key: 4, text: t('GOOD', 'Good'), percent: 0.75, parentStyle: { left: '75%' }, isInnerStyle: true, pointerColor: true },
-    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
+    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false, pointerColor: false }
   ]
 
   const commentsList = reviewCommentList('customer')
@@ -142,6 +145,16 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
 
   }, [actionState.error])
 
+  useEffect(() => {
+    if (scrollref?.current) {
+      Keyboard.addListener('keyboardDidShow', () => {
+        scrollref.current.scrollToEnd()
+      })
+    }
+  }, [scrollref?.current])
+
+  const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`?.replace('  ', ' ')?.trim() ?? ''
+
   return (
     <KeyboardAvoidingView
       enabled
@@ -179,6 +192,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
       <Content
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 30 }}
+        ref={scrollref}
       >
         <CustomerInfoContainer>
           <View
@@ -196,20 +210,20 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               style={{ borderRadius: 7.6 }}
             />
           </View>
-          <OText
+          {!!customerName && <OText
             size={14}
             weight="500"
             style={{
               marginTop: 16
             }}
           >
-            {order?.customer?.name} {order?.customer?.middle_name} {order?.customer?.lastname} {order?.customer?.second_lastname}
-          </OText>
+            {customerName}
+          </OText>}
         </CustomerInfoContainer>
         <OText
           size={12}
         >
-          {t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', `${order?.customer?.name} ${order?.customer?.middle_name} ${order?.customer?.lastname} ${order?.customer?.second_lastname}`)}
+          {customerName ? t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', customerName) : t('HOW_WAS_YOUR_NO_CUSTOMER', 'How was your experience?')}
         </OText>
         <RatingBarContainer>
           <LinearGradient
@@ -271,7 +285,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
               imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
               imgRightStyle={{ right: 5, margin: 5 }}
-              onClick={() => handleChangeComment(commentItem) }
+              onClick={() => handleChangeComment(commentItem)}
             />
           ))}
         </CommentsButtonGroup>
@@ -299,7 +313,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
       </ActionButtonWrapper>
       <Alert
         open={alertState.open}
-        onAccept={() => setAlertState({  open: false, content: [] })}
+        onAccept={() => setAlertState({ open: false, content: [] })}
         onClose={() => setAlertState({ open: false, content: [] })}
         content={alertState.content}
         title={t('ERROR', 'Error')}
