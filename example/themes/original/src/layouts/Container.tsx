@@ -19,7 +19,7 @@ export const Container = (props: any) => {
         flex: 1,
         backgroundColor: theme.colors.backgroundPage
       }}
-      edges={['bottom']}
+      edges={['top']}
     >
       <ContainerStyled {...props} ref={props?.forwardRef} keyboardShouldPersistTaps='handled' style={{...props.style}}>
         {props.children}
