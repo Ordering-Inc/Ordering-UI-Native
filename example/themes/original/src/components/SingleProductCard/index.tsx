@@ -11,15 +11,15 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
+import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
 import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
-import { LottieProvider } from '../../providers/LottieProvider';
+import { LottieAnimation } from '../LottieAnimation';
+import { CardAnimation } from '../shared/CardAnimation'
 
 function SingleProductCardPropsAreEqual(prevProps: any, nextProps: any) {
 	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) &&
@@ -44,15 +44,20 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
-	const [isPressed, setIsPressed] = useState(false)
 
 	const styles = StyleSheet.create({
 		container: {
 			borderWidth: 1,
-			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			marginBottom: 25,
-			minHeight: hideAddButton ? 100 : 165
+			minHeight: hideAddButton ? 100 : 165,
+			flex: 1,
+			flexDirection: hideAddButton ? 'row' : 'column',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			padding: 12,
+			borderRadius: 10,
+			position: 'relative'
 		},
 		titleWrapper: {
 			flexDirection: 'row',
@@ -92,14 +97,6 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			textDecorationLine: 'line-through',
 			marginLeft: 7,
 			marginRight: 7
-		},
-		cardAnimation: {
-			elevation: isPressed ? 2 : 0,
-			shadowColor: '#888',
-			shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
-			shadowRadius: 18,
-			shadowOpacity: isPressed ? 0.8 : 0,
-			borderRadius: 12,
 		}
 	});
 
@@ -160,19 +157,13 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	return (
 		<InView style={{ minHeight: hideAddButton ? 125 : 190 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
-				<CardContainer
-					showAddButton={!hideAddButton}
+				<CardAnimation
+					onClick={() => handleClickproduct()}
 					style={[
 						styles.container,
 						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
-						(style && { ...style }),
-						styles.cardAnimation
+						(style && { ...style })
 					]}
-					activeOpacity={0.8}
-					delayPressIn={20}
-					onPressIn={() => setIsPressed(true)}
-					onPressOut={() => setIsPressed(false)}
-					onPress={() => handleClickproduct()}
 				>
 					<View style={{ flexDirection: 'row' }}>
 						{productAddedToCartLength > 0 && (
@@ -193,20 +184,15 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									{product?.name}
 								</OText>
 								{!isPreviously && (
-									<LottieProvider
-										src={theme.images?.general?.heart}
+									<LottieAnimation
+										type='favorite'
 										onClick={handleChangeFavorite}
-										initialValue={product?.favorite ? 0.5 : 0}
-										toValue={product?.favorite ? 0 : 0.5}
-										style={{ marginTop: 5 }}
+										initialValue={product?.favorite ? 1 : 0}
+										toValue={product?.favorite ? 0 : 1}
 										disableAnimation={!auth}
-									>
-										<IconAntDesign
-											name={product?.favorite ? 'heart' : 'hearto'}
-											color={theme.colors.danger5}
-											size={18}
-										/>
-									</LottieProvider>
+										iconProps={{ color: theme.colors.danger5, size: 18 }}
+										isActive={product?.favorite}
+									/>
 								)}
 							</View>
 							<PricesContainer>
@@ -295,7 +281,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							text={t('ADD', 'Add')}
 						/>
 					)}
-				</CardContainer>
+				</CardAnimation>
 			) : (
 				<View style={{ marginBottom: 28, padding: 12, height: hideAddButton ? 125 : 165 }}>
 					<Placeholder style={{ padding: 5 }} Animation={Fade}>
