@@ -33,7 +33,7 @@ const OBottomPopup = (props: Props) => {
 	
 	return (
 		<Modal
-			animationType='slide'
+			animationType='fade'
 			transparent={transparent}
 			visible={open}
 			onRequestClose={() => onClose()}
