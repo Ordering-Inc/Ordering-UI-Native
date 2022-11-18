@@ -8,12 +8,10 @@ import {
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OButton } from '../shared';
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { SingleOrderCardParams } from '../../types';
 import { OAlert } from '../../../../../src/components/shared'
 
 import {
-  Container,
   InnerContainer,
   Logo,
   CardInfoWrapper,
@@ -23,6 +21,8 @@ import {
   UnreadMessageCounter,
   Price
 } from './styles';
+import { LottieAnimation } from '../LottieAnimation';
+import { CardAnimation } from '../shared/CardAnimation';
 
 const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const {
@@ -46,10 +46,16 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   const [reorderSelected, setReorderSelected] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
+  const [isPressed, setIsPressed] = useState(false)
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
   const styles = StyleSheet.create({
+    container: {
+      borderRadius: 7.6,
+      marginBottom: 10,
+      paddingVertical: 5,
+    },
     logo: {
       borderRadius: 8,
       width: 64,
@@ -100,6 +106,14 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     infoText: {
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    cardAnimation: {
+      elevation: isPressed ? 2 : 0,
+      shadowColor: '#888',
+      shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
+      shadowRadius: 18,
+      shadowOpacity: isPressed ? 0.8 : 0,
+      borderRadius: 12,
     }
   });
 
@@ -165,9 +179,9 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   return (
     <>
-      <Container
-        onPress={() => handleClickViewOrder(order?.uuid)}
-        activeOpacity={0.7}
+      <CardAnimation
+        onClick={() => handleClickViewOrder(order?.uuid)}
+        style={[styles.container]}
       >
         <InnerContainer>
           {(!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
@@ -280,21 +294,20 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                 </OText>
               </View>
               {!isMessageView && (
-                <TouchableOpacity
-                  onPress={handleChangeFavorite}
-                  style={{ marginTop: 5 }}
-                >
-                  <IconAntDesign
-                    name={order?.favorite ? 'heart' : 'hearto'}
-                    color={theme.colors.danger5}
-                    size={16}
-                  />
-                </TouchableOpacity>
+                <LottieAnimation
+                  type='favorite'
+                  onClick={handleChangeFavorite}
+                  initialValue={order?.favorite ? 1 : 0}
+                  toValue={order?.favorite ? 0 : 1}
+                  style={{ marginBottom: 5 }}
+                  iconProps={{ color: theme.colors.danger5, size: 16, style: { top: 7 } }}
+                  isActive={order?.favorite}
+                />
               )}
             </ContentFooter>
           </CardInfoWrapper>
         </InnerContainer>
-      </Container>
+      </CardAnimation>
       <OAlert
         open={confirm.open}
         title={confirm.title}
