@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
@@ -136,16 +136,25 @@ const WalletsUI = (props: any) => {
                 showsHorizontalScrollIndicator={false}
               >
                 {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
-                  <Pressable
+                  <TouchableOpacity
                     key={wallet.id}
                     onPress={() => handleChangeTab(wallet)}
                   >
-                    <OTab isSelected={tabSelected === wallet.type}>
-                      <OText size={18} color={tabSelected === wallet.type && theme.colors.primary}>
+                    <OTab
+                      isSelected={tabSelected === wallet.type}
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor:
+                          tabSelected === wallet.type
+                          ? theme.colors.textNormal
+                          : theme.colors.border
+                      }}
+                    >
+                      <OText>
                         {walletName[wallet.type]?.name}
                       </OText>
                     </OTab>
-                  </Pressable>
+                  </TouchableOpacity>
                 ))}
               </OTabs>
 
