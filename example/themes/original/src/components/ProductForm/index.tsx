@@ -187,6 +187,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [headerRefHeight, setHeaderRefHeight] = useState(0)
 	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
 	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
+	const [editionsLayoutY, setEditionsLayoutY] = useState(null)
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -295,6 +296,7 @@ export const ProductOptionsUI = (props: any) => {
 		maxProductQuantity === 0 ||
 		Object.keys(errors).length > 0;
 
+	
 	const ExtraOptions = ({ eID, options }: any) => (
 		<>
 			{options.map(({ id, name, respect_to, suboptions }: any) => (
@@ -302,19 +304,25 @@ export const ProductOptionsUI = (props: any) => {
 					{respect_to == null && suboptions?.length > 0 && (
 						<TouchableOpacity
 							key={`eopt_key_${id}`}
-							onPress={() => setSelectedOpt(id)}
+							onPress={() => {
+								setSelectedOpt(id)
+								scrollViewRef?.current?.scrollTo && scrollViewRef.current.scrollTo({
+									y: optionLayout[`id:${id}`]?.y + editionsLayoutY - 50,
+									animated: true
+								})
+							}}
 							style={[
 								styles.extraItem,
 								{
 									borderBottomColor:
-										selOpt == id ? theme.colors.textNormal : theme.colors.border,
+										selOpt == id ? theme.colors.textNormal : theme.colors.backgroundPage,
 								},
 							]}>
 							<OText
 								color={
 									selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
 								}
-								size={selOpt == id ? 14 : 12}
+								size={12}
 								weight={selOpt == id ? '600' : 'normal'}
 								style={{ maxWidth: 150 }}
 								numberOfLines={1}>
@@ -701,39 +709,34 @@ export const ProductOptionsUI = (props: any) => {
 						<ExtraOptionWrap
 							horizontal
 							showsHorizontalScrollIndicator={false}
-							style={{ marginBottom: 20 }}
-							contentContainerStyle={{ paddingHorizontal: 33, backgroundColor: theme.colors.white }}
+							style={{
+								marginBottom: 20,
+								borderBottomWidth: 1,
+								borderBottomColor: theme.colors.border,
+								marginHorizontal: 30,
+								backgroundColor: theme.colors.backgroundPage,
+							}}
 						>
-							<TouchableOpacity
-								key={`eopt_key_00`}
-								onPress={() => setSelectedOpt(-1)}
-								style={[
-									styles.extraItem,
-									{
-										borderBottomColor: selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
-									},
-								]}>
-								<OText
-									color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
-									size={selOpt == -1 ? 14 : 12}
-									weight={selOpt == -1 ? '600' : 'normal'}>
-									{t('ALL', 'All')}
-								</OText>
-							</TouchableOpacity>
 							{product?.ingredients.length > 0 && (
 								<TouchableOpacity
 									key={`eopt_key_01`}
-									onPress={() => setSelectedOpt(0)}
+									onPress={() => {
+										setSelectedOpt(0)
+										scrollViewRef?.current?.scrollTo && scrollViewRef.current.scrollTo({
+											y: optionLayout[`id:0`]?.y + editionsLayoutY - 50,
+											animated: true
+										})
+									}}
 									style={[
 										styles.extraItem,
 										{
 											borderBottomColor:
-												selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
+												selOpt == 0 ? theme.colors.textNormal : theme.colors.backgroundPage,
 										},
 									]}>
 									<OText
 										color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-										size={selOpt == 0 ? 14 : 12}
+										size={12}
 										weight={selOpt == 0 ? '600' : 'normal'}>
 										{t('INGREDIENTS', 'Ingredients')}
 									</OText>
@@ -783,184 +786,93 @@ export const ProductOptionsUI = (props: any) => {
 							))}
 						</>
 					) : (
-						<ProductEditions>
-							{selOpt === -1 ? (
-								<>
-									{product?.ingredients.length > 0 && (
-										<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, 0)}>
-											<SectionTitle>
-												<OText size={16}>
-													{t('INGREDIENTS', 'Ingredients')}
-												</OText>
-											</SectionTitle>
-											<WrapperIngredients>
-												{product?.ingredients.map((ingredient: any) => (
-													<ProductIngredient
-														key={ingredient.id}
-														ingredient={ingredient}
-														state={
-															productCart.ingredients[`id:${ingredient.id}`]
-														}
-														onChange={handleChangeIngredientState}
-														isSoldOut={isSoldOut}
-													/>
-												))}
-											</WrapperIngredients>
-										</View>
-									)}
-									{product?.extras.sort((a: any, b: any) => a.rank - b.rank).map((extra: any) =>
-										extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
-											const currentState =
-												productCart.options[`id:${option.id}`] || {};
-											return (
-												<React.Fragment key={`popt_${option.id}`}>
-													{showOption(option) && (
-														<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, option?.id)}>
-															<ProductOption
-																option={option}
-																currentState={currentState}
-																error={errors[`id:${option.id}`]}>
-																<WrapperSubOption
-																	style={{
-																		backgroundColor: isError(option.id),
-																		borderRadius: 7.6
-																	}}>
-																	{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
-																		(suboption: any) => {
-																			const currentState =
-																				productCart.options[
-																					`id:${option.id}`
-																				]?.suboptions[
-																				`id:${suboption.id}`
-																				] || {};
-																			const balance =
-																				productCart.options[
-																					`id:${option.id}`
-																				]?.balance || 0;
-																			return (
-																				<ProductOptionSubOption
-																					key={suboption.id}
-																					isSoldOut={isSoldOut}
-																					onChange={
-																						handleChangeSuboptionState
-																					}
-																					balance={balance}
-																					option={option}
-																					suboption={suboption}
-																					state={currentState}
-																					disabled={
-																						isSoldOut ||
-																						maxProductQuantity <= 0
-																					}
-																					setIsScrollAvailable={setIsScrollAvailable}
-																					error={errors[`id:${option.id}`]}
-																				/>
-																			);
-																		},
-																	)}
-																</WrapperSubOption>
-															</ProductOption>
-														</View>
-													)}
-												</React.Fragment>
-											);
-										}),
-									)}
-								</>
-							) : (
-								<>
-									{selOpt === 0 ? (
-										<View style={styles.optionContainer}>
-											<SectionTitle>
-												<OText size={16}>
-													{t('INGREDIENTS', 'Ingredients')}
-												</OText>
-											</SectionTitle>
-											<WrapperIngredients>
-												{product?.ingredients.map((ingredient: any) => (
-													<ProductIngredient
-														key={ingredient.id}
-														ingredient={ingredient}
-														state={
-															productCart.ingredients[`id:${ingredient.id}`]
-														}
-														onChange={handleChangeIngredientState}
-														isSoldOut={isSoldOut}
-													/>
-												))}
-											</WrapperIngredients>
-										</View>
-									) : (
-										<>
-											{product?.extras.map((extra: any) =>
-												extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
-													if (
-														option.id == selOpt ||
-														(hasRespected(
-															extra.options,
-															option.respect_to,
-														) &&
-															showOption(option))
-													) {
-														const currentState =
-															productCart.options[`id:${option.id}`] || {};
-														return (
-															<React.Fragment key={option.id}>
-																{showOption(option) && (
-																	<View style={styles.optionContainer}>
-																		<ProductOption
-																			option={option}
-																			currentState={currentState}
-																			error={errors[`id:${option.id}`]}>
-																			<WrapperSubOption
-																				style={{
-																					backgroundColor: isError(
-																						option.id,
-																					),
-																				}}>
-																				{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
-																					(suboption: any) => {
-																						const currentState =
-																							productCart.options[
-																								`id:${option.id}`
-																							]?.suboptions[
-																							`id:${suboption.id}`
-																							] || {};
-																						const balance =
-																							productCart.options[
-																								`id:${option.id}`
-																							]?.balance || 0;
-																						return (
-																							<ProductOptionSubOption
-																								key={suboption.id}
-																								onChange={
-																									handleChangeSuboptionState
-																								}
-																								balance={balance}
-																								option={option}
-																								suboption={suboption}
-																								state={currentState}
-																								disabled={
-																									isSoldOut ||
-																									maxProductQuantity <= 0
-																								}
-																							/>
-																						);
-																					},
-																				)}
-																			</WrapperSubOption>
-																		</ProductOption>
-																	</View>
-																)}
-															</React.Fragment>
-														);
+						<ProductEditions
+							onLayout={(event: any) => {
+								setEditionsLayoutY(event.nativeEvent.layout?.y)
+							}}
+						>
+							<>
+								{product?.ingredients.length > 0 && (
+									<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, 0)}>
+										<SectionTitle>
+											<OText size={16}>
+												{t('INGREDIENTS', 'Ingredients')}
+											</OText>
+										</SectionTitle>
+										<WrapperIngredients>
+											{product?.ingredients.map((ingredient: any) => (
+												<ProductIngredient
+													key={ingredient.id}
+													ingredient={ingredient}
+													state={
+														productCart.ingredients[`id:${ingredient.id}`]
 													}
-												}),
-											)}
-										</>
-									)}
-								</>
-							)}
+													onChange={handleChangeIngredientState}
+													isSoldOut={isSoldOut}
+												/>
+											))}
+										</WrapperIngredients>
+									</View>
+								)}
+								{product?.extras.sort((a: any, b: any) => a.rank - b.rank).map((extra: any) =>
+									extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
+										const currentState =
+											productCart.options[`id:${option.id}`] || {};
+										return (
+											<React.Fragment key={`popt_${option.id}`}>
+												{showOption(option) && (
+													<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, option?.id)}>
+														<ProductOption
+															option={option}
+															currentState={currentState}
+															error={errors[`id:${option.id}`]}>
+															<WrapperSubOption
+																style={{
+																	backgroundColor: isError(option.id),
+																	borderRadius: 7.6
+																}}>
+																{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
+																	(suboption: any) => {
+																		const currentState =
+																			productCart.options[
+																				`id:${option.id}`
+																			]?.suboptions[
+																			`id:${suboption.id}`
+																			] || {};
+																		const balance =
+																			productCart.options[
+																				`id:${option.id}`
+																			]?.balance || 0;
+																		return (
+																			<ProductOptionSubOption
+																				key={suboption.id}
+																				isSoldOut={isSoldOut}
+																				onChange={
+																					handleChangeSuboptionState
+																				}
+																				balance={balance}
+																				option={option}
+																				suboption={suboption}
+																				state={currentState}
+																				disabled={
+																					isSoldOut ||
+																					maxProductQuantity <= 0
+																				}
+																				setIsScrollAvailable={setIsScrollAvailable}
+																				error={errors[`id:${option.id}`]}
+																			/>
+																		);
+																	},
+																)}
+															</WrapperSubOption>
+														</ProductOption>
+													</View>
+												)}
+											</React.Fragment>
+										);
+									}),
+								)}
+							</>
 							{!product?.hide_special_instructions && (
 								<ProductComment>
 									<SectionTitle>

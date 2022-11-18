@@ -9,7 +9,7 @@ export const TopActions = styled.TouchableOpacity`
 	height: 60px;
 	justify-content: center;
   padding-horizontal: 30px;
-  width: 80px;
+  width: 100px;
 `;
 
 export const TopHeader = styled.View`
@@ -82,7 +82,6 @@ export const ProductActions = styled.View`
   border-top-color: ${(props: any) => props.theme.colors.border};
 `
 export const ExtraOptionWrap = styled.ScrollView`
-	margin-horizontal: 30px;
 `;
 
 export const WeightUnitSwitch = styled.View`
