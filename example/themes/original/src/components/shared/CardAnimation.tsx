@@ -10,7 +10,7 @@ interface Props {
     onClick: any
 }
 
-export const CardAnimation = (props : Props) => {
+export const CardAnimation = (props: Props) => {
     const {
         children,
         onClick,
@@ -21,8 +21,8 @@ export const CardAnimation = (props : Props) => {
         cardAnimation: {
             elevation: isPressed ? 2 : 0,
             shadowColor: '#888',
-            shadowOffset: { width: 0, height: isPressed ? 2 : 0 },
-            shadowRadius: 18,
+            shadowOffset: { width: 0, height: 0 },
+            shadowRadius: 0,
             shadowOpacity: isPressed ? 0.8 : 0,
             borderRadius: 12,
         }
