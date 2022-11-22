@@ -174,10 +174,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					<BusinessHero>
 						<FastImage
 							style={{ height: 120 }}
-							source={{
-								uri: optimizeImage(businessHeader || business?.header || theme.images.dummies.businessHeader, 'h_500,c_limit'),
+							source={(businessHeader || business?.header) ? {
+								uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
 								priority: FastImage.priority.normal,
-							}}
+							} : theme.images.dummies.businessHeader}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
 						{(businessFeatured ?? business?.featured) && (
@@ -203,10 +203,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							<BusinessLogo style={styles.businessLogo}>
 								<FastImage
 									style={{ width: 56, height: 56 }}
-									source={{
-										uri: optimizeImage(businessLogo || business?.logo || theme.images.dummies.businessLogo, 'h_150,c_limit'),
+									source={(businessLogo || business?.logo) ? {
+										uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
 										priority: FastImage.priority.normal,
-									}}
+									} : theme.images.dummies.businessLogo}
 									resizeMode={FastImage.resizeMode.cover}
 								/>
 							</BusinessLogo>
