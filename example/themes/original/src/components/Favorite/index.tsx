@@ -13,7 +13,8 @@ import {
 
 export const Favorite = (props: any) => {
   const {
-    navigation
+    navigation,
+    franchiseId
   } = props
   const [, t] = useLanguage()
   const theme = useTheme()
@@ -69,6 +70,7 @@ export const Favorite = (props: any) => {
           originalURL='business'
           location={`${orderState.options?.address?.location?.lat},${orderState.options?.address?.location?.lng}`}
           propsToFetch={['id', 'name', 'header', 'logo', 'location', 'address', 'ribbon', 'timezone', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']}
+          franchiseId={franchiseId}
         />
       )}
       {tabSelected === 'products' && (
@@ -77,6 +79,7 @@ export const Favorite = (props: any) => {
           originalURL='products'
           onNavigationRedirect={onRedirect}
           isProduct
+          franchiseId={franchiseId}
         />
       )}
       {tabSelected === 'orders' && (
@@ -85,6 +88,7 @@ export const Favorite = (props: any) => {
           favoriteURL='favorite_orders'
           originalURL='orders'
           isOrder
+          franchiseId={franchiseId}
         />
       )}
     </Container>
