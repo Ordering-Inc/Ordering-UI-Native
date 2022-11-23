@@ -28,7 +28,7 @@ const AddressDetailsUI = (props: any) => {
 					size={16}
 					lineHeight={24}
 					color={theme.colors.textNormal}
-					weight={'500'}>
+				>
 					{t('DELIVERY_ADDRESS', 'Delivery address')}
 				</OText>
 			</ADHeader>
