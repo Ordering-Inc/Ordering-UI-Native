@@ -154,8 +154,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
 
   const handleCustomerName = () => {
     let customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`
-    if (customerName?.replace('   ', ' ')?.trim()) return customerName?.replace('   ', ' ')?.trim()
-    return ''
+    return customerName?.replace('   ', ' ')?.trim() ?? ''
   }
 
   return (
