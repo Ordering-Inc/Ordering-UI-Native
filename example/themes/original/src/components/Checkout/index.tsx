@@ -341,7 +341,7 @@ const CheckoutUI = (props: any) => {
 								Object.values(businessDetails?.business).length > 0 &&
 								(
 									<>
-										<OText size={16} lineHeight={24} weight={'500'} mBottom={10}>
+										<OText size={16} lineHeight={24} weight={'500'} mBottom={10} color={theme.colors.textNormal}>
 											{t('BUSINESS_DETAILS', 'Business Details')}
 										</OText>
 										<View>
@@ -362,7 +362,7 @@ const CheckoutUI = (props: any) => {
 								)}
 							{businessDetails?.error && businessDetails?.error?.length > 0 && (
 								<View>
-									<OText size={16} lineHeight={24} weight={'500'}>
+									<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
 										{t('BUSINESS_DETAILS', 'Business Details')}
 									</OText>
 									<NotFoundSource
