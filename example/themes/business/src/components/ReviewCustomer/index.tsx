@@ -151,11 +151,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
     }
   }, [scrollref?.current])
 
-
-  const handleCustomerName = () => {
-    let customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`
-    return customerName?.replace('   ', ' ')?.trim() ?? ''
-  }
+  const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`?.replace('  ', ' ')?.trim() ?? ''
 
   return (
     <KeyboardAvoidingView
@@ -212,20 +208,20 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               style={{ borderRadius: 7.6 }}
             />
           </View>
-          {handleCustomerName() !== '' && <OText
+          {customerName !== '' && <OText
             size={14}
             weight="500"
             style={{
               marginTop: 16
             }}
           >
-            {handleCustomerName()}
+            {customerName}
           </OText>}
         </CustomerInfoContainer>
         <OText
           size={12}
         >
-          {handleCustomerName() ? t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', handleCustomerName()) : t('HOW_WAS_YOUR_NO_CUSTOMER', 'How was your experience?')}
+          {customerName ? t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', customerName) : t('HOW_WAS_YOUR_NO_CUSTOMER', 'How was your experience?')}
         </OText>
         <RatingBarContainer>
           <LinearGradient
