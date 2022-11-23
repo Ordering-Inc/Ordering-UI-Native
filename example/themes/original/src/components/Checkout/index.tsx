@@ -341,7 +341,7 @@ const CheckoutUI = (props: any) => {
 								Object.values(businessDetails?.business).length > 0 &&
 								(
 									<>
-										<OText size={16} lineHeight={24} weight={'500'} mBottom={10}>
+										<OText size={16} lineHeight={24} weight={'500'} mBottom={10} color={theme.colors.textNormal}>
 											{t('BUSINESS_DETAILS', 'Business Details')}
 										</OText>
 										<View>
@@ -362,7 +362,7 @@ const CheckoutUI = (props: any) => {
 								)}
 							{businessDetails?.error && businessDetails?.error?.length > 0 && (
 								<View>
-									<OText size={16} lineHeight={24} weight={'500'}>
+									<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
 										{t('BUSINESS_DETAILS', 'Business Details')}
 									</OText>
 									<NotFoundSource
@@ -411,7 +411,7 @@ const CheckoutUI = (props: any) => {
 								</View>
 							) : (
 								<>
-									<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+									<OText size={16} color={theme.colors.textNormal} mBottom={10}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
 									<View
 										style={{
 											backgroundColor: theme.colors.inputDisabled,
@@ -626,7 +626,6 @@ const CheckoutUI = (props: any) => {
 												size={16}
 												lineHeight={24}
 												color={theme.colors.textNormal}
-												style={{ fontWeight: '500' }}
 											>
 												{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
 											</OText>

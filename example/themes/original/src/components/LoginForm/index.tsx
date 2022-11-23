@@ -680,7 +680,7 @@ const LoginFormUI = (props: LoginParams) => {
 									{t('NEW_ON_PLATFORM', 'New on Ordering?')}
 								</OText>
 								<TouchableOpacity onPress={() => onNavigationRedirect('Signup')}>
-									<OText size={14} mLeft={5} color={theme.colors.skyBlue}>
+									<OText size={14} mLeft={5} color={theme.colors.primary}>
 										{t('CREATE_ACCOUNT', 'Create account')}
 									</OText>
 								</TouchableOpacity>

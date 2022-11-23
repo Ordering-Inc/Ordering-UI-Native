@@ -1,4 +1,5 @@
 import React from 'react'
+import { Platform } from 'react-native'
 import { useLanguage } from 'ordering-components/native'
 import { HelpAccountAndPaymentParams } from '../../types'
 import { OText, OButton, OIcon } from '../shared'
@@ -7,7 +8,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
-  Content
+  Content,
+  HeaderWrapper
 } from './styles'
 
 export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
@@ -38,17 +40,25 @@ export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
 
   return (
     <>
-      <OButton
-        imgRightSrc={null}
-        style={styles.btnBackArrow}
-        onClick={() => goToBack()}
-        icon={AntDesignIcon}
-        iconProps={{
-          name: 'arrowleft',
-          size: 26
-        }}
-      />
-      <OText size={22} weight={600}>{t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}</OText>
+      <HeaderWrapper>
+        <OButton
+          imgRightSrc={null}
+          style={styles.btnBackArrow}
+          onClick={() => goToBack()}
+          icon={AntDesignIcon}
+          iconProps={{
+            name: 'arrowleft',
+            size: 26
+          }}
+        />
+        <OText
+          size={24}
+          weight={Platform.OS === 'ios' ? '600' : 'bold'}
+          color={theme.colors.textNormal}
+        >
+          {t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}
+        </OText>
+      </HeaderWrapper>
       <Content>
         <OText mBottom={20}>
           -Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vel in congue nisl, nisi. Mauris, condimentum auctor sed cras cursus arcu pellentesque.
