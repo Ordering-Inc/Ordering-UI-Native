@@ -389,10 +389,10 @@ const CartUI = (props: any) => {
 
             <OSTotal>
               <OSTable style={{ marginTop: 15 }}>
-                <OText size={14} lineHeight={21} weight={'600'}>
+                <OText size={14} lineHeight={21} weight={'bold'} color={theme.colors.textNormal}>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText size={14} lineHeight={21} weight={'600'}>
+                <OText size={14} lineHeight={21} weight={'bold'} color={theme.colors.textNormal}>
                   {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                 </OText>
               </OSTable>

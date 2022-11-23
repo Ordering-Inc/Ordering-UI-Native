@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components/native'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { WebView } from 'react-native-webview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import NavBar from '../NavBar'
 
 import {
   Content
@@ -42,17 +43,12 @@ export const HelpOrder = (props: HelpOrderParams) => {
 
   return (
     <>
-      <OButton
-        imgRightSrc={null}
-        style={styles.btnBackArrow}
-        onClick={() => goToBack()}
-        icon={AntDesignIcon}
-        iconProps={{
-          name: 'arrowleft',
-          size: 26
-        }}
+      <NavBar
+        title={t('HELP_WITH_ORDER', 'Help with an order')}
+        onActionLeft={goToBack}
+        btnStyle={{ paddingLeft: 0 }}
+        showCall={false}
       />
-      <OText size={22} weight={600}>{t('HELP_WITH_ORDER', 'Help with an order')}</OText>
       <Content>
         <OText mBottom={20}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vel in congue nisl, nisi. Mauris, condimentum auctor sed cras cursus arcu pellentesque. Sed tempus et, cursus ultricies nisl nisl, in eros.
