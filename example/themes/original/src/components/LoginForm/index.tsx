@@ -96,7 +96,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 	const [tabLayouts, setTabLayouts] = useState<any>({})
 	const tabsRef = useRef<any>(null)
-
+	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 	const theme = useTheme();
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
 	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
@@ -788,6 +788,12 @@ const LoginFormUI = (props: LoginParams) => {
 							/>
 						</Placeholder>
 					</SkeletonWrapper>
+				)}
+
+				{enabledPoweredByOrdering && (
+					<OText>
+						Powered By Ordering.co
+					</OText>
 				)}
 			</FormSide>
 			<OModal
