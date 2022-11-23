@@ -208,7 +208,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               style={{ borderRadius: 7.6 }}
             />
           </View>
-          {customerName !== '' && <OText
+          {!!customerName && <OText
             size={14}
             weight="500"
             style={{
