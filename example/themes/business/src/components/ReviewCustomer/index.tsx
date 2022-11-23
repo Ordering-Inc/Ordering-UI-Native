@@ -151,6 +151,8 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
     }
   }, [scrollref?.current])
 
+  let customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`
+
   return (
     <KeyboardAvoidingView
       enabled
@@ -213,13 +215,13 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               marginTop: 16
             }}
           >
-            {order?.customer?.name ?? ''} {order?.customer?.middle_name ?? ''} {order?.customer?.lastname ?? ''} {order?.customer?.second_lastname ?? ''}
+            {customerName?.replace('   ', ' ')?.trim()}
           </OText>
         </CustomerInfoContainer>
         <OText
           size={12}
         >
-          {t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`)}
+          {t('HOW_WAS_YOUR_CUSTOMER', 'How was your experience with _name_?').replace('_name_', customerName?.replace('   ', ' ')?.trim())}
         </OText>
         <RatingBarContainer>
           <LinearGradient
