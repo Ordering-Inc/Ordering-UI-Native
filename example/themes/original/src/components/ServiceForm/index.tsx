@@ -60,7 +60,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const [selectDate, setSelectedDate] = useState<any>(new Date())
   const [timeList, setTimeList] = useState<any>([])
   const [isEnabled, setIsEnabled] = useState(false)
-  const [timeSelected, setTimeSelected] = useState(null)
+  const [timeSelected, setTimeSelected] = useState<string | null>(null)
   const [dateSelected, setDateSelected] = useState<any>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [currentProfessional, setCurrentProfessional] = useState<any>(null)
@@ -248,6 +248,12 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       setCurrentProfessional(professional)
     }
   }, [isCartProduct, professionalListState?.professionals])
+
+  useEffect(() => {
+    if (!productCart?.calendar_event?.start) return
+    setSelectedDate(moment.utc(productCart?.calendar_event?.start).local())
+    setTimeSelected(moment.utc(productCart?.calendar_event?.start).local().format('HH:mm'))
+  }, [productCart])
   
   return (
     <>
@@ -409,7 +415,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                 {(timeList?.length > 0 && isEnabled) ? (
                   <SelectDropdown
                     ref={dropdownRef} 
-                    defaultValue={timeSelected}
+                    defaultValueByIndex={timeList.findIndex((item: any) => item.value === timeSelected)}
                     data={timeList}
                     onSelect={(selectedItem, index) => {
                       setTimeSelected(selectedItem?.value)
