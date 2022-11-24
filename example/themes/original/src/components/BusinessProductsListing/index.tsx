@@ -485,22 +485,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<FloatingButton
-						btnText={
-							openUpselling
-								? t('LOADING', 'Loading')
-								: currentCart?.subtotal >= currentCart?.minimum
-									? t('VIEW_ORDER', 'View Order')
-									: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
-						}
-						isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-						btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-						btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-						btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
-						btnRightValue={parsePrice(currentCart?.total)}
-						disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-						handleClick={() => setOpenUpselling(true)}
-					/>
+					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
+						<FloatingButton
+              btnText={
+                openUpselling
+                  ? t('LOADING', 'Loading')
+                  : currentCart?.subtotal >= currentCart?.minimum
+                    ? t('VIEW_ORDER', 'View Order')
+                    : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+              }
+              isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
+              btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
+              btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
+              btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
+              btnRightValue={parsePrice(currentCart?.total)}
+              disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
+              handleClick={() => setOpenUpselling(true)}
+            />
+					</View>
 				)}
 				{openUpselling && (
 					<UpsellingRedirect
