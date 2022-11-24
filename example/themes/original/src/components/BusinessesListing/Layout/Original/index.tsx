@@ -468,7 +468,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				<HeaderWrapper
 					source={bgHeader ? { uri: bgHeader } : theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
-					resizeMode='cover'
+					resizeMode='stretch'
 				>
 					{!auth && (
 
