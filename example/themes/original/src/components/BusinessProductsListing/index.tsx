@@ -130,6 +130,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 	const [openService, setOpenService] = useState(false)
 	const [currentProduct, setCurrentProduct] = useState(null)
+	const [searchBarHeight, setSearchBarHeight] = useState(60)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
@@ -262,6 +263,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						style={{
 							marginTop: Platform.OS === 'ios' ? insets.top : 0
 						}}
+						onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height) }
 					>
 						{!isOpenSearchBar && (
 							<>
@@ -322,9 +324,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
 					<FiltProductsContainer
-						isIos={Platform.OS === 'ios'}
 						style={{
-							height: Dimensions.get('window').height - filtProductsHeight
+							height: Dimensions.get('window').height - filtProductsHeight,
+							top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight							
 						}}
 						contentContainerStyle={{ flexGrow: 1 }}
 					>
