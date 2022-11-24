@@ -118,6 +118,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const mapValidStatuses = [9, 19, 23]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
+  const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 
   const walletName: any = {
     cash: {
@@ -599,6 +600,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   : parseDate(order?.delivery_datetime, { utc: false })}
               </OText>}
             />
+            {enabledPoweredByOrdering && (
+              <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <OText>
+                  Powered By Ordering.co
+                </OText>
+              </View>
+            )}
             <OrderInfo>
               <OrderData>
                 <View style={styles.linkWrapper}>
