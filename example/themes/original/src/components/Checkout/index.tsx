@@ -182,8 +182,8 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = (confirmPayment: any) => {
-		if (!userErrors.length && !requiredFields?.length) {
+	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
+		if (!userErrors.length && !requiredFields?.length || forcePlace) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -742,7 +742,10 @@ const CheckoutUI = (props: any) => {
 								togglePhoneUpdate={togglePhoneUpdate}
 								requiredFields={requiredFields}
 								hideUpdateButton
-								onClose={() => setIsOpen(false)}
+								onClose={() => {
+									setIsOpen(false)
+									handlePlaceOrder(null, true)
+								}}
 							/>
 						</View>
 					</OModal>
