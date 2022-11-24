@@ -118,7 +118,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 				flagButtonStyle={flagStyle}
 				countryPickerButtonStyle={{ ...style.countryBtn, ...boxStyle ? boxStyle : {} }}
 				placeholder={t('PHONE_NUMBER', 'Phone Number')}
-				textInputProps={{ autoCompleteType: 'tel', ref: forwardRef, ...textInputProps }}
+				textInputProps={{ keyboardType: 'number-pad', autoCompleteType: 'tel', textContentType: 'telephoneNumber', dataDetectorTypes: 'phoneNumber', ref: forwardRef, ...textInputProps }}
 				containerStyle={{ width: '100%' }}
 				renderDropdownImage={noDropIcon ? <View /> : <OIcon src={theme.images.general.arrow_down} width={13} color={'#B1BCCC'}></OIcon>}
 			/>
