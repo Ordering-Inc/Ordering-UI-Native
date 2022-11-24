@@ -167,6 +167,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const timerId = useRef<any>(false)
 	const [favoriteIds, setFavoriteIds] = useState<any>([])
 	const chewOrderTypes = [{ name: t('DELIVERY', 'Delivery').toUpperCase(), value: 1 }, { name: t('PICKUP', 'Pickup').toUpperCase(), value: 2 }]
+	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 
 	const handleMomentClick = () => {
 		if (isPreorderEnabled) {
@@ -353,6 +354,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			}
 		>
+			{enabledPoweredByOrdering && auth && (
+				<View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', top: 20 }}>
+					<OText>
+						Powered By Ordering.co
+					</OText>
+				</View>
+			)}
 			<View style={{
 				height: !isPreOrderSetting && isChewLayout ? 150 : isChewLayout ? 200 : isFarAway ? 150 : 100,
 				marginTop: Platform.OS == 'ios' ? 0 : 50,
@@ -458,7 +466,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={bgHeader ? {uri: bgHeader} : theme.images.backgrounds.business_list_header}
+					source={bgHeader ? { uri: bgHeader } : theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
 					resizeMode='cover'
 				>
