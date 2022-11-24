@@ -38,8 +38,6 @@ export const FiltProductsContainer = styled.ScrollView`
   position: absolute;
   width: 100%;
   z-index: 20000;
-  top: 80px;
-  margin-top: 20px;
 `
 
 export const BackgroundGray = styled.View`
