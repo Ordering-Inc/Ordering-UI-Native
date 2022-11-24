@@ -111,7 +111,7 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-        <OText size={24}>{t('WALLETS', 'Wallets')}</OText>
+        <OText size={24} style={{ marginTop: 30 }}>{t('WALLETS', 'Wallets')}</OText>
           {isChewLayout && (
             <OButton
               text={t('WALLET_HISTORY', 'Wallet history')}
