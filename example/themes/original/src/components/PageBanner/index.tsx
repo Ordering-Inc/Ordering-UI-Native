@@ -1,11 +1,14 @@
 import React from 'react'
-import { useUtils, PageBanner as PageBannerController } from 'ordering-components/native'
+import { useUtils } from 'ordering-components/native'
+import { PageBanner as PageBannerController } from './naked'
+
 import { View, StyleSheet } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useTheme } from 'styled-components/native';
+import { PageBannerWrapper } from './styles'
 
 const PageBannerUI = (props: any) => {
   const {
@@ -37,56 +40,57 @@ const PageBannerUI = (props: any) => {
   return (
     <>
       {pageBannerState.loading ? (
-        <View>
+        <PageBannerWrapper>
           <Placeholder
             Animation={Fade}
-            style={{ marginBottom: 20 }}
           >
             <PlaceholderLine
 							height={300}
-							style={{ marginBottom: 20, borderRadius: 25 }}
+							style={{ marginBottom: 20, borderRadius: 8 }}
 						/>
           </Placeholder>
-        </View>
+        </PageBannerWrapper>
       ) : (
-        <View>
-          {pageBannerState.banner?.items && (
-            <Swiper
-              loop={false}
-              showsButtons={true}
-              style={styles.mainSwiper}
-              showsPagination={false}
-              prevButton={
-                <View style={styles.swiperButton}>
-                  <IconAntDesign
-                    name="caretleft"
-                    color={theme.colors.white}
-                    size={13}
-                  />
-                </View>
-              }
-              nextButton={
-                <View style={styles.swiperButton}>
-                  <IconAntDesign
-                    name="caretright"
-                    color={theme.colors.white}
-                    size={13}
-                  />
-                </View>
-              }
-            >
-              {pageBannerState.banner?.items.map((img, i) => (
-                <View key={i} style={styles.sliderWrapper}>
-                  <FastImage
-                    style={{ height: '100%', width: '100%' }}
-                    resizeMode='cover'
-                    source={{ uri: optimizeImage(img.url, 'h_300,c_limit') }}
-                  />
-                </View>
-              ))}
-            </Swiper>
+        <>
+          {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
+            <PageBannerWrapper>
+              <Swiper
+                loop={false}
+                showsButtons={true}
+                style={styles.mainSwiper}
+                showsPagination={false}
+                prevButton={
+                  <View style={styles.swiperButton}>
+                    <IconAntDesign
+                      name="caretleft"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </View>
+                }
+                nextButton={
+                  <View style={styles.swiperButton}>
+                    <IconAntDesign
+                      name="caretright"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </View>
+                }
+              >
+                {pageBannerState.banner?.items.map((img, i) => (
+                  <View key={i} style={styles.sliderWrapper}>
+                    <FastImage
+                      style={{ height: '100%', width: '100%' }}
+                      resizeMode='cover'
+                      source={{ uri: optimizeImage(img.url, 'h_300,c_limit') }}
+                    />
+                  </View>
+                ))}
+              </Swiper>
+            </PageBannerWrapper>
           )}
-        </View>
+        </>
       )}
     </>
   )
