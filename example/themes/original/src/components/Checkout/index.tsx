@@ -118,9 +118,11 @@ const CheckoutUI = (props: any) => {
 			paddingHorizontal: 40,
 			width: '100%'
 		},
-		wrapperNavbar: Platform.OS === 'ios'
-			? { paddingVertical: 0, paddingHorizontal: 40 }
-			: { paddingVertical: 20, paddingHorizontal: 40 }
+		wrapperNavbar: {
+			paddingVertical: 0,
+			paddingHorizontal: 40,
+			marginVertical: 2
+		}
 	})
 
 	const [, { showToast }] = useToast();
@@ -180,8 +182,8 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = (confirmPayment: any) => {
-		if (!userErrors.length && !requiredFields?.length) {
+	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
+		if (!userErrors.length && !requiredFields?.length || forcePlace) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -284,7 +286,6 @@ const CheckoutUI = (props: any) => {
 						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0 }}
-						style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
 					/>
@@ -741,7 +742,10 @@ const CheckoutUI = (props: any) => {
 								togglePhoneUpdate={togglePhoneUpdate}
 								requiredFields={requiredFields}
 								hideUpdateButton
-								onClose={() => setIsOpen(false)}
+								onClose={() => {
+									setIsOpen(false)
+									handlePlaceOrder(null, true)
+								}}
 							/>
 						</View>
 					</OModal>
