@@ -1134,8 +1134,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               )}
               <Total>
                 <Table>
-                  <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
-                  <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>
+                  <OText size={14} style={{ fontWeight: 'bold' }} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
+                  <OText size={14} style={{ fontWeight: 'bold' }} color={theme.colors.textNormal}>
                     {parsePrice(order?.summary?.total ?? order?.total)}
                   </OText>
                 </Table>
