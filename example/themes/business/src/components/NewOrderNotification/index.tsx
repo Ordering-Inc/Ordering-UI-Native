@@ -14,6 +14,8 @@ Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
 
+const SOUND_LOOP = 3
+
 const NewOrderNotificationUI = (props: any) => {
   const { isBusinessApp } = props
   const [events] = useEvent()
@@ -22,8 +24,7 @@ const NewOrderNotificationUI = (props: any) => {
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
   const { getCurrentLocation } = useLocation();
-  const [soundTimeout, setSoundTimeout] = useState<any>(null)
-  let [currentEvent, setCurrentEvent] = useState<any>(null)
+  const [currentEvent, setCurrentEvent] = useState<any>(null)
 
   const evtList: any = {
     1: {
@@ -43,29 +44,27 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const notificationSound = new Sound(theme.sounds.notification, (e) => { console.log(e) });
+  const notificationSound = new Sound(theme.sounds.notification);
 
-  const handlePlayNotificationSound = () => {
-    if (currentEvent) return
-    let times = 0
-    const _timeout = setInterval(function () {
-      notificationSound.play(success => {
-        if (success) {
-          times = times + 1
-        }
-      })
-      setSoundTimeout(_timeout)
-      if (times === 3) {
-        clearInterval(_timeout)
-        clearInterval(soundTimeout)
-      }
-    }, 2500)
+  let _timeout: any = null
+
+  const handleCloseEvents = () => {
+    notificationSound.stop()
+    setCurrentEvent(null)
+    clearInterval(_timeout)
   }
 
-  const handleCloseModal = () => {
-    clearInterval(soundTimeout)
-    currentEvent = null
-    setCurrentEvent({ evt: null })
+  const handlePlayNotificationSound = (eventObj: any = null) => {
+    setCurrentEvent(eventObj)
+    let times = 1
+    if (times < SOUND_LOOP) {
+      _timeout = setInterval(() => {
+        notificationSound.setVolume(1).play(success => success && (times = times + 1))
+        if (times === SOUND_LOOP) {
+          clearInterval(_timeout)
+        }
+      }, 2500)
+    }
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
@@ -79,26 +78,15 @@ const NewOrderNotificationUI = (props: any) => {
           }),
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
         })
-      } catch (error) {
-          console.log(error)
-      }
+      } catch {}
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
       if (assignedSecondsDiff < 5 && !isBusinessApp) {
-        handlePlayNotificationSound()
-        clearInterval(soundTimeout)
-        currentEvent = { evt: 2, orderId: value?.id }
-        setCurrentEvent({ evt: 2, orderId: value?.id })
+        handlePlayNotificationSound({ evt: 2, orderId: value?.id })
       }
     }
     if (evtType === 3 || value.author_id === user.id) return
-    handlePlayNotificationSound()
-    clearInterval(soundTimeout)
-    currentEvent = {
-      evt: evtType,
-      orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
-    }
-    setCurrentEvent({
+    handlePlayNotificationSound({
       evt: evtType,
       orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
     })
@@ -116,10 +104,7 @@ const NewOrderNotificationUI = (props: any) => {
   }, [])
 
   useEffect(() => {
-    notificationSound.setVolume(1);
-    return () => {
-      notificationSound.release();
-    }
+    return () => handleCloseEvents()
   }, [])
 
   return (
@@ -133,7 +118,7 @@ const NewOrderNotificationUI = (props: any) => {
           <View style={styles.modalView}>
             <TouchableOpacity
               style={styles.wrapperIcon}
-              onPress={() => handleCloseModal()}
+              onPress={() => handleCloseEvents()}
             >
               <Icon name="x" size={30} />
             </TouchableOpacity>
