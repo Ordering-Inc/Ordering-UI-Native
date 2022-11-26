@@ -1,6 +1,5 @@
 import React from 'react'
-import { useUtils } from 'ordering-components/native'
-import { PageBanner as PageBannerController } from './naked'
+import { useUtils, PageBanner as PageBannerController } from 'ordering-components/native'
 
 import { View, StyleSheet } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
