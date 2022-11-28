@@ -18,8 +18,7 @@ import {
 	useSession,
 	useOrder,
 	useConfig,
-	useUtils,
-	useOrderingTheme
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -53,6 +52,7 @@ import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { PageBanner } from '../../../PageBanner'
 import { CitiesControl } from '../../../CitiesControl'
 
 const PIXELS_TO_SCROLL = 2000;
@@ -73,13 +73,25 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		logosLayout
 	} = props;
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
+
+	const [, t] = useLanguage();
+	const [{ user, auth }] = useSession();
+	const [orderState, { changeCityFilter }] = useOrder();
+	const [{ configs }] = useConfig();
+	const [{ parseDate }] = useUtils();
+
 	const appState = useRef(AppState.currentState)
-  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const [refreshing] = useState(false);
-	const bgHeader = orderingTheme?.theme?.business_listing_view?.components?.business_hero?.components?.image
+	const hideCities = (theme?.business_listing_view?.components?.cities?.hidden || orderState?.options?.type !== 2) ?? true
+	const hideHero = theme?.business_listing_view?.components?.business_hero?.hidden
+	const hidePreviousOrders = theme?.business_listing_view?.components?.previous_orders_block?.hidden
+	const hideHighestBusiness = theme?.business_listing_view?.components?.highest_rated_business_block?.hidden
+	const isAllCategoriesHidden = theme?.business_listing_view?.components?.categories?.hidden
+	const bgHeader = theme?.business_listing_view?.components?.business_hero?.components?.image
+	const bgHeaderHeight = theme?.business_listing_view?.components?.business_hero?.components?.style?.height
+
 	const styles = StyleSheet.create({
 		container: {
 			marginBottom: 0,
@@ -143,19 +155,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		},
 	});
 
-
-	const [, t] = useLanguage();
-	const [{ user, auth }] = useSession();
-	const [orderState, { changeCityFilter }] = useOrder();
-	const [{ configs }] = useConfig();
-	const [{ parseDate }] = useUtils();
-
 	const { top } = useSafeAreaInsets();
 
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
 	const [businessTypes, setBusinessTypes] = useState(null)
-	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options.value)
+	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options?.value)
 	const [isOpenCities, setIsOpenCities] = useState(false)
 	const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0
@@ -465,18 +470,30 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				)}
 			</View>
 			{!isChewLayout ? (
-				<HeaderWrapper
-					source={bgHeader ? { uri: bgHeader } : theme.images.backgrounds.business_list_header}
-					style={{ paddingTop: top + 20 }}
-					resizeMode='cover'
-				>
-					{!auth && (
-
-						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-							<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
-						</TouchableOpacity>
+				<>
+					{!hideHero ? (
+						<HeaderWrapper
+							source={bgHeader ? { uri: bgHeader } : theme.images.backgrounds.business_list_header}
+							style={{ paddingTop: top + 20 }}
+							resizeMode='cover'
+							bgHeaderHeight={bgHeaderHeight}
+						>
+							{!auth && (
+								<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+									<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+								</TouchableOpacity>
+							)}
+						</HeaderWrapper>
+					) : (
+						<>
+							{!auth && (
+								<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+									<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+								</TouchableOpacity>
+							)}
+						</>
 					)}
-				</HeaderWrapper>
+				</>
 			) : (
 				<OrderTypesContainer>
 					<OrderTypeSelector
@@ -501,10 +518,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</TouchableOpacity>
 				</View>
 			)}
-			<OrderProgress
-				{...props}
-				isFocused={isFocused}
-			/>
+			{!hidePreviousOrders && (
+				<OrderProgress
+					{...props}
+					isFocused={isFocused}
+				/>
+			)}
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
@@ -537,7 +556,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</FeaturedWrapper>
 				)
 			}
-			{!isChewLayout && (
+			{!isChewLayout && !hideHighestBusiness && (
 				<>
 					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 					{
@@ -552,9 +571,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					}
 				</>
 			)}
+
+			<PageBanner position='app_business_listing' navigation={navigation} />
+
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
-				{!businessId && (
+				{!businessId && !isAllCategoriesHidden && (
 					<BusinessTypeFilter
 						images={props.images}
 						businessTypes={props.businessTypes}
