@@ -273,6 +273,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								width: '100%',
 								borderRadius: 7.6,
 								marginTop: 10,
+								height: 40
 
 							}}
 							bgColor={isSoldOut ? '#B8B8B8' : theme?.colors?.white}

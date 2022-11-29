@@ -268,7 +268,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						{!isOpenSearchBar && (
 							<>
 								<TopActions onPress={() => handleBackNavigation()}>
-									<IconAntDesign name='arrowleft' size={26} />
+									<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
 								</TopActions>
 								{!errorQuantityProducts && (
 									<View style={{ ...styles.headerItem }}>
@@ -276,7 +276,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 											onPress={() => setIsOpenSearchBar(true)}
 											style={styles.searchIcon}
 										>
-											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
+											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={20} />
 										</TouchableOpacity>
 									</View>
 								)}
