@@ -34,6 +34,8 @@ export const getTraduction = (key: string, t: any) => {
     ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY: 'Error adding product, very far for delivery',
     ERROR_PRODUCT_NOT_FOUND: 'Error with the product',
     ERROR_ADD_BUSINESS_INVALID: 'An error occurred with the business',
+    ERROR_INVALID_OFFER: 'The offer doesn\'t exist',
+    ERROR_ADD_PRODUCT_BEFORE_ADDRESS: 'You must have an address'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)

@@ -550,7 +550,7 @@ export const ProductOptionsUI = (props: any) => {
             </View>
           )}
           <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%' : '80%' }}>
-            {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
+            {productCart && !isSoldOut && maxProductQuantity > 0 && auth && (
               <OButton
                 onClick={() => handleSaveProduct()}
                 imgRightSrc=''
@@ -562,19 +562,6 @@ export const ProductOptionsUI = (props: any) => {
                   height: 60
                 }}
               />
-            )}
-            {auth && !orderState.options?.address_id && (
-              orderState.loading ? (
-                <OButton
-                  isDisabled
-                  text={t('LOADING', 'Loading')}
-                  imgRightSrc=''
-                />
-              ) : (
-                <OButton
-                  onClick={navigation?.navigate('AddressList')}
-                />
-              )
             )}
             {(!auth || isSoldOut || maxProductQuantity <= 0) && (
               <OButton
