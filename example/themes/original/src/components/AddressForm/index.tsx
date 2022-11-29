@@ -83,7 +83,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 			backgroundColor: theme.colors.clear
 		},
 		inputsStyle: {
-			borderColor: theme.colors.border,
 			borderRadius: 10,
 			marginBottom: 20,
 			height: 50,
@@ -92,7 +91,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 			flex: 1,
 		},
 		textAreaStyles: {
-			borderColor: theme.colors.border,
 			borderRadius: 10,
 			marginBottom: 20,
 			height: 104,
@@ -679,6 +677,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													addressState?.address?.internal_number ||
 													''
 												}
+												isFocusHighlight
 												style={{
 													...styles.inputsStyle,
 													marginRight: showField('internal_number') && showField('zipcode') ? 24 : 0
@@ -725,6 +724,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													addressState.address.zipcode ||
 													''
 												}
+												isFocusHighlight
 												style={styles.inputsStyle}
 												forwardRef={zipCodeRef}
 												returnKeyType="next"
@@ -770,6 +770,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												''
 											}
 											multiline
+											isFocusHighlight
 											style={styles.textAreaStyles}
 											returnKeyType="done"
 											forwardRef={addressNotesRef}
