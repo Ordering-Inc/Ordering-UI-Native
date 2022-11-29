@@ -195,6 +195,9 @@ const StripeElementsFormUI = (props: any) => {
 								cardStyle={{
 									backgroundColor: '#FFFFFF',
 									textColor: '#000000',
+									borderWidth: 1,
+									borderRadius: 8,
+									borderColor: theme.colors.border
 								}}
 								style={{
 									width: '100%',
