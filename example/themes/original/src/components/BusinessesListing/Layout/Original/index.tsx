@@ -655,14 +655,25 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							key={city?.id}
 							style={{
 								padding: 10,
-								borderBottomWidth: 1,
-								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
-								marginBottom: 10,
+								flexDirection: 'row'
 							}}
 							onPress={() => handleChangeCity(city?.id)}
 							disabled={orderState?.loading}
 						>
-							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>
+							{orderState?.options?.city_id === city?.id ? (
+								<OIcon
+									src={theme.images.general.option_checked}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							) : (
+								<OIcon
+									src={theme.images.general.option_normal}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							)}
+							<OText color={theme.colors.black}>
 								{city?.name}
 							</OText>
 						</TouchableOpacity>
