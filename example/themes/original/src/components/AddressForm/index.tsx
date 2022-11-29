@@ -140,6 +140,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 	const [isSignUpEffect, setIsSignUpEffect] = useState(false);
 	const [hasEditing, setAddressEditing] = useState(false);
+	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
 	const googleInput: any = useRef(null);
 	const internalNumberRef: any = useRef(null);
@@ -563,6 +564,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 												autoCorrect: false,
 												blurOnSubmit: false,
 												returnKeyType: 'next',
+												onFocus: () => setAutoCompleteInputFocused(true),
+												onBlur: () => setAutoCompleteInputFocused(false)
 											}}
 											onFail={(error) =>
 												setAlertState({
@@ -586,7 +589,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												textInput: {
 													borderWidth: 1,
 													borderRadius: 7.6,
-													borderColor: theme.colors.border,
+													borderColor: autoCompleteInputFocused ? theme.colors.primary : theme.colors.border,
 													flexGrow: 1,
 													fontSize: 15,
 													paddingLeft: 16,
