@@ -20,6 +20,7 @@ const BusinessesListingUI = (props: any) => {
   const {
     navigation,
     businessesList,
+    paginationProps,
     handleBusinessClick,
   } = props;
 
@@ -78,7 +79,7 @@ const BusinessesListingUI = (props: any) => {
         </CardsContainer>
 
 
-        {!businessesList.loading && businessesList.businesses.length === 0 && (
+        {!businessesList.loading && businessesList.businesses.length === 0 && paginationProps.totalPages !== null && (
           <NotFoundSource
             content={t(
               'NOT_FOUND_BUSINESSES',
