@@ -74,15 +74,8 @@ export const ListWrapper = styled.View`
 
 export const FeaturedWrapper = styled.View`
 	background-color: ${(props: any) => props.theme.colors.backgroundLight};
-	height: 220px;
 	paddingVertical: 30px;
 `;
-
-export const OrderProgressWrapper = styled.View`
-  margin-top: 37px;
-  margin-bottom: 20px;
-	padding-horizontal: 40px;
-`
 
 export const FarAwayMessage = styled.View`
   flex-direction: row;

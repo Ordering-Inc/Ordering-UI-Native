@@ -32,7 +32,6 @@ import {
 	HeaderWrapper,
 	ListWrapper,
 	FeaturedWrapper,
-	OrderProgressWrapper,
 	FarAwayMessage,
 	AddressInputContainer,
 	PreorderInput,
@@ -500,12 +499,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</TouchableOpacity>
 				</View>
 			)}
-			<OrderProgressWrapper>
-				<OrderProgress
-					{...props}
-					isFocused={isFocused}
-				/>
-			</OrderProgressWrapper>
+			<OrderProgress
+				{...props}
+				isFocused={isFocused}
+			/>
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
