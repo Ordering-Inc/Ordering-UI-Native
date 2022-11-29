@@ -136,7 +136,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			minHeight: 45,
 			paddingVertical: 5,
 			paddingHorizontal: 20,
-			borderWidth: 1
+			borderWidth: 1,
+			justifyContent: 'center'
 		},
 		businessSkeleton: {
 			borderRadius: 8,
