@@ -54,7 +54,7 @@ const PageBannerUI = (props: any) => {
           {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
             <PageBannerWrapper>
               <Swiper
-                loop={false}
+                loop={pageBannerState.banner?.items.length > 1}
                 showsButtons={true}
                 style={styles.mainSwiper}
                 showsPagination={false}
