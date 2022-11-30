@@ -102,7 +102,7 @@ export const BusinessItemAccordion = (props: any) => {
 										<OText
 											size={12}
 											lineHeight={18}
-											color={theme.colors.textSecondary}
+											color={theme.colors.primary}
 											style={{ textDecorationLine: 'underline' }}
 										>
 											{t('CHANGE_STORE', 'Change store')}
