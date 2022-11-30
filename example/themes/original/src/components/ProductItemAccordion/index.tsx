@@ -241,7 +241,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginEnd: 7 }}>
 											<OIcon
 												src={theme.images.general.pencil}
-												width={16}
+												width={20}
 												color={theme.colors.textSecondary}
 											/>
 										</TouchableOpacity>
@@ -254,7 +254,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										>
 											<OIcon
 												src={theme.images.general.trash}
-												width={17}
+												width={20}
 												color={theme.colors.textSecondary}
 											/>
 										</OAlert>

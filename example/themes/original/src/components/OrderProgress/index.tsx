@@ -17,7 +17,8 @@ import {
   ProgressBar,
   TimeWrapper,
   ProgressTextWrapper,
-  OrderInfoWrapper
+  OrderInfoWrapper,
+  OrderProgressWrapper
 } from './styles'
 const OrderProgressUI = (props: any) => {
   const {
@@ -47,9 +48,9 @@ const OrderProgressUI = (props: any) => {
         height: 1
       },
       shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowRadius: 1,
-      elevation: 2
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3
     },
     logoWrapper: {
       overflow: 'hidden',
@@ -144,70 +145,74 @@ const OrderProgressUI = (props: any) => {
   return (
     <>
       {(orderList?.loading && !initialLoaded) && (
-        <Placeholder Animation={Fade} height={Platform.OS === 'ios' ? 147.5 : 158}>
-          <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
-          <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
-          <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />
-        </Placeholder>
+        <OrderProgressWrapper>
+          <Placeholder Animation={Fade} height={Platform.OS === 'ios' ? 147.5 : 158}>
+            <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
+            <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
+            <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />
+          </Placeholder>
+        </OrderProgressWrapper>
       )}
       {(!orderList?.loading || initialLoaded) && orderList?.orders?.length > 0 && lastOrder && (
-        <View style={styles.main}>
-          <OrderInfoWrapper style={{ flex: 1 }}>
-            <View style={styles.logoWrapper}>
-              <FastImage
-                style={{ width: 50, height: 50 }}
-                source={{
-                  uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
-                  priority: FastImage.priority.normal,
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
+        <OrderProgressWrapper>
+          <View style={styles.main}>
+            <OrderInfoWrapper style={{ flex: 1 }}>
+              <View style={styles.logoWrapper}>
+                <FastImage
+                  style={{ width: 50, height: 50 }}
+                  source={{
+                    uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
+                    priority: FastImage.priority.normal,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+              </View>
+              <View style={{
+                paddingHorizontal: 10,
+                flex: 1
+              }}
+              >
+                <OText
+                  size={13}
+                  style={{
+                    fontWeight: 'bold',
+                    marginBottom: 3
+                  }}
+                >{t('ORDER_IN_PROGRESS', 'Order in progress')}</OText>
+                <OText size={11} numberOfLines={1} ellipsizeMode='tail'>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</OText>
+                <TouchableOpacity onPress={() => handleGoToOrder('MyOrders')}>
+                  <View style={styles.navigationButton}>
+                    <OText size={11} color={theme.colors.primary}>{t('GO_TO_MY_ORDERS', 'Go to my orders')}</OText>
+                    <IconAntDesign
+                      name='arrowright'
+                      color={theme.colors.primary}
+                      size={13}
+                      style={{ marginHorizontal: 5 }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </OrderInfoWrapper>
+            <View style={{ flex: 1 }}>
+              <ProgressContentWrapper>
+                <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${getOrderStatus(lastOrder.status)?.percentage}%` : '0%' }} />
+              </ProgressContentWrapper>
+              <ProgressTextWrapper>
+                <OText size={12} style={{ width: '50%' }}>{getOrderStatus(lastOrder.status)?.value}</OText>
+                <TimeWrapper>
+                  <OText size={11}>{t('ESTIMATED_DELIVERY', 'Estimated delivery')}</OText>
+                  <OText size={11}>
+                    {lastOrder?.delivery_datetime_utc
+                      ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
+                      : parseTime(lastOrder?.delivery_datetime, { utc: false })}
+                    &nbsp;-&nbsp;
+                    {convertDiffToHours(lastOrder)}
+                  </OText>
+                </TimeWrapper>
+              </ProgressTextWrapper>
             </View>
-            <View style={{
-              paddingHorizontal: 10,
-              flex: 1
-            }}
-            >
-              <OText
-                size={13}
-                style={{
-                  fontWeight: 'bold',
-                  marginBottom: 3
-                }}
-              >{t('ORDER_IN_PROGRESS', 'Order in progress')}</OText>
-              <OText size={11} numberOfLines={1} ellipsizeMode='tail'>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</OText>
-              <TouchableOpacity onPress={() => handleGoToOrder('MyOrders')}>
-                <View style={styles.navigationButton}>
-                  <OText size={11} color={theme.colors.primary}>{t('GO_TO_MY_ORDERS', 'Go to my orders')}</OText>
-                  <IconAntDesign
-                    name='arrowright'
-                    color={theme.colors.primary}
-                    size={13}
-                    style={{ marginHorizontal: 5 }}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </OrderInfoWrapper>
-          <View style={{ flex: 1 }}>
-            <ProgressContentWrapper>
-              <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${getOrderStatus(lastOrder.status)?.percentage}%` : '0%' }} />
-            </ProgressContentWrapper>
-            <ProgressTextWrapper>
-              <OText size={12} style={{ width: '50%' }}>{getOrderStatus(lastOrder.status)?.value}</OText>
-              <TimeWrapper>
-                <OText size={11}>{t('ESTIMATED_DELIVERY', 'Estimated delivery')}</OText>
-                <OText size={11}>
-                  {lastOrder?.delivery_datetime_utc
-                    ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
-                    : parseTime(lastOrder?.delivery_datetime, { utc: false })}
-                  &nbsp;-&nbsp;
-                  {convertDiffToHours(lastOrder)}
-                </OText>
-              </TimeWrapper>
-            </ProgressTextWrapper>
           </View>
-        </View>
+        </OrderProgressWrapper>
       )}
       {/* {!orderList?.loading && orderList?.orders?.length === 0 && (
         <NotFoundSource

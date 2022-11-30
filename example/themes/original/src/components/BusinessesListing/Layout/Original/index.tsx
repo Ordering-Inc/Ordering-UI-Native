@@ -32,7 +32,6 @@ import {
 	HeaderWrapper,
 	ListWrapper,
 	FeaturedWrapper,
-	OrderProgressWrapper,
 	FarAwayMessage,
 	AddressInputContainer,
 	PreorderInput,
@@ -137,7 +136,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			minHeight: 45,
 			paddingVertical: 5,
 			paddingHorizontal: 20,
-			borderWidth: 1
+			borderWidth: 1,
+			justifyContent: 'center'
 		},
 		businessSkeleton: {
 			borderRadius: 8,
@@ -500,12 +500,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</TouchableOpacity>
 				</View>
 			)}
-			<OrderProgressWrapper>
-				<OrderProgress
-					{...props}
-					isFocused={isFocused}
-				/>
-			</OrderProgressWrapper>
+			<OrderProgress
+				{...props}
+				isFocused={isFocused}
+			/>
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
@@ -655,14 +653,25 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							key={city?.id}
 							style={{
 								padding: 10,
-								borderBottomWidth: 1,
-								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
-								marginBottom: 10,
+								flexDirection: 'row'
 							}}
 							onPress={() => handleChangeCity(city?.id)}
 							disabled={orderState?.loading}
 						>
-							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>
+							{orderState?.options?.city_id === city?.id ? (
+								<OIcon
+									src={theme.images.general.option_checked}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							) : (
+								<OIcon
+									src={theme.images.general.option_normal}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							)}
+							<OText color={theme.colors.black}>
 								{city?.name}
 							</OText>
 						</TouchableOpacity>
