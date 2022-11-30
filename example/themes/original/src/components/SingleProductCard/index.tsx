@@ -168,7 +168,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					<View style={{ flexDirection: 'row' }}>
 						{productAddedToCartLength > 0 && (
 							<QuantityContainer style={[styles.quantityContainer, {
-								transform: [{ translateX: 25 }, { translateY: hideAddButton ? -25 : -55 }],
+								transform: [{ translateX: 25 }, { translateY: -25 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
 							</QuantityContainer>
