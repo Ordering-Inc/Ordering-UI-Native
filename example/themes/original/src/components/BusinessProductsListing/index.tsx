@@ -42,6 +42,7 @@ import Animated from 'react-native-reanimated'
 import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
+import { PageBanner } from '../PageBanner'
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -403,6 +404,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							/>
 						</ProfessionalFilterWrapper>
 					)}
+					<PageBanner position='app_business_page' />
 					<View
 						style={{
 							height: 8,

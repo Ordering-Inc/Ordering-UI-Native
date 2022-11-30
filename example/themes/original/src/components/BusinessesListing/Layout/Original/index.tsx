@@ -54,6 +54,7 @@ import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { PageBanner } from '../../../PageBanner'
 
 const PIXELS_TO_SCROLL = 2000;
 
@@ -547,6 +548,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				)
 			}
+
+			<PageBanner position='app_business_listing' />
+
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				{!businessId && (
