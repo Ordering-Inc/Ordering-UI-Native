@@ -57,7 +57,7 @@ const AddressDetailsUI = (props: any) => {
 						}>
 						<OText
 							size={12}
-							color={theme.colors.textSecondary}
+							color={theme.colors.primary}
 							style={{ textDecorationLine: 'underline' }}>
 							{t('CHANGE', 'Change')}
 						</OText>

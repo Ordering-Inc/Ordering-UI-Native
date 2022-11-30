@@ -21,6 +21,7 @@ export const QuantityContainer = styled.View`
 export const PricesContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  margin-vertical: 6px;
 `
 
 export const LogoWrapper = styled.View`
