@@ -919,7 +919,7 @@ export const ProductOptionsUI = (props: any) => {
 										disabled={productCart.quantity === 1 || !productCart.quantity || isSoldOut || ((productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order)}>
 										<OIcon
 											src={theme.images.general.minus}
-											width={16}
+											width={20}
 											color={
 												productCart.quantity === 1 || isSoldOut
 													? theme.colors.backgroundGray
@@ -940,7 +940,8 @@ export const ProductOptionsUI = (props: any) => {
 												borderRadius: 8,
 												borderColor: theme.colors.inputBorderColor,
 												height: 44,
-												marginHorizontal: 10
+												marginHorizontal: 10,
+												fontSize: 16
 											}}
 										/>
 									)}
@@ -963,7 +964,7 @@ export const ProductOptionsUI = (props: any) => {
 										}>
 										<OIcon
 											src={theme.images.general.plus}
-											width={16}
+											width={20}
 											color={
 												maxProductQuantity <= 0 ||
 													(productCart?.quantity + productAddedToCartLength) >= maxProductQuantity ||
