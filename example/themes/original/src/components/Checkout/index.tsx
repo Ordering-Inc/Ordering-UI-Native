@@ -634,7 +634,7 @@ const CheckoutUI = (props: any) => {
 												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 											>
 												<OText
-													size={10}
+													size={12}
 													lineHeight={15}
 													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
@@ -651,7 +651,7 @@ const CheckoutUI = (props: any) => {
 												<OText
 													size={12}
 													lineHeight={18}
-													color={theme.colors.textSecondary}
+													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
 												>
 													{t('CHANGE_STORE', 'Change store')}

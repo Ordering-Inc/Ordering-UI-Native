@@ -251,7 +251,11 @@ export const BusinessBasicInformation = (
 						)}
 						{isChewLayout && (
 							<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
-								<OText style={{ textDecorationColor: theme.colors.black, textDecorationLine: 'underline' }}>
+								<OText 
+									color={theme.colors.primary}
+									style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+									size={12}
+								>
 									{t('SEE_MORE_DESCRIPTION', 'See more')}
 								</OText>
 							</TouchableOpacity>
@@ -416,7 +420,11 @@ export const BusinessBasicInformation = (
 									{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
 										<>
 											<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
-												<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+												<OText 
+													color={theme.colors.primary}
+													style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+													size={12}
+												>
 													{t('PREORDER', 'Preorder')}
 												</OText>
 											</TouchableOpacity>
@@ -424,7 +432,11 @@ export const BusinessBasicInformation = (
 										</>
 									)}
 									<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
-										<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+										<OText
+											color={theme.colors.primary}
+											style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+											size={12}
+										>
 											{t('REVIEWS', 'Reviews')}
 										</OText>
 									</TouchableOpacity>
