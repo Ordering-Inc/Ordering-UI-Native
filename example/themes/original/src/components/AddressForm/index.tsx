@@ -153,7 +153,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		'true';
 	const maxLimitLocation =
 		configState?.configs?.meters_to_change_address?.value;
-
+	const countryCode = configState?.configs?.country_autocomplete?.value
 	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -543,7 +543,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 											onPress={(data, details: any) => {
 												handleChangeAddress(data, details);
 											}}
-											query={{ key: googleMapsApiKey }}
+											query={{
+												key: googleMapsApiKey,
+												components: countryCode && countryCode !== '*' ? `country:${countryCode}` : ''
+											}}
 											fetchDetails
 											ref={googleInput}
 											textInputProps={{

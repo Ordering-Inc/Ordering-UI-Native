@@ -154,8 +154,13 @@ const CheckoutUI = (props: any) => {
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
+		if (item?.type === 1)
+			return acc = acc + item?.summary?.tax
+		return acc = acc
+	}, cart?.subtotal)
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
-		placing || errorCash || cart?.subtotal < cart?.minimum ||
+		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
 		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
@@ -634,7 +639,7 @@ const CheckoutUI = (props: any) => {
 												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 											>
 												<OText
-													size={10}
+													size={12}
 													lineHeight={15}
 													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
@@ -651,7 +656,7 @@ const CheckoutUI = (props: any) => {
 												<OText
 													size={12}
 													lineHeight={18}
-													color={theme.colors.textSecondary}
+													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
 												>
 													{t('CHANGE_STORE', 'Change store')}
@@ -756,7 +761,7 @@ const CheckoutUI = (props: any) => {
 					handleClick={() => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
-					btnText={cart?.subtotal >= cart?.minimum
+					btnText={subtotalWithTaxes >= cart?.minimum
 						? (
 							placing
 								? t('PLACING', 'Placing')
