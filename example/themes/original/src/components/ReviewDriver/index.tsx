@@ -186,7 +186,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
         <NavBar
           title={t('REVIEW_DRIVER', 'Review driver')}
           titleAlign={'center'}
-          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+          onActionLeft={() => onNavigationRedirect('BottomTab')}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
