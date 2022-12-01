@@ -155,7 +155,7 @@ const CheckoutUI = (props: any) => {
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
-		placing || errorCash || cart?.subtotal < cart?.minimum ||
+		placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum ||
 		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
@@ -756,7 +756,7 @@ const CheckoutUI = (props: any) => {
 					handleClick={() => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
-					btnText={cart?.subtotal >= cart?.minimum
+					btnText={cart?.subtotal_to_calculate >= cart?.minimum
 						? (
 							placing
 								? t('PLACING', 'Placing')
