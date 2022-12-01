@@ -1,10 +1,11 @@
 import React from 'react';
 import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {CODES} from 'ordering-components/native'
+import { CODES } from 'ordering-components/native'
 import { ORDER_TYPES } from '../config/constants';
 
 export const flatArray = (arr: any) => [].concat(...arr)
+const [languageState, t] = useLanguage();
 
 /**
  * Function to return the traduction depending of a key 't'
@@ -43,68 +44,112 @@ export const getTraduction = (key: string) => {
 /**
  * Change local moment variables
  */
- export const setLocalMoment = (moment : any, t : any) => {
+export const setLocalMoment = (moment: any, t: any) => {
   moment.locale('custom', {
     months: [
-      t('MONTH1','January'),
-      t('MONTH2','February'),
-      t('MONTH3','March'),
-      t('MONTH4','April'),
-      t('MONTH5','May'),
-      t('MONTH6','June'),
-      t('MONTH7','July'),
-      t('MONTH8','August'),
-      t('MONTH9','September'),
-      t('MONTH10','October'),
-      t('MONTH11','November'),
-      t('MONTH12','December')
+      t('MONTH1', 'January'),
+      t('MONTH2', 'February'),
+      t('MONTH3', 'March'),
+      t('MONTH4', 'April'),
+      t('MONTH5', 'May'),
+      t('MONTH6', 'June'),
+      t('MONTH7', 'July'),
+      t('MONTH8', 'August'),
+      t('MONTH9', 'September'),
+      t('MONTH10', 'October'),
+      t('MONTH11', 'November'),
+      t('MONTH12', 'December')
     ],
     monthsShort: [
-      t('MONTHSHORT1','Jan'),
-      t('MONTHSHORT2','Feb'),
-      t('MONTHSHORT3','Mar'),
-      t('MONTHSHORT4','Apr'),
-      t('MONTHSHORT5','May'),
-      t('MONTHSHORT6','Jun'),
-      t('MONTHSHORT7','Jul'),
-      t('MONTHSHORT8','Aug'),
-      t('MONTHSHORT9','Sep'),
-      t('MONTHSHORT10','Oct'),
-      t('MONTHSHORT11','Nov'),
-      t('MONTHSHORT12','Dec')
+      t('MONTHSHORT1', 'Jan'),
+      t('MONTHSHORT2', 'Feb'),
+      t('MONTHSHORT3', 'Mar'),
+      t('MONTHSHORT4', 'Apr'),
+      t('MONTHSHORT5', 'May'),
+      t('MONTHSHORT6', 'Jun'),
+      t('MONTHSHORT7', 'Jul'),
+      t('MONTHSHORT8', 'Aug'),
+      t('MONTHSHORT9', 'Sep'),
+      t('MONTHSHORT10', 'Oct'),
+      t('MONTHSHORT11', 'Nov'),
+      t('MONTHSHORT12', 'Dec')
     ],
     weekdays: [
-      t('DAY7','Sunday'),
-      t('DAY1','Monday'),
-      t('DAY2','Tuesday'),
-      t('DAY3','Wednesday'),
-      t('DAY4','Thursday'),
-      t('DAY5','Friday'),
-      t('DAY6','Saturday')
+      t('DAY7', 'Sunday'),
+      t('DAY1', 'Monday'),
+      t('DAY2', 'Tuesday'),
+      t('DAY3', 'Wednesday'),
+      t('DAY4', 'Thursday'),
+      t('DAY5', 'Friday'),
+      t('DAY6', 'Saturday')
     ],
     weekdaysShort: [
-      t('DAYSHORT7','Sun'),
-      t('DAYSHORT1','Mon'),
-      t('DAYSHORT2','Tue'),
-      t('DAYSHORT3','Wed'),
-      t('DAYSHORT4','Thu'),
-      t('DAYSHORT5','Fri'),
-      t('DAYSHORT6','Sat')
+      t('DAYSHORT7', 'Sun'),
+      t('DAYSHORT1', 'Mon'),
+      t('DAYSHORT2', 'Tue'),
+      t('DAYSHORT3', 'Wed'),
+      t('DAYSHORT4', 'Thu'),
+      t('DAYSHORT5', 'Fri'),
+      t('DAYSHORT6', 'Sat')
     ],
     weekdaysMin: [
-      t('DAYMIN7','Su'),
-      t('DAYMIN1','Mo'),
-      t('DAYMIN2','Tu'),
-      t('DAYMIN3','We'),
-      t('DAYMIN4','Th'),
-      t('DAYMIN5','Fr'),
-      t('DAYMIN6','Sa')
+      t('DAYMIN7', 'Su'),
+      t('DAYMIN1', 'Mo'),
+      t('DAYMIN2', 'Tu'),
+      t('DAYMIN3', 'We'),
+      t('DAYMIN4', 'Th'),
+      t('DAYMIN5', 'Fr'),
+      t('DAYMIN6', 'Sa')
     ],
-    meridiem : function (hours : any) {
-      return hours < 12 ? t('AM', 'AM') : t('PM','PM');
+    meridiem: function (hours: any) {
+      return hours < 12 ? t('AM', 'AM') : t('PM', 'PM');
     }
   })
 }
+
+export const monthsEnum: any = {
+  Jan: 'MONTHSHORT1',
+  Feb: 'MONTHSHORT2',
+  Mar: 'MONTHSHORT3',
+  Apr: 'MONTHSHORT4',
+  May: 'MONTHSHORT5',
+  Jun: 'MONTHSHORT6',
+  Jul: 'MONTHSHORT7',
+  Aug: 'MONTHSHORT8',
+  Sep: 'MONTHSHORT9',
+  Oct: 'MONTHSHORT10',
+  Nov: 'MONTHSHORT11',
+  Dec: 'MONTHSHORT12',
+}
+
+export const locale = {
+  name: languageState?.language?.code?.slice(0, 2),
+  config: {
+    months: [
+      t('MONTH1', 'January'),
+      t('MONTH2', 'February'),
+      t('MONTH3', 'March'),
+      t('MONTH4', 'April'),
+      t('MONTH5', 'May'),
+      t('MONTH6', 'June'),
+      t('MONTH7', 'July'),
+      t('MONTH8', 'August'),
+      t('MONTH9', 'September'),
+      t('MONTH10', 'October'),
+      t('MONTH11', 'November'),
+      t('MONTH12', 'December')
+    ],
+    weekdaysShort: [
+      t('DAYSHORT7', 'Sun'),
+      t('DAYSHORT1', 'Mon'),
+      t('DAYSHORT2', 'Tue'),
+      t('DAYSHORT3', 'Wed'),
+      t('DAYSHORT4', 'Thu'),
+      t('DAYSHORT5', 'Fri'),
+      t('DAYSHORT6', 'Sat')
+    ],
+  }
+};
 
 /**
  * Function to convert delivery time in minutes
@@ -182,7 +227,7 @@ export const getIconCard = (brand: string, size: number) => {
  * Function to return a static google maps image based in location
  * @param {object} param object with latitude and logitude
  */
- export const getGoogleMapImage = ({ lat, lng }: any, apiKey: string) => {
+export const getGoogleMapImage = ({ lat, lng }: any, apiKey: string) => {
   return `https://maps.googleapis.com/maps/api/staticmap?size=500x190&center=${lat},${lng}&zoom=17&scale=2&maptype=roadmap&&markers=icon:https://res.cloudinary.com/ditpjbrmz/image/upload/f_auto,q_auto,w_45,q_auto:best,q_auto:best/v1564675872/marker-customer_kvxric.png%7Ccolor:white%7C${lat},${lng}&key=${apiKey}`
 }
 /**
@@ -213,8 +258,8 @@ export const sortInputFields = ({ fields, values }: any) => {
   return fieldsSorted;
 }
 
-export const transformCountryCode = (countryCode : number) => {
-  const code = CODES.find((code : any) => code.phoneCode === countryCode)
+export const transformCountryCode = (countryCode: number) => {
+  const code = CODES.find((code: any) => code.phoneCode === countryCode)
   return code?.countryCode
 }
 
@@ -224,7 +269,7 @@ export const transformCountryCode = (countryCode : number) => {
  * @param {*} parser function fallback when is decimal
  * @returns string
  */
- export const verifyDecimals = (value: number, parser: any) => {
+export const verifyDecimals = (value: number, parser: any) => {
   if (value % 1 === 0) {
     return value
   } else {
@@ -240,7 +285,7 @@ export const getTypesText = (value: number) => {
 /**
  * List shape for ribbon
  */
- export const shape = {
+export const shape = {
   rectangle: 'rectangle',
   rectangleRound: 'rectangle_round',
   capsuleShape: 'capsule_shape'
@@ -251,7 +296,7 @@ export const getTypesText = (value: number) => {
  * @param {number} value for transform
  *
  */
- export const convertToRadian = (value: number) => {
+export const convertToRadian = (value: number) => {
   return value * Math.PI / 180
 }
 
@@ -273,14 +318,14 @@ export const getDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
   return R * c
 }
 
-export const formatUrlVideo = (url : string) => {
+export const formatUrlVideo = (url: string) => {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
   const match = url.match(regExp)
   const id = (match && match[7].length === 11) ? match[7] : false
   return `https://www.youtube-nocookie.com/embed/${id}`
 }
 
-export const formatSeconds = (seconds : number) => {
+export const formatSeconds = (seconds: number) => {
   // Hours, minutes and seconds
   var hrs = ~~(seconds / 3600)
   var mins = ~~((seconds % 3600) / 60)
@@ -299,7 +344,7 @@ export const formatSeconds = (seconds : number) => {
 /**
  * List of price to filter businesses
  */
- export const priceList = [
+export const priceList = [
   { level: '1', content: '$' },
   { level: '2', content: '$$' },
   { level: '3', content: '$$$' },
