@@ -46,6 +46,12 @@ export const BusinessItemAccordion = (props: any) => {
 		}
 	}, [orderState?.carts, isClosed])
 
+	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
+		if (item?.type === 1)
+			return acc = acc + item?.summary?.tax
+		return acc = acc
+	}, cart?.subtotal)
+
 	return (
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
@@ -151,7 +157,7 @@ export const BusinessItemAccordion = (props: any) => {
 							textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
 							style={{ width: 180, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
 							text={t('CHECKOUT', 'Checkout')}
-							bgColor={(cart?.subtotal_to_calculate < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+							bgColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
 							borderColor={theme.colors.primary}
 							isDisabled={checkoutButtonDisabled}
 						/>
