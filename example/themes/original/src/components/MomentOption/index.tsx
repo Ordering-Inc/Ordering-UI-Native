@@ -28,6 +28,7 @@ import {
 	TimeItem
 } from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { locale, monthsEnum } from '../../utils';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -131,7 +132,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		}
 	});
 
-	const [languageState, t] = useLanguage();
+	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [{ parseTime }] = useUtils()
 	const [orderState] = useOrder();
@@ -249,51 +250,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	useEffect(() => {
 		setSelectedTime(timeSelected)
 	}, [timeSelected])
-
-
-	const monthsEnum: any = {
-		Jan: 'MONTHSHORT1',
-		Feb: 'MONTHSHORT2',
-		Mar: 'MONTHSHORT3',
-		Apr: 'MONTHSHORT4',
-		May: 'MONTHSHORT5',
-		Jun: 'MONTHSHORT6',
-		Jul: 'MONTHSHORT7',
-		Aug: 'MONTHSHORT8',
-		Sep: 'MONTHSHORT9',
-		Oct: 'MONTHSHORT10',
-		Nov: 'MONTHSHORT11',
-		Dec: 'MONTHSHORT12',
-	}
-
-	const locale = {
-		name: languageState?.language?.code?.slice(0, 2),
-		config: {
-			months: [
-				t('MONTH1', 'January'),
-				t('MONTH2', 'February'),
-				t('MONTH3', 'March'),
-				t('MONTH4', 'April'),
-				t('MONTH5', 'May'),
-				t('MONTH6', 'June'),
-				t('MONTH7', 'July'),
-				t('MONTH8', 'August'),
-				t('MONTH9', 'September'),
-				t('MONTH10', 'October'),
-				t('MONTH11', 'November'),
-				t('MONTH12', 'December')
-			],
-			weekdaysShort: [
-				t('DAYSHORT7', 'Sun'),
-				t('DAYSHORT1', 'Mon'),
-				t('DAYSHORT2', 'Tue'),
-				t('DAYSHORT3', 'Wed'),
-				t('DAYSHORT4', 'Thu'),
-				t('DAYSHORT5', 'Fri'),
-				t('DAYSHORT6', 'Sat')
-			],
-		}
-	};
 
 	return (
 		<>
