@@ -163,7 +163,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	}, [removeAccountState])
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom - 62, paddingTop: 20 }}>
+		<View style={{ flex: 1, height: height - top - bottom - 42, paddingTop: 20 }}>
 			{/* <OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
 				{t('PROFILE', 'Profile')}
 			</OText> */}
@@ -183,7 +183,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				<View style={{ flexBasis: '70%' }}>
 					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{user?.name} {user?.lastname}</OText>
 					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
-						<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
+						<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
 					</TouchableOpacity>
 				</View>
 			</CenterView>

@@ -622,7 +622,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         onPress={() => handleClickOrderReview(order)}
                       >
                         <OText
-                          size={10}
+                          size={12}
                           lineHeight={15}
                           color={theme.colors.primary}
                           style={{ textDecorationLine: 'underline' }}
@@ -638,7 +638,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                   >
                     <OText
-                      size={10}
+                      size={12}
                       lineHeight={15}
                       color={theme.colors.primary}
                       style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
