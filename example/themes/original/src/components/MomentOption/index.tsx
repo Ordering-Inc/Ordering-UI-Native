@@ -131,7 +131,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		}
 	});
 
-	const [, t] = useLanguage();
+	const [languageState, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [{ parseTime }] = useUtils()
 	const [orderState] = useOrder();
@@ -250,6 +250,51 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		setSelectedTime(timeSelected)
 	}, [timeSelected])
 
+
+	const monthsEnum: any = {
+		Jan: 'MONTHSHORT1',
+		Feb: 'MONTHSHORT2',
+		Mar: 'MONTHSHORT3',
+		Apr: 'MONTHSHORT4',
+		May: 'MONTHSHORT5',
+		Jun: 'MONTHSHORT6',
+		Jul: 'MONTHSHORT7',
+		Aug: 'MONTHSHORT8',
+		Sep: 'MONTHSHORT9',
+		Oct: 'MONTHSHORT10',
+		Nov: 'MONTHSHORT11',
+		Dec: 'MONTHSHORT12',
+	}
+
+	const locale = {
+		name: languageState?.language?.code?.slice(0, 2),
+		config: {
+			months: [
+				t('MONTH1', 'January'),
+				t('MONTH2', 'February'),
+				t('MONTH3', 'March'),
+				t('MONTH4', 'April'),
+				t('MONTH5', 'May'),
+				t('MONTH6', 'June'),
+				t('MONTH7', 'July'),
+				t('MONTH8', 'August'),
+				t('MONTH9', 'September'),
+				t('MONTH10', 'October'),
+				t('MONTH11', 'November'),
+				t('MONTH12', 'December')
+			],
+			weekdaysShort: [
+				t('DAYSHORT7', 'Sun'),
+				t('DAYSHORT1', 'Mon'),
+				t('DAYSHORT2', 'Tue'),
+				t('DAYSHORT3', 'Wed'),
+				t('DAYSHORT4', 'Thu'),
+				t('DAYSHORT5', 'Fri'),
+				t('DAYSHORT6', 'Sat')
+			],
+		}
+	};
+
 	return (
 		<>
 			<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
@@ -281,7 +326,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								style={{ marginEnd: 24 }}
 							/>
 						)}
-						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM D, yyyy h:mm A')} + delivery time)`}</OText>
+						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${t(moment().format('dddd')?.toLocaleUpperCase(), moment().format('dddd'))}, ${t(monthsEnum[moment().format('MMM')], moment().format('MMM'))}${moment().format(' D, yyyy h:mm A')} + ${t('DELIVERY_TIME', 'delivery time')})`}</OText>
 					</WrapSelectOption>
 					<WrapSelectOption
 						onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
@@ -308,6 +353,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								{selectDate && datesWhitelist[0]?.start !== null && (
 									<CalendarStrip
 										scrollable
+										locale={locale}
 										style={styles.calendar}
 										calendarHeaderContainerStyle={styles.calendarHeaderContainer}
 										calendarHeaderStyle={styles.calendarHeader}
@@ -342,12 +388,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 													style={{
 														lineHeight: 24
 													}}
-												>{is12hours ? ( 
-													time.startTime.includes('12') 
+												>{is12hours ? (
+													time.startTime.includes('12')
 														? `${time.startTime}PM`
 														: parseTime(moment(time.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
-													) : time.startTime
-												}</OText>
+												) : time.startTime
+													}</OText>
 											</TimeItem>
 										</TouchableOpacity>
 									))}
