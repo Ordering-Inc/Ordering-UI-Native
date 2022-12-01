@@ -131,7 +131,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 	const [openService, setOpenService] = useState(false)
 	const [currentProduct, setCurrentProduct] = useState(null)
-  const [searchBarHeight, setSearchBarHeight] = useState(60)
+	const [searchBarHeight, setSearchBarHeight] = useState(60)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
@@ -256,6 +256,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		}
 	}, [isFocused])
 
+	const subtotalWithTaxes = currentCart?.taxes?.reduce((acc: any, item: any) => {
+		if (item?.type === 1)
+			return acc = acc + item?.summary?.tax
+		return acc = acc
+	}, currentCart?.subtotal)
+
 	return (
 		<>
 			<View style={{ flex: 1 }}>
@@ -264,7 +270,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						style={{
 							marginTop: Platform.OS === 'ios' ? insets.top : 0
 						}}
-            onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height) }
+						onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height)}
 					>
 						{!isOpenSearchBar && (
 							<>
@@ -325,12 +331,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
 					<FiltProductsContainer
-          style={{
-            height: Dimensions.get('window').height - filtProductsHeight,
-            top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight							
-          }}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+						style={{
+							height: Dimensions.get('window').height - filtProductsHeight,
+							top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight
+						}}
+						contentContainerStyle={{ flexGrow: 1 }}
+					>
 						<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
 							<BusinessProductsList
 								categories={[
@@ -491,21 +497,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
 						<FloatingButton
-              btnText={
-                openUpselling
-                  ? t('LOADING', 'Loading')
-                  : currentCart?.subtotal >= currentCart?.minimum
-                    ? t('VIEW_ORDER', 'View Order')
-                    : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
-              }
-              isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-              btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-              btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-              btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
-              btnRightValue={parsePrice(currentCart?.total)}
-              disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-              handleClick={() => setOpenUpselling(true)}
-            />
+							btnText={
+								openUpselling
+									? t('LOADING', 'Loading')
+									: subtotalWithTaxes >= currentCart?.minimum
+										? t('VIEW_ORDER', 'View Order')
+										: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+							}
+							isSecondaryBtn={subtotalWithTaxes < currentCart?.minimum || openUpselling}
+							btnLeftValueShow={subtotalWithTaxes >= currentCart?.minimum && currentCart?.products?.length > 0}
+							btnRightValueShow={subtotalWithTaxes >= currentCart?.minimum && currentCart?.products?.length > 0}
+							btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
+							btnRightValue={parsePrice(currentCart?.total)}
+							disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
+							handleClick={() => setOpenUpselling(true)}
+						/>
 					</View>
 				)}
 				{openUpselling && (
