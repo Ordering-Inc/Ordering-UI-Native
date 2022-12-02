@@ -444,7 +444,7 @@ const LoginFormUI = (props: LoginParams) => {
             </View>
           )}
 
-          {(Number(useLoginByEmail) + Number(useLoginByCellphone) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
+          {(Number(useLoginByEmail) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
             <LoginWith>
               <ScrollView
                 ref={scrollRefTab}
