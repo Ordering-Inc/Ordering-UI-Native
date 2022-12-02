@@ -28,13 +28,18 @@ import {
   TabsContainer,
   OrSeparator,
   LineSeparator,
-  RecaptchaButton
+  RecaptchaButton,
+  TabBtn,
+  OTab
 } from './styles';
 import { _setStoreData } from '../../providers/StoreUtil'
 import { OText, OButton, OInput, OIconButton, OModal } from '../shared';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { VerifyPhone } from '../VerifyPhone';
 import { LoginParams } from '../../types';
+
+import { Otp } from './Otp'
+import Alert from '../../../../../src/providers/AlertProvider'
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -54,7 +59,14 @@ const LoginFormUI = (props: LoginParams) => {
     useRootPoint,
     notificationState,
     handleReCaptcha,
-    enableReCaptcha
+    enableReCaptcha,
+
+    useLoginOtp,
+		otpType,
+		setOtpType,
+		generateOtpCode,
+		useLoginOtpEmail,
+		useLoginOtpCellphone,
   } = props;
 
   const [ordering, { setOrdering }] = useApi();
@@ -96,6 +108,12 @@ const LoginFormUI = (props: LoginParams) => {
   const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 
   const recaptchaRef = useRef<any>({});
+
+  const [willVerifyOtpState, setWillVerifyOtpState] = useState(false)
+  const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
+  const isOtpEmail = loginTab === 'otp' && otpType === 'email'
+	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+
 
   const handleOpenRecaptcha = () => {
     setRecaptchaVerified(false)
@@ -209,6 +227,31 @@ const LoginFormUI = (props: LoginParams) => {
     handleSubmit(onSubmit)();
   };
 
+  const mainLogin = (values) => {
+    if (loginTab === 'otp') {
+			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
+				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+				return
+			}
+			if (loginTab === 'otp') {
+				generateOtpCode({
+					...values,
+					...phoneInputData.phone
+				})
+			}
+			setWillVerifyOtpState(true)
+		} else {
+			if (phoneInputData.error) {
+				showToast(ToastType.Error, phoneInputData.error);
+				return;
+			}
+			handleButtonLoginClick({
+				...values,
+				...phoneInputData.phone,
+			});
+		}
+  }
+
   const onSubmit = (values: any) => {
     Keyboard.dismiss();
 
@@ -227,12 +270,26 @@ const LoginFormUI = (props: LoginParams) => {
       setSubmitted(true)
       return
     }
-
-    handleButtonLoginClick({
-      ...values,
-      ...phoneInputData.phone
-    });
+    mainLogin(values)
   };
+
+  const handleChangeOtpType = (type: string) => {
+		handleChangeTab('otp', type)
+		setOtpType(type)
+	}
+
+	const handleLoginOtp = (code: string) => {
+		handleButtonLoginClick({ code })
+		setWillVerifyOtpState(false)
+	}
+
+	const closeAlert = () => {
+		setAlertState({
+			open: false,
+			title: '',
+			content: []
+		})
+	}
 
   const handleVerifyCodeClick = () => {
     if (phoneInputData.error) {
@@ -360,8 +417,19 @@ const LoginFormUI = (props: LoginParams) => {
     if (values?.project_name) {
       delete values.project_name
     }
-    handleButtonLoginClick({ ...values })
+    mainLogin(values)
+    setSubmitted(false)
   }, [ordering, submitted])
+
+  useEffect(() => {
+		if (checkPhoneCodeState?.result?.error) {
+			setAlertState({
+				open: true,
+				content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
+				title: ''
+			})
+		}
+	}, [checkPhoneCodeState])
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowWidth(
@@ -445,6 +513,25 @@ const LoginFormUI = (props: LoginParams) => {
       fontWeight: 'normal',
       fontSize: 16,
     },
+
+    borderStyleBase: {
+			width: 30,
+			height: 45
+		},
+		borderStyleHighLighted: {
+			borderColor: "#03DAC6",
+		},
+		underlineStyleBase: {
+			width: 45,
+			height: 60,
+			borderWidth: 1,
+			fontSize: 16
+		},
+		underlineStyleHighLighted: {
+			borderColor: theme.colors.primary,
+			color: theme.colors.primary,
+			fontSize: 16
+		},
   });
 
   return (
@@ -461,7 +548,7 @@ const LoginFormUI = (props: LoginParams) => {
         <OText style={styles.title}>{t('LOGIN', 'Login')}</OText>
       </View>
 
-      {(useLoginByEmail || useLoginByCellphone) && (
+      {(Number(useLoginByEmail) + Number(useLoginByCellphone) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
         <LoginWith>
           <ScrollView
             ref={scrollRefTab}
@@ -522,12 +609,63 @@ const LoginFormUI = (props: LoginParams) => {
                     }}></View>
                 </Pressable>
               )}
+
+              {useLoginOtpEmail && (
+								<Pressable
+                  style={styles.btnTab}
+                  onPress={() => handleChangeOtpType('email')}>
+                  <OText
+                    style={styles.btnTabText}
+                    color={
+                      isOtpEmail
+                        ? theme.colors.textNormal
+                        : theme.colors.disabled
+                    }
+                    weight={isOtpEmail ? 'bold' : 'normal'}>
+                    {t('BY_OTP_EMAIL', 'By Otp Email')}
+                  </OText>
+                  <View
+                    style={{
+                      width: '100%',
+                      borderBottomColor:
+                        isOtpEmail
+                          ? theme.colors.textGray
+                          : theme.colors.tabBar,
+                      borderBottomWidth: 2,
+                    }} />
+								</Pressable>
+							)}
+							{useLoginOtpCellphone && (
+								<Pressable
+                  style={styles.btnTab}
+                  onPress={() => handleChangeOtpType('cellphone')}>
+                  <OText
+                    style={styles.btnTabText}
+                    color={
+                      isOtpCellphone
+                        ? theme.colors.textNormal
+                        : theme.colors.disabled
+                    }
+                    weight={isOtpCellphone ? 'bold' : 'normal'}>
+                    {t('BY_OTP_PHONE', 'By Otp Phone')}
+                  </OText>
+                  <View
+                    style={{
+                      width: '100%',
+                      borderBottomColor:
+                      isOtpCellphone
+                          ? theme.colors.textGray
+                          : theme.colors.tabBar,
+                      borderBottomWidth: 2,
+                    }} />
+								</Pressable>
+							)}
             </TabsContainer>
           </ScrollView>
         </LoginWith>
       )}
 
-      {(useLoginByCellphone || useLoginByEmail) && (
+      {(useLoginByCellphone || useLoginByEmail || useLoginOtp) && (
         <FormInput>
           {useRootPoint && (
             <Controller
@@ -561,7 +699,7 @@ const LoginFormUI = (props: LoginParams) => {
             />
           )}
 
-          {useLoginByEmail && loginTab === 'email' && (
+          {((useLoginByEmail && loginTab === 'email') || (loginTab === 'otp' && otpType === 'email')) && (
             <Controller
               control={control}
               render={({ onChange, value }: any) => (
@@ -606,7 +744,7 @@ const LoginFormUI = (props: LoginParams) => {
             />
           )}
 
-          {useLoginByCellphone && loginTab === 'cellphone' && (
+          {((useLoginByCellphone && loginTab === 'cellphone') || (loginTab === 'otp' && otpType === 'cellphone')) && (
             <View style={{ marginBottom: 20 }}>
               <PhoneInputNumber
                 data={phoneInputData}
@@ -621,54 +759,56 @@ const LoginFormUI = (props: LoginParams) => {
             </View>
           )}
 
-          <Controller
-            control={control}
-            render={({ onChange, value }: any) => (
-              <OInput
-                isSecured={!passwordSee ? true : false}
-                placeholder={t('PASSWORD', 'Password')}
-                placeholderTextColor={theme.colors.arrowColor}
-                style={styles.input}
-                icon={theme.images.logos.passwordInputIcon}
-                iconColor={theme.colors.arrowColor}
-                iconCustomRight={
-                  !passwordSee ? (
-                    <MaterialCommunityIcons
-                      name="eye-outline"
-                      size={24}
-                      color={theme.colors.arrowColor}
-                      onPress={() => setPasswordSee(!passwordSee)}
-                    />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="eye-off-outline"
-                      size={24}
-                      color={theme.colors.arrowColor}
-                      onPress={() => setPasswordSee(!passwordSee)}
-                    />
-                  )
-                }
-                selectionColor={theme.colors.primary}
-                color={theme.colors.textGray}
-                value={value}
-                forwardRef={inputRef}
-                onChange={(val: any) => onChange(val)}
-                returnKeyType="done"
-                onSubmitEditing={() => handleLogin()}
-                blurOnSubmit
-              />
-            )}
-            name="password"
-            rules={{
-              required: t(
-                'VALIDATION_ERROR_PASSWORD_REQUIRED',
-                'The field Password is required',
-              ).replace('_attribute_', t('PASSWORD', 'Password')),
-            }}
-            defaultValue=""
-          />
+          {loginTab !== 'otp' && (
+            <Controller
+              control={control}
+              render={({ onChange, value }: any) => (
+                <OInput
+                  isSecured={!passwordSee ? true : false}
+                  placeholder={t('PASSWORD', 'Password')}
+                  placeholderTextColor={theme.colors.arrowColor}
+                  style={styles.input}
+                  icon={theme.images.logos.passwordInputIcon}
+                  iconColor={theme.colors.arrowColor}
+                  iconCustomRight={
+                    !passwordSee ? (
+                      <MaterialCommunityIcons
+                        name="eye-outline"
+                        size={24}
+                        color={theme.colors.arrowColor}
+                        onPress={() => setPasswordSee(!passwordSee)}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="eye-off-outline"
+                        size={24}
+                        color={theme.colors.arrowColor}
+                        onPress={() => setPasswordSee(!passwordSee)}
+                      />
+                    )
+                  }
+                  selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
+                  value={value}
+                  forwardRef={inputRef}
+                  onChange={(val: any) => onChange(val)}
+                  returnKeyType="done"
+                  onSubmitEditing={() => handleLogin()}
+                  blurOnSubmit
+                />
+              )}
+              name="password"
+              rules={{
+                required: t(
+                  'VALIDATION_ERROR_PASSWORD_REQUIRED',
+                  'The field Password is required',
+                ).replace('_attribute_', t('PASSWORD', 'Password')),
+              }}
+              defaultValue=""
+            />
+          )}
 
-          {onNavigationRedirect && (
+          {onNavigationRedirect && loginTab !== 'otp' && (
             <Pressable
               style={{ marginRight: 'auto', marginBottom: 20 }}
               onPress={() => onNavigationRedirect('Forgot')}>
@@ -723,7 +863,7 @@ const LoginFormUI = (props: LoginParams) => {
           )}
           <OButton
             onClick={handleLogin}
-            text={t('LOGIN', 'Login')}
+            text={loginTab !== 'otp' ? t('LOGIN', 'Login') : t('GET_VERIFY_CODE', 'Get verify code')}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
             textStyle={styles.btnText}
@@ -763,7 +903,10 @@ const LoginFormUI = (props: LoginParams) => {
           </>
         )}
 
-      <OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
+      <OModal
+        open={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      >
         <VerifyPhone
           phone={phoneInputData.phone}
           verifyPhoneState={verifyPhoneState}
@@ -773,6 +916,28 @@ const LoginFormUI = (props: LoginParams) => {
           handleVerifyCodeClick={handleVerifyCodeClick}
         />
       </OModal>
+      <OModal
+				open={willVerifyOtpState}
+				onClose={() => setWillVerifyOtpState(false)}
+				entireModal
+        hideIcons
+				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			>
+				<Otp
+					willVerifyOtpState={willVerifyOtpState}
+					setWillVerifyOtpState={setWillVerifyOtpState}
+					handleLoginOtp={handleLoginOtp}
+					onSubmit={handleLogin}
+					setAlertState={setAlertState}
+				/>
+			</OModal>
+			<Alert
+				open={alertState.open}
+				content={alertState.content}
+				title={alertState.title || ''}
+				onAccept={closeAlert}
+				onClose={closeAlert}
+			/>
     </View>
   );
 };

@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
   },
-  titleSection: {
-    width: '100%',
-    height: 30,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
+	titleSection: {
+		width: '100%',
+		justifyContent: 'space-between',
+		alignItems: 'flex-start',
+		paddingLeft: 40,
+		paddingRight: 40,
+		marginBottom: 40,
+	},
   cancelBtn: {
     position: 'absolute',
     left: 0,
@@ -111,9 +111,12 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginTop: 15,
-    fontSize: 25,
-    textAlign: "center",
-    zIndex: 10
+		fontSize: 20,
+		lineHeight: 30,
+		fontWeight: '600',
+		textAlign: "center",
+		zIndex: 10,
+    width: '100%'
   },
   wrapperIcon: {
     overflow: 'hidden',

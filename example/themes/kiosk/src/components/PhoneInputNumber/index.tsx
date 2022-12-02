@@ -86,6 +86,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   return (
     <Wrapper>
       <PhoneInput
+        containerStyle={{ width: '100%' }}
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
         defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
