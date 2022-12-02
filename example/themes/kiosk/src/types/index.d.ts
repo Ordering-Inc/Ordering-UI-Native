@@ -84,6 +84,12 @@ export interface LoginParams {
   useRootPoint?: any;
   enableReCaptcha?: boolean;
   handleReCaptcha?: (vlaue: any) => void;
+  useLoginOtp?: any;
+  otpType?: any;
+  setOtpType?: any;
+  generateOtpCode?: any;
+  useLoginOtpEmail?: any;
+  useLoginOtpCellphone?: any;
 }
 
 export interface ProductItemAccordionParams {
@@ -481,4 +487,11 @@ export interface Cart {
 
 export interface NoNetworkParams {
   image?: any;
+}
+export interface otpParams {
+	willVerifyOtpState: boolean,
+	setWillVerifyOtpState: (val : boolean) => void,
+	onSubmit: any,
+	handleLoginOtp: (code : string) => void,
+	setAlertState: any
 }
