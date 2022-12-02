@@ -22,7 +22,13 @@ export const Container = (props: Props) => {
     <SafeAreStyled
       nestedScrollEnabled={props.nestedScrollEnabled}
     >
-      <ContainerStyled {...props} ref={props?.forwardRef}>{props.children}</ContainerStyled>
+      <ContainerStyled
+        {...props}
+        keyboardShouldPersistTaps="handled"
+        ref={props?.forwardRef}
+      >
+        {props.children}
+      </ContainerStyled>
     </SafeAreStyled>
   );
 };
