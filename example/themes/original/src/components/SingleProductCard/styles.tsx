@@ -1,14 +1,5 @@
 import styled, { css } from 'styled-components/native'
 
-export const CardContainer = styled.TouchableOpacity`
-  flex: 1;
-  flex-direction: ${(props : any) => props.showAddButton ? 'column' : 'row'};
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  border-radius: 10px;
-  position: relative;
-`
 export const CardInfo = styled.View`
   padding-start: 3px;
   flex: 1;
@@ -30,6 +21,7 @@ export const QuantityContainer = styled.View`
 export const PricesContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  margin-vertical: 6px;
 `
 
 export const LogoWrapper = styled.View`

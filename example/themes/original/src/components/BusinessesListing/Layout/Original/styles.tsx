@@ -60,7 +60,9 @@ export const WrapMomentOption = styled.TouchableOpacity`
 
 export const HeaderWrapper = styled.ImageBackground`
 	width: 100%;
-	height: 270px;
+  height: 5%;
+	min-height: 270px;
+	max-height: 400px;
 	padding: 20px 40px;
 	background-color: transparent;
 `;
@@ -72,15 +74,8 @@ export const ListWrapper = styled.View`
 
 export const FeaturedWrapper = styled.View`
 	background-color: ${(props: any) => props.theme.colors.backgroundLight};
-	height: 220px;
 	paddingVertical: 30px;
 `;
-
-export const OrderProgressWrapper = styled.View`
-  margin-top: 37px;
-  margin-bottom: 20px;
-	padding-horizontal: 40px;
-`
 
 export const FarAwayMessage = styled.View`
   flex-direction: row;

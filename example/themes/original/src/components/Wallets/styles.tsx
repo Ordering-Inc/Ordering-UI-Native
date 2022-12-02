@@ -34,10 +34,12 @@ export const OTabs = styled.View`
   flex-direction: row;
   width: 100%;
   flex-wrap: wrap;
+  padding-vertical: 5px;
 `;
 
 export const OTab = styled.View`
   padding-horizontal: 10px;
+  padding-vertical: 10px;
 `;
 
 export const LoyaltyContent = styled.View`

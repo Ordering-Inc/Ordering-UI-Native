@@ -3,6 +3,7 @@ import { ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, TextStyle }
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { useTheme } from 'styled-components/native';
 
 const Input = styled.TextInput`
   flex-grow: 1;
@@ -39,6 +40,7 @@ interface Props extends TextInputProps {
 	inputStyle?: TextStyle;
 	wrapperRef?: any;
 	onPress?: any;
+	isFocusHighlight?: boolean
 }
 
 const Wrapper = styled.Pressable`
@@ -54,12 +56,16 @@ const Wrapper = styled.Pressable`
 `;
 
 const OInput = (props: Props): React.ReactElement => {
+	const theme = useTheme();
+	const [inputFocused, setInputFocused] = React.useState(false)
 	return (
 		<Wrapper
 			onPress={() => { props.forwardRef?.current?.focus?.(); props.onPress && props.onPress() }}
 			style={{
 				backgroundColor: props.bgColor,
-				borderColor: props.borderColor,
+				borderColor: !props.isFocusHighlight
+					? props.borderColor
+					: inputFocused ? theme.colors.primary : theme.colors.border,
 				...props.style,
 			}}>
 			{props.icon ? (
@@ -95,6 +101,8 @@ const OInput = (props: Props): React.ReactElement => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
 				style={props?.inputStyle}
+				onFocus={() => setInputFocused(true)}
+				onBlur={() => setInputFocused(false)}
 			/>
 			{props.iconRight && (
 				<OIcon
@@ -114,6 +122,7 @@ OInput.defaultProps = {
 	iconColor: '#959595',
 	bgColor: 'white',
 	borderColor: 'white',
+	isFocusHighlight: false
 };
 
 export default OInput;

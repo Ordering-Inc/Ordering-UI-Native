@@ -96,7 +96,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 	const [tabLayouts, setTabLayouts] = useState<any>({})
 	const tabsRef = useRef<any>(null)
-
+	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 	const theme = useTheme();
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
 	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
@@ -680,7 +680,7 @@ const LoginFormUI = (props: LoginParams) => {
 									{t('NEW_ON_PLATFORM', 'New on Ordering?')}
 								</OText>
 								<TouchableOpacity onPress={() => onNavigationRedirect('Signup')}>
-									<OText size={14} mLeft={5} color={theme.colors.skyBlue}>
+									<OText size={14} mLeft={5} color={theme.colors.primary}>
 										{t('CREATE_ACCOUNT', 'Create account')}
 									</OText>
 								</TouchableOpacity>
@@ -788,6 +788,12 @@ const LoginFormUI = (props: LoginParams) => {
 							/>
 						</Placeholder>
 					</SkeletonWrapper>
+				)}
+
+				{enabledPoweredByOrdering && (
+					<OText>
+						Powered By Ordering.co
+					</OText>
 				)}
 			</FormSide>
 			<OModal

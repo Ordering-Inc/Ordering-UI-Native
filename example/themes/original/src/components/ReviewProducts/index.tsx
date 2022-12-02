@@ -67,7 +67,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
         <NavBar
           title={t('REVIEW_PRODUCT', 'Review product')}
           titleAlign={'center'}
-          onActionLeft={() => onNavigationRedirect('MyOrders')}
+          onActionLeft={() => onNavigationRedirect('BottomTab')}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}

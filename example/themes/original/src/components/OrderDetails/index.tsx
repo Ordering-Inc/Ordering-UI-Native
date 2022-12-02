@@ -118,6 +118,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const mapValidStatuses = [9, 19, 23]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
+  const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 
   const walletName: any = {
     cash: {
@@ -599,6 +600,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   : parseDate(order?.delivery_datetime, { utc: false })}
               </OText>}
             />
+            {enabledPoweredByOrdering && (
+              <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <OText>
+                  Powered By Ordering.co
+                </OText>
+              </View>
+            )}
             <OrderInfo>
               <OrderData>
                 <View style={styles.linkWrapper}>
@@ -614,7 +622,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         onPress={() => handleClickOrderReview(order)}
                       >
                         <OText
-                          size={10}
+                          size={12}
                           lineHeight={15}
                           color={theme.colors.primary}
                           style={{ textDecorationLine: 'underline' }}
@@ -630,7 +638,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                   >
                     <OText
-                      size={10}
+                      size={12}
                       lineHeight={15}
                       color={theme.colors.primary}
                       style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
@@ -1126,8 +1134,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               )}
               <Total>
                 <Table>
-                  <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
-                  <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>
+                  <OText size={14} style={{ fontWeight: 'bold' }} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
+                  <OText size={14} style={{ fontWeight: 'bold' }} color={theme.colors.textNormal}>
                     {parsePrice(order?.summary?.total ?? order?.total)}
                   </OText>
                 </Table>

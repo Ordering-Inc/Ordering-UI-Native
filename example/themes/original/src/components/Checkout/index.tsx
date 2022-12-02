@@ -118,9 +118,11 @@ const CheckoutUI = (props: any) => {
 			paddingHorizontal: 40,
 			width: '100%'
 		},
-		wrapperNavbar: Platform.OS === 'ios'
-			? { paddingVertical: 0, paddingHorizontal: 40 }
-			: { paddingVertical: 20, paddingHorizontal: 40 }
+		wrapperNavbar: {
+			paddingVertical: 0,
+			paddingHorizontal: 40,
+			marginVertical: 2
+		}
 	})
 
 	const [, { showToast }] = useToast();
@@ -152,8 +154,13 @@ const CheckoutUI = (props: any) => {
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
+		if (item?.type === 1)
+			return acc = acc + item?.summary?.tax
+		return acc = acc
+	}, cart?.subtotal)
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
-		placing || errorCash || cart?.subtotal < cart?.minimum ||
+		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
 		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
@@ -180,8 +187,8 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = (confirmPayment: any) => {
-		if (!userErrors.length && !requiredFields?.length) {
+	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
+		if (!userErrors.length && !requiredFields?.length || forcePlace) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -284,7 +291,6 @@ const CheckoutUI = (props: any) => {
 						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0 }}
-						style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
 					/>
@@ -341,7 +347,7 @@ const CheckoutUI = (props: any) => {
 								Object.values(businessDetails?.business).length > 0 &&
 								(
 									<>
-										<OText size={16} lineHeight={24} weight={'500'} mBottom={10}>
+										<OText size={16} lineHeight={24} weight={'500'} mBottom={10} color={theme.colors.textNormal}>
 											{t('BUSINESS_DETAILS', 'Business Details')}
 										</OText>
 										<View>
@@ -362,7 +368,7 @@ const CheckoutUI = (props: any) => {
 								)}
 							{businessDetails?.error && businessDetails?.error?.length > 0 && (
 								<View>
-									<OText size={16} lineHeight={24} weight={'500'}>
+									<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
 										{t('BUSINESS_DETAILS', 'Business Details')}
 									</OText>
 									<NotFoundSource
@@ -411,7 +417,7 @@ const CheckoutUI = (props: any) => {
 								</View>
 							) : (
 								<>
-									<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+									<OText size={16} color={theme.colors.textNormal} mBottom={10}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
 									<View
 										style={{
 											backgroundColor: theme.colors.inputDisabled,
@@ -626,7 +632,6 @@ const CheckoutUI = (props: any) => {
 												size={16}
 												lineHeight={24}
 												color={theme.colors.textNormal}
-												style={{ fontWeight: '500' }}
 											>
 												{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
 											</OText>
@@ -634,7 +639,7 @@ const CheckoutUI = (props: any) => {
 												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 											>
 												<OText
-													size={10}
+													size={12}
 													lineHeight={15}
 													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
@@ -651,7 +656,7 @@ const CheckoutUI = (props: any) => {
 												<OText
 													size={12}
 													lineHeight={18}
-													color={theme.colors.textSecondary}
+													color={theme.colors.primary}
 													style={{ textDecorationLine: 'underline' }}
 												>
 													{t('CHANGE_STORE', 'Change store')}
@@ -742,7 +747,10 @@ const CheckoutUI = (props: any) => {
 								togglePhoneUpdate={togglePhoneUpdate}
 								requiredFields={requiredFields}
 								hideUpdateButton
-								onClose={() => setIsOpen(false)}
+								onClose={() => {
+									setIsOpen(false)
+									handlePlaceOrder(null, true)
+								}}
 							/>
 						</View>
 					</OModal>
@@ -753,7 +761,7 @@ const CheckoutUI = (props: any) => {
 					handleClick={() => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
-					btnText={cart?.subtotal >= cart?.minimum
+					btnText={subtotalWithTaxes >= cart?.minimum
 						? (
 							placing
 								? t('PLACING', 'Placing')

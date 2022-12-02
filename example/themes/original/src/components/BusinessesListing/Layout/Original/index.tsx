@@ -32,7 +32,6 @@ import {
 	HeaderWrapper,
 	ListWrapper,
 	FeaturedWrapper,
-	OrderProgressWrapper,
 	FarAwayMessage,
 	AddressInputContainer,
 	PreorderInput,
@@ -55,6 +54,7 @@ import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { PageBanner } from '../../../PageBanner'
 
 const PIXELS_TO_SCROLL = 2000;
 
@@ -137,7 +137,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			minHeight: 45,
 			paddingVertical: 5,
 			paddingHorizontal: 20,
-			borderWidth: 1
+			borderWidth: 1,
+			justifyContent: 'center'
 		},
 		businessSkeleton: {
 			borderRadius: 8,
@@ -167,6 +168,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const timerId = useRef<any>(false)
 	const [favoriteIds, setFavoriteIds] = useState<any>([])
 	const chewOrderTypes = [{ name: t('DELIVERY', 'Delivery').toUpperCase(), value: 1 }, { name: t('PICKUP', 'Pickup').toUpperCase(), value: 2 }]
+	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 
 	const handleMomentClick = () => {
 		if (isPreorderEnabled) {
@@ -353,6 +355,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			}
 		>
+			{enabledPoweredByOrdering && auth && (
+				<View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', top: 20 }}>
+					<OText>
+						Powered By Ordering.co
+					</OText>
+				</View>
+			)}
 			<View style={{
 				height: !isPreOrderSetting && isChewLayout ? 150 : isChewLayout ? 200 : isFarAway ? 150 : 100,
 				marginTop: Platform.OS == 'ios' ? 0 : 50,
@@ -458,9 +467,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={bgHeader ? {uri: bgHeader} : theme.images.backgrounds.business_list_header}
+					source={bgHeader ? { uri: bgHeader } : theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
-					resizeMode='cover'
+					resizeMode='stretch'
 				>
 					{!auth && (
 
@@ -492,12 +501,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</TouchableOpacity>
 				</View>
 			)}
-			<OrderProgressWrapper>
-				<OrderProgress
-					{...props}
-					isFocused={isFocused}
-				/>
-			</OrderProgressWrapper>
+			<OrderProgress
+				{...props}
+				isFocused={isFocused}
+			/>
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
@@ -541,6 +548,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				)
 			}
+
+			<PageBanner position='app_business_listing' />
+
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				{!businessId && (
@@ -647,14 +657,25 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							key={city?.id}
 							style={{
 								padding: 10,
-								borderBottomWidth: 1,
-								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
-								marginBottom: 10,
+								flexDirection: 'row'
 							}}
 							onPress={() => handleChangeCity(city?.id)}
 							disabled={orderState?.loading}
 						>
-							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>
+							{orderState?.options?.city_id === city?.id ? (
+								<OIcon
+									src={theme.images.general.option_checked}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							) : (
+								<OIcon
+									src={theme.images.general.option_normal}
+									width={16}
+									style={{ marginEnd: 24 }}
+								/>
+							)}
+							<OText color={theme.colors.black}>
 								{city?.name}
 							</OText>
 						</TouchableOpacity>

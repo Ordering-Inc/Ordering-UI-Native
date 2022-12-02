@@ -28,6 +28,7 @@ import {
 	TimeItem
 } from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { locale, monthsEnum } from '../../utils';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -258,7 +259,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 						onActionLeft={() => goToBack()}
 						btnStyle={{ paddingLeft: 0 }}
 						paddingTop={0}
-						style={{ paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}
+						style={{ paddingBottom: 0 }}
 						title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
 						titleAlign={'center'}
 						titleStyle={{ fontSize: 14, marginRight: 0, marginLeft: 0 }}
@@ -281,7 +282,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								style={{ marginEnd: 24 }}
 							/>
 						)}
-						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM D, yyyy h:mm A')} + delivery time)`}</OText>
+						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${t(moment().format('dddd')?.toLocaleUpperCase(), moment().format('dddd'))}, ${t(monthsEnum[moment().format('MMM')], moment().format('MMM'))}${moment().format(' D, yyyy h:mm A')} + ${t('DELIVERY_TIME', 'delivery time')})`}</OText>
 					</WrapSelectOption>
 					<WrapSelectOption
 						onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
@@ -308,6 +309,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								{selectDate && datesWhitelist[0]?.start !== null && (
 									<CalendarStrip
 										scrollable
+										locale={locale}
 										style={styles.calendar}
 										calendarHeaderContainerStyle={styles.calendarHeaderContainer}
 										calendarHeaderStyle={styles.calendarHeader}
@@ -342,12 +344,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 													style={{
 														lineHeight: 24
 													}}
-												>{is12hours ? ( 
-													time.startTime.includes('12') 
+												>{is12hours ? (
+													time.startTime.includes('12')
 														? `${time.startTime}PM`
 														: parseTime(moment(time.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
-													) : time.startTime
-												}</OText>
+												) : time.startTime
+													}</OText>
 											</TimeItem>
 										</TouchableOpacity>
 									))}

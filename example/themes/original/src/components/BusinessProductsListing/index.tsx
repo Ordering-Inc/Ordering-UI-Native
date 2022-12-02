@@ -42,6 +42,7 @@ import Animated from 'react-native-reanimated'
 import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
+import { PageBanner } from '../PageBanner'
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -130,6 +131,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 	const [openService, setOpenService] = useState(false)
 	const [currentProduct, setCurrentProduct] = useState(null)
+	const [searchBarHeight, setSearchBarHeight] = useState(60)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
@@ -254,19 +256,26 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		}
 	}, [isFocused])
 
+	const subtotalWithTaxes = currentCart?.taxes?.reduce((acc: any, item: any) => {
+		if (item?.type === 1)
+			return acc = acc + item?.summary?.tax
+		return acc = acc
+	}, currentCart?.subtotal)
+
 	return (
 		<>
 			<View style={{ flex: 1 }}>
 				<Animated.View style={{ position: 'relative' }}>
 					<TopHeader
 						style={{
-							marginTop: Platform.OS === 'ios' ? insets.top : 40
+							marginTop: Platform.OS === 'ios' ? insets.top : 0
 						}}
+						onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height)}
 					>
 						{!isOpenSearchBar && (
 							<>
 								<TopActions onPress={() => handleBackNavigation()}>
-									<IconAntDesign name='arrowleft' size={26} />
+									<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
 								</TopActions>
 								{!errorQuantityProducts && (
 									<View style={{ ...styles.headerItem }}>
@@ -274,7 +283,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 											onPress={() => setIsOpenSearchBar(true)}
 											style={styles.searchIcon}
 										>
-											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
+											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={20} />
 										</TouchableOpacity>
 									</View>
 								)}
@@ -322,9 +331,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
 					<FiltProductsContainer
-						isIos={Platform.OS === 'ios'}
 						style={{
-							height: Dimensions.get('window').height - filtProductsHeight
+							height: Dimensions.get('window').height - filtProductsHeight,
+							top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight
 						}}
 						contentContainerStyle={{ flexGrow: 1 }}
 					>
@@ -401,6 +410,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							/>
 						</ProfessionalFilterWrapper>
 					)}
+					<PageBanner position='app_business_page' />
 					<View
 						style={{
 							height: 8,
@@ -485,22 +495,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<FloatingButton
-						btnText={
-							openUpselling
-								? t('LOADING', 'Loading')
-								: currentCart?.subtotal >= currentCart?.minimum
-									? t('VIEW_ORDER', 'View Order')
-									: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
-						}
-						isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-						btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-						btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-						btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
-						btnRightValue={parsePrice(currentCart?.total)}
-						disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-						handleClick={() => setOpenUpselling(true)}
-					/>
+					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
+						<FloatingButton
+							btnText={
+								openUpselling
+									? t('LOADING', 'Loading')
+									: subtotalWithTaxes >= currentCart?.minimum
+										? t('VIEW_ORDER', 'View Order')
+										: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+							}
+							isSecondaryBtn={subtotalWithTaxes < currentCart?.minimum || openUpselling}
+							btnLeftValueShow={subtotalWithTaxes >= currentCart?.minimum && currentCart?.products?.length > 0}
+							btnRightValueShow={subtotalWithTaxes >= currentCart?.minimum && currentCart?.products?.length > 0}
+							btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
+							btnRightValue={parsePrice(currentCart?.total)}
+							disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
+							handleClick={() => setOpenUpselling(true)}
+						/>
+					</View>
 				)}
 				{openUpselling && (
 					<UpsellingRedirect

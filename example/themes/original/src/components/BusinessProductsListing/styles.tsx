@@ -37,9 +37,7 @@ export const BusinessProductsListingContainer = styled.ScrollView`
 export const FiltProductsContainer = styled.ScrollView`
   position: absolute;
   width: 100%;
-  z-index: 2000;
-  top: 80px;
-  margin-top: 20px;
+  z-index: 20000;
 `
 
 export const BackgroundGray = styled.View`
@@ -48,7 +46,7 @@ export const BackgroundGray = styled.View`
   background-color: rgba(0,0,0,0.5);
   position: absolute;
   margin-top: 100px;
-  z-index: 100;
+  z-index: 10000;
   width: 100%;
 `
 

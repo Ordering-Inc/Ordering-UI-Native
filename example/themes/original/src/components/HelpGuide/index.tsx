@@ -4,6 +4,7 @@ import { HelpGuideParams } from '../../types'
 import { OText, OButton, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 import { StyleSheet, TouchableOpacity } from 'react-native'
+import NavBar from '../NavBar'
 import {
   Content
 } from './styles'
@@ -37,17 +38,12 @@ export const HelpGuide = (props: HelpGuideParams) => {
 
   return (
     <>
-      <OButton
-        imgRightSrc={null}
-        style={styles.btnBackArrow}
-        onClick={() => goToBack()}
-        icon={AntDesignIcon}
-        iconProps={{
-          name: 'arrowleft',
-          size: 26
-        }}
+      <NavBar
+        title={t('GUIDE_TO_ORDERING', 'Guide to Ordering')}
+        onActionLeft={goToBack}
+        btnStyle={{ paddingLeft: 0 }}
+        showCall={false}
       />
-      <OText size={22} weight={600}>{t('GUIDE_TO_ORDERING', 'Guide to Ordering')}</OText>
       <Content>
         <OText mBottom={15}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit mauris varius faucibus varius condimentum morbi pretium mus. Aliquam bibendum erat venenatis feugiat sed.

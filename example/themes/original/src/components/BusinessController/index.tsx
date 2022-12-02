@@ -11,15 +11,14 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, TouchableOpacity, View, Animated } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
+
 import {
-	Card,
 	BusinessHero,
 	BusinessContent,
-	BusinessCategory,
 	BusinessInfo,
 	Metadata,
 	BusinessState,
@@ -30,8 +29,9 @@ import {
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
+import { LottieAnimation } from '../LottieAnimation';
+import { CardAnimation } from '../shared/CardAnimation';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const {
@@ -54,13 +54,19 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [, { showToast }] = useToast()
 	const [orderState] = useOrder();
-	const [ { auth }] = useSession()
+	const [{ auth }] = useSession()
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 
 	const styles = StyleSheet.create({
+		container: {
+			marginVertical: 20,
+			borderRadius: 7.6,
+			width: '100%',
+			position: 'relative'
+		},
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
 			borderTopRightRadius: 7.6,
@@ -110,7 +116,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'flex-start',
-		},
+		}
 	});
 
 	const types = ['food', 'laundry', 'alcohol', 'groceries'];
@@ -152,7 +158,13 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	return (
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
 			{isIntersectionObserver ? (
-				<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
+				<CardAnimation
+					onClick={() => handleBusinessClick(business)}
+					style={[
+						style,
+						styles.container
+					]}
+				>
 					{business?.ribbon?.enabled && (
 						<RibbonBox
 							bgColor={business?.ribbon?.color}
@@ -174,10 +186,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					<BusinessHero>
 						<FastImage
 							style={{ height: 120 }}
-							source={{
-								uri: optimizeImage(businessHeader || business?.header || theme.images.dummies.businessHeader, 'h_500,c_limit'),
+							source={(businessHeader || business?.header) ? {
+								uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
 								priority: FastImage.priority.normal,
-							}}
+							} : theme.images.dummies.businessHeader}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
 						{(businessFeatured ?? business?.featured) && (
@@ -203,10 +215,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							<BusinessLogo style={styles.businessLogo}>
 								<FastImage
 									style={{ width: 56, height: 56 }}
-									source={{
-										uri: optimizeImage(businessLogo || business?.logo || theme.images.dummies.businessLogo, 'h_150,c_limit'),
+									source={(businessLogo || business?.logo) ? {
+										uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
 										priority: FastImage.priority.normal,
-									}}
+									} : theme.images.dummies.businessLogo}
 									resizeMode={FastImage.resizeMode.cover}
 								/>
 							</BusinessLogo>
@@ -219,15 +231,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										</OText>
 									</Reviews>
 								)}
-								<TouchableOpacity
-									onPress={handleChangeFavorite}
-								>
-									<IconAntDesign
-										name={business?.favorite ? 'heart' : 'hearto'}
-										color={theme.colors.danger5}
-										size={18}
-									/>
-								</TouchableOpacity>
+								<LottieAnimation
+									type='favorite'
+									onClick={handleChangeFavorite}
+									initialValue={business?.favorite ? 0.75 : 0}
+									toValue={business?.favorite ? 0 : 0.75}
+									disableAnimation={!auth}
+									iconProps={{ color: theme.colors.danger5, size: 18 }}
+									isActive={business?.favorite}
+								/>
 							</ReviewAndFavorite>
 						</BusinessInfo>
 						<OText
@@ -266,7 +278,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							)}
 						</Metadata>
 					</BusinessContent>
-				</Card>
+				</CardAnimation>
 			) : (
 				<Placeholder
 					Animation={Fade}

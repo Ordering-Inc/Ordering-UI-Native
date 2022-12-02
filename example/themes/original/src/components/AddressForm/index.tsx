@@ -83,7 +83,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 			backgroundColor: theme.colors.clear
 		},
 		inputsStyle: {
-			borderColor: theme.colors.border,
 			borderRadius: 10,
 			marginBottom: 20,
 			height: 50,
@@ -92,7 +91,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 			flex: 1,
 		},
 		textAreaStyles: {
-			borderColor: theme.colors.border,
 			borderRadius: 10,
 			marginBottom: 20,
 			height: 104,
@@ -140,6 +138,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 	const [isSignUpEffect, setIsSignUpEffect] = useState(false);
 	const [hasEditing, setAddressEditing] = useState(false);
+	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
 	const googleInput: any = useRef(null);
 	const internalNumberRef: any = useRef(null);
@@ -154,7 +153,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		'true';
 	const maxLimitLocation =
 		configState?.configs?.meters_to_change_address?.value;
-
+	const countryCode = configState?.configs?.country_autocomplete?.value
 	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -544,7 +543,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 											onPress={(data, details: any) => {
 												handleChangeAddress(data, details);
 											}}
-											query={{ key: googleMapsApiKey }}
+											query={{
+												key: googleMapsApiKey,
+												components: countryCode && countryCode !== '*' ? `country:${countryCode}` : ''
+											}}
 											fetchDetails
 											ref={googleInput}
 											textInputProps={{
@@ -563,6 +565,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 												autoCorrect: false,
 												blurOnSubmit: false,
 												returnKeyType: 'next',
+												onFocus: () => setAutoCompleteInputFocused(true),
+												onBlur: () => setAutoCompleteInputFocused(false)
 											}}
 											onFail={(error) =>
 												setAlertState({
@@ -586,13 +590,14 @@ const AddressFormUI = (props: AddressFormParams) => {
 												textInput: {
 													borderWidth: 1,
 													borderRadius: 7.6,
-													borderColor: theme.colors.border,
+													borderColor: autoCompleteInputFocused ? theme.colors.primary : theme.colors.border,
 													flexGrow: 1,
 													fontSize: 15,
-													paddingHorizontal: 16,
+													paddingLeft: 16,
+													paddingRight: 32,
 													minHeight: 50,
 													fontFamily: 'Poppins-Regular',
-													marginBottom: 24,
+													marginBottom: 24
 												},
 											}}
 										/>
@@ -600,9 +605,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 
 								{(
-									((!isEditing && !isGuestUser && !formState.changes?.address) ||
-										(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
-									(isGuestUser && !formState.changes?.address)) &&
+									((!isEditing && !isGuestUser) ||
+										(isEditing && !isGuestUser)) ||
+									(isGuestUser)) &&
 									(
 										<View style={styles.pinIcon}>
 											<GPSButton
@@ -675,6 +680,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													addressState?.address?.internal_number ||
 													''
 												}
+												isFocusHighlight
 												style={{
 													...styles.inputsStyle,
 													marginRight: showField('internal_number') && showField('zipcode') ? 24 : 0
@@ -721,6 +727,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													addressState.address.zipcode ||
 													''
 												}
+												isFocusHighlight
 												style={styles.inputsStyle}
 												forwardRef={zipCodeRef}
 												returnKeyType="next"
@@ -766,6 +773,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												''
 											}
 											multiline
+											isFocusHighlight
 											style={styles.textAreaStyles}
 											returnKeyType="done"
 											forwardRef={addressNotesRef}

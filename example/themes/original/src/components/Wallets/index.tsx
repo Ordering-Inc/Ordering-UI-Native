@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
@@ -24,7 +24,6 @@ import {
   WalletTransactionsWrapper
 } from './styles'
 
-import NavBar from '../NavBar'
 import { OButton, OIcon, OText, OModal } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { WalletTransactions } from '../WalletTransactions'
@@ -78,7 +77,7 @@ const WalletsUI = (props: any) => {
       isActive: isWalletCashEnabled
     },
     credit_point: {
-      name: t('CREDITS_POINTS_WALLET', 'Credit Points Wallet'),
+      name: t('POINTS_WALLET', 'Points Wallet'),
       value: 1,
       isActive: isWalletPointsEnabled
     }
@@ -112,15 +111,7 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-          <NavBar
-            title={isChewLayout ? '' : t('WALLETS', 'Wallets')}
-            titleAlign={'center'}
-            onActionLeft={goToBack}
-            showCall={false}
-            paddingTop={10}
-            btnStyle={{ paddingLeft: 0 }}
-            style={{ flex: 1 }}
-          />
+        <OText size={24} style={{ marginTop: 30 }}>{t('WALLETS', 'Wallets')}</OText>
           {isChewLayout && (
             <OButton
               text={t('WALLET_HISTORY', 'Wallet history')}
@@ -145,16 +136,25 @@ const WalletsUI = (props: any) => {
                 showsHorizontalScrollIndicator={false}
               >
                 {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
-                  <Pressable
+                  <TouchableOpacity
                     key={wallet.id}
                     onPress={() => handleChangeTab(wallet)}
                   >
-                    <OTab isSelected={tabSelected === wallet.type}>
-                      <OText size={18} color={tabSelected === wallet.type && theme.colors.primary}>
+                    <OTab
+                      isSelected={tabSelected === wallet.type}
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor:
+                          tabSelected === wallet.type
+                          ? theme.colors.textNormal
+                          : theme.colors.border
+                      }}
+                    >
+                      <OText>
                         {walletName[wallet.type]?.name}
                       </OText>
                     </OTab>
-                  </Pressable>
+                  </TouchableOpacity>
                 ))}
               </OTabs>
 

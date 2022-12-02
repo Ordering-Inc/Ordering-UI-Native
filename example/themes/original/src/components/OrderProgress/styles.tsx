@@ -29,3 +29,8 @@ export const OrderInfoWrapper = styled.View`
   align-items: center;
   margin-bottom: 15px;
 `
+export const OrderProgressWrapper = styled.View`
+  margin-top: 37px;
+  margin-bottom: 20px;
+	padding-horizontal: 40px;
+`

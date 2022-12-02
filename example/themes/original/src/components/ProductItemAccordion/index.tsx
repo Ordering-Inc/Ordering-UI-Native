@@ -5,6 +5,7 @@ import { useTheme } from 'styled-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
 import { ServiceForm } from '../ServiceForm';
+import FastImage from 'react-native-fast-image'
 
 import {
 	Accordion,
@@ -157,9 +158,37 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							{(product?.images || theme?.images?.dummies?.product) && (
 								<ProductImage>
 									{isFromCheckout ? (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
+										product?.images ? (
+											<FastImage
+												style={{ ...styles.productImage, ...{ width: 82, height: 82 } }}
+												source={{
+													uri: optimizeImage(product?.images, 'h_100,c_limit'),
+													priority: FastImage.priority.normal,
+												}}
+												resizeMode={FastImage.resizeMode.cover}
+											/>
+										) : (
+											<OIcon
+												src={theme?.images?.dummies?.product}
+												style={{ ...styles.productImage, ...{ width: 82, height: 82 } }}
+											/>
+										)
 									) : (
-										<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={styles.productImage} />
+										product?.images ? (
+											<FastImage
+												style={styles.productImage}
+												source={{
+													uri: optimizeImage(product?.images, 'h_100,c_limit'),
+													priority: FastImage.priority.normal,
+												}}
+												resizeMode={FastImage.resizeMode.cover}
+											/>
+										) : (
+											<OIcon
+												src={theme?.images?.dummies?.product}
+												style={styles.productImage}
+											/>
+										)
 									)}
 								</ProductImage>
 							)}
@@ -172,7 +201,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										{parseDate(product?.calendar_event?.start, { outputFormat: 'hh:mm a' })} - {parseDate(product?.calendar_event?.end, { outputFormat: 'hh:mm a' })}
 									</OText>
 								</View>
-							): (
+							) : (
 								<>
 									{isCartProduct && !isCartPending && getProductMax && (
 										<ProductInfo>
@@ -212,7 +241,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginEnd: 7 }}>
 											<OIcon
 												src={theme.images.general.pencil}
-												width={16}
+												width={20}
 												color={theme.colors.textSecondary}
 											/>
 										</TouchableOpacity>
@@ -225,7 +254,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										>
 											<OIcon
 												src={theme.images.general.trash}
-												width={17}
+												width={20}
 												color={theme.colors.textSecondary}
 											/>
 										</OAlert>
@@ -287,22 +316,22 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				</View>
 			</AccordionSection>
 			<OModal
-        open={isServiceOpen}
-        onClose={() => setIsServiceOpen(false)}
-        entireModal
-      >
-        <ServiceForm
-          isCartProduct
-          isService
-          businessId={product?.business_id}
+				open={isServiceOpen}
+				onClose={() => setIsServiceOpen(false)}
+				entireModal
+			>
+				<ServiceForm
+					isCartProduct
+					isService
+					businessId={product?.business_id}
 					categoryId={product?.category_id}
 					productId={product?.id}
 					productCart={product}
-          onSave={() => setIsServiceOpen(false)}
-          onClose={() => setIsServiceOpen(false)}
-          professionalSelected={product?.calendar_event?.professional}
-        />
-      </OModal>
+					onSave={() => setIsServiceOpen(false)}
+					onClose={() => setIsServiceOpen(false)}
+					professionalSelected={product?.calendar_event?.professional}
+				/>
+			</OModal>
 		</>
 	)
 }
