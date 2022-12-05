@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Keyboard } from 'react-native';
+import { StyleSheet, View, Keyboard, Vibration } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
@@ -165,6 +165,7 @@ const LoginFormUI = (props: LoginParams) => {
 		if (loginTab === 'otp') {
 			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
 				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+				Vibration.vibrate()
 				return
 			}
 			if (loginTab === 'otp') {
@@ -177,6 +178,7 @@ const LoginFormUI = (props: LoginParams) => {
 		} else {
 			if (phoneInputData.error) {
 				showToast(ToastType.Error, phoneInputData.error);
+				Vibration.vibrate()
 				return;
 			}
 			handleButtonLoginClick({
@@ -189,6 +191,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const handleVerifyCodeClick = () => {
 		if (phoneInputData.error) {
 			showToast(ToastType.Error, phoneInputData.error);
+			Vibration.vibrate()
 			return;
 		}
 		if (
@@ -203,6 +206,7 @@ const LoginFormUI = (props: LoginParams) => {
 					'The field Mobile phone is required.',
 				),
 			);
+			Vibration.vibrate()
 			return;
 		}
 		handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone);
@@ -224,10 +228,12 @@ const LoginFormUI = (props: LoginParams) => {
 		setRecaptchaVerified(false)
 		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			Vibration.vibrate()
 			return
 		}
 		if (!recaptchaConfig?.baseUrl) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			Vibration.vibrate()
 			return
 		}
 
@@ -304,6 +310,7 @@ const LoginFormUI = (props: LoginParams) => {
 					baseUrl: configs?.security_recaptcha_base_url?.value || null
 				})
 				showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
+				Vibration.vibrate()
 				return
 			}
 			formState.result?.result &&
@@ -313,6 +320,7 @@ const LoginFormUI = (props: LoginParams) => {
 						? formState.result?.result
 						: formState.result?.result[0],
 				);
+			formState.result?.result && Vibration.vibrate()
 		}
 	}, [formState]);
 
@@ -324,6 +332,7 @@ const LoginFormUI = (props: LoginParams) => {
 						? verifyPhoneState?.result?.result
 						: verifyPhoneState?.result?.result[0];
 				verifyPhoneState.result?.result && showToast(ToastType.Error, message);
+				verifyPhoneState.result?.result && Vibration.vibrate();
 				setIsLoadingVerifyModal(false);
 				return;
 			}
@@ -362,6 +371,10 @@ const LoginFormUI = (props: LoginParams) => {
 			})
 		}
 	}, [checkPhoneCodeState])
+
+	useEffect(() => {
+		if (!!Object.values(errors)?.length) Vibration.vibrate()
+	}, [errors])
 
 	return (
 		<Container>
@@ -720,8 +733,8 @@ const LoginFormUI = (props: LoginParams) => {
 
 				{configs && Object.keys(configs).length > 0 ? (
 					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value && facebookLoginEnabled) ||
-					((configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled) ||
-					((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) &&
+						((configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled) ||
+						((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) &&
 					(
 						<>
 							<View
@@ -749,7 +762,7 @@ const LoginFormUI = (props: LoginParams) => {
 										facebookLoginEnabled && (
 											<FacebookLogin
 												notificationState={notificationState}
-												handleErrors={(err: any) => showToast(ToastType.Error, err)}
+												handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 												handleLoading={(val: boolean) => setIsFBLoading(val)}
 												handleSuccessFacebookLogin={handleSuccessFacebook}
 											/>
@@ -758,7 +771,7 @@ const LoginFormUI = (props: LoginParams) => {
 										<GoogleLogin
 											notificationState={notificationState}
 											webClientId={configs?.google_login_client_id?.value}
-											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 											handleLoading={(val: boolean) => setIsFBLoading(val)}
 											handleSuccessGoogleLogin={handleSuccessFacebook}
 										/>
@@ -766,7 +779,7 @@ const LoginFormUI = (props: LoginParams) => {
 									{(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && appleLoginEnabled && (
 										<AppleLogin
 											notificationState={notificationState}
-											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 											handleLoading={(val: boolean) => setIsFBLoading(val)}
 											handleSuccessAppleLogin={handleSuccessFacebook}
 										/>

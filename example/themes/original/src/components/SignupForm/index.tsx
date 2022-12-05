@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking, Platform, TouchableOpacity } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Platform, TouchableOpacity, Vibration } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -245,6 +245,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const onSubmit = (values?: any) => {
 		if (phoneInputData.error && signUpTab !== 'otpEmail') {
 			showToast(ToastType.Error, phoneInputData.error);
+			Vibration.vibrate()
 			return;
 		}
 		if (
@@ -262,6 +263,7 @@ const SignupFormUI = (props: SignupParams) => {
 					'The field Mobile phone is required.',
 				),
 			);
+			Vibration.vibrate()
 			return;
 		}
 		if (signUpTab === 'otpEmail' || signUpTab === 'otpCellphone') {
@@ -330,6 +332,7 @@ const SignupFormUI = (props: SignupParams) => {
 			await Linking.openURL(url);
 		} else {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
+			Vibration.vibrate()
 		}
 	}
 
@@ -337,10 +340,12 @@ const SignupFormUI = (props: SignupParams) => {
 		setRecaptchaVerified(false)
 		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			Vibration.vibrate()
 			return
 		}
 		if (!recaptchaConfig?.baseUrl) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			Vibration.vibrate()
 			return
 		}
 		recaptchaRef.current.open()
@@ -384,10 +389,11 @@ const SignupFormUI = (props: SignupParams) => {
 					baseUrl: configs?.security_recaptcha_base_url?.value || null
 				})
 				showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
+				Vibration.vibrate()
 				return
 			}
-			formState.result?.result &&
-				showToast(ToastType.Error, formState.result?.result[0]);
+			formState.result?.result && showToast(ToastType.Error, formState.result?.result[0]);
+			formState.result?.result && Vibration.vibrate()
 			setIsLoadingVerifyModal(false);
 		}
 	}, [formState]);
@@ -395,6 +401,7 @@ const SignupFormUI = (props: SignupParams) => {
 	useEffect(() => {
 		if (Object.keys(errors).length > 0) {
 			setIsLoadingVerifyModal(false);
+			Vibration.vibrate()
 		}
 	}, [errors])
 
@@ -423,6 +430,7 @@ const SignupFormUI = (props: SignupParams) => {
 						? verifyPhoneState?.result?.result
 						: verifyPhoneState?.result?.result[0];
 				verifyPhoneState.result?.result && showToast(ToastType.Error, message);
+				verifyPhoneState.result?.result && Vibration.vibrate()
 				setIsLoadingVerifyModal(false);
 				return;
 			}
@@ -918,7 +926,7 @@ const SignupFormUI = (props: SignupParams) => {
 										(
 											<FacebookLogin
 												notificationState={notificationState}
-												handleErrors={(err: any) => showToast(ToastType.Error, err)}
+												handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 												handleLoading={(val: boolean) => setIsFBLoading(val)}
 												handleSuccessFacebookLogin={handleSuccessFacebook}
 											/>
@@ -927,7 +935,7 @@ const SignupFormUI = (props: SignupParams) => {
 										<GoogleLogin
 											notificationState={notificationState}
 											webClientId={configs?.google_login_client_id?.value}
-											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 											handleLoading={(val: boolean) => setIsFBLoading(val)}
 											handleSuccessGoogleLogin={handleSuccessFacebook}
 										/>
@@ -935,7 +943,7 @@ const SignupFormUI = (props: SignupParams) => {
 									{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled && (
 										<AppleLogin
 											notificationState={notificationState}
-											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleErrors={(err: any) => { showToast(ToastType.Error, err), Vibration.vibrate() }}
 											handleLoading={(val: boolean) => setIsFBLoading(val)}
 											handleSuccessAppleLogin={handleSuccessFacebook}
 										/>
