@@ -74,7 +74,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
-	const [orderState, { clearCart }] = useOrder()
+	const [orderState, { addProduct, updateProduct }] = useOrder()
 	const [{ parsePrice }] = useUtils()
 	const [, { showToast }] = useToast()
 	const [{ configs }] = useConfig()
@@ -133,6 +133,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [searchBarHeight, setSearchBarHeight] = useState(60)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
+	const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
 	const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
@@ -141,20 +142,39 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
-
-	const onProductClick = (product: any) => {
-		const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0) || 0
-		if (product?.type === 'service' && business?.professionals?.length > 0) {
-			setCurrentProduct(product)
-			setOpenService(true)
-			return
+	const onProductClick = async (product: any) => {
+		if (product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
+			const isProductAddedToCart = currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)
+			const productQuantity = isProductAddedToCart?.quantity
+			const addCurrentProduct = {
+				...product,
+				quantity: 1
+			}
+			const updateCurrentProduct = {
+				id: product.id,
+				code: isProductAddedToCart?.code,
+				quantity: productQuantity + 1
+			}
+			const cartData = currentCart?.business_id ? currentCart : { business_id: business.id }
+			if (isProductAddedToCart) {
+				await updateProduct(updateCurrentProduct, cartData, isQuickAddProduct)
+			} else {
+				await addProduct(addCurrentProduct, cartData, isQuickAddProduct)
+			}
+		} else {
+			const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0) || 0
+			if (product?.type === 'service' && business?.professionals?.length > 0) {
+				setCurrentProduct(product)
+				setOpenService(true)
+				return
+			}
+			onRedirect('ProductDetails', {
+				product: product,
+				businessSlug: business.slug,
+				businessId: business.id,
+				productAddedToCartLength
+			})
 		}
-		onRedirect('ProductDetails', {
-			product: product,
-			businessSlug: business.slug,
-			businessId: business.id,
-			productAddedToCartLength
-		})
 	}
 
 	const handleCancel = () => {
