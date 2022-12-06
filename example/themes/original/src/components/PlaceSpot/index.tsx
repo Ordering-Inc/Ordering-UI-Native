@@ -23,13 +23,14 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
     isInputMode,
     setSpotNumber,
     setVehicle,
-    handleChangeSpot
+    handleChangeSpot,
+    setPlaceSpotNumber
   } = props
 
   const theme = useTheme()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
-	const [, { showToast }] = useToast();
+  const [, { showToast }] = useToast();
 
   const [placeGroupSelected, setPlaceGroupSelected] = useState<any>(null)
   const vehicleInputAllowed = [4, 5]
@@ -135,9 +136,14 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
   useEffect(() => {
     if (spotState?.error?.length > 0) {
       const errorText = manageErrorsToShow(spotState?.error)
-			showToast(ToastType.Error, errorText)
+      showToast(ToastType.Error, errorText)
     }
   }, [spotState?.error])
+
+  const onChangePlaceSpot = (value: string) => {
+    setSpotNumber(value)
+    setPlaceSpotNumber(value)
+  }
 
   return (
     <PlaceSpotContainer>
@@ -220,12 +226,12 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
             value={spotNumber?.toString() ?? ''}
             placeholder={placeholderText}
             type='number-pad'
-            onChange={(value: string) => setSpotNumber(value)}
+            onChange={(value: string) => onChangePlaceSpot(value)}
             style={{
               borderColor: theme.colors.border,
               borderRadius: 7.6
             }}
-						inputStyle={{ fontSize: 12, color: theme.colors.textNormal }}
+            inputStyle={{ fontSize: 12, color: theme.colors.textNormal }}
           />
           <View style={{ alignItems: 'flex-start' }}>
             <OButton
@@ -278,7 +284,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
                     onSelect={(place: any) => handlerChangePlace(place)}
                     placeholder={t('SELECT_YOUR_SPOT', 'Select your spot')}
                     options={getPlaces()}
-                    defaultValue={placesState?.places?.find((place : any) => place?.id === cart?.place_id)}
+                    defaultValue={placesState?.places?.find((place: any) => place?.id === cart?.place_id)}
                     isModal
                   />
                 </View>
