@@ -163,7 +163,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	}, [removeAccountState])
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom - 42, paddingTop: 20 }}>
+		<View style={{ flex: 1, height: height - top - bottom, paddingTop: 20 }}>
 			{/* <OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
 				{t('PROFILE', 'Profile')}
 			</OText> */}
