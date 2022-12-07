@@ -670,6 +670,7 @@ export interface PlaceSpotParams {
 	vehicle?: any,
 	setVehicle?: any,
 	handleChangeSpot?: any
+	setPlaceSpotNumber?: any
 }
 
 export interface PromotionParams {
@@ -735,7 +736,7 @@ export interface PreviousBusinessOrderedParams {
 	isBusinessesSearchList?: any,
 	businessLoading?: boolean,
 	businesses?: any
-  handleUpdateBusinesses?: (businessId: number, changes: any) => {},
+	handleUpdateBusinesses?: (businessId: number, changes: any) => {},
 }
 
 export interface ServiceFormParams {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -87,7 +87,8 @@ const CheckoutUI = (props: any) => {
 		instructionsOptions,
 		handleChangeDeliveryOption,
 		currency,
-		merchantId
+		merchantId,
+		setPlaceSpotNumber
 	} = props
 
 	const theme = useTheme();
@@ -600,6 +601,7 @@ const CheckoutUI = (props: any) => {
 								isInputMode
 								cart={cart}
 								spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
+								setPlaceSpotNumber={setPlaceSpotNumber}
 								vehicleDefault={cart?.vehicle}
 							/>
 							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
@@ -741,7 +743,7 @@ const CheckoutUI = (props: any) => {
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
-					handleClick={() => handlePlaceOrder(null)}
+					handleClick={isDisabledButtonPlace ? () => Vibration.vibrate() : () => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
 					btnText={subtotalWithTaxes >= cart?.minimum
