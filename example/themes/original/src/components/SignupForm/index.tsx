@@ -471,7 +471,6 @@ const SignupFormUI = (props: SignupParams) => {
 				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 				showCall={false}
 				btnStyle={{ paddingLeft: 0 }}
-				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleWrapStyle={{ paddingHorizontal: 0 }}
 				titleStyle={{ marginLeft: 0, marginRight: 0 }}
 			/>

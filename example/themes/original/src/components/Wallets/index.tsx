@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
@@ -111,7 +111,14 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-        <OText size={24} style={{ marginTop: 30 }}>{t('WALLETS', 'Wallets')}</OText>
+        <OText
+          size={20}
+          style={{
+            marginTop: 30,
+            color: theme.colors.textNormal,
+          }}
+          weight={Platform.OS === 'ios' ? '600' : 'bold'}
+        >{t('WALLETS', 'Wallets')}</OText>
           {isChewLayout && (
             <OButton
               text={t('WALLET_HISTORY', 'Wallet history')}
