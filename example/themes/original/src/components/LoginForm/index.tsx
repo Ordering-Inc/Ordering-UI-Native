@@ -384,7 +384,6 @@ const LoginFormUI = (props: LoginParams) => {
 				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 				showCall={false}
 				btnStyle={{ paddingLeft: 0 }}
-				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleWrapStyle={{ paddingHorizontal: 0 }}
 				titleStyle={{ marginRight: 0, marginLeft: 0 }}
 			/>
