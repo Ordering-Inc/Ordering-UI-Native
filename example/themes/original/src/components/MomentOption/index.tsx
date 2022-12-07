@@ -262,7 +262,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 						style={{ paddingBottom: 0 }}
 						title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
 						titleAlign={'center'}
-						titleStyle={{ fontSize: 14, marginRight: 0, marginLeft: 0 }}
+						titleStyle={{ fontSize: 20, marginRight: 0, marginLeft: 0 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 					/>
 
