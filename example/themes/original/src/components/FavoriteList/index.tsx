@@ -4,8 +4,8 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { FavoriteParams } from '../../types';
 import { SingleOrderCard } from '../SingleOrderCard';
 import {
-	FavoriteList as FavoriteListController,
-	useOrder,
+  FavoriteList as FavoriteListController,
+  useOrder,
   useLanguage
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -19,7 +19,7 @@ import moment from 'moment';
 
 
 const FavoriteListUI = (props: FavoriteParams) => {
-	const {
+  const {
     favoriteList,
     handleUpdateFavoriteList,
     pagination,
@@ -31,9 +31,9 @@ const FavoriteListUI = (props: FavoriteParams) => {
     isBusiness,
     isOrder,
     isProduct
-	} = props
+  } = props
 
-	const theme = useTheme();
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [orderState] = useOrder();
   const [{ carts }] = useOrder()
@@ -79,34 +79,39 @@ const FavoriteListUI = (props: FavoriteParams) => {
     const businessId = product?.category?.business?.id
     if (!categoryId || !businessId) return
     onNavigationRedirect && onNavigationRedirect('ProductDetails', {
-			productId: product?.id,
-			categoryId: categoryId,
-			businessId: businessId
-		})
+      isRedirect: 'business',
+      productId: product?.id,
+      businessId: businessId,
+      categoryId: categoryId,
+      business: {
+        store: product?.category?.business.slug,
+        header: product?.category?.header,
+      }
+    })
   }
 
   useEffect(() => {
-		const _businessId = 'businessId:' + reorderState?.result?.business_id
-		if (reorderState?.error) {
-		  if (reorderState?.result?.business_id) {
-			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
-			onNavigationRedirect && onNavigationRedirect('Business', { store: reorderState?.result?.business?.slug })
-		  }
-		}
-		if (!reorderState?.error && reorderState.loading === false && reorderState?.result?.business_id) {
-		  const cartProducts = carts?.[_businessId]?.products
-		  const available = cartProducts.every((product: any) => product.valid === true)
-		  const orderProducts = favoriteList?.favorites.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
+    const _businessId = 'businessId:' + reorderState?.result?.business_id
+    if (reorderState?.error) {
+      if (reorderState?.result?.business_id) {
+        _setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+        onNavigationRedirect && onNavigationRedirect('Business', { store: reorderState?.result?.business?.slug })
+      }
+    }
+    if (!reorderState?.error && reorderState.loading === false && reorderState?.result?.business_id) {
+      const cartProducts = carts?.[_businessId]?.products
+      const available = cartProducts.every((product: any) => product.valid === true)
+      const orderProducts = favoriteList?.favorites.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
 
-		  if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
-			onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
-		  } else {
-			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
-			cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
-			onNavigationRedirect && onNavigationRedirect('Business', { store: reorderState?.result?.business?.slug })
-		  }
-		}
-	  }, [reorderState])
+      if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
+        onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+      } else {
+        _setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+        cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
+        onNavigationRedirect && onNavigationRedirect('Business', { store: reorderState?.result?.business?.slug })
+      }
+    }
+  }, [reorderState])
 
   const handleBusinessClick = (business: any) => {
     onNavigationRedirect && onNavigationRedirect('Business', {
@@ -195,12 +200,12 @@ const FavoriteListUI = (props: FavoriteParams) => {
     )
   }
 
-	return (
-		<Container>
+  return (
+    <Container>
       {isBusiness && (
         <>
           {favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites?.sort((a: any, b: any) => a?.name?.toLowerCase() > b?.name?.toLowerCase()).map((business: any, i:number) => (
+            favoriteList.favorites?.sort((a: any, b: any) => a?.name?.toLowerCase() > b?.name?.toLowerCase()).map((business: any, i: number) => (
               <BusinessController
                 key={`${business.id}_` + i}
                 business={business}
@@ -237,7 +242,7 @@ const FavoriteListUI = (props: FavoriteParams) => {
       {isOrder && (
         <>
           {favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites?.sort((a: any, b:any) => moment(a?.delivery_datetime_utc).valueOf() - moment(b?.delivery_datetime_utc).valueOf())
+            favoriteList.favorites?.sort((a: any, b: any) => moment(a?.delivery_datetime_utc).valueOf() - moment(b?.delivery_datetime_utc).valueOf())
               .map((order: any, i: number) => (
                 <SingleOrderCard
                   key={`${order?.id}_${i}`}
@@ -250,7 +255,7 @@ const FavoriteListUI = (props: FavoriteParams) => {
                   handleReorder={handleReorder}
                   reorderLoading={reorderState?.loading}
                 />
-            ))
+              ))
           )}
           {favoriteList?.loading && (
             [...Array(5).keys()].map(i => (
@@ -294,18 +299,18 @@ const FavoriteListUI = (props: FavoriteParams) => {
       )}
 
       {!favoriteList?.loading && pagination.totalPages && pagination.currentPage < pagination.totalPages && (
-				<WrappButton>
-					<OButton
-						onClick={() => getFavoriteList(pagination?.currentPage + 1)}
-						text={t('LOAD_MORE_ITEMS', 'Load more items')}
-						imgRightSrc={null}
-						textStyle={{ color: theme.colors.white }}
-						style={{ borderRadius: 7.6, shadowOpacity: 0, marginTop: 20 }}
-					/>
-				</WrappButton>
-			)}
+        <WrappButton>
+          <OButton
+            onClick={() => getFavoriteList(pagination?.currentPage + 1)}
+            text={t('LOAD_MORE_ITEMS', 'Load more items')}
+            imgRightSrc={null}
+            textStyle={{ color: theme.colors.white }}
+            style={{ borderRadius: 7.6, shadowOpacity: 0, marginTop: 20 }}
+          />
+        </WrappButton>
+      )}
     </Container>
-	)
+  )
 }
 
 export const FavoriteList = (props: any) => {
