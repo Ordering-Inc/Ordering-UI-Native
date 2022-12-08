@@ -118,6 +118,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const mapValidStatuses = [9, 19, 23]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
+  const activeStatus = [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 
   const walletName: any = {
@@ -595,9 +596,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
               subTitle={<OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                {order?.delivery_datetime_utc
-                  ? parseDate(order?.delivery_datetime_utc)
-                  : parseDate(order?.delivery_datetime, { utc: false })}
+                {
+                  activeStatus.includes(order?.status)
+                    ? order?.eta_time + 'min'
+                    : order?.delivery_datetime_utc
+                        ? parseDate(order?.delivery_datetime_utc)
+                        : parseDate(order?.delivery_datetime, { utc: false })
+                }
               </OText>}
             />
             {enabledPoweredByOrdering && (
