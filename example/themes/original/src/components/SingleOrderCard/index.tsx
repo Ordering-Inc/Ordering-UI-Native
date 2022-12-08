@@ -282,7 +282,11 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                     color={theme.colors.textSecondary}
                     style={{ marginVertical: 3 }}
                     numberOfLines={1}>
-                    {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
+                    {
+                      pastOrders
+                        ? order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })
+                        : order?.eta_time + 'min'
+                    }
                   </OText>
                 </View>
                 <OText
