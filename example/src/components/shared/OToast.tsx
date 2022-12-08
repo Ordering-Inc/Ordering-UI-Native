@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 import { getTraduction } from '../../utils'
 
 const fadeDuration = 300;
-const bottomPosition = 20;
+const topPosition = 20;
 
 export const Toast = (props: any) => {
   const [toastConfig, { hideToast }] = useToast();
@@ -54,7 +54,7 @@ export const Toast = (props: any) => {
       backgroundColor = theme.colors.toastInfo || '#6BA4FF';
       break;
     case ToastType.Error:
-      backgroundColor = theme.colors.toastError || '#D83520' ;
+      backgroundColor = theme.colors.toastError || '#D83520';
       break;
     case ToastType.Success:
       backgroundColor = theme.colors.toastSuccess || '#90C68E';
@@ -65,7 +65,7 @@ export const Toast = (props: any) => {
     <Animated.View
       style={[
         styles.container,
-        { bottom: bottomPosition, opacity },
+        { top: topPosition, opacity },
       ]}
     >
       <View style={[styles.toast, { backgroundColor }]}>
