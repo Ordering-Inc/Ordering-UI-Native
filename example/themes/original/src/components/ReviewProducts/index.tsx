@@ -56,7 +56,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
       if (order?.driver && !order?.user_review) {
         onNavigationRedirect('ReviewDriver', { order: order })
       } else {
-        onNavigationRedirect('MyOrders')
+        onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
       }
     }
   }, [formState])
@@ -67,7 +67,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
         <NavBar
           title={t('REVIEW_PRODUCT', 'Review product')}
           titleAlign={'center'}
-          onActionLeft={() => onNavigationRedirect('BottomTab')}
+          onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'MyOrders' })}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
@@ -87,7 +87,10 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={() => (order?.driver && !order?.user_review) ? onNavigationRedirect('ReviewDriver', { order: order }) : onNavigationRedirect('MyOrders')}
+            onPress={() => (order?.driver && !order?.user_review) ?
+              onNavigationRedirect('ReviewDriver', { order: order }) :
+              onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
+            }
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
@@ -95,7 +98,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
             text={order?.driver && !order?.user_review ? t('CONTINUE', 'Continue') : t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
-			      imgRightSrc={theme.images.general.arrow_right}
+            imgRightSrc={theme.images.general.arrow_right}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
             isDisabled={formState.loading || formState?.changes?.length === 0}
             onClick={() => handleContinueClick()}
