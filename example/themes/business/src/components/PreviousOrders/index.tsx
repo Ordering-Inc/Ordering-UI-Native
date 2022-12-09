@@ -139,7 +139,7 @@ export const PreviousOrders = (props: any) => {
     const interval = setInterval(() => {
       const date: any = Date.now()
       setCurrentTime(date)
-    }, slaSettingTime)
+    }, slaSettingTime ?? 6000)
 
     return () => clearInterval(interval)
   }, [])
