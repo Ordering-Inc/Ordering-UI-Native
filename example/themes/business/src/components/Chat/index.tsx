@@ -472,7 +472,7 @@ const ChatUI = (props: MessagesParams) => {
     const firstMessage = {
       _id: 0,
       text: console,
-      createdAt: order?.created_at,
+      createdAt: parseDate(order?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
       system: true,
     };
     messages?.messages.map((message: any) => {
@@ -488,7 +488,7 @@ const ChatUI = (props: MessagesParams) => {
         newMessage = {
           _id: message.id,
           text: message.type === 1 ? messageConsole(message) : message.comment,
-          createdAt: message.type !== 0 && message.created_at,
+          createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
           image: message.source,
           system: message.type === 1,
           user: {

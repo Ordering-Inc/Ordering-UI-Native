@@ -141,7 +141,7 @@ const MessagesUI = (props: MessagesParams) => {
 		const firstMessage = {
 			_id: 0,
 			text: _console,
-			createdAt: order?.created_at,
+			createdAt: parseDate(order?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 			system: true
 		}
 		const newMessage: any = [];
@@ -150,7 +150,7 @@ const MessagesUI = (props: MessagesParams) => {
 				newMessage.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
-					createdAt: message.type !== 0 && message.created_at,
+					createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 					image: message.source,
 					system: message.type === 1,
 					user: {
@@ -165,7 +165,7 @@ const MessagesUI = (props: MessagesParams) => {
 				newMessage.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
-					createdAt: message.type !== 0 && message.created_at,
+					createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 					image: message.source,
 					system: message.type === 1,
 					user: {
