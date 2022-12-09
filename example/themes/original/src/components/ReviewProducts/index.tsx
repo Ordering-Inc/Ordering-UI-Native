@@ -56,7 +56,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
       if (order?.driver && !order?.user_review) {
         onNavigationRedirect('ReviewDriver', { order: order })
       } else {
-        navigation.navigate('BottomTab', { screen: 'MyOrders' })
+        onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
       }
     }
   }, [formState])
@@ -67,7 +67,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
         <NavBar
           title={t('REVIEW_PRODUCT', 'Review product')}
           titleAlign={'center'}
-          onActionLeft={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
+          onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'MyOrders' })}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
@@ -89,7 +89,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
           <SkipButton
             onPress={() => (order?.driver && !order?.user_review) ?
               onNavigationRedirect('ReviewDriver', { order: order }) :
-              navigation.navigate('BottomTab', { screen: 'MyOrders' })
+              onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
             }
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>

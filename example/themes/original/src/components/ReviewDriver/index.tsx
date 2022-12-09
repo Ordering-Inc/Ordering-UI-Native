@@ -131,7 +131,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     if (!order?.user_review && !isDriverReviewed) {
       onSubmit()
     } else {
-      navigation.navigate('BottomTab', { screen: 'MyOrders' })
+      onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
     }
   }
 
@@ -145,7 +145,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     }
     if (!formState.loading && !formState.result?.error && alertState.success) {
       setIsDriverReviewed && setIsDriverReviewed(true)
-      navigation.navigate('BottomTab', { screen: 'MyOrders' })
+      onNavigationRedirect('BottomTab', { screen: 'MyOrders' })
     }
   }, [formState])
 
@@ -186,7 +186,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
         <NavBar
           title={t('REVIEW_DRIVER', 'Review driver')}
           titleAlign={'center'}
-          onActionLeft={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
+          onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'MyOrders' })}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
