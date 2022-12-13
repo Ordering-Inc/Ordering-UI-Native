@@ -358,7 +358,10 @@ export const ProductOptionsUI = (props: any) => {
 	useEffect(() => {
 		const imageList: any = []
 		const videoList: any = []
-		product?.images?.length > 0 ? imageList.push(product.images) : imageList.push(theme?.images?.dummies?.product)
+		imageList.push(product?.images?.length > 0
+			? product.images
+			: theme?.images?.dummies?.product)
+
 		if (product?.gallery && product?.gallery.length > 0) {
 			for (const img of product?.gallery) {
 				if (img?.file) {
@@ -537,7 +540,7 @@ export const ProductOptionsUI = (props: any) => {
 											style={styles.slide1}
 											key={i}
 										>
-											{String(img).includes('image') || typeof img === 'number' ? (
+											{(String(img).includes('http') || typeof img === 'number') ? (
 												<FastImage
 													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 3 / 2 }}
 													source={typeof img !== 'number' ? {
@@ -548,7 +551,8 @@ export const ProductOptionsUI = (props: any) => {
 											) : (
 												<>
 													<YoutubePlayer
-														height={300}
+														height={'100%'}
+														width={'100%'}
 														play={playing}
 														videoId={img}
 														onChangeState={onStateChange}
@@ -579,7 +583,7 @@ export const ProductOptionsUI = (props: any) => {
 													opacity: index === thumbsSwiper ? 1 : 0.8
 												}}
 											>
-												{String(img).includes('image') ? (
+												{String(img).includes('http') ? (
 													<OIcon
 														url={img}
 														style={{
@@ -594,7 +598,7 @@ export const ProductOptionsUI = (props: any) => {
 													/>
 												) : (
 													<OIcon
-														url={'http://img.youtube.com/vi/' + img + '/0.jpg'}
+														url={'https://img.youtube.com/vi/' + img + '/0.jpg'}
 														style={{
 															borderColor: theme.colors.lightGray,
 															borderRadius: 8,
