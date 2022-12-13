@@ -236,12 +236,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										<MaterialCommunityIcon name='chevron-down' size={18} />
 									)}
 								</View>
-								<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+								<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', height: 20 }}>
 									{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
-										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginEnd: 7 }}>
-											<OIcon
-												src={theme.images.general.pencil}
-												width={20}
+										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginRight: 5 }}>
+											<MaterialCommunityIcon
+												name='pencil-outline'
+												size={20}
 												color={theme.colors.textSecondary}
 											/>
 										</TouchableOpacity>
@@ -252,9 +252,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 											message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
 											onAccept={() => onDeleteProduct(product)}
 										>
-											<OIcon
-												src={theme.images.general.trash}
-												width={20}
+											<MaterialCommunityIcon
+												name='trash-can-outline'
+												size={20}
 												color={theme.colors.textSecondary}
 											/>
 										</OAlert>
