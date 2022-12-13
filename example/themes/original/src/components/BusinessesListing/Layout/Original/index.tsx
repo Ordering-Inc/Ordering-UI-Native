@@ -48,7 +48,7 @@ import { OrderTypeSelector } from '../../../OrderTypeSelector';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BusinessFeaturedController } from '../../../BusinessFeaturedController';
 import { HighestRatedBusinesses } from '../../../HighestRatedBusinesses';
-import { getTypesText, convertToRadian } from '../../../../utils';
+import { getTypesText } from '../../../../utils';
 import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -188,6 +188,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			getBusinesses();
 		}
 	};
+
+	const convertToRadian = (value: number) => {
+		return value * Math.PI / 180
+	}
 
 	const getDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
 		const R = 6371 // km
