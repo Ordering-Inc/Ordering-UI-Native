@@ -18,7 +18,7 @@ export const Container = (props: any) => {
     <View
       style={{
         flex: 1,
-        paddingTop: insets.top,
+        paddingTop: props.pt ?? insets.top,
         backgroundColor: theme.colors.backgroundPage
       }}
     >

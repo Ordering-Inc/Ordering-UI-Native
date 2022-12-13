@@ -24,13 +24,15 @@ const AddressDetailsUI = (props: any) => {
 	return (
 		<ADContainer>
 			<ADHeader>
-				<OText
-					size={16}
-					lineHeight={24}
-					color={theme.colors.textNormal}
-				>
-					{t('DELIVERY_ADDRESS', 'Delivery address')}
-				</OText>
+				{props.HeaderTitle ?? (
+					<OText
+						size={16}
+						lineHeight={24}
+						color={theme.colors.textNormal}
+					>
+						{t('DELIVERY_ADDRESS', 'Delivery address')}
+					</OText>
+				)}
 			</ADHeader>
 			{!!apiKey && (
 				<ADMap

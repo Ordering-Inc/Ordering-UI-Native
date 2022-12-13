@@ -153,6 +153,7 @@ const CheckoutUI = (props: any) => {
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -162,7 +163,6 @@ const CheckoutUI = (props: any) => {
 	}, cart?.subtotal)
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
-		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
@@ -268,10 +268,6 @@ const CheckoutUI = (props: any) => {
 		}
 	}, [errors])
 
-	// useEffect(() => {
-	//   handlePaymethodChange(null)
-	// }, [cart?.total])
-
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
 			onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
@@ -281,6 +277,21 @@ const CheckoutUI = (props: any) => {
 	useEffect(() => {
 		onFailPaypal()
 	}, [showGateway.closedByUser])
+
+	const HeaderTitle = (props: any) => {
+		const { text } = props
+		return (
+			<OText
+				size={16}
+				lineHeight={24}
+				weight={'500'}
+				mBottom={props.mb ?? 10}
+				color={theme.colors.textNormal}
+			>
+				{text}
+			</OText>
+		)
+	}
 
 	return (
 		<>
@@ -299,13 +310,20 @@ const CheckoutUI = (props: any) => {
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
 						<ChHeader>
-							{/* <OrderTypeSelector configTypes={configTypes} /> */}
-							<CHMomentWrapper onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-								<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(options?.type || 1), 'Delivery')}</OText>
+							<CHMomentWrapper isCustomColor={isChewLayout} onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+								<OText
+									size={12}
+									numberOfLines={1}
+									ellipsizeMode={'tail'}
+									color={theme.colors?.[isChewLayout ? 'white' : 'textSecondary']}
+								>
+									{t(getTypesText(options?.type || 1), 'Delivery')}
+								</OText>
 								<OIcon
 									src={theme.images.general.arrow_down}
 									width={10}
 									style={{ marginStart: 8 }}
+									{...(isChewLayout && { color: 'white' })}
 								/>
 							</CHMomentWrapper>
 							<CHMomentWrapper
@@ -348,9 +366,7 @@ const CheckoutUI = (props: any) => {
 								Object.values(businessDetails?.business).length > 0 &&
 								(
 									<>
-										<OText size={16} lineHeight={24} weight={'500'} mBottom={10} color={theme.colors.textNormal}>
-											{t('BUSINESS_DETAILS', 'Business Details')}
-										</OText>
+										<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
 										<View>
 											<OText size={12} lineHeight={18} weight={'400'}>
 												{businessDetails?.business?.name}
@@ -369,9 +385,7 @@ const CheckoutUI = (props: any) => {
 								)}
 							{businessDetails?.error && businessDetails?.error?.length > 0 && (
 								<View>
-									<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
-										{t('BUSINESS_DETAILS', 'Business Details')}
-									</OText>
+									<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
 									<NotFoundSource
 										content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
 									/>
@@ -393,6 +407,7 @@ const CheckoutUI = (props: any) => {
 							) : (
 								<UserDetails
 									isUserDetailsEdit={isUserDetailsEdit}
+									HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
 									cartStatus={cart?.status}
 									businessId={cart?.business_id}
 									useValidationFields
@@ -417,8 +432,8 @@ const CheckoutUI = (props: any) => {
 									</Placeholder>
 								</View>
 							) : (
-								<>
-									<OText size={16} color={theme.colors.textNormal} mBottom={10}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+								<ChSection>
+									<HeaderTitle text={t('DELIVERY_OPTIONS', 'Delivery options')} />
 									<View
 										style={{
 											backgroundColor: theme.colors.inputDisabled,
@@ -464,7 +479,7 @@ const CheckoutUI = (props: any) => {
 										/>
 									</View>
 									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-								</>
+								</ChSection>
 							)}
 
 						</DeliveryOptionsContainer>
@@ -486,29 +501,6 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					{/* <ChSection>
-        <ChTotal>
-          {
-            (
-              <>
-                <OIcon
-                  url={businessLogo || businessDetails?.business?.logo}
-                  width={80}
-                  height={80}
-                  borderRadius={80}
-                />
-                <View style={{ marginLeft: 10, width: '85%' }}>
-                  <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
-                    {businessName || businessDetails?.business?.name}
-                  </OText>
-                  <OText size={22}>
-                    {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                  </OText>
-                </View>
-              </>
-            )}
-        </ChTotal>
-      </ChSection> */}
 					<ChSection>
 						<ChAddress>
 							{(businessDetails?.loading || cartState.loading) ? (
@@ -525,6 +517,7 @@ const CheckoutUI = (props: any) => {
 									uuid={cartUuid}
 									apiKey={configs?.google_maps_api_key?.value}
 									mapConfigs={mapConfigs}
+									HeaderTitle={<HeaderTitle text={t('DELIVERY_ADDRESS', 'Delivery address')} mb={0} />}
 								/>
 							)}
 						</ChAddress>
@@ -541,9 +534,7 @@ const CheckoutUI = (props: any) => {
 						(
 							<ChSection>
 								<ChDriverTips>
-									<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-										{t('DRIVER_TIPS', 'Driver Tips')}
-									</OText>
+									<HeaderTitle text={t('DRIVER_TIPS', 'Driver Tips')} mb={0} />
 									<DriverTips
 										uuid={cartUuid}
 										businessId={cart?.business_id}
@@ -562,9 +553,7 @@ const CheckoutUI = (props: any) => {
 					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
 						<ChSection>
 							<ChPaymethods>
-								<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-									{t('PAYMENT_METHOD', 'Payment Method')}
-								</OText>
+								<HeaderTitle text={t('PAYMENT_METHOD', 'Payment Method')} mb={0} />
 								{!cartState.loading && cart?.status === 4 && (
 									<OText
 										style={{ textAlign: 'center', marginTop: 20 }}
@@ -630,13 +619,7 @@ const CheckoutUI = (props: any) => {
 								) : (
 									<>
 										<CartHeader>
-											<OText
-												size={16}
-												lineHeight={24}
-												color={theme.colors.textNormal}
-											>
-												{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
-											</OText>
+											<HeaderTitle text={t('MOBILE_FRONT_YOUR_ORDER', 'Your order')} mb={0} />
 											<TouchableOpacity
 												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 											>

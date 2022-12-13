@@ -6,7 +6,7 @@ export const ChContainer = styled.View`
 `
 
 export const ChSection = styled.View`
-	padding-top: 30px;
+	padding-top: 20px;
 `
 
 export const ChHeader = styled.View`
@@ -40,7 +40,9 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
+	background-color: ${(props: any) => props.isCustomColor
+    ? props.theme.colors.primary
+    : props.theme.colors.backgroundGray100};
 	border-radius: 7.6px;
 	font-size: 12px;
 	max-width: 240px;
