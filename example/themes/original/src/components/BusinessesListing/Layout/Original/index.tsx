@@ -39,8 +39,7 @@ import {
 	BusinessLogosContainer
 } from './styles';
 
-import { SearchBar } from '../../../SearchBar';
-import { OButton, OIcon, OText, OBottomPopup, OModal } from '../../../shared';
+import { OIcon, OText, OModal } from '../../../shared';
 import { BusinessesListingParams } from '../../../../types';
 import { NotFoundSource } from '../../../NotFoundSource';
 import { BusinessTypeFilter } from '../../../BusinessTypeFilter';
@@ -55,6 +54,7 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { PageBanner } from '../../../PageBanner'
+import { CitiesControl } from '../../../CitiesControl'
 
 const PIXELS_TO_SCROLL = 2000;
 
@@ -62,12 +62,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const {
 		navigation,
 		businessesList,
-		searchValue,
 		getBusinesses,
 		handleChangeBusinessType,
 		handleBusinessClick,
 		paginationProps,
-		handleChangeSearch,
 		businessId,
 		isGuestUser,
 		handleUpdateBusinessList,
@@ -79,8 +77,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
-	const searchBarRef = useRef<any>()
-	const [appStateVisible, setAppStateVisible] = useState(appState.current);
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
@@ -494,6 +490,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					<TouchableOpacity
 						style={styles.buttonCityStyle}
 						onPress={() => setIsOpenCities(true)}
+						disabled={orderState?.loading}
 					>
 						<OText size={18} color={theme.colors.backgroundGray} weight='bold' style={{ textAlign: 'center' }}>
 							{citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
@@ -652,36 +649,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				onClose={() => setIsOpenCities(false)}
 				title={t('SELECT_A_CITY', 'Select a city')}
 			>
-				<View style={{ padding: 40, width: '100%' }}>
-					{citiesState?.cities?.map((city: any) => (
-						<TouchableOpacity
-							key={city?.id}
-							style={{
-								padding: 10,
-								flexDirection: 'row'
-							}}
-							onPress={() => handleChangeCity(city?.id)}
-							disabled={orderState?.loading}
-						>
-							{orderState?.options?.city_id === city?.id ? (
-								<OIcon
-									src={theme.images.general.option_checked}
-									width={16}
-									style={{ marginEnd: 24 }}
-								/>
-							) : (
-								<OIcon
-									src={theme.images.general.option_normal}
-									width={16}
-									style={{ marginEnd: 24 }}
-								/>
-							)}
-							<OText color={theme.colors.black}>
-								{city?.name}
-							</OText>
-						</TouchableOpacity>
-					))}
-				</View>
+				<CitiesControl
+					cities={citiesState?.cities}
+					onClose={() => setIsOpenCities(false)}
+					handleChangeCity={handleChangeCity}
+				/>
 			</OModal>
 		</IOScrollView>
 	);

@@ -166,14 +166,16 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   style={bpStyles.catWrap}
                   onLayout={(event: any) => handleOnLayout(event, category.id)}
                 >
-                  <View style={bpStyles.catIcon}>
-                    <OIcon
-                      url={optimizeImage(category.image, 'h_250,c_limit')}
-                      width={41}
-                      height={41}
-                      style={{ borderRadius: 7.6 }}
-                    />
-                  </View>
+                  {!!category.image && (
+                    <View style={bpStyles.catIcon}>
+                      <OIcon
+                        url={optimizeImage(category.image, 'h_250,c_limit')}
+                        width={41}
+                        height={41}
+                        style={{ borderRadius: 7.6 }}
+                      />
+                    </View>
+                  )}
                   <OText size={16} weight="600">
                     {category.name}
                   </OText>
