@@ -9,7 +9,7 @@ export const BusinessHero = styled.View`
 
 export const BusinessContent = styled.View`
     padding-horizontal: 18px;
-    padding-bottom: 18px;
+    padding-bottom: 10px;
     border-bottom-left-radius: 7.6px;
     border-bottom-right-radius: 7.6px;
     border-width: 1px;

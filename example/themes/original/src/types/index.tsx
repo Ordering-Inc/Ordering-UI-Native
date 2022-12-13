@@ -173,6 +173,9 @@ export interface BusinessesListingParams {
 	handleChangePriceLevel?: any;
 	businessTypeSelected?: any;
 	logosLayout?: boolean;
+	isCustomLayout?: boolean;
+	citiesState?: any;
+	actualSlug?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
@@ -218,6 +221,7 @@ export interface BusinessControllerParams {
 	setFavoriteIds?: any;
 	handleUpdateBusinessList?: any;
 	enableIntersection?: boolean;
+	isCustomLayout?: boolean;
 	handleCustomUpdate?: (businessId: number, changes: any) => {};
 }
 export interface BusinessProductsListingParams {

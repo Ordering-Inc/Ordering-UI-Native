@@ -44,9 +44,7 @@ export const ProductTitle = styled.View`
   padding-bottom: 7px;
 `
 
-export const ProductDescription = styled.View`
-  margin-bottom: 20px;
-`
+export const ProductDescription = styled.View``
 
 export const ProductEditions = styled.View`
   padding: 0 40px;
@@ -96,7 +94,7 @@ export const WeightUnitItem = styled.View`
   `}
 `
 export const ProductSummary = styled.View`
-  padding: 26px 40px;
+  padding: 26px 40px 0;
   position: relative;
   background-color: white;
   z-index: 100;

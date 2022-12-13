@@ -152,9 +152,11 @@ const UserDetailsUI = (props: any) => {
 			{!(validationFields.loading || formState.loading) && (
 				<UDContainer>
 					<UDHeader>
-						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
-							{t('CUSTOMER_DETAILS', 'Customer Details')}
-						</OText>
+						{props.HeaderTitle ?? (
+							<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
+								{t('CUSTOMER_DETAILS', 'Customer Details')}
+							</OText>
+						)}
 						{cartStatus !== 2 && !requiredFields && (
 							!isEdit ? (
 								<EditBtn onPress={() => toggleIsEdit()} activeOpacity={0.7}>

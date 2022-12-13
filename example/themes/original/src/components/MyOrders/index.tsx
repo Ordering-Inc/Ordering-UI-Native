@@ -67,51 +67,51 @@ export const MyOrders = (props: any) => {
   });
 
   return (
-    <Container noPadding refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={() => handleOnRefresh()}
-      />
-    }>
+    <Container
+      pt={0}
+      noPadding
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => handleOnRefresh()}
+        />
+      }
+    >
       {(isChewLayout || showNavbar) && (
         <View style={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 40,
-          marginTop: Platform.OS === 'android' ? 50 : 30,
+          ...{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 40,
+            marginTop: Platform.OS === 'android' ? 50 : 30,
+          },
+          ...props.titleStyle
         }}>
-          <OButton
-            imgLeftStyle={{ width: 18 }}
-            imgRightSrc={null}
-            style={{
-              borderWidth: 0,
-              width: 26,
-              height: 26,
-              backgroundColor: '#FFF',
-              borderColor: '#FFF',
-              shadowColor: '#FFF',
-              paddingLeft: 0,
-              paddingRight: 0
-            }}
-            onClick={goToBack}
-            icon={AntDesignIcon}
-            iconProps={{
-              name: 'arrowleft',
-              size: 26
-            }}
-          />
-          <OText
-              size={24}
+          {!props.hideBackBtn && (
+            <OButton
+              imgLeftStyle={{ width: 18 }}
+              imgRightSrc={null}
               style={{
-                textTransform: 'capitalize',
-                marginLeft: 20,
-                top: 2
+                borderWidth: 0,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
+                paddingLeft: 0,
+                paddingRight: 0
               }}
-            >
-              {t('MY_ORDERS', 'My Orders')}
-            </OText>
+              onClick={goToBack}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26
+              }}
+            />
+          )}
+          <HeaderTitle ph={0} text={t('MY_ORDERS', 'My Orders')} />
         </View>
       )}
       {!hideOrders && !isChewLayout && !showNavbar && (
@@ -145,16 +145,18 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          <View style={{ paddingLeft: 40, paddingRight: 40 }}>
-            <OrdersOption
-              {...props}
-              activeOrders
-              ordersLength={ordersLength}
-              setOrdersLength={setOrdersLength}
-              setRefreshOrders={setRefreshOrders}
-              refreshOrders={refreshOrders}
-            />
-          </View>
+          {ordersLength?.activeOrdersLength > 0 && (
+            <View style={{ paddingLeft: 40, paddingRight: 40 }}>
+              <OrdersOption
+                {...props}
+                activeOrders
+                ordersLength={ordersLength}
+                setOrdersLength={setOrdersLength}
+                setRefreshOrders={setRefreshOrders}
+                refreshOrders={refreshOrders}
+              />
+            </View>
+          )}
           <View style={{ paddingLeft: 40, paddingRight: 40 }}>
             <OrdersOption
               {...props}

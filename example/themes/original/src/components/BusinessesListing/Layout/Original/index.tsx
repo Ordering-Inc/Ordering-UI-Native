@@ -313,10 +313,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									key={business?.id}
 									onPress={() => handleBusinessClick && handleBusinessClick(business)}
 									style={{
-										width: 57,
-										height: 58,
-										borderBottomColor: theme.colors.primary,
-										borderBottomWidth: business?.slug === actualSlug ? 2 : 0,
+										width: 60,
+										height: 60,
+										borderRadius: 8,
 										marginRight: 5
 									}}
 								>
@@ -325,8 +324,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 											width: 56,
 											height: 56,
 											marginRight: 20,
-											borderTopLeftRadius: 7.6,
-											borderTopRightRadius: 7.6
+											borderRadius: 8,
+											borderColor: theme.colors.primary,
+											borderWidth: business?.slug === actualSlug ? 2 : 0
 										}}
 										source={{
 											uri: business?.logo,
@@ -369,8 +369,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			>
 				{isChewLayout && (
 					<View style={{ marginTop: 30, paddingHorizontal: 30, flexDirection: 'row', justifyContent: 'space-between' }}>
-						<OText size={18} weight={700} color={theme.colors?.white}>
-							{t('WELCOME', 'Welcome')} {user?.name}!
+						<OText size={24} weight={700} color={theme.colors?.white}>
+							{t('WELCOME', 'Welcome')} {user?.name}
 						</OText>
 					</View>
 				)}
@@ -571,6 +571,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<BusinessController
 							key={`${business.id}_` + i}
 							enableIntersection
+							isCustomLayout={isChewLayout}
 							business={business}
 							isBusinessOpen={business.open}
 							handleCustomClick={handleBusinessClick}
