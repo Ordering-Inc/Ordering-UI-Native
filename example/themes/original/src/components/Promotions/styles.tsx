@@ -6,18 +6,22 @@ export const PromotionsContainer = styled.View`
 	padding-right: 40px;
 `
 
+export const WrapperSingleOffer = styled.View`
+  flex-direction: column;
+  width: 100%;
+`
+
 export const SingleOfferContainer = styled.View`
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-
 `
 
 export const OfferInformation = styled.View`
   justify-content: space-between;
-  max-width: 75%;
+  max-width: 70%;
 `
 
 export const SearchBarContainer = styled.View`
@@ -29,6 +33,7 @@ export const SearchBarContainer = styled.View`
 
 export const SingleBusinessOffer = styled.View`
   flex-direction: row;
+  margin-bottom: 10px;
 `
 
 export const AvailableBusinesses = styled.View`

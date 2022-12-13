@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/native'
 export const CardInfo = styled.View`
   padding-start: 3px;
   flex: 1;
+  min-height: 85px;
 `
 export const SoldOut = styled.View`
   position: absolute;

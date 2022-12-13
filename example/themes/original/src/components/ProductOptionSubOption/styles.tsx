@@ -21,7 +21,6 @@ export const QuantityControl = styled.View`
   margin-horizontal: 5px;
   flex: 1;
   width: 60px;
-
 `
 
 export const PositionControl = styled.View`

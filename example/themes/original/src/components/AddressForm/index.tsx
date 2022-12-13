@@ -65,6 +65,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	} = props;
 
 	const theme = useTheme();
+	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
 	const tagsName = [
 		{ icon: theme.images.general.tag_home, value: 'home' },
@@ -104,6 +105,12 @@ const AddressFormUI = (props: AddressFormParams) => {
 			end: 0,
 			top: 12,
 			zIndex: 1002,
+			right: autoCompleteInputFocused && (
+				!!address?.address ||
+				!!formState.changes?.address ||
+				!!addressState.address.address
+			) ? 30 : 15,
+			width: 16
 		},
 		wrapperNavbar: Platform.OS === 'ios'
 			? { paddingVertical: 0, paddingHorizontal: 40 }
@@ -138,7 +145,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 	const [isSignUpEffect, setIsSignUpEffect] = useState(false);
 	const [hasEditing, setAddressEditing] = useState(false);
-	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
 	const googleInput: any = useRef(null);
 	const internalNumberRef: any = useRef(null);

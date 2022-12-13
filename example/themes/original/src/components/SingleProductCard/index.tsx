@@ -44,6 +44,9 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+
+	const textSize = isChewLayout ? 12 : 10
 
 	const styles = StyleSheet.create({
 		container: {
@@ -77,8 +80,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			textTransform: 'uppercase',
 		},
 		productStyle: {
-			width: 75,
-			height: 75,
+			width: 85,
+			height: 85,
 			borderRadius: 7.6
 		},
 		quantityContainer: {
@@ -176,7 +179,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 						<CardInfo>
 							<View style={styles.titleWrapper}>
 								<OText
-									size={12}
+									size={textSize + 2}
 									weight={'500'}
 									numberOfLines={1}
 									ellipsizeMode="tail"
@@ -204,7 +207,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								)}
 							</PricesContainer>
 							<OText
-								size={10}
+								size={textSize}
 								numberOfLines={!isPreviously ? 2 : 1}
 								ellipsizeMode="tail"
 								color={theme.colors.textSecondary}
@@ -213,7 +216,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							</OText>
 							{isPreviously && (
 								<OText
-									size={10}
+									size={textSize}
 									numberOfLines={1}
 									ellipsizeMode="tail"
 									color={theme.colors.primary}
@@ -230,7 +233,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
 								>
 									<OText
-										size={10}
+										size={textSize}
 										weight={'400'}
 										color={theme.colors.white}
 										numberOfLines={2}
@@ -241,21 +244,14 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									</OText>
 								</RibbonBox>
 							)}
-							{product?.images ? (
-								<FastImage
-									style={styles.productStyle}
-									source={{
-										uri: optimizeImage(product?.images, 'h_250,c_limit'),
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
-							) : (
-								<OIcon
-									src={theme?.images?.dummies?.product}
-									style={styles.productStyle}
-								/>
-							)}
+							<FastImage
+								style={styles.productStyle}
+								source={product?.images ? {
+									uri: optimizeImage(product?.images, 'h_250,c_limit'),
+									priority: FastImage.priority.normal,
+								} : theme?.images?.dummies?.product}
+								resizeMode={FastImage.resizeMode.cover}
+							/>
 						</LogoWrapper>
 
 						{(isSoldOut || maxProductQuantity <= 0) && (

@@ -76,6 +76,8 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
+  const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+
   const priceList = [
     { level: '1', content: '$' },
     { level: '2', content: '$$' },
@@ -97,7 +99,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       width: '100%'
     },
     searchInput: {
-      fontSize: 10,
+      fontSize: 12,
     },
     productsContainer: {
       marginTop: 20
@@ -231,6 +233,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       <SearchWrapper>
         <SearchBar
           lazyLoad
+          {...(isChewLayout && { height: 55 })}
           inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
           placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
           onSearch={(val: string) => handleChangeTermValue(val)}
@@ -255,6 +258,12 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           BusinessControllerSkeletons={BusinessControllerSkeletons}
           businessPaginationProps={paginationProps}
           franchiseId={brandId}
+          hideBackBtn
+          titleStyle={{
+            paddingHorizontal: 0,
+            marginTop: 0,
+            marginLeft: 0
+          }}
         />
       )}
 
@@ -263,19 +272,26 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           {t('BUSINESSES', 'Businesses')}
         </OText>
       </OptionTitle>
-      <ScrollView horizontal>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
-          <BusinessController
+          <View
             key={business.id}
-            business={business}
-            isBusinessOpen={business.open}
-            enableIntersection={false}
-            handleCustomClick={() => onBusinessClick(business)}
-            handleUpdateBusinessList={handleUpdateBusinessList}
-            orderType={orderState?.options?.type}
-            style={{ width: screenWidth - 120, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
-          />
+            style={{
+              width: screenWidth - 120,
+              marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0
+            }}
+          >
+            <BusinessController
+              business={business}
+              isBusinessOpen={business.open}
+              enableIntersection={false}
+              handleCustomClick={() => onBusinessClick(business)}
+              handleUpdateBusinessList={handleUpdateBusinessList}
+              orderType={orderState?.options?.type}
+            />
+          </View>
         ))}
+        {console.log(screenWidth)}
         {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
           <LoadMoreBusinessContainer>
             <OButton

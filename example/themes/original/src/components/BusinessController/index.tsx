@@ -11,7 +11,7 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
@@ -40,6 +40,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		navigation,
 		isBusinessOpen,
 		style,
+		isCustomLayout,
 		businessHeader,
 		businessFeatured,
 		businessLogo,
@@ -51,6 +52,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		handleFavoriteBusiness,
 		enableIntersection
 	} = props;
+
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [, { showToast }] = useToast()
 	const [orderState] = useOrder();
@@ -58,14 +60,19 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
+	const windowHeight = Dimensions.get('window').height
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
+
+	const textSize = isCustomLayout ? 12 : 10
+	const cardHeight = windowHeight * 0.3
 
 	const styles = StyleSheet.create({
 		container: {
 			marginVertical: 20,
 			borderRadius: 7.6,
 			width: '100%',
-			position: 'relative'
+			position: 'relative',
+			height: cardHeight
 		},
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -159,11 +166,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
 			{isIntersectionObserver ? (
 				<CardAnimation
+					style={[style, styles.container]}
 					onClick={() => handleBusinessClick(business)}
-					style={[
-						style,
-						styles.container
-					]}
 				>
 					{business?.ribbon?.enabled && (
 						<RibbonBox
@@ -185,7 +189,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					)}
 					<BusinessHero>
 						<FastImage
-							style={{ height: 120 }}
+							style={{ height: isCustomLayout ? cardHeight * 0.66 : 120 }}
 							source={(businessHeader || business?.header) ? {
 								uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
 								priority: FastImage.priority.normal,
@@ -211,7 +215,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</BusinessState>
 					</BusinessHero>
 					<BusinessContent>
-						<BusinessInfo>
+						<BusinessInfo style={isCustomLayout && { position: 'absolute', bottom: 85, left: 15 }}>
 							<BusinessLogo style={styles.businessLogo}>
 								<FastImage
 									style={{ width: 56, height: 56 }}
@@ -222,38 +226,60 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 									resizeMode={FastImage.resizeMode.cover}
 								/>
 							</BusinessLogo>
-							<ReviewAndFavorite>
-								{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
-									<Reviews>
-										<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
-										<OText size={10} style={{ lineHeight: 15 }}>
-											{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
-										</OText>
-									</Reviews>
-								)}
-								<LottieAnimation
-									type='favorite'
-									onClick={handleChangeFavorite}
-									initialValue={business?.favorite ? 0.75 : 0}
-									toValue={business?.favorite ? 0 : 0.75}
-									disableAnimation={!auth}
-									iconProps={{ color: theme.colors.danger5, size: 18 }}
-									isActive={business?.favorite}
-								/>
-							</ReviewAndFavorite>
+							{!isCustomLayout && (
+								<ReviewAndFavorite>
+									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+										<Reviews>
+											<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
+											<OText size={10} style={{ lineHeight: 15 }}>
+												{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
+											</OText>
+										</Reviews>
+									)}
+									<LottieAnimation
+										type='favorite'
+										onClick={handleChangeFavorite}
+										initialValue={business?.favorite ? 0.75 : 0}
+										toValue={business?.favorite ? 0 : 0.75}
+										disableAnimation={!auth}
+										iconProps={{ color: theme.colors.danger5, size: 18 }}
+										isActive={business?.favorite}
+									/>
+								</ReviewAndFavorite>
+							)}
 						</BusinessInfo>
-						<OText
-							size={12}
-							style={{ lineHeight: 18, marginBottom: 6 }}
-							weight={'500'}>
-							{business?.name}
-						</OText>
-						<OText size={10} style={{ lineHeight: 15, marginBottom: 3 }}>
+						<View style={isCustomLayout && { width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+							<OText
+								size={textSize + 2}
+								style={{ lineHeight: 18, marginBottom: 6 }}
+								weight={'500'}>
+								{business?.name}
+							</OText>
+							{isCustomLayout && (
+								<ReviewAndFavorite>
+									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+										<Reviews>
+											<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
+											<OText size={10} style={{ lineHeight: 15 }}>
+												{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
+											</OText>
+										</Reviews>
+									)}
+									<LottieAnimation
+										type='favorite'
+										onClick={handleChangeFavorite}
+										initialValue={business?.favorite ? 0.75 : 0}
+										toValue={business?.favorite ? 0 : 0.75}
+										disableAnimation={!auth}
+										iconProps={{ color: theme.colors.danger5, size: 18 }}
+										isActive={business?.favorite}
+									/>
+								</ReviewAndFavorite>
+							)}
+						</View>
+						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3 }} numberOfLines={isCustomLayout ? 1 : 2}>
 							{business?.address}
 						</OText>
-						{/* <BusinessCategory>
-          <OText>{getBusinessType()}</OText>
-        </BusinessCategory> */}
 						<Metadata>
 							{!isBusinessOpen ? (
 								<View style={styles.closed}>
@@ -264,16 +290,16 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							) : (
 								<View style={styles.bullet}>
 									{orderState?.options?.type === 1 && (
-										<OText size={10} color={theme.colors.textSecondary}>
+										<OText size={textSize} color={theme.colors.textSecondary}>
 											{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
 										</OText>
 									)}
-									<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
+									<OText size={textSize} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
 										orderState?.options?.type === 1
 											? (businessDeliveryTime ?? business?.delivery_time)
 											: (businessPickupTime ?? business?.pickup_time),
 									)} \u2022 `}</OText>
-									<OText size={10} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
+									<OText size={textSize} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
 								</View>
 							)}
 						</Metadata>

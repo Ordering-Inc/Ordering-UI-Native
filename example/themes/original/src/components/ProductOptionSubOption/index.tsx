@@ -6,6 +6,7 @@ import {
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View } from 'react-native'
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
 	Container,
@@ -33,12 +34,15 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
-	
+
 	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ parsePrice }] = useUtils()
 	const [showMessage, setShowMessage] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
+
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const iconsSize = isChewLayout ? 20 : 16
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
@@ -87,9 +91,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					{option?.allow_suboption_quantity && state?.selected && (
 						<>
 							<Checkbox disabled={disabled || state.quantity === 0} onPress={decrement}>
-								<OIcon
-									src={theme.images.general.minus}
-									width={16}
+								<IconAntDesign
+									name='minuscircleo'
+									size={iconsSize}
 									color={state.quantity === 0 || disabled ? theme.colors.disabled : theme.colors.primary}
 								/>
 							</Checkbox>
@@ -97,9 +101,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								{state.quantity}
 							</OText>
 							<Checkbox disabled={disabled || disableIncrement} onPress={increment}>
-								<OIcon
-									src={theme.images.general.plus}
-									width={16}
+								<IconAntDesign
+									name='pluscircleo'
+									size={iconsSize}
 									color={disableIncrement || disabled ? theme.colors.disabled : theme.colors.primary}
 								/>
 							</Checkbox>
@@ -140,7 +144,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					</OText>
 				)}
 			</Container>
-			{showMessage && <OText size={10} mLeft={4} mRight={4} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+			{showMessage && (
+				<OText size={10} mLeft={4} mRight={4} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>
+					{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}
+				</OText>
+			)}
 		</View>
 	)
 }
