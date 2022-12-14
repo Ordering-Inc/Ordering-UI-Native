@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useUtils, PageBanner as PageBannerController } from 'ordering-components/native'
 
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-import Swiper from 'react-native-swiper'
+import Carousel from 'react-native-snap-carousel'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useTheme } from 'styled-components/native';
-import { PageBannerWrapper } from './styles'
+import { PageBannerWrapper, ArrowButtonsContainer } from './styles'
 
 const PageBannerUI = (props: any) => {
   const {
@@ -16,6 +16,9 @@ const PageBannerUI = (props: any) => {
 
 	const theme = useTheme();
 	const [{ optimizeImage }] = useUtils();
+  const carouselRef = useRef(null)
+
+  const windowWidth = Dimensions.get('window').width;
 
   const styles = StyleSheet.create({
     mainSwiper: {
@@ -36,6 +39,18 @@ const PageBannerUI = (props: any) => {
     }
   })
 
+  const renderItem = ({ item, index }) => {
+    return (
+      <View style={styles.sliderWrapper}>
+        <FastImage
+          style={{ height: '100%', width: '100%' }}
+          resizeMode='cover'
+          source={{ uri: optimizeImage(item.url, 'h_300,c_limit') }}
+        />
+      </View>
+    )
+  }
+
   return (
     <>
       {pageBannerState.loading ? (
@@ -53,40 +68,40 @@ const PageBannerUI = (props: any) => {
         <>
           {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
             <PageBannerWrapper>
-              <Swiper
+              <ArrowButtonsContainer>
+                <TouchableOpacity
+                  style={styles.swiperButton}
+                  onPress={() => carouselRef.current.snapToPrev()}
+                >
+                  <IconAntDesign
+                    name="caretleft"
+                    color={theme.colors.white}
+                    size={13}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.swiperButton}
+                  onPress={() => carouselRef.current.snapToNext()}
+                >
+                  <IconAntDesign
+                    name="caretright"
+                    color={theme.colors.white}
+                    size={13}
+                  />
+                </TouchableOpacity>
+              </ArrowButtonsContainer>
+              <Carousel
+                ref={carouselRef}
                 loop={pageBannerState.banner?.items.length > 1}
-                showsButtons={true}
-                style={styles.mainSwiper}
-                showsPagination={false}
-                prevButton={
-                  <View style={styles.swiperButton}>
-                    <IconAntDesign
-                      name="caretleft"
-                      color={theme.colors.white}
-                      size={13}
-                    />
-                  </View>
-                }
-                nextButton={
-                  <View style={styles.swiperButton}>
-                    <IconAntDesign
-                      name="caretright"
-                      color={theme.colors.white}
-                      size={13}
-                    />
-                  </View>
-                }
-              >
-                {pageBannerState.banner?.items.map((img, i) => (
-                  <View key={i} style={styles.sliderWrapper}>
-                    <FastImage
-                      style={{ height: '100%', width: '100%' }}
-                      resizeMode='cover'
-                      source={{ uri: optimizeImage(img.url, 'h_300,c_limit') }}
-                    />
-                  </View>
-                ))}
-              </Swiper>
+                data={pageBannerState.banner?.items}
+                renderItem={renderItem}
+                sliderWidth={windowWidth - 80}
+                itemWidth={windowWidth - 80}
+                inactiveSlideScale={1}
+                pagingEnabled
+                removeClippedSubviews={false}
+                inactiveSlideOpacity={1}
+              />
             </PageBannerWrapper>
           )}
         </>
