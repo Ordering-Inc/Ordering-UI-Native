@@ -538,17 +538,21 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</FeaturedWrapper>
 				)
 			}
-			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			{
-				!businessId && !props.franchiseId && (
-					<HighestRatedBusinesses
-						onBusinessClick={handleBusinessClick}
-						navigation={navigation}
-						favoriteIds={favoriteIds}
-						setFavoriteIds={setFavoriteIds}
-					/>
-				)
-			}
+			{!isChewLayout && (
+				<>
+					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+					{
+						!businessId && !props.franchiseId && (
+							<HighestRatedBusinesses
+								onBusinessClick={handleBusinessClick}
+								navigation={navigation}
+								favoriteIds={favoriteIds}
+								setFavoriteIds={setFavoriteIds}
+							/>
+						)
+					}
+				</>
+			)}
 
 			<PageBanner position='app_business_listing' />
 
