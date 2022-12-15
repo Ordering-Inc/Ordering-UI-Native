@@ -32,3 +32,10 @@ export const RatingStarContainer = styled.View`
 export const PlacedDate = styled.View`
   margin-top: 30px;
 `
+
+export const MultiLogosContainer = styled.View`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  width: 100%;
+`

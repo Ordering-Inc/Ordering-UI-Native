@@ -11,7 +11,8 @@ import {
   ActionContainer,
   SkipButton,
   RatingBarContainer,
-  RatingTextContainer
+  RatingTextContainer,
+  MultiLogosContainer
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet, View, I18nManager } from 'react-native';
@@ -215,14 +216,30 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
         />
-        <BusinessLogo>
-          <View style={styles.logoWrapper}>
-            <OIcon
-              url={order?.logo}
-              width={80}
-              height={80}
-            />
-          </View>
+        <BusinessLogo isMulti={order?.business?.length > 1}>
+          {typeof order?.logo === 'string' || !order?.logo ? (
+            <View style={styles.logoWrapper}>
+              <OIcon
+                url={order?.logo}
+                width={80}
+                height={80}
+              />
+            </View>
+          ) : (
+            <MultiLogosContainer>
+              {order?.logo?.map((logo : string, i : number) => (
+                <React.Fragment key={logo}>
+                  <View style={styles.logoWrapper}>
+                    <OIcon
+                      url={logo}
+                      width={80}
+                      height={80}
+                    />
+                  </View>
+                </React.Fragment>
+              ))}
+            </MultiLogosContainer>
+          )}
         </BusinessLogo>
         {order?.review ? (
           <View style={styles.reviewedStyle}>

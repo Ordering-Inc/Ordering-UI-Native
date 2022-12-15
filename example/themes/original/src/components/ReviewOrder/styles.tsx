@@ -42,3 +42,10 @@ export const RatingTextContainer = styled.View`
   justify-content: space-between;
   margin-top: 10px;
 `
+
+export const MultiLogosContainer = styled.View`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  width: 100%;
+`

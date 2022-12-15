@@ -60,12 +60,42 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	const [, { showToast }] = useToast()
 	const { loading, error, orders: values } = orderList
 	const [businessLoading, setBusinessLoading] = useState(true)
+	const [orders, setOrders] = useState([])
 
 	const imageFails = activeOrders
 		? theme.images.general.emptyActiveOrders
 		: theme.images.general.emptyPastOrders
 
-	const orders = customArray || values || []
+	const _orders = customArray || values || []
+	const uniqueOrders: any = []
+
+
+	useEffect(() => {
+		if (loading || error) return
+		const orders = _orders.map((order: any) => order?.cart_group_id
+			? _orders
+				.filter((_order : any) => _order?.cart_group_id === order?.cart_group_id)
+				?.reduce((orderCompleted : any, currentOrder : any) => ({
+					...orderCompleted,
+					total: orderCompleted.summary?.total + currentOrder?.summary?.total,
+					business: [orderCompleted.business, currentOrder.business].flat(),
+					business_id: [orderCompleted.business_id, currentOrder.business_id].flat(),
+					id: [orderCompleted.id, currentOrder.id].flat(),
+					review: orderCompleted.review && currentOrder.review,
+					user_review: orderCompleted.user_review && currentOrder.user_review,
+					products: [orderCompleted.products, currentOrder.products].flat()
+				}))
+			: order)
+			.filter((order: any) => {
+				const isDuplicate = uniqueOrders.includes(order?.cart_group_id)
+				if (!isDuplicate) {
+					uniqueOrders.push(order?.cart_group_id)
+					return true
+				}
+				return false
+			})
+		setOrders(orders)
+	}, [JSON.stringify(_orders)])
 
 	const getOrderStatus = (s: string) => {
 		const status = parseInt(s)
@@ -219,7 +249,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						)}
 				</>
 			)}
-			{isBusiness && !!businessesSearchList && businesses?.loading &&  (
+			{isBusiness && !!businessesSearchList && businesses?.loading && (
 				<ScrollView horizontal>
 					<BusinessControllerSkeletons paginationProps={businessPaginationProps} />
 				</ScrollView>
