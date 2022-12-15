@@ -25,7 +25,8 @@ import {
 	BusinessLogo,
 	Reviews,
 	RibbonBox,
-	ReviewAndFavorite
+	ReviewAndFavorite,
+	OfferBox
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
@@ -50,7 +51,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		businessPickupTime,
 		businessDistance,
 		handleFavoriteBusiness,
-		enableIntersection
+		enableIntersection,
+		getBusinessOffer
 	} = props;
 
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
@@ -200,6 +202,18 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							<View style={styles.featured}>
 								<FontAwesomeIcon name="crown" size={26} color="gold" />
 							</View>
+						)}
+						{(!isCustomLayout) && (
+							getBusinessOffer((business?.offers)) &&
+							<OfferBox>
+								<OText
+									size={10}
+									weight={'400'}
+									numberOfLines={2}
+									ellipsizeMode='tail'
+									lineHeight={13}
+								>{getBusinessOffer((business?.offers)) || parsePrice(0)}</OText>
+							</OfferBox>
 						)}
 						<BusinessState>
 							{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
