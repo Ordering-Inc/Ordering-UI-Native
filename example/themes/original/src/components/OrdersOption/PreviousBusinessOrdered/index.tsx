@@ -16,24 +16,24 @@ const BusinessControllerList = ({ businesses, onBusinessClick, navigation, order
   return (
     <>
       {businesses?.result?.map((business: any, i: number) => (
-        <BusinessController
-          key={`${business.id}_` + i}
-          business={business}
-          isBusinessOpen={business.open}
-          handleCustomClick={() => onBusinessClick(business)}
-          orderType={orderState?.options?.type}
-          navigation={navigation}
-          businessHeader={business?.header}
-          businessFeatured={business?.featured}
-          businessLogo={business?.logo}
-          businessReviews={business?.reviews}
-          businessDeliveryPrice={business?.delivery_price}
-          businessDeliveryTime={business?.delivery_time}
-          businessPickupTime={business?.pickup_time}
-          businessDistance={business?.distance}
-          handleCustomUpdate={handleCustomUpdate}
-          style={style}
-        />
+        <View style={style} key={`${business.id}_` + i}>
+          <BusinessController
+            business={business}
+            isBusinessOpen={business.open}
+            handleCustomClick={() => onBusinessClick(business)}
+            orderType={orderState?.options?.type}
+            navigation={navigation}
+            businessHeader={business?.header}
+            businessFeatured={business?.featured}
+            businessLogo={business?.logo}
+            businessReviews={business?.reviews}
+            businessDeliveryPrice={business?.delivery_price}
+            businessDeliveryTime={business?.delivery_time}
+            businessPickupTime={business?.pickup_time}
+            businessDistance={business?.distance}
+            handleCustomUpdate={handleCustomUpdate}
+          />
+        </View>
       ))}
     </>
   )
@@ -109,7 +109,12 @@ export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) =>
   });
 
   return (
-    <ScrollView horizontal={isBusinessesSearchList} style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      horizontal={isBusinessesSearchList}
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
       {isBusinessesSearchList ? (
         <>
           {!businesses?.loading && (
