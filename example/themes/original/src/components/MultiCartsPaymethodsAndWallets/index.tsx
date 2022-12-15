@@ -25,7 +25,6 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
     businessIds,
     paymethodsAndWallets,
     walletsState,
-    businessPaymethods,
     paymethodSelected,
     handleSelectPaymethod,
     handleSelectWallet,
@@ -77,24 +76,24 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const renderPaymethods = ({ item }: any) => {
     return (
       <TouchableOpacity
-        onPress={() => handleSelectPaymethod(item)}
+        onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
       >
         <PMItem
           key={item.id}
-          isActive={paymethodSelected?.paymethod_id === item.paymethod_id}
+          isActive={paymethodSelected?.id === item.id}
         >
           <OIcon
             src={getPayIcon(item.paymethod?.gateway)}
             width={20}
             height={20}
-            color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : theme.colors.backgroundDark}
+            color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
           />
           <OText
             size={10}
             style={{ margin: 0, marginTop: 4 }}
-            color={paymethodSelected?.paymethod_id === item.paymethod_id ? theme.colors.white : '#000'}
+            color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
           >
-            {t(item?.paymethod?.gateway.toUpperCase(), item?.paymethod?.name)}
+            {t(item?.gateway.toUpperCase(), item?.name)}
           </OText>
         </PMItem>
       </TouchableOpacity>
@@ -124,7 +123,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={businessPaymethods?.result?.filter((paymethod: any) => paymethodsAndWallets.paymethods.find((item: any) => item.id === paymethod.paymethod_id))}
+          data={paymethodsAndWallets.paymethods}
           renderItem={renderPaymethods}
           keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
         />
