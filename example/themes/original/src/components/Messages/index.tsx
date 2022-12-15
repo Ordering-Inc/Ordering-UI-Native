@@ -407,15 +407,8 @@ const MessagesUI = (props: MessagesParams) => {
 		context.actionSheet().showActionSheetWithOptions({
 			options,
 			cancelButtonIndex
-		}, (buttonIndex: any) => {
-			switch (buttonIndex) {
-				case 0:
-					Clipboard.setString(message.text);
-					break;
-				case 1:
-					break;
-			}
-		});
+		}, (buttonIndex: any) => buttonIndex === 0 && Clipboard.setString(message.text)
+		);
 	}
 
 	return (
