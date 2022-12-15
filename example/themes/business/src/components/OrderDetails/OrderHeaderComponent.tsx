@@ -271,7 +271,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             {order?.delivery_option && (
               <OText size={13}>
                 <OText size={13} weight='bold'>{`${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: `}</OText>
-                {t(order?.delivery_option?.name?.toUpperCase()?.replaceAll(' ', '_'), order?.delivery_option?.name)}
+                {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
             )}
             {order?.payment_events?.length > 0 && (
@@ -286,8 +286,8 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                         ? `${walletName[event?.wallet_event?.wallet?.type]?.name} - `
                         : walletName[event?.wallet_event?.wallet?.type]?.name
                       : idx < order?.payment_events?.length - 1
-                        ? `${t(event?.paymethod?.name?.toUpperCase()?.replaceAll(' ', '_'), event?.paymethod?.name)} - `
-                        : t(event?.paymethod?.name?.toUpperCase()?.replaceAll(' ', '_'), event?.paymethod?.name)
+                        ? `${t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)} - `
+                        : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)
                   })}
                 </OText>
               </View>

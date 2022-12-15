@@ -333,7 +333,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
               <OText>
-                {t(order?.delivery_option?.name?.toUpperCase()?.replaceAll(' ', '_'), order?.delivery_option?.name)}
+                {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
             )}
             {!!order?.comment && (
@@ -399,7 +399,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replaceAll(' ', '_'), offer.name)}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -445,7 +445,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={tax.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(tax?.name?.toUpperCase()?.replaceAll(' ', '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {t(tax?.name?.toUpperCase()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
               </OSRow>
@@ -458,7 +458,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={fee.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(fee?.name?.toUpperCase()?.replaceAll(' ', '_'), fee?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {t(fee?.name?.toUpperCase()?.replace(/ /g, '_'), fee?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   ({fee?.fixed > 0 && `${parsePrice(fee?.fixed, { currency: order?.currency })} + `}{fee.percentage}%){' '}
                 </OText>
               </OSRow>
@@ -471,7 +471,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replaceAll(' ', '_'), offer.name)}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -499,7 +499,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replaceAll(' ', '_'), offer.name)}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -568,7 +568,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     <OText>
                       {event?.wallet_event
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
-                        : t(event?.paymethod?.name?.toUpperCase()?.replaceAll(' ', '_'), event?.paymethod?.name)}
+                        : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                     </OText>
                     {event?.data?.charge_id && (
                       <OText>
