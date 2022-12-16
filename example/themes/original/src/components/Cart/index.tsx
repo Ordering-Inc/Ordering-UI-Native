@@ -104,9 +104,38 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    if (isCheckoutMultiBusinessEnabled && openCarts.length > 1) {
+    const cartSelectedHasGroup = cart?.group?.uuid
+    const cartFilterValidation = (cart : any) => cart?.valid && cart?.status !== 2
+    const cartsGroupLength = cartSelectedHasGroup ? Object.values(orderState.carts).filter((_cart : any) => _cart?.group?.uuid === cartSelectedHasGroup && cartFilterValidation(_cart))?.length : 0
+    if (cartsGroupLength > 1 && isCheckoutMultiBusinessEnabled) {
       props.onNavigationRedirect('CheckoutNavigator', {
-        screen: 'MultiCheckout'
+        screen: 'MultiCheckout',
+        cartUuid: cart?.group?.uuid
+      })
+      return
+    }
+    const cartGroupsCount : any = {}
+    Object.values(orderState.carts).filter(_cart => cartFilterValidation(_cart))?.forEach((_cart : any) => {
+      if (cartGroupsCount[_cart?.group?.uuid]) {
+        cartGroupsCount[_cart?.group?.uuid] += 1
+      } else {
+        cartGroupsCount[_cart?.group?.uuid] = 1
+      }
+    })
+    let groupForTheCart
+    const groupForAddCartArray = Object.keys(cartGroupsCount).filter(cartGroupUuid => cartGroupsCount[cartGroupUuid] > 0 && cartGroupsCount[cartGroupUuid] < 5)
+    const max = Math.max(...groupForAddCartArray.map(uuid => cartGroupsCount[uuid]))
+    const indexes = groupForAddCartArray.filter(uuid => cartGroupsCount[uuid] === max)
+    if (indexes?.length > 1) {
+      groupForTheCart = indexes.find(uuid => uuid !== 'undefined')
+    } else {
+      groupForTheCart = indexes[0]
+    }
+    if (isCheckoutMultiBusinessEnabled && openCarts.length > 1 && groupForTheCart) {
+      props.onNavigationRedirect('CheckoutNavigator', {
+        screen: 'MultiCart',
+        cartUuid: cart.uuid, 
+        cartGroup: groupForTheCart === 'undefined' ? 'create' : groupForTheCart
       })
     } else {
       props.onNavigationRedirect('CheckoutNavigator', {

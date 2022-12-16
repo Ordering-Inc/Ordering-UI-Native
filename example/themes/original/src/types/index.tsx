@@ -530,6 +530,7 @@ export interface FloatingButtonParams {
 	handleClick?: any;
 	handleEmpty?: any;
 	iosBottom?: number
+	hideButton?: boolean
 }
 export interface MomentOptionParams {
 	navigation: any;

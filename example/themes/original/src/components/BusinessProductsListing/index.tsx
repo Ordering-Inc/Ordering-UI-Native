@@ -528,6 +528,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
 							btnRightValue={parsePrice(currentCart?.total)}
 							disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
+							hideButton={isCheckoutMultiBusinessEnabled}
 							handleClick={() => setOpenUpselling(true)}
 						/>
 					</View>

@@ -19,7 +19,8 @@ import {
   ButtonWrapper,
   ContentFooter,
   UnreadMessageCounter,
-  Price
+  Price,
+  MultiLogosContainer
 } from './styles';
 import { LottieAnimation } from '../LottieAnimation';
 import { CardAnimation } from '../shared/CardAnimation';
@@ -60,6 +61,11 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       borderRadius: 8,
       width: 64,
       height: 64
+    },
+    minilogo: {
+      borderRadius: 8,
+      width: 40,
+      height: 40
     },
     logoWrapper: {
       overflow: 'hidden',
@@ -141,11 +147,12 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
           order: {
             id: order?.id,
             business_id: order?.business_id,
-            logo: order?.business?.logo,
+            logo: order?.business?.length > 1 ? order?.business?.map?.((business : any) => business?.logo): order?.business?.logo,
             driver: order?.driver,
             products: order?.products,
             review: order?.review,
-            user_review: order?.user_review
+            user_review: order?.user_review,
+            business: order?.business
           },
         });
       return
@@ -158,13 +165,16 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       onNavigationRedirect('OrderDetails', { orderId: order?.uuid });
   };
 
-  const handleClickViewOrder = (uuid: string) => {
+  const handleClickViewOrder = (order: any) => {
     if (isMessageView) {
       handleClickOrder(order?.uuid)
       return
     }
-    onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { orderId: uuid });
+    if (order?.cart_group_id){
+      onNavigationRedirect?.('MultiOrdersDetails', { orderId: order?.cart_group_id });
+    } else {
+      onNavigationRedirect?.('OrderDetails', { orderId: order?.uuid });
+    }
   };
 
   const handleChangeFavorite = () => {
@@ -180,24 +190,49 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   return (
     <>
       <CardAnimation
-        onClick={() => handleClickViewOrder(order?.uuid)}
+        onClick={() => handleClickViewOrder(order)}
         style={[styles.container]}
       >
         <InnerContainer>
           {(!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
-            <Logo style={styles.logoWrapper}>
-              <OIcon
-                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
-                src={optimizeImage(!order.business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
-                style={styles.logo}
-              />
-            </Logo>
+            <>
+              {order?.business?.length > 1 ? (
+                <MultiLogosContainer>
+                  {order?.business?.map((business: any, i: number) => (
+                    <View key={business?.id}>
+                      {i > 1 ? (
+                        <>
+                          {console.log(order?.business?.length - 2)}
+                        <OText mRight={3}> + {order?.business?.length - 2}</OText>
+                        </>
+                      ) : (
+                        <Logo style={styles.logoWrapper} isMulti>
+                          <OIcon
+                            url={optimizeImage(business?.logo, 'h_300,c_limit')}
+                            src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                            style={styles.minilogo}
+                          />
+                        </Logo>
+                      )}
+                    </View>
+                  ))}
+                </MultiLogosContainer>
+              ) : (
+                <Logo style={styles.logoWrapper}>
+                  <OIcon
+                    url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                    src={optimizeImage(!order.business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                    style={styles.logo}
+                  />
+                </Logo>
+              )}
+            </>
           )}
           <CardInfoWrapper>
             <ContentHeader>
               <View style={{ flex: 1 }}>
                 <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
-                  {order.business?.name}
+                  {order?.business?.length > 1 ? `${t('GROUP_ORDER', 'Group Order')} ${t('No', 'No')}. ${order?.cart_group_id}` : order.business?.name}
                 </OText>
               </View>
               {!!!pastOrders && (
@@ -253,7 +288,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
             <ContentFooter>
               <View style={{ flex: 1 }}>
                 <View style={styles.infoText}>
-                  {!!!pastOrders && (
+                  {(!!!pastOrders || order?.business?.length > 1) && (
                     <>
                       <OText
                         size={10}
@@ -263,7 +298,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         lineHeight={15}
                         numberOfLines={1}
                       >
-                        {t('ORDER_NO', 'Order No') + '.'}
+                        {order?.business?.length > 1 ? order?.business?.length : (t('ORDER_NO', 'Order No') + '.')}
                       </OText>
                       <OText
                         size={10}
@@ -272,7 +307,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         lineHeight={15}
                         numberOfLines={1}
                       >
-                        {order.id + ` \u2022 `}
+                        {order?.business?.length > 1 ? t('ORDERS', 'orders') + ' \u2022 ' : order.id + ` \u2022 `}
                       </OText>
                     </>
                   )}
@@ -293,7 +328,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   {getOrderStatus(order.status)?.value}
                 </OText>
               </View>
-              {!isMessageView && (
+              {!isMessageView && !order?.business?.length && (
                 <LottieAnimation
                   type='favorite'
                   onClick={handleChangeFavorite}

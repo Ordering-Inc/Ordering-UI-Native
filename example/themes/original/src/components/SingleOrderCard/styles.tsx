@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 export const InnerContainer = styled.View`
   flex-direction: row;
@@ -8,6 +8,9 @@ export const InnerContainer = styled.View`
 export const Logo = styled.View`
 	border-radius: 7.6px;
   margin-right: 12px;
+  ${({ isMulti } : any) => isMulti && css`
+      margin-right: 5px;
+    `}
 `
 
 export const CardInfoWrapper = styled.View`
@@ -44,4 +47,10 @@ export const Price = styled.View`
   align-items: flex-end;
   margin-left: 10px;
   width: 30%;
+`
+
+export const MultiLogosContainer = styled.View`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
 `
