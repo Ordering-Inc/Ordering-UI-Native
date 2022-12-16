@@ -19,6 +19,7 @@ import {
   OrdersSummary,
   BorderLine
 } from './styles'
+import { NotFoundSource } from '../NotFoundSource'
 
 export const MultiOrdersDetailsUI = (props: any) => {
   const {
@@ -247,6 +248,19 @@ export const MultiOrdersDetailsUI = (props: any) => {
             </React.Fragment>
           ))}
         </>
+      )}
+      {!loading && (error || orders?.length === 0) && (
+        error?.includes('ERROR_ACCESS_EXPIRED') ? (
+          <NotFoundSource
+            content={t(error[0], 'Sorry, the order has expired.')}
+          />
+        ) : (
+          <NotFoundSource
+            content={t('NOT_FOUND_ORDER', theme?.defaultLanguages?.NOT_FOUND_ORDER || 'Sorry, we couldn\'t find the requested order.')}
+            btnTitle={t('ORDERS_REDIRECT', theme?.defaultLanguages?.ORDERS_REDIRECT || 'Go to Orders')}
+            onClickButton={navigation.navigate('BusinessList')}
+          />
+        )
       )}
       <Divider />
     </OrdersDetailsContainer>

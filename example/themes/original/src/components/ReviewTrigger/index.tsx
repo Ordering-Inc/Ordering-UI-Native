@@ -8,7 +8,8 @@ import {
   FormReviews,
   ActionContainer,
   RatingStarContainer,
-  PlacedDate
+  PlacedDate,
+  MultiLogosContainer
 } from './styles'
 import { OButton, OIcon, OText } from '../shared'
 import { StyleSheet, View, I18nManager } from 'react-native';
@@ -79,13 +80,30 @@ export const ReviewTrigger = (props: any) => {
     <>
       <ReviewOrderContainer>
         <BusinessLogo>
-          <View style={styles.logoWrapper}>
-            <OIcon
-              url={order?.logo}
-              width={80}
-              height={80}
-            />
-          </View>
+          {typeof order?.logo === 'string' || !order?.logo ? (
+            <View style={styles.logoWrapper}>
+              <OIcon
+                url={order?.logo}
+                width={80}
+                height={80}
+              />
+            </View>
+          ) : (
+            <MultiLogosContainer>
+              {order?.logo?.map((logo : string, i : number) => (
+                <React.Fragment key={logo}>
+                  <View style={styles.logoWrapper}>
+                    <OIcon
+                      url={logo}
+                      width={80}
+                      height={80}
+                    />
+                  </View>
+                </React.Fragment>
+              ))}
+            </MultiLogosContainer>
+
+          )}
         </BusinessLogo>
         {!!order?.business_name && <OText style={{ textAlign: 'center', marginTop: 15 }} color={theme.colors.textNormal}>{order?.business_name}</OText>}
         <View style={{ flex: 1, justifyContent: 'flex-end' }}>

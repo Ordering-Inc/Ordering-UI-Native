@@ -53,7 +53,8 @@ const MultiCheckoutUI = (props: any) => {
     paymethodSelected,
     handleSelectPaymethod,
     handleSelectWallet,
-    handlePaymethodDataChange
+    handlePaymethodDataChange,
+    cartUuid
   } = props
 
 	const theme = useTheme();
@@ -78,7 +79,7 @@ const MultiCheckoutUI = (props: any) => {
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const maximumCarts = 5
-  const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || openCarts.length > maximumCarts
+  const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || openCarts.length > maximumCarts || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
 
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
@@ -225,6 +226,7 @@ const MultiCheckoutUI = (props: any) => {
               handleSelectPaymethod={handleSelectPaymethod}
               handleSelectWallet={handleSelectWallet}
               handlePaymethodDataChange={handlePaymethodDataChange}
+              cartUuid={cartUuid}
             />
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
           </ChSection>
