@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Clipboard from '@react-native-clipboard/clipboard';
 import { Messages as MessagesController, useSession, useUtils, useLanguage, ToastType, useToast } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { launchImageLibrary } from 'react-native-image-picker'
@@ -397,6 +398,19 @@ const MessagesUI = (props: MessagesParams) => {
 		}
 	}
 
+	const onLongPress = (context: any, message: any) => {
+		const options = [
+			t('COPY_TEXT', 'Copy text'),
+			t('CANCEL', 'Cancel'),
+		];
+		const cancelButtonIndex = options.length - 1;
+		context.actionSheet().showActionSheetWithOptions({
+			options,
+			cancelButtonIndex
+		}, (buttonIndex: any) => buttonIndex === 0 && Clipboard.setString(message.text)
+		);
+	}
+
 	return (
 		<View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
 			<Wrapper>
@@ -473,6 +487,7 @@ const MessagesUI = (props: MessagesParams) => {
 					onSend={onSubmit}
 					onInputTextChanged={onChangeMessage}
 					alignTop
+					onLongPress={(context: any, message: any) => onLongPress(context, message)}
 					scrollToBottom
 					renderAvatarOnTop
 					renderUsernameOnMessage

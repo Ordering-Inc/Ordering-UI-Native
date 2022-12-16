@@ -16,26 +16,19 @@ import {
 	DivideView,
 	MediaWrapper,
 } from './styles';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
 import { formatUrlVideo } from '../../utils'
+import { ScheduleAccordion } from '../ScheduleAccordion';
 const BusinessInformationUI = (props: BusinessInformationParams) => {
 	const { businessState, businessSchedule, businessLocation } = props;
 
 	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [{ optimizeImage }] = useUtils();
-	const daysOfWeek = [
-		t('SUNDAY_ABBREVIATION', 'Sun'),
-		t('MONDAY_ABBREVIATION', 'Mon'),
-		t('TUESDAY_ABBREVIATION', 'Tues'),
-		t('WEDNESDAY_ABBREVIATION', 'Wed'),
-		t('THURSDAY_ABBREVIATION', 'Thur'),
-		t('FRIDAY_ABBREVIATION', 'Fri'),
-		t('SATURDAY_ABBREVIATION', 'Sat'),
-	];
+
 	const scheduleFormatted = ({
 		hour,
 		minute,
@@ -112,25 +105,11 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 						<WrapScheduleBlock>
 							{businessSchedule.map((schedule: any, i: number) => (
 								<ScheduleBlock key={i}>
-									<OText
-										lineHeight={21}
-										mBottom={16}
-										size={14}
-										weight={Platform.OS === 'android' ? 'bold' : '600'}
-										style={{ flexBasis: '20%' }}>
-										{daysOfWeek[i].toUpperCase()}
-									</OText>
-									{schedule.enabled ? (
-										<OText mBottom={16}>
-											{scheduleFormatted(schedule.lapses[0].open) +
-												' - ' +
-												scheduleFormatted(schedule.lapses[0].close)}
-										</OText>
-									) : (
-										<OText color={theme.colors.red} mBottom={16}>
-											{t('CLOSED', 'Closed')}
-										</OText>
-									)}
+									<ScheduleAccordion
+										weekIndex={i}
+										scheduleFormatted={scheduleFormatted}
+										schedule={schedule}
+									/>
 								</ScheduleBlock>
 							))}
 						</WrapScheduleBlock>
@@ -152,10 +131,10 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 											style={{ width: 210, height: 127, borderRadius: 7.6 }}
 											javaScriptEnabled={true}
 											domStorageEnabled={true}
-											source={{ 
+											source={{
 												html: `
 													<iframe width='80%' height='80%' src="${formatUrlVideo(v.video)}" frameBorder='0' allow='autoplay; encrypted-media' allowFullScreen />
-												`, 
+												`,
 											}}
 											mediaPlaybackRequiresUserAction={true}
 										/>
