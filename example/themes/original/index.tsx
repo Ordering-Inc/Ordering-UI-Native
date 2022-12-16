@@ -68,6 +68,7 @@ import { SingleProductCard } from './src/components/SingleProductCard';
 import { SingleOrderCard } from './src/components/SingleOrderCard';
 import { UpsellingRedirect } from './src/components/BusinessProductsListing/UpsellingRedirect';
 import { ProductItemAccordion } from './src/components/ProductItemAccordion';
+import { ScheduleAccordion } from './src/components/ScheduleAccordion';
 import { BusinessItemAccordion } from './src/components/BusinessItemAccordion';
 import { CouponControl } from './src/components/CouponControl';
 import { TaxInformation } from './src/components/TaxInformation';
@@ -231,6 +232,7 @@ export {
 	SingleOrderCard,
 	UpsellingRedirect,
 	ProductItemAccordion,
+	ScheduleAccordion,
 	BusinessItemAccordion,
 	CouponControl,
 	TaxInformation,
