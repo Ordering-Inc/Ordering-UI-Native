@@ -39,7 +39,7 @@ export const BusinessState = styled.View`
 `
 
 export const BusinessLogo = styled.View`
-   
+
 `
 
 export const ReviewAndFavorite = styled.View`
@@ -72,4 +72,16 @@ export const RibbonBox = styled.View`
   ${(props: any) => props.isCapsule && css`
     border-radius: 50px;
   `}
+`
+
+export const OfferBox = styled.View`
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  right: 10px;
+  border-radius: 50px;
+  color: ${(props: any) => props.theme.colors.textThird};
+  background: ${(props: any) => props.theme.colors.inputBorderColor};
+  padding: 3px 8px;
+  max-width: 180px;
 `

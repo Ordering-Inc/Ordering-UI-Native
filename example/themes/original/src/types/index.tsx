@@ -222,6 +222,7 @@ export interface BusinessControllerParams {
 	handleUpdateBusinessList?: any;
 	enableIntersection?: boolean;
 	isCustomLayout?: boolean;
+	getBusinessOffer?: any;
 	handleCustomUpdate?: (businessId: number, changes: any) => {};
 }
 export interface BusinessProductsListingParams {
