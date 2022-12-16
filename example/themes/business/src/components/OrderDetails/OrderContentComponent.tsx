@@ -333,7 +333,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
               <OText>
-                {order?.delivery_option?.name}
+                {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
             )}
             {!!order?.comment && (
@@ -378,7 +378,7 @@ export const OrderContentComponent = (props: OrderContent) => {
         <Table>
           <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
           <OText mBottom={4}>
-            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: order?.currency})}
+            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: order?.currency })}
           </OText>
         </Table>
         {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
@@ -391,7 +391,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             ) : (
               <OText mBottom={4}>{t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}</OText>
             )}
-            <OText>- {parsePrice(order?.summary?.discount ?? order?.discount, { currency: order?.currency})}</OText>
+            <OText>- {parsePrice(order?.summary?.discount ?? order?.discount, { currency: order?.currency })}</OText>
           </Table>
         )}
         {
@@ -399,13 +399,13 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {offer.name}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency })}</OText>
             </Table>
           ))
         }
@@ -413,9 +413,9 @@ export const OrderContentComponent = (props: OrderContent) => {
           <Table>
             <OText mBottom={4}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
             {order?.tax_type === 1 ? (
-              <OText mBottom={4}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0), { currency: order?.currency})}</OText>
+              <OText mBottom={4}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0), { currency: order?.currency })}</OText>
             ) : (
-              <OText mBottom={4}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0, { currency: order?.currency })}</OText>
             )}
           </Table>
         )}
@@ -425,7 +425,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
             </OText>
             <OText mBottom={4}>
-              {parsePrice(order?.summary?.tax ?? 0, { currency: order?.currency})}
+              {parsePrice(order?.summary?.tax ?? 0, { currency: order?.currency })}
             </OText>
           </Table>
         )}
@@ -436,7 +436,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 {t('SERVICE_FEE', 'Service fee')}
                 {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
               </OText>
-              <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0, { currency: order?.currency })}</OText>
             </Table>
           )
         }
@@ -445,11 +445,11 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={tax.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {t(tax?.name?.toUpperCase()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: order?.currency })}</OText>
             </Table>
           ))
         }
@@ -458,11 +458,11 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={fee.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
-                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed, { currency: order?.currency})} + `}{fee.percentage}%){' '}
+                  {t(fee?.name?.toUpperCase()?.replace(/ /g, '_'), fee?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed, { currency: order?.currency })} + `}{fee.percentage}%){' '}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0, { currency: order?.currency })}</OText>
             </Table>
           ))
         }
@@ -471,13 +471,13 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {offer.name}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency })}</OText>
             </Table>
           ))
         }
@@ -489,7 +489,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               </OText>
 
               <OText mBottom={4}>
-                {parsePrice(order?.summary?.delivery_price, { currency: order?.currency})}
+                {parsePrice(order?.summary?.delivery_price, { currency: order?.currency })}
               </OText>
             </Table>
           )
@@ -499,13 +499,13 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {offer.name}
+                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency })}</OText>
             </Table>
           ))
         }
@@ -520,7 +520,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
                 )}
             </OText>
-            <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: order?.currency})}</OText>
+            <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: order?.currency })}</OText>
           </Table>
         )}
 
@@ -534,7 +534,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               mBottom={4}
               style={styles.textBold}
               color={theme.colors.primary}>
-              {parsePrice(order?.summary?.total ?? order?.total, { currency: order?.currency})}
+              {parsePrice(order?.summary?.total ?? order?.total, { currency: order?.currency })}
             </OText>
           </Table>
         </Total>
@@ -568,7 +568,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     <OText>
                       {event?.wallet_event
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
-                        : event?.paymethod?.name}
+                        : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                     </OText>
                     {event?.data?.charge_id && (
                       <OText>
@@ -577,7 +577,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     )}
                   </View>
                   <OText>
-                    -{parsePrice(event.amount, { currency: order?.currency})}
+                    -{parsePrice(event.amount, { currency: order?.currency })}
                   </OText>
                 </View>
               ))}
