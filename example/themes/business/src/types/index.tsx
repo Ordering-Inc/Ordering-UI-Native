@@ -311,6 +311,8 @@ export interface OrdersOptionParams {
   isLogisticActivated?: boolean;
   isAlsea?: boolean;
   checkNotification?: boolean;
+  ordersGroupedFormatted?: any;
+  handleChangeOrderStatus?: () => void;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -569,7 +571,7 @@ export interface AcceptOrRejectOrderParams {
   loading?: boolean;
   action: string;
   orderId?: number;
-  handleUpdateOrder?: (status: number, isAccept: any) => {};
+  handleUpdateOrder?: () => void;
   notShowCustomerPhone?: boolean | undefined;
   actions?: actions;
   titleAccept?: textTranslate;
