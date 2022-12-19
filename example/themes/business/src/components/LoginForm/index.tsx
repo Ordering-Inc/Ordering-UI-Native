@@ -280,7 +280,6 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const handleLoginOtp = (code: string) => {
 		handleButtonLoginClick({ code })
-		setWillVerifyOtpState(false)
 	}
 
 	const closeAlert = () => {
@@ -336,6 +335,9 @@ const LoginFormUI = (props: LoginParams) => {
           : formState.result?.result[0]
       )
       setSubmitted(false)
+    }
+    if (!formState?.loading && !formState?.result?.error) {
+      setWillVerifyOtpState(false)
     }
   }, [formState]);
 
@@ -916,6 +918,7 @@ const LoginFormUI = (props: LoginParams) => {
 					handleLoginOtp={handleLoginOtp}
 					onSubmit={handleLogin}
 					setAlertState={setAlertState}
+          formState={formState}
 				/>
 			</OModal>
 			<Alert

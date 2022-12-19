@@ -36,7 +36,8 @@ export interface otpParams {
 	setWillVerifyOtpState: (val : boolean) => void,
 	onSubmit: () => void,
 	handleLoginOtp: (code : string) => void,
-	setAlertState: any
+	setAlertState: any,
+  formState?: any
 }
 export interface ProfileParams {
   navigation?: any;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { formatSeconds } from '../../../utils'
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
@@ -16,7 +16,8 @@ export const Otp = (props: otpParams) => {
         onSubmit,
         handleLoginOtp,
         setAlertState,
-        pinCount
+        pinCount,
+        formState
     } = props
 
     const theme = useTheme();
@@ -43,6 +44,25 @@ export const Otp = (props: otpParams) => {
             })
         }
     }, [otpLeftTime])
+
+    useEffect(() => {
+        if (!formState?.loading && formState?.result?.error) {
+            Alert.alert(
+                t('ERROR', 'Error'),
+                typeof formState.result?.result === 'string'
+                  ? formState.result?.result
+                  : formState.result?.result[0],
+                [
+                    {
+                        text: t('ACCEPT', 'Accept'),
+                        onPress: () => {},
+                        style: 'cancel'
+                    },
+                ],
+                { cancelable: false }
+            )
+        }
+    }, [formState])
 
     const loginStyle = StyleSheet.create({
         underlineStyleBase: {
