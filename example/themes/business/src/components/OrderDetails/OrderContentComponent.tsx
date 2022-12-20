@@ -91,6 +91,10 @@ export const OrderContentComponent = (props: OrderContent) => {
     return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
 
+  const containsOnlyNumbers = (str: string) => {
+    return /^\d+$/.test(str);
+  }
+
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
       {isOrderGroup && (
@@ -148,7 +152,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               <View style={styles.linkWithIcons}>
                 <OLink
                   PressStyle={styles.linkWithIcons}
-                  url={`tel:${order?.business?.cellphone}`}
+                  url={`tel:${containsOnlyNumbers(order?.business?.cellphone) ? order?.business?.cellphone : 'invalid'}`}
                   shorcut={`${order?.business?.cellphone}`}
                   TextStyle={styles.textLink}
                 />
@@ -159,7 +163,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               <View style={styles.linkWithIcons}>
                 <OLink
                   PressStyle={styles.linkWithIcons}
-                  url={`tel:${order?.business?.phone}`}
+                  url={`tel:${containsOnlyNumbers(order?.business?.cellphone) ? order?.business?.phone : 'invalid'}`}
                   shorcut={order?.business?.phone}
                   TextStyle={styles.textLink}
                 />
@@ -274,7 +278,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={styles.linkWithIcons}>
             <OLink
               PressStyle={styles.linkWithIcons}
-              url={`tel:${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
+              url={`tel:${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${containsOnlyNumbers(order?.customer?.cellphone) ? order?.customer?.cellphone : 'invalid'}`}
               shorcut={`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
               TextStyle={styles.textLink}
             />
@@ -285,7 +289,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={styles.linkWithIcons}>
             <OLink
               PressStyle={styles.linkWithIcons}
-              url={`tel:${order?.customer?.phone}`}
+              url={`tel:${containsOnlyNumbers(order?.customer?.phone) ? order?.customer?.phone : 'invalid'}`}
               shorcut={order?.customer?.phone}
               TextStyle={styles.textLink}
             />
