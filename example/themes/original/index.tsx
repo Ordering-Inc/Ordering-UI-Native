@@ -95,6 +95,7 @@ import { LogoutButton } from './src/components/LogoutButton';
 import { UserFormDetailsUI } from './src/components/UserFormDetails';
 import { WalletTransactionItem } from './src/components/WalletTransactionItem';
 import { Promotions } from './src/components/Promotions'
+import { MultiCart } from './src/components/MultiCart'
 import { USER_TYPE, ORDER_TYPES } from './src/config/constants'
 
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/OrderSummary/styles';
@@ -258,6 +259,7 @@ export {
 	WalletTransactionItem,
 	Promotions,
 	MyOrders,
+  MultiCart,
 	ORDER_TYPES,
 	USER_TYPE,
 
