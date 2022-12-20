@@ -41,7 +41,8 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
     reviewState,
     setReviewState,
     actionState,
-    handleSendCustomerReview
+    handleSendCustomerReview,
+    handleCustomCustomerReview
   } = props
 
   const theme = useTheme()
@@ -154,6 +155,15 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   }, [scrollref?.current])
 
   const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`?.replace('  ', ' ')?.trim() ?? ''
+
+  const handleReviewClick = () => {
+    handleCustomCustomerReview
+      ? handleCustomCustomerReview({
+        qualification: reviewState?.qualification,
+        comment: reviewState?.comment
+      })
+      : handleSendCustomerReview()
+  }
 
   return (
     <KeyboardAvoidingView
@@ -305,7 +315,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
 
       <ActionButtonWrapper>
         <FloatingButton
-          firstButtonClick={() => handleSendCustomerReview()}
+          firstButtonClick={() => handleReviewClick()}
           btnText={actionState.loading ? t('LOADING', 'Loading') : t('SEND_REVIEW', 'Send Review')}
           color={theme.colors.primary}
           widthButton={'100%'}
