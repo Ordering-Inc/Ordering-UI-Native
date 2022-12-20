@@ -232,7 +232,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', maxWidth: 100 }}>
 								<View style={{ flexDirection: 'row' }}>
 									<OText size={12} lineHeight={18} weight={'400'}>{parsePrice(product.total || product.price)}</OText>
-									{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+									{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || !!product.comment) && (
 										<MaterialCommunityIcon name='chevron-down' size={18} />
 									)}
 								</View>
@@ -305,7 +305,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									))}
 								</ProductOptionsList>
 							)}
-							{product.comment && (
+							{!!product.comment && (
 								<ProductComment>
 									<OText size={10} color={theme.colors.textSecondary}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
 									<OText size={10} color={theme.colors.textThird}>{product.comment}</OText>
