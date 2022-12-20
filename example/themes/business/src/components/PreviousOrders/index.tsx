@@ -186,7 +186,7 @@ export const PreviousOrders = (props: any) => {
 
   return (
     <>
-      {Object.keys(ordersGrouped)?.length > 0 && (
+      {ordersGrouped && Object.keys(ordersGrouped)?.length > 0 && (
         <View style={{ marginBottom: 10 }}>
           {Object.keys(ordersGrouped).map(k => (
             <OrdersGroupedItem
