@@ -59,11 +59,6 @@ export const Otp = (props: otpParams) => {
       justifyContent: 'space-between',
       marginVertical: 30
     },
-    focusStyles: {
-      borderColor: theme.colors.primary,
-      borderWidth: 1,
-      borderRadius: 8
-    },
     underlineStyleBase: {
       width: 45,
       height: 50,
@@ -91,7 +86,6 @@ export const Otp = (props: otpParams) => {
           numberOfInputs={pinCount || 6}
           style={loginStyle.container}
           inputStyles={loginStyle.underlineStyleBase}
-          focusStyles={loginStyle.focusStyles}
           handleChange={setCode}
         />
         <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
