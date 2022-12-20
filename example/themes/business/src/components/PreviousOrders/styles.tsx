@@ -33,7 +33,6 @@ export const NotificationIcon = styled.View`
 export const AcceptOrRejectOrder = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
   margin: 10px;
 `
 export const Timestatus = styled.View`
@@ -42,4 +41,33 @@ export const Timestatus = styled.View`
   height: 55px;
   border-radius: 20px;
   top: 5px;
+`
+
+export const AccordionSection = styled.View`
+  background: #FFF;
+  padding-vertical: 10px;
+`
+
+export const Accordion = styled.TouchableOpacity`
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  paddingVertical: 0;
+  marginLeft: 3px;
+`
+
+export const ContentInfo = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  overflow: hidden;
+`
+
+export const AccordionContent = styled.View`
+  overflow: hidden;
+`
+
+export const ProductOptionsList = styled.View`
+  margin-top: 20px;
+  margin-left: 20px;
 `

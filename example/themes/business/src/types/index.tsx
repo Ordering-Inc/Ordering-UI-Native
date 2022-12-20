@@ -311,6 +311,10 @@ export interface OrdersOptionParams {
   isLogisticActivated?: boolean;
   isAlsea?: boolean;
   checkNotification?: boolean;
+  ordersGroupedFormatted?: any;
+  handleChangeOrderStatus?: () => void;
+  handleSendCustomerReview?: () => void;
+  orderDetailsProps?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -569,7 +573,7 @@ export interface AcceptOrRejectOrderParams {
   loading?: boolean;
   action: string;
   orderId?: number;
-  handleUpdateOrder?: (status: number, isAccept: any) => {};
+  handleUpdateOrder?: () => void;
   notShowCustomerPhone?: boolean | undefined;
   actions?: actions;
   titleAccept?: textTranslate;
@@ -598,6 +602,7 @@ export interface ReviewCustomerParams {
   actionState?: any,
   handleChangeQualification?: any,
   handleSendCustomerReview?: any,
+  handleCustomCustomerReview?: any,
 }
 
 export interface NoNetworkParams {
