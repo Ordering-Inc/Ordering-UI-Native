@@ -33,7 +33,6 @@ export const NotificationIcon = styled.View`
 export const AcceptOrRejectOrder = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
   margin: 10px;
 `
 export const Timestatus = styled.View`

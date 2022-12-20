@@ -313,6 +313,8 @@ export interface OrdersOptionParams {
   checkNotification?: boolean;
   ordersGroupedFormatted?: any;
   handleChangeOrderStatus?: () => void;
+  handleSendCustomerReview?: () => void;
+  orderDetailsProps?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -600,6 +602,7 @@ export interface ReviewCustomerParams {
   actionState?: any,
   handleChangeQualification?: any,
   handleSendCustomerReview?: any,
+  handleCustomCustomerReview?: any,
 }
 
 export interface NoNetworkParams {

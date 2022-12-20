@@ -67,7 +67,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadLogisticOrders,
     isLogisticActivated,
     isAlsea,
-    handleChangeOrderStatus
+    handleChangeOrderStatus,
+    handleSendCustomerReview
   } = props;
 
   const defaultSearchList = {
@@ -585,13 +586,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             (
               <PreviousOrders
                 orders={currentOrdersGroup?.orders}
+                navigation={props.navigation}
                 ordersGrouped={ordersGroupedFormatted}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
                 slaSettingTime={slaSettingTime}
                 currentTabSelected={currentTabSelected}
+                appTitle={props.orderDetailsProps?.appTitle}
+                actions={props.orderDetailsProps?.actions}
+                orderTitle={props.orderDetailsProps?.orderTitle}
                 handleChangeOrderStatus={handleChangeOrderStatus}
+                handleSendCustomerReview={handleSendCustomerReview}
               />
             )}
           {!logisticOrders?.error?.length &&
