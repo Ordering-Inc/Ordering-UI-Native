@@ -80,7 +80,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
-	const bgHeader =  orderingTheme?.theme?.business_listing_view?.components?.business_hero?.components?.image 
+	const bgHeader = orderingTheme?.theme?.business_listing_view?.components?.business_hero?.components?.image
 	const styles = StyleSheet.create({
 		container: {
 			marginBottom: 0,
@@ -474,7 +474,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					{!auth && (
 
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-							<IconAntDesign name='arrowleft' size={26} />
+							<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
 						</TouchableOpacity>
 					)}
 				</HeaderWrapper>
