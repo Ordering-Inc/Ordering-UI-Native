@@ -27,6 +27,7 @@ import { ProductItemAccordionParams } from '../../types'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const {
+		isDisabledEdit,
 		isCartPending,
 		isCartProduct,
 		product,
@@ -203,7 +204,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								</View>
 							) : (
 								<>
-									{isCartProduct && !isCartPending && getProductMax && (
+									{!isDisabledEdit && isCartProduct && !isCartPending && getProductMax && (
 										<ProductInfo>
 											<RNPickerSelect
 												items={productOptions}
@@ -225,7 +226,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										</ProductQuantity>
 									)}
 									<View style={{ flex: 1 }}>
-										<OText size={12} lineHeight={18} weight={'400'}>{product.name}</OText>
+										<OText size={12} lineHeight={18} weight={'400'} mLeft={8}>{product.name}</OText>
 									</View>
 								</>
 							)}
@@ -237,7 +238,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									)}
 								</View>
 								<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', height: 20 }}>
-									{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
+									{!isDisabledEdit && onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
 										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginRight: 5 }}>
 											<MaterialCommunityIcon
 												name='pencil-outline'

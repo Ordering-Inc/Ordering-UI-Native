@@ -121,6 +121,7 @@ const OrderSummaryUI = (props: any) => {
                 onDeleteProduct={handleDeleteClick}
                 onEditProduct={handleEditProduct}
                 isFromCheckout={isFromCheckout}
+                isDisabledEdit={!cart?.business_id}
               />
             ))}
           </OSProductList>
@@ -166,7 +167,9 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 ))
               }
-              <Divider />
+              {cart?.business_id && (
+                <Divider />
+              )}
               {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
                 <OSTable>
                   <OText size={12} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
@@ -279,7 +282,7 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
                 </OSTable>
               ))}
-              {isCouponEnabled && !isCartPending && (
+              {isCouponEnabled && !isCartPending && cart?.business_id && (
                 <View>
                   <View style={{ paddingVertical: 5 }}>
                     <CouponControl
@@ -301,7 +304,7 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 </View>
               )}
-              {cart?.status !== 2 && (
+              {cart?.business_id && cart?.status !== 2 && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
                     <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
