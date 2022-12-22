@@ -70,13 +70,19 @@ const NotificationsUI = (props: any) => {
 	}, [notificationsList])
 
 	return (
-		<Container noPadding>
+		<Container
+			noPadding
+			pt={10}
+		>
 			<NavBar
 				title={t('NOTIFICATIONS', 'Notifications')}
 				titleAlign={'center'}
 				onActionLeft={goToBack}
 				showCall={false}
-				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 20, marginTop: Platform.OS === 'ios' ? 0 : 30 }}
+				style={{
+					paddingHorizontal: 40,
+					paddingVertical: 0,
+				}}
 			/>
 			{showCustomerPromotions && showNotifications && (
 				<>
