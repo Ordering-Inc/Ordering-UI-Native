@@ -67,7 +67,7 @@ export const OrdersGroupedItem = (props: any) => {
                 resizeMode={FastImage.resizeMode.cover}
               />
             </View>
-            <View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
+            <View style={{ flex: 1, marginLeft: 5, flexDirection: 'column' }}>
               <View>
                 <OText numberOfLines={1} style={styles.title}>
                   {t('GROUP_NRO', 'Group No.')}{groupId}

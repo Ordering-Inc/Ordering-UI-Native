@@ -55,7 +55,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ordersGroup,
     setOrdersGroup,
     orderStatus,
-    ordersGroupedFormatted,
+    ordersFormatted,
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
@@ -98,7 +98,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
-  const [selectedTabStatus, setSelectedTabStatus] = useState([])
+  const [selectedTabStatus, setSelectedTabStatus] = useState<any>([])
   const [hour, setHour] = useState(0)
   const [minute, setMinute] = useState(0)
   const [openedSelect, setOpenedSelect] = useState('')
@@ -585,9 +585,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             currentTabSelected !== 'logisticOrders' &&
             (
               <PreviousOrders
-                orders={currentOrdersGroup?.orders}
+                orders={ordersFormatted}
                 navigation={props.navigation}
-                ordersGrouped={ordersGroupedFormatted}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
@@ -840,7 +839,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   </ScrollView>
                 </FiltersTab>
                 <DeliveryStatusWrapper>
-                  {selectedTabStatus && selectedTabStatus.length > 0 && selectedTabStatus.map((item, i) => (
+                  {selectedTabStatus && selectedTabStatus.length > 0 && selectedTabStatus.map((item: any, i: number) => (
                     <StatusBlock
                       key={i}
                       item={item}

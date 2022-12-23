@@ -1,9 +1,13 @@
 import styled from 'styled-components/native';
 
 export const Content = styled.ScrollView`
-  background-color: ${(props: any) => props.theme.colors.white};
-  margin-bottom: 30px;
+  padding-horizontal: 30px;
 `;
+
+export const TopActions = styled.View`
+  padding-horizontal: 30px;
+  padding-bottom: 10px;
+`
 
 export const Timer = styled.TouchableOpacity`
   padding: 40px;
@@ -28,8 +32,6 @@ export const TimeField = styled.TextInput`
 `;
 
 export const Header = styled.View``;
-
-export const Action = styled.View``;
 
 export const Comments = styled.View`
   margin-top: 20px;
