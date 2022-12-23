@@ -351,7 +351,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
 					<FiltProductsContainer
 						style={{
-							height: Dimensions.get('window').height,
+							height: Dimensions.get('window').height - filtProductsHeight,
 							top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight
 						}}
 						contentContainerStyle={{ flexGrow: 1 }}
@@ -513,8 +513,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</>
 					)}
 				</IOScrollView>
-				{!loading && !isOpenFiltProducts && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
+				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+					<View style={{ marginBottom: 0, zIndex: 20000 }}>
 						<FloatingButton
 							btnText={
 								openUpselling
