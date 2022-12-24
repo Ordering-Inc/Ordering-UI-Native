@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useLanguage, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
+import { Platform } from 'react-native'
 import { FavoriteList } from '../FavoriteList'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
@@ -34,7 +35,9 @@ export const Favorite = (props: any) => {
   }
 
   return (
-    <Container>
+    <Container
+      pdng={Platform.OS === 'ios' ? '20px' : '30px'}
+    >
       <NavBar
         title={t('FAVORITE', 'Favorite')}
         titleAlign={'center'}
@@ -52,9 +55,9 @@ export const Favorite = (props: any) => {
           >
             <OText
               color={menu.key === tabSelected ? theme.colors.textNormal : theme.colors.disabled}
-					    size={14}
-					    weight={menu.key === tabSelected ? '500' : '400'}
-					    style={{ marginBottom: 12 }}
+              size={14}
+              weight={menu.key === tabSelected ? '500' : '400'}
+              style={{ marginBottom: 12 }}
             >
               {menu.name}
             </OText>

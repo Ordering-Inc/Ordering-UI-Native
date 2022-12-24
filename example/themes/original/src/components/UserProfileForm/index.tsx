@@ -284,16 +284,18 @@ const ProfileUI = (props: ProfileParams) => {
 
 	return (
 		<>
-			<NavBar
-				title={t('ACCOUNT', 'Account')}
-				titleAlign={'center'}
-				onActionLeft={() => navigation.goBack()}
-				showCall={false}
-				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 }}
-			/>
-			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-				<Container noPadding>
-
+			<Container
+				pt={15}
+				noPadding
+			>
+				<NavBar
+					title={t('ACCOUNT', 'Account')}
+					titleAlign={'center'}
+					onActionLeft={() => navigation.goBack()}
+					showCall={false}
+					style={{ paddingHorizontal: 40 }}
+				/>
+				<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 					<CenterView style={styles.pagePadding}>
 						<View style={styles.photo}>
 							{user?.photo ? (
@@ -326,8 +328,8 @@ const ProfileUI = (props: ProfileParams) => {
 							setWillVerifyOtpState={setWillVerifyOtpState}
 						/>
 					</View>
-				</Container>
-			</KeyboardAvoidingView>
+				</KeyboardAvoidingView>
+			</Container>
 			<OModal
 				open={isModalVisible}
 				onClose={() => setIsModalVisible(false)}
