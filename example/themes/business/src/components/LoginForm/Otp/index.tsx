@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { formatSeconds } from '../../../utils'
 import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
@@ -22,6 +22,7 @@ export const Otp = (props: otpParams) => {
 
     const theme = useTheme();
     const [, t] = useLanguage();
+    const [code, setCode] = useState('')
     const [otpLeftTime, _, resetOtpLeftTime]: any = useCountdownTimer(
         600, willVerifyOtpState)
 
@@ -61,6 +62,11 @@ export const Otp = (props: otpParams) => {
                 ],
                 { cancelable: false }
             )
+
+            if (code.length === (pinCount || 6)) {
+                setCode('')
+            }
+
         }
     }, [formState])
 
@@ -92,6 +98,8 @@ export const Otp = (props: otpParams) => {
                     onCodeFilled={(code: string) => handleLoginOtp(code)}
                     selectionColor={theme.colors.primary}
                     editable
+                    code={code}
+                    onCodeChanged={(code: string) => setCode(code)}
                 />
                 <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
                     <OText size={16} mBottom={30} color={otpLeftTime > 520 ? theme.colors.disabled : theme.colors.primary}>
