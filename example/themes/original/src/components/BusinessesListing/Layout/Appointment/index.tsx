@@ -284,7 +284,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				style={{ paddingTop: top + 20 }}>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<IconAntDesign name='arrowleft' size={26} />
+						<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
 					</TouchableOpacity>
 				)}
 				<Search>
