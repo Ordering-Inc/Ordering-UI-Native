@@ -143,7 +143,8 @@ const AddressListUI = (props: AddressListParams) => {
 	}, [])
 
 	return (
-		<Container 
+		<Container
+			pt={20}
 			noPadding
 			refreshControl={
 				<RefreshControl
@@ -158,7 +159,10 @@ const AddressListUI = (props: AddressListParams) => {
 					titleAlign={'center'}
 					onActionLeft={goToBack}
 					showCall={false}
-					style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 20, marginTop: Platform.OS === 'ios' ? 0 : 30 }}
+					style={{
+						paddingHorizontal: 40,
+						marginTop: Platform.OS === 'ios' ? 0 : 10
+					}}
 				/>
 			)}
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
@@ -179,7 +183,7 @@ const AddressListUI = (props: AddressListParams) => {
 								showCall={false}
 								btnStyle={{ paddingLeft: 0 }}
 								paddingTop={0}
-								style={{ marginTop: Platform.OS === 'ios' ? 0 : 40 }}
+								style={{ marginTop: 0 }}
 								titleWrapStyle={{ paddingHorizontal: 0 }}
 								titleStyle={{ marginLeft: 0, marginRight: 0 }}
 							/>

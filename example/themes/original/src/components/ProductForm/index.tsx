@@ -301,7 +301,7 @@ export const ProductOptionsUI = (props: any) => {
 		maxProductQuantity === 0 ||
 		Object.keys(errors)?.length > 0;
 
-	
+
 	const ExtraOptions = ({ eID, options }: any) => (
 		<>
 			{options.map(({ id, name, respect_to, suboptions }: any) => (
@@ -488,7 +488,7 @@ export const ProductOptionsUI = (props: any) => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<TopHeader>
 				<TopActions onPress={() => handleGoBack()}>
-					<IconAntDesign name='arrowleft' size={26} />
+					<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
 				</TopActions>
 			</TopHeader>
 			{!error && (

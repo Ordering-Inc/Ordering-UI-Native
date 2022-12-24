@@ -30,7 +30,6 @@ import {
 	WrapSearchBar,
 	WrapContent,
 	FiltProductsContainer,
-	ContainerSafeAreaView,
 	BackgroundGray,
 	ProfessionalFilterWrapper,
 	NearBusiness,
@@ -371,7 +370,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					<FiltProductsContainer
 						style={{
 							height: Dimensions.get('window').height - filtProductsHeight,
-							top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight
+							top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight
 						}}
 						contentContainerStyle={{ flexGrow: 1 }}
 					>
@@ -533,7 +532,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
+					<View style={{ marginBottom: 0, zIndex: 20000 }}>
 						<FloatingButton
 							btnText={
 								openUpselling
