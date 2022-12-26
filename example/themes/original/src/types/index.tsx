@@ -250,6 +250,7 @@ export interface BusinessProductsListingParams {
 	professionalSelected?: any;
 	handleChangeProfessionalSelected?: any;
 	handleUpdateProfessionals?: any;
+	onBusinessClick?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;

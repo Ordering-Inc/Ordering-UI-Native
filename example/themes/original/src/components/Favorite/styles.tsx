@@ -18,5 +18,5 @@ export const Tab = styled.TouchableOpacity`
 export const Container = styled.View`
   padding-horizontal: 40px;
   padding-bottom: 20px;
-  padding-top: 30px;
+  padding-top: ${(props: any) => props.pdng};
 `
