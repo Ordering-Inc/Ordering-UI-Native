@@ -249,6 +249,7 @@ export interface BusinessProductsListingParams {
 	handleUpdateProducts?: any;
 	professionalSelected?: any;
 	handleChangeProfessionalSelected?: any;
+	handleUpdateProfessionals?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;

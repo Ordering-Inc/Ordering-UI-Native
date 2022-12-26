@@ -111,9 +111,15 @@ const ServiceFormUI = (props: ServiceFormParams) => {
 
   const isBusyTime = (professional: any) => {
     if (professional?.busy_times?.length === 0 || !dateSelected) return false
-    const valid = professional?.busy_times.some((item: any) => {
-      return moment(item?.start).valueOf() <= moment(dateSelected).valueOf() &&
-        moment(dateSelected).valueOf() <= moment(item?.end).valueOf()
+    const duration = product?.duration ?? 0
+    const busyTimes = isCartProduct
+      ? professional?.busy_times.filter((item: any) => !(item.start === productCart?.calendar_event?.start && item.end === productCart?.calendar_event?.end))
+      : [...professional?.busy_times]
+    const valid = busyTimes.some((item: any) => {
+      return (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).valueOf() &&
+        moment(dateSelected).valueOf() <= moment.utc(item?.end).local().valueOf()) ||
+        (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).add(duration, 'minutes').valueOf() &&
+        moment(dateSelected).add(duration, 'minutes').valueOf() <= moment.utc(item?.end).local().valueOf())
     })
     return valid
   }
@@ -523,7 +529,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                       ? t('SOLD_OUT', 'Sold out')
                       : t('BOOK', 'Book'))}
                   style={styles.buttonStyle}
-                  isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected}
+                  isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected || isBusyTime(currentProfessional)}
                   textStyle={{ fontSize: 14, color: theme.colors.white }}
                 />
               )}
