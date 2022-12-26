@@ -66,6 +66,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		getNextProducts,
 		handleUpdateProducts,
 		professionalSelected,
+		handleUpdateProfessionals,
 		handleChangeProfessionalSelected,
 		onBusinessClick
 	} = props
@@ -570,6 +571,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					professionalList={business?.professionals}
 					professionalSelected={professionalSelected}
 					handleChangeProfessional={handleChangeProfessionalSelected}
+					handleUpdateProfessionals={handleUpdateProfessionals}
 					onSave={() => setOpenService(false)}
 					onClose={() => setOpenService(false)}
 				/>
