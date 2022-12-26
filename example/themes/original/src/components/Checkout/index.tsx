@@ -452,7 +452,7 @@ const CheckoutUI = (props: any) => {
 														<OText
 															size={14}
 														>
-															{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+															{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected)?.label}
 														</OText>
 														<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
 													</DeliveryOptionItem>
