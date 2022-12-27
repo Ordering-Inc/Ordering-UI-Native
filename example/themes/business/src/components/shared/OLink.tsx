@@ -12,10 +12,11 @@ interface Props {
   TextStyle?: TextStyle;
   type?: string;
   hasButton?: boolean;
+  numberOfLines?: number;
 }
 
 const OLink = (props: Props): React.ReactElement => {
-  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton } = props;
+  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton, numberOfLines } = props;
   const [, t] = useLanguage();
 
   const handleAlert = () =>
@@ -75,7 +76,7 @@ const OLink = (props: Props): React.ReactElement => {
       ) : (
         <OText
           style={TextStyle}
-          numberOfLines={1}
+          numberOfLines={numberOfLines ?? 1}
           ellipsizeMode="tail"
           color={color}>
           {shorcut}
