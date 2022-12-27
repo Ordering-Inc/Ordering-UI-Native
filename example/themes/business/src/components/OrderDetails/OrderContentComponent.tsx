@@ -180,7 +180,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 ios: `maps:0,0?q=${order?.business?.address}`,
                 android: `geo:0,0?q=${order?.business?.address}`,
               })}
-              lineNums={2}
+              numberOfLines={2}
               shorcut={order?.business?.address}
               TextStyle={styles.textLink}
             />
@@ -305,7 +305,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 ios: `maps:0,0?q=${order?.customer?.address}`,
                 android: `geo:0,0?q=${order?.customer?.address}`,
               })}
-              lineNums={2}
+              numberOfLines={2}
               shorcut={order?.customer?.address}
               TextStyle={styles.textLink}
             />
