@@ -68,11 +68,6 @@ const NavBar = (props: Props) => {
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}
-			// icon={AntDesignIcon}
-			// iconProps={{
-			// 	name: 'arrowleft',
-			// 	size: 26
-			// }}
 			/>
 			<TitleTopWrapper>
 				{props.withIcon
