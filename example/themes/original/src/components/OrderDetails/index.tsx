@@ -48,7 +48,7 @@ import { Placeholder, PlaceholderLine } from 'rn-placeholder';
 import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
 import { PlaceSpot } from '../PlaceSpot'
-import { SendGiftCard } from '../SendGiftCard'
+import { SendGiftCard } from '../GiftCard/SendGiftCard'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,

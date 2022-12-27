@@ -5,7 +5,7 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { StyleSheet, View, Alert } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { OText, OButton, OInput } from '../shared';
+import { OText, OButton, OInput } from '../../shared';
 
 import {
   Container,

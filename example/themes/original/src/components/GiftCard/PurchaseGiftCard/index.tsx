@@ -6,7 +6,7 @@ import {
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
-import { OText, OButton, OIcon } from '../shared';
+import { OText, OButton, OIcon } from '../../shared';
 
 import {
   Container

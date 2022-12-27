@@ -27,7 +27,7 @@ import {
 import { OButton, OIcon, OText, OModal } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { WalletTransactions } from '../WalletTransactions'
-import { GiftCard } from '../GiftCard'
+import { GiftCardUI } from '../GiftCard/GiftCardUI'
 
 const WalletsUI = (props: any) => {
   const {
@@ -223,7 +223,7 @@ const WalletsUI = (props: any) => {
                 </BalanceElement>
 
                 <View style={styles.dividerStyle} />
-                <GiftCard navigation={navigation} />
+                <GiftCardUI navigation={navigation} />
                 <View style={styles.dividerStyle} />
 
                 {!isChewLayout && (

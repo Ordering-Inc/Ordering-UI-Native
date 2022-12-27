@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import Feather from 'react-native-vector-icons/Feather'
 import { useTheme } from 'styled-components/native';
-import { OText, OButton } from '../shared';
-import { OModal } from '../../../../../src/components/shared';
+import { OText, OButton } from '../../shared';
+import { OModal } from '../../../../../../src/components/shared';
 import { PurchaseGiftCard } from '../PurchaseGiftCard'
 import { RedeemGiftCard } from '../RedeemGiftCard'
 
@@ -12,7 +12,7 @@ import {
   Container
 } from './styles'
 
-export const GiftCard =  React.memo((props: any) => {
+export const GiftCardUI =  React.memo((props: any) => {
   const {
     navigation
   } = props
