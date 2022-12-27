@@ -366,7 +366,7 @@ export const PreviousOrders = (props: any) => {
                       })}
                     />
                   )}
-                  {deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && (
+                  {deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && (
                     <AcceptOrRejectOrderStyle>
                       <OButton
                         text={t('PICKUP_FAILED', 'Pickup failed')}
@@ -398,7 +398,7 @@ export const PreviousOrders = (props: any) => {
                       />
                     </AcceptOrRejectOrderStyle>
                   )}
-                  {deliveryStatusCompleteBtn.includes(_ordersGrouped[k][0]?.status) && (
+                  {deliveryStatusCompleteBtn && deliveryStatusCompleteBtn.includes(_ordersGrouped[k][0]?.status) && (
                     <AcceptOrRejectOrderStyle>
                       <OButton
                         text={t('DELIVERY_FAILED', 'Delivery Failed')}
