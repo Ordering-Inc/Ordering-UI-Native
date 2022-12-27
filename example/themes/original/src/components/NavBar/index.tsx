@@ -63,16 +63,16 @@ const NavBar = (props: Props) => {
 	return (
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			<OButton
-				imgLeftSrc={props.leftImg}
-				imgLeftStyle={{ width: 18 }}
+				imgLeftSrc={theme.images.general.arrow_left}
+				imgLeftStyle={{ width: 26 }}
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}
-				icon={AntDesignIcon}
-				iconProps={{
-					name: 'arrowleft',
-					size: 26
-				}}
+			// icon={AntDesignIcon}
+			// iconProps={{
+			// 	name: 'arrowleft',
+			// 	size: 26
+			// }}
 			/>
 			<TitleTopWrapper>
 				{props.withIcon
