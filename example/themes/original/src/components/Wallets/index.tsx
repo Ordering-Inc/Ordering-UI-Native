@@ -27,6 +27,7 @@ import {
 import { OButton, OIcon, OText, OModal } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { WalletTransactions } from '../WalletTransactions'
+import { GiftCardUI } from '../GiftCard/GiftCardUI'
 
 const WalletsUI = (props: any) => {
   const {
@@ -47,6 +48,7 @@ const WalletsUI = (props: any) => {
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
 
+
   const styles = StyleSheet.create({
     logoStyle: {
       width: 120,
@@ -57,6 +59,13 @@ const WalletsUI = (props: any) => {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    dividerStyle: {
+      height: 8,
+      backgroundColor: theme.colors.backgroundGray100,
+      marginVertical: 25,
+      marginHorizontal: -40,
+      width: '100%'
     }
   });
 
@@ -206,6 +215,10 @@ const WalletsUI = (props: any) => {
                       : t('POINTS', 'Points')}
                   </OText>
                 </BalanceElement>
+
+                <View style={styles.dividerStyle} />
+                <GiftCardUI navigation={navigation} />
+                <View style={styles.dividerStyle} />
 
                 {!isChewLayout && (
                   <WalletTransactions

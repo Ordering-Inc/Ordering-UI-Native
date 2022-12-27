@@ -226,6 +226,7 @@ const CartUI = (props: any) => {
             key={`${product.code}_${i}`}
             isCartPending={isCartPending}
             isCartProduct
+            isDisabledEdit={!cart?.business_id}
             product={product}
             changeQuantity={changeQuantity}
             getProductMax={getProductMax}

@@ -49,6 +49,7 @@ import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
 import { PlaceSpot } from '../PlaceSpot'
 import { OrderEta } from './OrderEta'
+import { SendGiftCard } from '../GiftCard/SendGiftCard'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -112,6 +113,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ carts }] = useOrder()
 
   const [isReviewed, setIsReviewed] = useState(false)
+  const [isGiftCardSent, setIsGiftCardSent] = useState(false)
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
   const [refreshing] = useState(false);
@@ -122,6 +124,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const activeStatus = [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
+  const isGiftCardOrder = !order?.business_id
+
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -412,175 +416,179 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OText>
               </View>
             )}
-            <OrderInfo>
-              <OrderData>
-                <View style={styles.linkWrapper}>
-                  {
-                    (
-                      parseInt(order?.status) === 1 ||
-                      parseInt(order?.status) === 11 ||
-                      parseInt(order?.status) === 15
-                    ) && !order.review && !isReviewed && (
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={{ marginTop: 6, marginRight: 10 }}
-                        onPress={() => handleClickOrderReview(order)}
-                      >
-                        <OText
-                          size={12}
-                          lineHeight={15}
-                          color={theme.colors.primary}
-                          style={{ textDecorationLine: 'underline' }}
+            {!isGiftCardOrder && (
+              <OrderInfo>
+                <OrderData>
+                  <View style={styles.linkWrapper}>
+                    {
+                      (
+                        parseInt(order?.status) === 1 ||
+                        parseInt(order?.status) === 11 ||
+                        parseInt(order?.status) === 15
+                      ) && !order.review && !isReviewed && (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          style={{ marginTop: 6, marginRight: 10 }}
+                          onPress={() => handleClickOrderReview(order)}
                         >
-                          {t('REVIEW_YOUR_ORDER', 'Review your order')}
-                        </OText>
-                      </TouchableOpacity>
-                    )}
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={{ marginTop: 6 }}
-                    onPress={() => setIsOrderHistory(true)}
-
-                  >
-                    <OText
-                      size={12}
-                      lineHeight={15}
-                      color={theme.colors.primary}
-                      style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
+                          <OText
+                            size={12}
+                            lineHeight={15}
+                            color={theme.colors.primary}
+                            style={{ textDecorationLine: 'underline' }}
+                          >
+                            {t('REVIEW_YOUR_ORDER', 'Review your order')}
+                          </OText>
+                        </TouchableOpacity>
+                      )}
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ marginTop: 6 }}
+                      onPress={() => setIsOrderHistory(true)}
+  
                     >
-                      {t('VIEW_DETAILS', 'View Details')}
-                    </OText>
-                  </TouchableOpacity>
-                </View>
-
-                <StaturBar>
-                  <LinearGradient
-                    start={{ x: 0.0, y: 0.0 }}
-                    end={{
-                      x: getOrderStatus(order?.status)?.percentage || 0,
-                      y: 0,
-                    }}
-                    locations={[0.9999, 0.9999]}
-                    colors={[theme.colors.primary, theme.colors.backgroundGray100]}
-                    style={styles.statusBar}
-                  />
-                </StaturBar>
+                      <OText
+                        size={12}
+                        lineHeight={15}
+                        color={theme.colors.primary}
+                        style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
+                      >
+                        {t('VIEW_DETAILS', 'View Details')}
+                      </OText>
+                    </TouchableOpacity>
+                  </View>
+  
+                  <StaturBar>
+                    <LinearGradient
+                      start={{ x: 0.0, y: 0.0 }}
+                      end={{
+                        x: getOrderStatus(order?.status)?.percentage || 0,
+                        y: 0,
+                      }}
+                      locations={[0.9999, 0.9999]}
+                      colors={[theme.colors.primary, theme.colors.backgroundGray100]}
+                      style={styles.statusBar}
+                    />
+                  </StaturBar>
+                  <OText
+                    size={16}
+                    lineHeight={24}
+                    weight={'600'}
+                    color={theme.colors.textNormal}>
+                    {getOrderStatus(order?.status)?.value}
+                  </OText>
+                </OrderData>
+                <View
+                  style={{
+                    height: 8,
+                    backgroundColor: theme.colors.backgroundGray100,
+                    marginTop: 18,
+                    marginHorizontal: -40,
+                  }}
+                />
+              </OrderInfo>
+            )}
+          </Header>
+          <OrderContent>
+            {!isGiftCardOrder && (
+              <OrderBusiness>
                 <OText
                   size={16}
                   lineHeight={24}
-                  weight={'600'}
-                  color={theme.colors.textNormal}>
-                  {getOrderStatus(order?.status)?.value}
+                  weight={'500'}
+                  color={theme.colors.textNormal}
+                  mBottom={12}>
+                  {t('FROM', 'From')}
                 </OText>
-              </OrderData>
-              <View
-                style={{
-                  height: 8,
-                  backgroundColor: theme.colors.backgroundGray100,
-                  marginTop: 18,
-                  marginHorizontal: -40,
-                }}
-              />
-            </OrderInfo>
-          </Header>
-          <OrderContent>
-            <OrderBusiness>
-              <OText
-                size={16}
-                lineHeight={24}
-                weight={'500'}
-                color={theme.colors.textNormal}
-                mBottom={12}>
-                {t('FROM', 'From')}
-              </OText>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
                   }}>
-                  <OText
-                    size={13}
-                    lineHeight={20}
-                    color={theme.colors.textNormal}
-                    style={{ flexGrow: 1, flexBasis: '80%' }}>
-                    {order?.business?.name}
-                  </OText>
-                  <Icons>
-                    {!!order?.business?.cellphone && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <OText
+                      size={13}
+                      lineHeight={20}
+                      color={theme.colors.textNormal}
+                      style={{ flexGrow: 1, flexBasis: '80%' }}>
+                      {order?.business?.name}
+                    </OText>
+                    <Icons>
+                      {!!order?.business?.cellphone && (
+                        <TouchableOpacity
+                          onPress={() => order?.business?.cellphone &&
+                            Linking.openURL(`tel:${order?.business?.cellphone}`)
+                          }
+                          style={{ paddingEnd: 5 }}
+                        >
+                          <OIcon
+                            src={theme.images.general.phone}
+                            width={16}
+                            color={theme.colors.disabled}
+                          />
+                        </TouchableOpacity>
+                      )}
                       <TouchableOpacity
-                        onPress={() => order?.business?.cellphone &&
-                          Linking.openURL(`tel:${order?.business?.cellphone}`)
-                        }
-                        style={{ paddingEnd: 5 }}
-                      >
+                        style={{ paddingStart: 5 }}
+                        onPress={() => handleGoToMessages('business')}>
                         <OIcon
-                          src={theme.images.general.phone}
+                          src={theme.images.general.chat}
                           width={16}
                           color={theme.colors.disabled}
                         />
                       </TouchableOpacity>
-                    )}
-                    <TouchableOpacity
-                      style={{ paddingStart: 5 }}
-                      onPress={() => handleGoToMessages('business')}>
-                      <OIcon
-                        src={theme.images.general.chat}
-                        width={16}
-                        color={theme.colors.disabled}
-                      />
-                    </TouchableOpacity>
-                  </Icons>
-                </View>
-                <OText
-                  size={12}
-                  lineHeight={18}
-                  color={theme.colors.textNormal}
-                  mBottom={2}>
-                  {order?.business?.email}
-                </OText>
-                {!!order?.business?.cellphone && (
+                    </Icons>
+                  </View>
                   <OText
                     size={12}
                     lineHeight={18}
                     color={theme.colors.textNormal}
                     mBottom={2}>
-                    {order?.business?.cellphone}
+                    {order?.business?.email}
                   </OText>
+                  {!!order?.business?.cellphone && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.business?.cellphone}
+                    </OText>
+                  )}
+                  <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+                    {order?.business?.address}
+                  </OText>
+                </View>
+                {directionTypes.includes(order?.delivery_type) && (
+                  <OButton
+                    text={t('GET_DIRECTIONS', 'Get Directions')}
+                    imgRightSrc=''
+                    textStyle={{ color: theme.colors.white }}
+                    style={{
+                      alignSelf: 'center',
+                      borderRadius: 10,
+                      marginTop: 30
+                    }}
+                    onClick={() => showLocation({
+                      latitude: order?.business?.location?.lat,
+                      longitude: order?.business?.location?.lng,
+                      naverCallerName: 'com.reactnativeappstemplate5',
+                      dialogTitle: t('GET_DIRECTIONS', 'Get Directions'),
+                      dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+                      cancelText: t('CANCEL', 'Cancel'),
+                    })}
+                  />
                 )}
-                <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                  {order?.business?.address}
-                </OText>
-              </View>
-              {directionTypes.includes(order?.delivery_type) && (
-                <OButton
-                  text={t('GET_DIRECTIONS', 'Get Directions')}
-                  imgRightSrc=''
-                  textStyle={{ color: theme.colors.white }}
-                  style={{
-                    alignSelf: 'center',
-                    borderRadius: 10,
-                    marginTop: 30
-                  }}
-                  onClick={() => showLocation({
-                    latitude: order?.business?.location?.lat,
-                    longitude: order?.business?.location?.lng,
-                    naverCallerName: 'com.reactnativeappstemplate5',
-                    dialogTitle: t('GET_DIRECTIONS', 'Get Directions'),
-                    dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
-                    cancelText: t('CANCEL', 'Cancel'),
-                  })}
-                />
-              )}
-            </OrderBusiness>
+              </OrderBusiness>
+            )}
             
-            {placeSpotTypes.includes(order?.delivery_type) && (
+            {!isGiftCardOrder && placeSpotTypes.includes(order?.delivery_type) && (
               <PlaceSpotWrapper>
                 <PlaceSpot
                   isInputMode
@@ -606,7 +614,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 weight={'500'}
                 color={theme.colors.textNormal}
                 mBottom={12}>
-                {t('TO', 'To')}
+                {isGiftCardOrder ? t('CUSTOMER', 'Customer') : t('TO', 'To')}
               </OText>
               <Customer>
                 <InfoBlock>
@@ -635,7 +643,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   )}
                 </InfoBlock>
               </Customer>
-              {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+              {!isGiftCardOrder && order?.delivery_option !== undefined && order?.delivery_type === 1 && (
                 <View style={{ marginTop: 15 }}>
                   <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
                     {t('DELIVERY_PREFERENCE', 'Delivery Preference')}
@@ -817,7 +825,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </Table>
                 ))
               }
-              <Divider />
+              {!isGiftCardOrder && (
+                <Divider />
+              )}
               {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
                 <Table>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
@@ -991,6 +1001,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </View>
               )}
             </OrderBill>
+            {isGiftCardOrder && order?.products[0]?.gift_card?.status === 'pending' && !isGiftCardSent && (
+              <>
+                <View
+                  style={{
+                    height: 8,
+                    backgroundColor: theme.colors.backgroundGray100,
+                    marginTop: 10,
+                    marginHorizontal: -40,
+                    marginBottom: 20
+                  }}
+                />
+                <SendGiftCard
+                  giftCardId={order?.products[0]?.gift_card?.id}
+                  setIsGiftCardSent={setIsGiftCardSent}
+                />
+              </>
+            )}
           </OrderContent>
         </>
       )}
