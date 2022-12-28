@@ -1,9 +1,5 @@
 import styled from 'styled-components/native'
 
-export const ContainerButtons = styled.View`
-    margin-vertical: 50px
-`
-
 export const Container = styled.ScrollView`
     position: relative;
     flex: 1;
@@ -13,7 +9,7 @@ export const Container = styled.ScrollView`
 export const NotificationsGroupSwitchWrapper = styled.View`
   flex-grow: 1;
   justify-content: space-between;
-	paddingHorizontal: 20px;
+	padding: 0 20px;
 `
 
 export const SwitchWrapper = styled.View`
