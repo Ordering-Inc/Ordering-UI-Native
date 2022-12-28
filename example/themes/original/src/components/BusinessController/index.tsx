@@ -11,7 +11,7 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Vibration, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
@@ -142,6 +142,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	};
 
 	const handleBusinessClick = (selectedBusiness: any) => {
+		Vibration.vibrate()
 		if (business?.open) handleClick && handleClick(selectedBusiness)
 		else {
 			if (configState?.configs?.preorder_status_enabled?.value === '1') {

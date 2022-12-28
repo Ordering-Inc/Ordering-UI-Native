@@ -9,7 +9,8 @@ import {
 	I18nManager,
 	SafeAreaView,
 	Platform,
-	Button
+	Button,
+	Vibration
 } from 'react-native';
 import {
 	ProductForm as ProductOptions,
@@ -207,6 +208,7 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+        Vibration.vibrate()
 		if (!productCart.quantity) {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
 			return
