@@ -557,7 +557,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			<PageBanner position='app_business_listing' />
 
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<ListWrapper ph={isChewLayout && 20}>
+			<ListWrapper style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
 				{!businessId && (
 					<BusinessTypeFilter
 						images={props.images}
