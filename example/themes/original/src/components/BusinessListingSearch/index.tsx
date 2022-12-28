@@ -76,7 +76,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
-  const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 
   const priceList = [
     { level: '1', content: '$' },
@@ -229,7 +229,9 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   }, [isFocused])
 
   return (
-    <BContainer>
+    <BContainer
+      style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+    >
       <SearchWrapper>
         <SearchBar
           lazyLoad
