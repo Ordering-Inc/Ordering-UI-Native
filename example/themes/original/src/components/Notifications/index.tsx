@@ -7,13 +7,12 @@ import {
 	useToast,
 	ToastType,
 } from 'ordering-components/native'
-import { NotificationsGroupSwitchWrapper, SwitchWrapper } from './styles'
-import { Platform, StyleSheet, View } from 'react-native'
+import { NotificationsGroupSwitchWrapper, SwitchWrapper, Container } from './styles'
+import { StyleSheet, View } from 'react-native'
 import { useState } from 'react'
 import { useTheme } from 'styled-components/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ToggleSwitch from 'toggle-switch-react-native'
-import { Container } from '../../layouts/Container'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
 
@@ -70,10 +69,7 @@ const NotificationsUI = (props: any) => {
 	}, [notificationsList])
 
 	return (
-		<Container
-			noPadding
-			pt={10}
-		>
+		<Container>
 			<NavBar
 				title={t('NOTIFICATIONS', 'Notifications')}
 				titleAlign={'center'}
@@ -87,47 +83,45 @@ const NotificationsUI = (props: any) => {
 			{showCustomerPromotions && showNotifications && (
 				<>
 					<Spinner visible={singleNotifications?.loading} />
-					<View style={{ ...styles.pagePadding }}>
-						<NotificationsGroupSwitchWrapper>
-							<OText style={{ ...styles.title }}>{t('MARKETING_NOTIFICATIONS', 'Marketing Notifications')}</OText>
-							<SwitchWrapper>
-								<OText>{t('EMAILS', 'Emails')}</OText>
-								<ToggleSwitch
-									isOn={notificationsList?.email}
-									onColor={theme.colors.primary}
-									size="small"
-									disabled={singleNotifications?.loading}
-									offColor={theme.colors.disabled}
-									animationSpeed={400}
-									onToggle={() => handleEditNotifications('email', !notificationsList?.email)}
-								/>
-							</SwitchWrapper>
-							<SwitchWrapper>
-								<OText>{t('SMS', 'Sms')}</OText>
-								<ToggleSwitch
-									isOn={notificationsList?.sms}
-									onColor={theme.colors.primary}
-									size="small"
-									disabled={singleNotifications?.loading}
-									offColor={theme.colors.disabled}
-									animationSpeed={400}
-									onToggle={() => handleEditNotifications('sms', !notificationsList?.sms)}
-								/>
-							</SwitchWrapper>
-							<SwitchWrapper>
-								<OText>{t('PUSH_NOTIFICATIONS', 'Push Notifications')}</OText>
-								<ToggleSwitch
-									isOn={notificationsList?.notification}
-									onColor={theme.colors.primary}
-									size="small"
-									disabled={singleNotifications?.loading}
-									offColor={theme.colors.disabled}
-									animationSpeed={400}
-									onToggle={() => handleEditNotifications('notification', !notificationsList?.notification)}
-								/>
-							</SwitchWrapper>
-						</NotificationsGroupSwitchWrapper>
-					</View>
+					<NotificationsGroupSwitchWrapper>
+						<OText style={{ ...styles.title }}>{t('MARKETING_NOTIFICATIONS', 'Marketing Notifications')}</OText>
+						<SwitchWrapper>
+							<OText>{t('EMAILS', 'Emails')}</OText>
+							<ToggleSwitch
+								isOn={notificationsList?.email}
+								onColor={theme.colors.primary}
+								size="small"
+								disabled={singleNotifications?.loading}
+								offColor={theme.colors.disabled}
+								animationSpeed={400}
+								onToggle={() => handleEditNotifications('email', !notificationsList?.email)}
+							/>
+						</SwitchWrapper>
+						<SwitchWrapper>
+							<OText>{t('SMS', 'Sms')}</OText>
+							<ToggleSwitch
+								isOn={notificationsList?.sms}
+								onColor={theme.colors.primary}
+								size="small"
+								disabled={singleNotifications?.loading}
+								offColor={theme.colors.disabled}
+								animationSpeed={400}
+								onToggle={() => handleEditNotifications('sms', !notificationsList?.sms)}
+							/>
+						</SwitchWrapper>
+						<SwitchWrapper>
+							<OText>{t('PUSH_NOTIFICATIONS', 'Push Notifications')}</OText>
+							<ToggleSwitch
+								isOn={notificationsList?.notification}
+								onColor={theme.colors.primary}
+								size="small"
+								disabled={singleNotifications?.loading}
+								offColor={theme.colors.disabled}
+								animationSpeed={400}
+								onToggle={() => handleEditNotifications('notification', !notificationsList?.notification)}
+							/>
+						</SwitchWrapper>
+					</NotificationsGroupSwitchWrapper>
 				</>
 			)}
 		</Container>
@@ -138,10 +132,6 @@ const styles = StyleSheet.create({
 	title: {
 		marginBottom: 24,
 		fontWeight: 'bold',
-	},
-	pagePadding: {
-		paddingLeft: 40,
-		paddingRight: 40
 	}
 });
 

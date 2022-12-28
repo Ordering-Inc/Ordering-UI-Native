@@ -19,8 +19,12 @@ export const CartContent = (props: any) => {
 	const [, t] = useLanguage()
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
 
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+
 	return (
-		<CCContainer>
+		<CCContainer
+			style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+		>
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
 					{carts.map((cart: any, i: number) => (

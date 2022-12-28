@@ -47,7 +47,7 @@ export const ProductTitle = styled.View`
 export const ProductDescription = styled.View``
 
 export const ProductEditions = styled.View`
-  padding: 0 40px;
+  padding-vertical: 0;
 `
 
 export const SectionTitle = styled.View`
@@ -94,7 +94,7 @@ export const WeightUnitItem = styled.View`
   `}
 `
 export const ProductSummary = styled.View`
-  padding: 26px 40px 0;
+  padding: 26px ${(props: any) => props.ph}px 0;
   position: relative;
   background-color: white;
   z-index: 100;

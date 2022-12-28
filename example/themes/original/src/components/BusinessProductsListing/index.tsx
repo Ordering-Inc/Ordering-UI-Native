@@ -82,7 +82,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const isFocused = useIsFocused();
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
 
@@ -139,7 +139,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
-	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 100
+	const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -458,6 +458,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						<>
 							<WrapContent
 								onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+								style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
 							>
 								<BusinessProductsList
 									categories={[
@@ -515,7 +516,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<View style={{ marginBottom: 0, zIndex: 20000 }}>
+					<View style={{ marginBottom: 0 }}>
 						<FloatingButton
 							btnText={
 								openUpselling
@@ -570,6 +571,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					businessId={business.id}
 					professionalList={business?.professionals}
 					professionalSelected={professionalSelected}
+					handleChangeProfessional={handleChangeProfessionalSelected}
 					handleChangeProfessional={handleChangeProfessionalSelected}
 					handleUpdateProfessionals={handleUpdateProfessionals}
 					onSave={() => setOpenService(false)}

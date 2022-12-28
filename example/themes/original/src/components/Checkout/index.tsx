@@ -154,7 +154,7 @@ const CheckoutUI = (props: any) => {
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -191,6 +191,7 @@ const CheckoutUI = (props: any) => {
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && !requiredFields?.length || forcePlace) {
+			Vibration.vibrate()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
