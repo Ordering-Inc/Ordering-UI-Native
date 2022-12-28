@@ -72,9 +72,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useEffect(() => {
 		if (loading || error) return
-		const orders = _orders.map((order: any) => order?.cart_group_id
-			? _orders
-				.filter((_order : any) => _order?.cart_group_id === order?.cart_group_id)
+		const ordersReduced = _orders.map((order: any) => order?.cart_group_id
+		? _orders
+				?.filter((_order : any) => _order?.cart_group_id === order?.cart_group_id)
 				?.reduce((orderCompleted : any, currentOrder : any) => ({
 					...orderCompleted,
 					total: orderCompleted.summary?.total + currentOrder?.summary?.total,
@@ -84,17 +84,19 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					review: orderCompleted.review && currentOrder.review,
 					user_review: orderCompleted.user_review && currentOrder.user_review,
 					products: [orderCompleted.products, currentOrder.products].flat()
-				})).filter((order: any) => {
-					const isDuplicate = uniqueOrders.includes(order?.cart_group_id)
-					if (!isDuplicate) {
-						uniqueOrders.push(order?.cart_group_id)
-						return true
-					}
-					return false
-				})
-			: order)
+				}))
+				: order)
+		const orders = ordersReduced?.filter((order: any) => {
+			if (!order?.cart_group_id) return true
+			const isDuplicate = uniqueOrders.includes(order?.cart_group_id)
+			if (!isDuplicate) {
+				uniqueOrders.push(order?.cart_group_id)
+				return true
+			}
+			return false
+		})
 		setOrders(orders)
-	}, [JSON.stringify(_orders)])
+	}, [_orders?.length])
 
 	const getOrderStatus = (s: string) => {
 		const status = parseInt(s)
