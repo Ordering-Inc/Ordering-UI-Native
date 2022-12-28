@@ -1,15 +1,15 @@
 import React from 'react'
 import { useLanguage } from 'ordering-components/native'
 import { HelpOrderParams } from '../../types'
-import { OText, OButton, OIcon } from '../shared'
+import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { WebView } from 'react-native-webview'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import NavBar from '../NavBar'
 
 import {
-  Content
+  Content,
+  Container
 } from './styles'
 
 export const HelpOrder = (props: HelpOrderParams) => {
@@ -20,15 +20,6 @@ export const HelpOrder = (props: HelpOrderParams) => {
   const theme = useTheme()
 
   const styles = StyleSheet.create({
-    btnBackArrow: {
-      borderWidth: 0,
-      backgroundColor: theme.colors.white,
-      borderColor: theme.colors.white,
-      shadowColor: theme.colors.white,
-      display: 'flex',
-      justifyContent: 'flex-start',
-      paddingLeft: 0,
-    },
     imageStyle: {
       width: '100%',
       height: 120
@@ -42,7 +33,7 @@ export const HelpOrder = (props: HelpOrderParams) => {
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   return (
-    <>
+    <Container>
       <NavBar
         title={t('HELP_WITH_ORDER', 'Help with an order')}
         onActionLeft={goToBack}
@@ -75,6 +66,6 @@ export const HelpOrder = (props: HelpOrderParams) => {
           style={styles.videoStyle}
         />
       </Content>
-    </>
+    </Container>
   )
 }

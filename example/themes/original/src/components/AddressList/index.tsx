@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
-import { AddressListContainer, AddressItem } from './styles'
+import { AddressItem, Container } from './styles'
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
-import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
@@ -139,8 +138,6 @@ const AddressListUI = (props: AddressListParams) => {
 
 	return (
 		<Container
-			pt={20}
-			noPadding
 			refreshControl={
 				<RefreshControl
 					refreshing={refreshing}
@@ -148,20 +145,18 @@ const AddressListUI = (props: AddressListParams) => {
 				/>
 			}
 		>
-			{isProfile && (
-				<NavBar
-					title={t('SAVED_PLACES', 'My saved places')}
-					titleAlign={'center'}
-					onActionLeft={goToBack}
-					showCall={false}
-					style={{
-						paddingHorizontal: 40,
-						marginTop: Platform.OS === 'ios' ? 0 : 10
-					}}
-				/>
-			)}
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
-				<AddressListContainer>
+				<>
+					{isProfile && (
+						<NavBar
+							title={t('SAVED_PLACES', 'My saved places')}
+							titleAlign={'center'}
+							onActionLeft={goToBack}
+							showCall={false}
+							paddingTop={10}
+							btnStyle={{ paddingLeft: 0 }}
+						/>
+					)}
 					{
 						route &&
 						(
@@ -327,7 +322,8 @@ const AddressListUI = (props: AddressListParams) => {
 							/>
 						</>
 					)}
-				</AddressListContainer>
+				</>
+
 			)}
 		</Container>
 	)

@@ -1,14 +1,14 @@
 import React from 'react'
 import { useLanguage } from 'ordering-components/native'
 import { HelpGuideParams } from '../../types'
-import { OText, OButton, OIcon } from '../shared'
+import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 import NavBar from '../NavBar'
 import {
-  Content
+  Content,
+  Container
 } from './styles'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 export const HelpGuide = (props: HelpGuideParams) => {
   const {
@@ -37,7 +37,7 @@ export const HelpGuide = (props: HelpGuideParams) => {
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   return (
-    <>
+    <Container>
       <NavBar
         title={t('GUIDE_TO_ORDERING', 'Guide to Ordering')}
         onActionLeft={goToBack}
@@ -63,6 +63,6 @@ export const HelpGuide = (props: HelpGuideParams) => {
           cover
         />
       </Content>
-    </>
+    </Container>
   )
 }
