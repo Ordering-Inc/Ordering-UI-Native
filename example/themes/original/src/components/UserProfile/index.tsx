@@ -49,6 +49,8 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const theme = useTheme();
 
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {
 			color: theme.colors.textNormal,
@@ -89,8 +91,7 @@ const ProfileListUI = (props: ProfileParams) => {
 			marginEnd: 14
 		},
 		pagePadding: {
-			paddingLeft: 40,
-			paddingRight: 40
+			paddingHorizontal: isChewLayout ? 20 : 40
 		},
 		messageIconStyle: {
 			fontSize: 18,
@@ -164,9 +165,6 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	return (
 		<View style={{ flex: 1, height: height - top - bottom, paddingTop: 20 }}>
-			{/* <OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
-				{t('PROFILE', 'Profile')}
-			</OText> */}
 			<CenterView style={styles.pagePadding}>
 				{user?.photo && (
 					<View style={styles.photo}>

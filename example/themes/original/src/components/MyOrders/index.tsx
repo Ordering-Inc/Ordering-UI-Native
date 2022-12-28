@@ -35,7 +35,7 @@ export const MyOrders = (props: any) => {
     { key: 'business', value: t('BUSINESS', 'Business') },
     { key: 'products', value: t('PRODUCTS', 'Products') }
   ]
-  const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
   const showNavbar = theme?.bar_menu?.components?.orders?.hidden
 
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
@@ -68,7 +68,6 @@ export const MyOrders = (props: any) => {
 
   return (
     <Container
-      pt={0}
       noPadding
       refreshControl={
         <RefreshControl
@@ -84,12 +83,11 @@ export const MyOrders = (props: any) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            paddingHorizontal: 40,
-            marginTop: Platform.OS === 'android' ? 50 : 30,
+            paddingHorizontal: isChewLayout ? 20 : 40,
           },
           ...props.titleStyle
         }}>
-          {!props.hideBackBtn && (
+          {!props.hideBackBtn && !isChewLayout && (
             <OButton
               imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
@@ -121,7 +119,7 @@ export const MyOrders = (props: any) => {
         <ScrollView
           horizontal
           style={{ ...styles.container, borderBottomWidth: 1 }}
-          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : 40 }}
+          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : isChewLayout ? 20 : 40 }}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
@@ -146,7 +144,7 @@ export const MyOrders = (props: any) => {
       {selectedOption === 'orders' && (
         <>
           {ordersLength?.activeOrdersLength > 0 && (
-            <View style={{ paddingLeft: 40, paddingRight: 40 }}>
+            <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
               <OrdersOption
                 {...props}
                 activeOrders
@@ -157,7 +155,7 @@ export const MyOrders = (props: any) => {
               />
             </View>
           )}
-          <View style={{ paddingLeft: 40, paddingRight: 40 }}>
+          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
             <OrdersOption
               {...props}
               ordersLength={ordersLength}

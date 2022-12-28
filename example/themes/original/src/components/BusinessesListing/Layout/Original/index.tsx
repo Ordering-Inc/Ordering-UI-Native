@@ -553,7 +553,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</>
 			)}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<ListWrapper>
+			<ListWrapper ph={isChewLayout && 20}>
 				{!businessId && (
 					<BusinessTypeFilter
 						images={props.images}

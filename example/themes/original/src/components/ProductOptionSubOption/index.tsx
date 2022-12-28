@@ -41,7 +41,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const [showMessage, setShowMessage] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
 
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const iconsSize = isChewLayout ? 20 : 16
 
 	const handleSuboptionClick = () => {
