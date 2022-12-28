@@ -67,7 +67,6 @@ export const HeaderWrapper = styled.ImageBackground`
 
 export const ListWrapper = styled.View`
 	background-color: ${(props: any) => props.theme.colors.backgroundLight};
-	padding-horizontal: ${(props: any) => props.ph ?? 40}px;
 `;
 
 export const FeaturedWrapper = styled.View`
