@@ -191,6 +191,7 @@ const CheckoutUI = (props: any) => {
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && !requiredFields?.length || forcePlace) {
+			Vibration.vibrate()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
