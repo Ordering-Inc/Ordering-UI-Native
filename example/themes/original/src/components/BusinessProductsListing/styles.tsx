@@ -24,7 +24,7 @@ export const WrapSearchBar = styled.View`
   flex: 1;
 `
 export const WrapContent = styled.View`
-  padding: 10px 40px;
+  padding-vertical: 10px;
 `
 
 export const BusinessProductsListingContainer = styled.ScrollView`

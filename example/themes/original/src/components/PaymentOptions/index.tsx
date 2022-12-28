@@ -287,7 +287,7 @@ const PaymentOptionsUI = (props: any) => {
 					<StripeCardsList
 						paymethod={isOpenMethod?.paymethod}
 						businessId={props.businessId}
-						publicKey={isOpenMethod?.paymethod?.credentials.publishable}
+						publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
 						payType={paymethodsList?.name}
 						onSelectCard={handlePaymethodDataChange}
 						onNavigationRedirect={onNavigationRedirect}

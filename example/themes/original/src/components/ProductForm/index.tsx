@@ -9,7 +9,8 @@ import {
 	I18nManager,
 	SafeAreaView,
 	Platform,
-	Button
+	Button,
+	Vibration
 } from 'react-native';
 import {
 	ProductForm as ProductOptions,
@@ -74,6 +75,8 @@ export const ProductOptionsUI = (props: any) => {
 
 	const theme = useTheme();
 	const [, { showToast }] = useToast()
+
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -205,6 +208,7 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+        Vibration.vibrate()
 		if (!productCart.quantity) {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
 			return
@@ -618,7 +622,10 @@ export const ProductOptionsUI = (props: any) => {
 							</>
 						)}
 					</WrapHeader>
-					<ProductSummary onLayout={(event: any) => setSummaryRefHeight(event.nativeEvent.layout?.height)}>
+					<ProductSummary
+						ph={isChewLayout ? 20 : 40}
+						onLayout={(event: any) => setSummaryRefHeight(event.nativeEvent.layout?.height)}
+					>
 						<ProductTitle>
 							{loading && !product ? (
 								<Placeholder Animation={Fade}>
@@ -718,7 +725,7 @@ export const ProductOptionsUI = (props: any) => {
 								marginBottom: 20,
 								borderBottomWidth: 1,
 								borderBottomColor: theme.colors.border,
-								marginHorizontal: 30,
+								marginHorizontal: isChewLayout ? 20 : 30,
 								backgroundColor: theme.colors.backgroundPage,
 							}}
 						>
@@ -792,6 +799,7 @@ export const ProductOptionsUI = (props: any) => {
 						</>
 					) : (
 						<ProductEditions
+							style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
 							onLayout={(event: any) => {
 								setEditionsLayoutY(event.nativeEvent.layout?.y)
 							}}
