@@ -251,6 +251,7 @@ export interface BusinessProductsListingParams {
 	handleChangeProfessionalSelected?: any;
 	handleUpdateProfessionals?: any;
 	onBusinessClick?: any;
+	onNavigationRedirect?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -532,7 +533,6 @@ export interface FloatingButtonParams {
 	handleClick?: any;
 	handleEmpty?: any;
 	iosBottom?: number
-	hideButton?: boolean
 }
 export interface MomentOptionParams {
 	navigation: any;
