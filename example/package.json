@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.17.78",
+  "version": "0.17.79",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
