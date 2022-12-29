@@ -184,6 +184,35 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
+		setOpenUpselling(false)
+		setCanOpenUpselling(false)
+		const cartSelectedHasGroup = currentCart?.group?.uuid
+		const cartFilterValidation = (cart: any) => cart?.valid && cart?.status !== 2
+		const cartsGroupLength = cartSelectedHasGroup ? Object.values(orderState.carts).filter((_cart: any) => _cart?.group?.uuid === cartSelectedHasGroup && cartFilterValidation(_cart))?.length : 0
+		if (cartsGroupLength > 1 && isCheckoutMultiBusinessEnabled) {
+			props.onNavigationRedirect('CheckoutNavigator', {
+				screen: 'MultiCheckout',
+				cartUuid: currentCart?.group?.uuid
+			})
+			return
+		}
+		const cartGroupsCount: any = {}
+		Object.values(orderState.carts).filter(_cart => cartFilterValidation(_cart))?.forEach((_cart: any) => {
+			if (cartGroupsCount[_cart?.group?.uuid]) {
+				cartGroupsCount[_cart?.group?.uuid] += 1
+			} else {
+				cartGroupsCount[_cart?.group?.uuid] = 1
+			}
+		})
+		let groupForTheCart
+		const groupForAddCartArray = Object.keys(cartGroupsCount).filter(cartGroupUuid => cartGroupsCount[cartGroupUuid] > 0 && cartGroupsCount[cartGroupUuid] < 5)
+		const max = Math.max(...groupForAddCartArray.map(uuid => cartGroupsCount[uuid]))
+		const indexes = groupForAddCartArray.filter(uuid => cartGroupsCount[uuid] === max)
+		if (indexes?.length > 1) {
+			groupForTheCart = indexes.find(uuid => uuid !== 'undefined')
+		} else {
+			groupForTheCart = indexes[0]
+		}
 		if (isCheckoutMultiBusinessEnabled && openCarts.length > 1) {
 			onRedirect('CheckoutNavigator', {
 				screen: 'MultiCheckout'
@@ -531,7 +560,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
 							btnRightValue={parsePrice(currentCart?.total)}
 							disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
-							hideButton={isCheckoutMultiBusinessEnabled}
 							handleClick={() => setOpenUpselling(true)}
 						/>
 					</View>
