@@ -192,14 +192,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	useEffect(() => {
 		if (loading) return
 
-		const updateOrders = orders.filter((order: any) => orderStatus.includes(order.status))
+		const updateOrders = _orders.filter((order: any) => orderStatus.includes(order.status))
 
 		if (activeOrders) {
 			setOrdersLength && setOrdersLength({ ...ordersLength, activeOrdersLength: updateOrders?.length })
 		} else if (!preOrders) {
 			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
 		}
-	}, [orders, activeOrders, preOrders])
+	}, [_orders, activeOrders, preOrders])
 
 	useEffect(() => {
 		if (refreshOrders) {
