@@ -23,7 +23,7 @@ export const MyOrders = (props: any) => {
   const [isEmptyBusinesses, setIsEmptyBusinesses] = useState(false)
   const [businessOrderIds, setBusinessOrderIds] = useState([])
   const [ordersLength, setOrdersLength] = useState({
-    activeOrdersLength: 0,
+    activeOrdersLength: null,
     previousOrdersLength: 0,
   });
   const [selectedOption, setSelectedOption] = useState(!hideOrders ? 'orders' : 'business')
@@ -143,7 +143,7 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          {ordersLength?.activeOrdersLength > 0 && (
+          {ordersLength?.activeOrdersLength !== 0 && (
             <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
               <OrdersOption
                 {...props}
