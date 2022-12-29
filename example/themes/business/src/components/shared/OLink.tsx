@@ -13,10 +13,11 @@ interface Props {
   type?: string;
   hasButton?: boolean;
   numberOfLines?: number;
+  onTextLayout?: (e : any) => void;
 }
 
 const OLink = (props: Props): React.ReactElement => {
-  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton, numberOfLines } = props;
+  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton, numberOfLines, onTextLayout } = props;
   const [, t] = useLanguage();
 
   const handleAlert = () =>
@@ -78,12 +79,18 @@ const OLink = (props: Props): React.ReactElement => {
           style={TextStyle}
           numberOfLines={numberOfLines ?? 1}
           ellipsizeMode="tail"
-          color={color}>
+          color={color}
+          onTextLayout={onTextLayout}
+        >
           {shorcut}
         </OText>
       )}
     </Pressable>
   );
+};
+
+OLink.defaultProps = {
+  onTextLayout: (e: any) => {}
 };
 
 export default OLink;

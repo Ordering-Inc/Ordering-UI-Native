@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 import { OButton, OText, OLink, OModal } from '../shared'
 import {
@@ -43,6 +43,9 @@ export const OrderContentComponent = (props: OrderContent) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [openReviewModal, setOpenReviewModal] = useState(false)
+
+  const [isReadMore, setIsReadMore] = useState(false)
+  const [lengthMore, setLengthMore] = useState(false)
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
@@ -94,6 +97,10 @@ export const OrderContentComponent = (props: OrderContent) => {
   const containsOnlyNumbers = (str: string) => {
     return /^\d+$/.test(str);
   }
+
+  const onTextLayout = useCallback((e: any) => {
+    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
+  },[]);
 
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
@@ -298,18 +305,26 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
 
         {!!order?.customer?.address && (
-          <View style={styles.linkWithIcons}>
-            <OLink
-              PressStyle={styles.linkWithIcons}
-              url={Platform.select({
-                ios: `maps:0,0?q=${order?.customer?.address}`,
-                android: `geo:0,0?q=${order?.customer?.address}`,
-              })}
-              numberOfLines={2}
-              shorcut={order?.customer?.address}
-              TextStyle={styles.textLink}
-            />
-          </View>
+          <>
+            <View style={styles.linkWithIcons}>
+              <OLink
+                PressStyle={{ ...styles.linkWithIcons, marginBottom: 0 }}
+                url={Platform.select({
+                  ios: `maps:0,0?q=${order?.customer?.address}`,
+                  android: `geo:0,0?q=${order?.customer?.address}`,
+                })}
+                onTextLayout={onTextLayout}
+                numberOfLines={isReadMore ? 20 : 2}
+                shorcut={order?.customer?.address}
+                TextStyle={styles.textLink}
+              />
+            </View>
+            {lengthMore && (
+              <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
+                <OText size={12} color={theme.colors.statusOrderBlue}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+              </TouchableOpacity>
+            )}
+          </>
         )}
 
         {!!order?.customer?.internal_number && (
