@@ -42,15 +42,20 @@ interface Props {
   adjustsFontSizeToFit?: boolean;
   textDecorationLine?: string;
   lineHeight?: number;
+  onTextLayout?: (e : any) => void;
 }
 
 const OText = (props: Props): React.ReactElement => {
   return (
-    <SText {...props} style={[props.style, { lineHeight: props.lineHeight }]}>
+    <SText {...props} style={[props.style, { lineHeight: props.lineHeight }]} onTextLayout={props.onTextLayout}>
       {props.children}
       {props.space && ' '}
     </SText>
   );
+};
+
+OText.defaultProps = {
+  onTextLayout: (e: any) => {}
 };
 
 export default OText;
