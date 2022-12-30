@@ -208,12 +208,12 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
-        Vibration.vibrate()
+		Vibration.vibrate()
 		if (!productCart.quantity) {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
 			return
 		}
-		const isErrors = Object.values(errors).length > 0;
+		const isErrors = Object.values(errors)?.length > 0;
 		if (!isErrors) {
 			handleSave && handleSave();
 			return;
@@ -232,7 +232,7 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleChangeMainIndex = (index: number) => {
-		if (index < 0 || index > gallery.length - 1) {
+		if (index < 0 || index > gallery?.length - 1) {
 			setThumbsSwiper(0)
 			return
 		}
@@ -275,7 +275,7 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	const scrollDown = (id: any) => {
-		const isErrors = Object.values(errors).length > 0
+		const isErrors = Object.values(errors)?.length > 0
 		if (!isErrors) {
 			return
 		}
@@ -299,7 +299,7 @@ export const ProductOptionsUI = (props: any) => {
 	const saveErrors =
 		orderState.loading ||
 		maxProductQuantity === 0 ||
-		Object.keys(errors).length > 0;
+		Object.keys(errors)?.length > 0;
 
 
 	const ExtraOptions = ({ eID, options }: any) => (
@@ -366,14 +366,14 @@ export const ProductOptionsUI = (props: any) => {
 			? product.images
 			: theme?.images?.dummies?.product)
 
-		if (product?.gallery && product?.gallery.length > 0) {
+		if (product?.gallery && product?.gallery?.length > 0) {
 			for (const img of product?.gallery) {
 				if (img?.file) {
 					imageList.push(img?.file)
 				}
 				if (img?.video) {
 					const keys = img?.video.split('/')
-					let _videoId = keys[keys.length - 1]
+					let _videoId = keys[keys?.length - 1]
 
 					if (_videoId.includes('watch')) {
 						const __url = _videoId.split('=')[1]
@@ -388,7 +388,7 @@ export const ProductOptionsUI = (props: any) => {
 					} else if (_videoId.search(/\?/i) >= 0) {
 						_videoId = _videoId.split('?')[0]
 					}
-					if ((_videoId.length === 11)) {
+					if ((_videoId?.length === 11)) {
 						videoList.push(_videoId)
 					}
 				}
@@ -539,7 +539,7 @@ export const ProductOptionsUI = (props: any) => {
 										</View>
 									}
 								>
-									{gallery && gallery.length > 0 && gallery.map((img, i) => (
+									{gallery && gallery?.length > 0 && gallery.map((img, i) => (
 										<View
 											style={styles.slide1}
 											key={i}
@@ -574,7 +574,7 @@ export const ProductOptionsUI = (props: any) => {
 										paddingVertical: 15
 									}}
 								>
-									{gallery.length > 0 && gallery.map((img, index) => (
+									{gallery?.length > 0 && gallery.map((img, index) => (
 										<TouchableOpacity
 											key={index}
 											onPress={() => handleClickThumb(index)}
@@ -729,7 +729,7 @@ export const ProductOptionsUI = (props: any) => {
 								backgroundColor: theme.colors.backgroundPage,
 							}}
 						>
-							{product?.ingredients.length > 0 && (
+							{product?.ingredients?.length > 0 && (
 								<TouchableOpacity
 									key={`eopt_key_01`}
 									onPress={() => {
@@ -754,7 +754,7 @@ export const ProductOptionsUI = (props: any) => {
 									</OText>
 								</TouchableOpacity>
 							)}
-							{product?.extras.map((extra: any) =>
+							{product?.extras?.map((extra: any) =>
 								<ExtraOptions key={extra.id} options={extra.options} />
 							)}
 						</ExtraOptionWrap>
@@ -805,7 +805,7 @@ export const ProductOptionsUI = (props: any) => {
 							}}
 						>
 							<>
-								{product?.ingredients.length > 0 && (
+								{product?.ingredients?.length > 0 && (
 									<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, 0)}>
 										<SectionTitle>
 											<OText size={16}>
@@ -827,8 +827,8 @@ export const ProductOptionsUI = (props: any) => {
 										</WrapperIngredients>
 									</View>
 								)}
-								{product?.extras.sort((a: any, b: any) => a.rank - b.rank).map((extra: any) =>
-									extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
+								{product?.extras?.sort((a: any, b: any) => a.rank - b.rank).map((extra: any) =>
+									extra.options?.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
 										const currentState =
 											productCart.options[`id:${option.id}`] || {};
 										return (
@@ -844,7 +844,7 @@ export const ProductOptionsUI = (props: any) => {
 																	backgroundColor: isError(option.id),
 																	borderRadius: 7.6
 																}}>
-																{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
+																{option?.suboptions?.sort((a: any, b: any) => a.rank - b.rank).map(
 																	(suboption: any) => {
 																		const currentState =
 																			productCart.options[
@@ -909,7 +909,7 @@ export const ProductOptionsUI = (props: any) => {
 							)}
 						</ProductEditions>
 					)}
-					{!!error && error.length > 0 && (
+					{!!error && error?.length > 0 && (
 						<NotFoundSource content={error[0]?.message || error[0]} />
 					)}
 				</ScrollView>
