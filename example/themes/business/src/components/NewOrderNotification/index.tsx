@@ -96,10 +96,15 @@ const NewOrderNotificationUI = (props: any) => {
     events.on('message_added_notification', (o: any) => handleEventNotification(1, o))
     events.on('order_added_notification', (o: any) => handleEventNotification(2, o))
     events.on('order_updated_notification', (o: any) => handleEventNotification(3, o))
+    events.on('request_register_notification', (o: any) => handleEventNotification(2, o))
+    events.on('request_update_notification', (o: any) => handleEventNotification(3, o))
+
     return () => {
       events.off('message_added_notification', (o: any) => handleEventNotification(1, o))
       events.off('order_added_notification', (o: any) => handleEventNotification(2, o))
       events.off('order_updated_notification', (o: any) => handleEventNotification(3, o))
+      events.off('request_register_notification', (o: any) => handleEventNotification(2, o))
+      events.off('request_update_notification', (o: any) => handleEventNotification(3, o))
     }
   }, [])
 
