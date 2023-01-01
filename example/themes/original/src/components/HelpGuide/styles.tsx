@@ -8,4 +8,5 @@ export const Container = styled.ScrollView`
     position: relative;
     flex: 1;
     margin: 10px 0;
+    padding-top: ${(props: any) => props.pdng}
 `

@@ -51,6 +51,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import NavBar from '../NavBar';
 const windowWidth = Dimensions.get('window').width;
 
 export const ProductOptionsUI = (props: any) => {
@@ -166,6 +167,11 @@ export const ProductOptionsUI = (props: any) => {
 			justifyContent: 'space-between',
 			width: '100%',
 			marginTop: 10
+		},
+		wrapperNavbar: {
+			paddingVertical: 0,
+			paddingHorizontal: 40,
+			marginVertical: 2
 		}
 	});
 
@@ -208,7 +214,7 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
-        Vibration.vibrate()
+		Vibration.vibrate()
 		if (!productCart.quantity) {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
 			return
@@ -483,14 +489,17 @@ export const ProductOptionsUI = (props: any) => {
 		}
 	}, [])
 
-
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<TopHeader>
-				<TopActions onPress={() => handleGoBack()}>
-					<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
-				</TopActions>
-			</TopHeader>
+			<View style={styles.wrapperNavbar}>
+				<NavBar
+					onActionLeft={() => handleGoBack()}
+					showCall={false}
+					btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
+					titleWrapStyle={{ paddingHorizontal: 0 }}
+					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+				/>
+			</View>
 			{!error && (
 				<ScrollView
 					ref={scrollViewRef}

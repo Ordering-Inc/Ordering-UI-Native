@@ -278,7 +278,9 @@ const ProfileUI = (props: ProfileParams) => {
 
 	return (
 		<>
-			<Container>
+			<Container
+				pdng={Platform.OS === 'ios' ? '20px' : '10px'}
+			>
 				<NavBar
 					title={t('ACCOUNT', 'Account')}
 					titleAlign={'center'}

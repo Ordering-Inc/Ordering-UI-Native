@@ -13,3 +13,7 @@ export const SessionItem = styled.View`
 export const DurationWrapper = styled.View`
   /* flex-direction: row; */
 `
+
+export const Container = styled.View`
+  padding-top: ${(props: any) => props.pdng};
+`

@@ -3,7 +3,7 @@ import { useLanguage } from 'ordering-components/native'
 import { HelpGuideParams } from '../../types'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import NavBar from '../NavBar'
 import {
   Content,
@@ -37,7 +37,7 @@ export const HelpGuide = (props: HelpGuideParams) => {
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   return (
-    <Container>
+    <Container pdng={Platform.OS === 'ios' ? '10px' : '0px'}>
       <NavBar
         title={t('GUIDE_TO_ORDERING', 'Guide to Ordering')}
         onActionLeft={goToBack}
