@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -156,6 +156,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				code: isProductAddedToCart?.code,
 				quantity: productQuantity + 1
 			}
+			Vibration.vibrate()
 			const cartData = currentCart?.business_id ? currentCart : { business_id: business.id }
 			if (isProductAddedToCart) {
 				await updateProduct(updateCurrentProduct, cartData, isQuickAddProduct)
