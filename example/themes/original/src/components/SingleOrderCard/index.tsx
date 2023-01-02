@@ -84,9 +84,13 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       marginRight: 2,
     },
     reorderLoading: {
-      width: 80,
-      height: 40,
-      borderRadius: 10,
+      height: 23,
+      paddingLeft: 20,
+      paddingRight: 20,
+      borderRadius: 23,
+      shadowOpacity: 0,
+      backgroundColor: theme.colors.primary,
+      borderWidth: 0,
     },
     reorderbutton: {
       height: 23,
@@ -183,8 +187,6 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   const handleOriginalReorder = () => {
     setConfirm({ ...confirm, open: false, title: null })
-    setReorderSelected(order?.id);
-    handleReorder && handleReorder(order?.id);
   }
 
   return (
