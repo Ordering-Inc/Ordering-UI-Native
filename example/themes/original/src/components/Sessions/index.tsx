@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Platform } from 'react-native'
 import { useLanguage, useSession, useUtils, Sessions as SessionsController } from 'ordering-components/native'
 import NavBar from '../NavBar'
 import { SessionsParams } from '../../types'
@@ -12,7 +12,8 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import {
   SessionsWrapper,
   SessionItem,
-  DurationWrapper
+  DurationWrapper,
+  Container
 } from './styles'
 
 export const SessionsUI = (props: SessionsParams) => {
@@ -27,7 +28,7 @@ export const SessionsUI = (props: SessionsParams) => {
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const [{ parseDate }] = useUtils()
-	const theme = useTheme()
+  const theme = useTheme()
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
@@ -61,7 +62,9 @@ export const SessionsUI = (props: SessionsParams) => {
   }
 
   return (
-    <>
+    <Container
+      pdng={Platform.OS === 'ios' ? '10px' : '0'}
+    >
       <NavBar
         title={t('SESSIONS', 'Sessions')}
         titleAlign={'center'}
@@ -77,11 +80,11 @@ export const SessionsUI = (props: SessionsParams) => {
               <SessionItem key={i}>
                 <Placeholder Animation={Fade}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flex: 1}}>
+                    <View style={{ flex: 1 }}>
                       <PlaceholderLine width={40} />
                       <PlaceholderLine width={40} />
                     </View>
-                    <PlaceholderLine width={5}/>
+                    <PlaceholderLine width={5} />
                   </View>
                 </Placeholder>
               </SessionItem>
@@ -120,7 +123,7 @@ export const SessionsUI = (props: SessionsParams) => {
                   style={{ borderRadius: 7.6, marginTop: 20 }}
                 />
               </SessionsWrapper>
-             ) : (
+            ) : (
               <OText>{t('YOU_DONT_HAVE_ANY_SESSIONS', 'You don\'t have any sessions')}</OText>
             )
           )}
@@ -147,7 +150,7 @@ export const SessionsUI = (props: SessionsParams) => {
         onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
         onClose={() => setConfirm({ ...confirm, open: false, title: null })}
       />
-    </>
+    </Container>
   )
 }
 
