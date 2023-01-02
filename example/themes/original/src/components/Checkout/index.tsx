@@ -303,7 +303,7 @@ const CheckoutUI = (props: any) => {
 						titleAlign={'center'}
 						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 						showCall={false}
-						btnStyle={{ paddingLeft: 0 }}
+						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
 					/>

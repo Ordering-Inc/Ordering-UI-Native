@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RefreshControl } from 'react-native'
+import { Platform, RefreshControl } from 'react-native'
 import { HelpParams } from '../../types'
 import { useLanguage } from 'ordering-components/native'
 import NavBar from '../NavBar'
@@ -31,7 +31,7 @@ export const Help = (props: HelpParams) => {
 
   return (
     <Container
-      pt={10}
+      pt={Platform.OS === 'ios' ? 20 : 10}
       noPadding
       refreshControl={
         <RefreshControl

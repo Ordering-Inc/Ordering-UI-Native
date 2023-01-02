@@ -12,7 +12,7 @@ export const UserData = styled.View`
 export const Container = styled.ScrollView`
     position: relative;
     flex: 1;
-	  paddingTop: 20px;
+	  padding-top: ${(props: any) => props.pdng};
     margin-bottom: 40px;
 `
 

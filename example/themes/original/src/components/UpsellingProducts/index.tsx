@@ -117,7 +117,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
         if (upsellingProducts?.products?.length && !isFromCart) {
           setCanOpenUpselling && setCanOpenUpselling(true)
         } else {
-          handleUpsellingPage && handleUpsellingPage()
+          handleUpsellingPage && handleUpsellingPage(cart)
         }
       }
     }
@@ -225,7 +225,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
             style={{ ...styles.closeUpsellingButton }}
             textStyle={{ color: theme.colors.white, fontSize: 14 }}
             onClick={() => {
-              handleUpsellingPage()
+              handleUpsellingPage(cart)
               setIsCheckout(true)
             }}
           />
@@ -247,7 +247,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
               <OBottomPopup
                 title={''}
                 open={openUpselling}
-                onClose={() => handleUpsellingPage()}
+                onClose={() => handleUpsellingPage(cart)}
                 isStatusBar
               >
                 <UpsellingContent />
