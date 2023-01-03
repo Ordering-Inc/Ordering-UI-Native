@@ -191,7 +191,8 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
 
   const isInteger = (val: any) => Number.isInteger(Number(val)) && !!val
 
-  const onProductClick = (business: any, categoryId: any, productId: any) => {
+
+  const onProductClick = (business: any, categoryId: any, productId: any, product: any) => {
     if (!isInteger(business?.id) ||
       !isInteger(categoryId) ||
       !isInteger(productId) ||
@@ -199,17 +200,20 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       showToast(ToastType.error, t('NOT_AVAILABLE', 'Not Available'))
       return
     }
-
+    const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
+    const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === productId ? Cproduct?.quantity : 0) }, 0) || 0
     navigation.navigate('ProductDetails', {
       isRedirect: 'business',
       businessId: business?.id,
       categoryId: categoryId,
       productId: productId,
+      product: product,
       business: {
         store: business.slug,
         header: business.header,
         logo: business.logo,
-      }
+      },
+      productAddedToCartLength
     })
   }
 
@@ -293,7 +297,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             />
           </View>
         ))}
-        {console.log(screenWidth)}
         {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
           <LoadMoreBusinessContainer>
             <OButton
@@ -361,7 +364,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   product={product}
                   enableIntersection={false}
                   businessId={business?.id}
-                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id)}
+                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id, product)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
                   style={{ width: screenWidth - 80, maxWidth: screenWidth - 80, marginRight: 20 }}
