@@ -169,9 +169,8 @@ export const ProductOptionsUI = (props: any) => {
 			marginTop: 10
 		},
 		wrapperNavbar: {
-			paddingVertical: 0,
 			paddingHorizontal: 40,
-			marginVertical: 2
+			paddingTop: 0,
 		}
 	});
 
@@ -495,9 +494,8 @@ export const ProductOptionsUI = (props: any) => {
 				<NavBar
 					onActionLeft={() => handleGoBack()}
 					showCall={false}
-					btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
-					titleWrapStyle={{ paddingHorizontal: 0 }}
-					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+					btnStyle={{ paddingLeft: 0 }}
+					paddingTop={4}
 				/>
 			</View>
 			{!error && (

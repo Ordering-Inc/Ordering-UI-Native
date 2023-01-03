@@ -16,7 +16,7 @@ import {
 	PlaceholderLine,
 	Fade
 } from "rn-placeholder";
-import { View, BackHandler } from 'react-native'
+import { View, BackHandler, Platform } from 'react-native'
 import {
 	MessageListingWrapper,
 	MessageContainer
@@ -77,7 +77,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			{ key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
 			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
 			{ key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
-      		{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
+			{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
 		]
 
 		const objectStatus = orderStatus.find((o) => o.key === status)
@@ -102,7 +102,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	}, [orderList, loading])
 
 	useEffect(() => {
-		if(refreshOrders){
+		if (refreshOrders) {
 			loadOrders(false, false, false, true)
 			setRefreshOrders && setRefreshOrders(false)
 		}
@@ -225,7 +225,7 @@ const OrderMessageUI = (props: any) => {
 }
 
 export const OrderListing = (props: OrdersOptionParams) => {
-  const [businessState] = useBusiness();
+	const [businessState] = useBusiness();
 	const OrderListingProps = {
 		...props,
 		UIComponent: OrdersOptionUI,
@@ -236,7 +236,7 @@ export const OrderListing = (props: OrdersOptionParams) => {
 			pageSize: 10,
 			controlType: 'infinity'
 		},
-    businessId: businessState?.business?.id,
+		businessId: businessState?.business?.id,
 		profileMessages: true,
 		orderBy: 'last_direct_message_at',
 		orderDirection: 'asc'
@@ -292,7 +292,7 @@ export const MessageListing = (props: MessageListingParams) => {
 				titleAlign={'center'}
 				onActionLeft={goToBack}
 				showCall={false}
-				paddingTop={10}
+				paddingTop={Platform.OS === 'ios' ? 20 : 10}
 				btnStyle={{ paddingLeft: 0 }}
 			/>
 			<OrderListing
@@ -300,7 +300,7 @@ export const MessageListing = (props: MessageListingParams) => {
 				setSelectedOrderId={setSelectedOrderId}
 				setOrderList={setOrderListStatus}
 				setOpenMessges={setOpenMessges}
-        franchiseId={props.franchiseId}
+				franchiseId={props.franchiseId}
 			/>
 			{openMessages && seletedOrder && (
 				<OModal
