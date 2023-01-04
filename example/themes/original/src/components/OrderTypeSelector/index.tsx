@@ -96,7 +96,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 					<NavBar
 						onActionLeft={() => goToBack()}
 						btnStyle={{ paddingLeft: 0, width: 50 }}
-						paddingTop={0}
+						paddingTop={Platform.OS === 'ios' ? 10 : 0}
 						style={{ paddingBottom: 0 }}
 						title={t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will your order type?')}
 						titleAlign={'center'}
