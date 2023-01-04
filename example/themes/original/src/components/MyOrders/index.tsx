@@ -37,6 +37,7 @@ export const MyOrders = (props: any) => {
   ]
   const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
   const showNavbar = theme?.bar_menu?.components?.orders?.hidden
+  const hideOrdersTheme = theme?.bar_menu?.components?.orders?.hidden
 
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
@@ -87,7 +88,7 @@ export const MyOrders = (props: any) => {
           },
           ...props.titleStyle
         }}>
-          {!props.hideBackBtn && !isChewLayout && (
+          {(!props.hideBackBtn || !hideOrdersTheme) && !isChewLayout && (
             <OButton
               imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
@@ -99,7 +100,8 @@ export const MyOrders = (props: any) => {
                 borderColor: '#FFF',
                 shadowColor: '#FFF',
                 paddingLeft: 0,
-                paddingRight: 0
+                paddingRight: 0,
+                marginTop: 50,
               }}
               onClick={goToBack}
               icon={AntDesignIcon}
@@ -109,7 +111,7 @@ export const MyOrders = (props: any) => {
               }}
             />
           )}
-          <HeaderTitle ph={0} text={t('MY_ORDERS', 'My Orders')} />
+          <HeaderTitle ph={10} text={t('MY_ORDERS', 'My Orders')} />
         </View>
       )}
       {!hideOrders && !isChewLayout && !showNavbar && (

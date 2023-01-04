@@ -340,7 +340,7 @@ const CartUI = (props: any) => {
             {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount ?? cart?.delivery_price)}</OText>
               </OSTable>
             )}
             {
