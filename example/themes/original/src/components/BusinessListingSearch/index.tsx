@@ -273,11 +273,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         />
       )}
 
-      <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
-        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
-          {t('BUSINESSES', 'Businesses')}
-        </OText>
-      </OptionTitle>
+      {businessesSearchList.businesses?.length > 0 && (
+        <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
+          <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
+            {t('BUSINESSES', 'Businesses')}
+          </OText>
+        </OptionTitle>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
           <View
