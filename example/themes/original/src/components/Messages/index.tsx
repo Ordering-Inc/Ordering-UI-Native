@@ -122,12 +122,29 @@ const MessagesUI = (props: MessagesParams) => {
 		setMessage && setMessage('')
 	}
 
+	const getLogisticTag = (status: any) => {
+		switch (parseInt(status)) {
+			case 0:
+			return t('PENDING', 'Pending')
+			case 1:
+			return t('IN_PROGRESS', 'In progress')
+			case 2:
+			return t('IN_QUEUE', 'In queue')
+			case 3:
+			return t('EXPIRED', 'Expired')
+			case 4:
+			return t('RESOLVED', 'Resolved')
+			default:
+			return t('UNKNOWN', 'Unknown')
+		}
+	}
+
 	const messageConsole = (message: any) => {
 		return message.change?.attribute !== 'driver_id'
 			?
 			`${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
 				`${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
-				`${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+				`${message.change?.attribute !== 'logistic_status' ? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)]) : message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status' ? t(ORDER_STATUS[parseInt(message.change.new, 10)]) : getLogisticTag(message.change.new)}`
 			}`
 			: message.change.new
 				?
@@ -155,9 +172,9 @@ const MessagesUI = (props: MessagesParams) => {
 					image: message.source,
 					system: message.type === 1,
 					user: {
-						_id: message.author.id,
-						name: message.author.name,
-						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
+						_id: message.author && message.author.id,
+						name: message.author && message.author.name,
+						avatar: message.author && (message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo)
 					}
 				});
 			}
@@ -170,9 +187,9 @@ const MessagesUI = (props: MessagesParams) => {
 					image: message.source,
 					system: message.type === 1,
 					user: {
-						_id: message.author.id,
-						name: message.author.name,
-						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
+						_id: message.author && message.author.id ,
+						name: message.author && message.author.name,
+						avatar: message.author && (message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo)
 					}
 				});
 			}
