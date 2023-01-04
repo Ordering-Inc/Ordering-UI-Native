@@ -7,7 +7,7 @@ import {
   useValidationFields,
   useSession,
   useToast,
-	ToastType,
+  ToastType,
   MultiCheckout as MultiCheckoutController
 } from 'ordering-components/native'
 import { View, StyleSheet, Platform } from 'react-native'
@@ -36,11 +36,11 @@ import {
 } from './styles'
 
 const mapConfigs = {
-	mapZoom: 16,
-	mapSize: {
-		width: 640,
-		height: 190
-	}
+  mapZoom: 16,
+  mapSize: {
+    width: 640,
+    height: 190
+  }
 }
 
 const MultiCheckoutUI = (props: any) => {
@@ -57,72 +57,70 @@ const MultiCheckoutUI = (props: any) => {
     cartUuid
   } = props
 
-	const theme = useTheme();
+  const theme = useTheme();
   const styles = StyleSheet.create({
     pagePadding: {
-			paddingLeft: 40,
-			paddingRight: 40
-		},
-    wrapperNavbar: Platform.OS === 'ios'
-			? { paddingVertical: 0, paddingHorizontal: 40 }
-			: { paddingVertical: 20, paddingHorizontal: 40 }
+      paddingLeft: 40,
+      paddingRight: 40
+    },
+    wrapperNavbar: { paddingHorizontal: 40 }
   })
 
-	const [, { showToast }] = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage()
-	const [{ configs }] = useConfig();
-	const [{ parsePrice, parseDate }] = useUtils();
-	const [{ options, carts, loading }, { confirmCart }] = useOrder();
-	const [validationFields] = useValidationFields();
+  const [{ configs }] = useConfig();
+  const [{ parsePrice, parseDate }] = useUtils();
+  const [{ options, carts, loading }, { confirmCart }] = useOrder();
+  const [validationFields] = useValidationFields();
   const [{ user }] = useSession()
 
-	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
-	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+  const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+  const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const maximumCarts = 5
   const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || openCarts.length > maximumCarts || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
 
-	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
-	const [phoneUpdate, setPhoneUpdate] = useState(false);
-	const [userErrors, setUserErrors] = useState<any>([]);
+  const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
+  const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [userErrors, setUserErrors] = useState<any>([]);
   const handleMomentClick = () => {
-		if (isPreOrder) {
-			navigation.navigate('MomentOption')
-		}
-	}
+    if (isPreOrder) {
+      navigation.navigate('MomentOption')
+    }
+  }
 
   const checkValidationFields = () => {
-		setUserErrors([])
-		const errors = []
-		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+    setUserErrors([])
+    const errors = []
+    const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
 
-		Object.values(validationFields?.fields?.checkout).map((field: any) => {
-			if (field?.required && !notFields.includes(field.code)) {
-				if (!user[field?.code]) {
-					errors.push(t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `The field ${field?.name} is required`))
-				}
-			}
-		})
+    Object.values(validationFields?.fields?.checkout).map((field: any) => {
+      if (field?.required && !notFields.includes(field.code)) {
+        if (!user[field?.code]) {
+          errors.push(t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `The field ${field?.name} is required`))
+        }
+      }
+    })
 
-		if (
-			!user?.cellphone &&
-			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-				validationFields?.fields?.checkout?.cellphone?.required) ||
-				configs?.verification_phone_required?.value === '1')
-		) {
-			errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
-		}
+    if (
+      !user?.cellphone &&
+      ((validationFields?.fields?.checkout?.cellphone?.enabled &&
+        validationFields?.fields?.checkout?.cellphone?.required) ||
+        configs?.verification_phone_required?.value === '1')
+    ) {
+      errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
+    }
 
-		if (phoneUpdate) {
-			errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
-		}
+    if (phoneUpdate) {
+      errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
+    }
 
-		setUserErrors(errors)
-	}
+    setUserErrors(errors)
+  }
 
   const togglePhoneUpdate = (val: boolean) => {
-		setPhoneUpdate(val)
-	}
+    setPhoneUpdate(val)
+  }
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
@@ -130,33 +128,30 @@ const MultiCheckoutUI = (props: any) => {
       return
     }
     let stringError = ''
-		Object.values(userErrors).map((item: any, i: number) => {
-			stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
-		})
-		showToast(ToastType.Error, stringError)
+    Object.values(userErrors).map((item: any, i: number) => {
+      stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
+    })
+    showToast(ToastType.Error, stringError)
     setIsUserDetailsEdit(true)
   }
 
   useEffect(() => {
-		if (validationFields && validationFields?.fields?.checkout) {
-			checkValidationFields()
-		}
-	}, [validationFields, user])
+    if (validationFields && validationFields?.fields?.checkout) {
+      checkValidationFields()
+    }
+  }, [validationFields, user])
 
   return (
     <>
       <Container noPadding>
         <View style={styles.wrapperNavbar}>
           <NavBar
-            isVertical
             title={t('CHECKOUT', 'Checkout')}
             titleAlign={'center'}
             onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
             showCall={false}
+            paddingTop={Platform.OS === 'ios' ? 0 : 4}
             btnStyle={{ paddingLeft: 0 }}
-            style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
-            titleWrapStyle={{ paddingHorizontal: 0 }}
-            titleStyle={{ marginRight: 0, marginLeft: 0 }}
           />
         </View>
         <ChContainer style={styles.pagePadding}>
@@ -283,14 +278,14 @@ const MultiCheckoutUI = (props: any) => {
           </ChSection>
         </ChContainer>
       </Container>
-      
+
       <FloatingButton
-				handleClick={() => handlePlaceOrder()}
+        handleClick={() => handlePlaceOrder()}
         isSecondaryBtn={isDisablePlaceOrderButton}
         disabled={isDisablePlaceOrderButton}
         btnText={placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')}
         btnRightValueShow
-				btnRightValue={parsePrice(totalCartsPrice)}
+        btnRightValue={parsePrice(totalCartsPrice)}
         iosBottom={30}
       />
     </>
