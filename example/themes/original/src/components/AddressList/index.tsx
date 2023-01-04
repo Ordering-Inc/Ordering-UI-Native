@@ -172,7 +172,7 @@ const AddressListUI = (props: AddressListParams) => {
 								onActionLeft={() => goToBack()}
 								showCall={false}
 								btnStyle={{ paddingLeft: 0 }}
-								paddingTop={0}
+								paddingTop={10}
 								style={{ marginTop: 0 }}
 								titleWrapStyle={{ paddingHorizontal: 0 }}
 								titleStyle={{ marginLeft: 0, marginRight: 0 }}
