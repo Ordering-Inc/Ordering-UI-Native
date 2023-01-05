@@ -16,6 +16,7 @@ import {
   StaturBar,
   Icons
 } from './styles'
+import { getOrderStatus } from '../../utils'
 
 const SingleOrderCardUI = (props: any) => {
   const {
@@ -25,7 +26,6 @@ const SingleOrderCardUI = (props: any) => {
     messages,
     setMessages,
     handleGoToOrderDetails,
-    getOrderStatus,
     showProgressBar
   } = props
 
