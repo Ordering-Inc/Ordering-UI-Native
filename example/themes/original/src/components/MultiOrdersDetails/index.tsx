@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useLanguage, useUtils, useToast, ToastType, MultiOrdersDetails as MultiOrdersDetailsController } from 'ordering-components/native'
+import { useLanguage, useUtils, useToast, ToastType, useConfig, MultiOrdersDetails as MultiOrdersDetailsController } from 'ordering-components/native'
 import { View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OText, OButton } from '../shared'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { SingleOrderCard } from './SingleOrderCard'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { getOrderStatus } from '../../utils'
 
 import {
   OrdersDetailsContainer,
@@ -16,9 +17,11 @@ import {
   InfoBlock,
   Row,
   OrdersSummary,
-  BorderLine
+  BorderLine,
+  StaturBar
 } from './styles'
 import { NotFoundSource } from '../NotFoundSource'
+import LinearGradient from 'react-native-linear-gradient'
 
 export const MultiOrdersDetailsUI = (props: any) => {
   const {
@@ -38,6 +41,9 @@ export const MultiOrdersDetailsUI = (props: any) => {
       padding: 0,
       marginLeft: -20
     },
+    statusBar: {
+      height: 12,
+    }
   })
 
   const { loading, orders, error } = props.ordersList
@@ -191,6 +197,23 @@ export const MultiOrdersDetailsUI = (props: any) => {
           <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={20}>
             {t('ORDER_SUMMARY', 'Order summary')}
           </OText>
+          {(showBarInOrder.includes(progressBarStyle)) && (
+            <StaturBar isOrderDetails>
+              <LinearGradient
+                start={{ x: 0.0, y: 0.0 }}
+                end={{
+                  x: getOrderStatus(orders[0]?.status)?.percentage || 0,
+                  y: 0,
+                }}
+                locations={[0.9999, 0.9999]}
+                colors={[theme.colors.primary, theme.colors.backgroundGray100]}
+                style={styles.statusBar}
+              />
+            </StaturBar>
+          )}
+          <OText size={14} lineHeight={18} weight={'400'} color={theme.colors.textNormal} mBottom={10}>
+            {getOrderStatus(orders[0]?.status)?.value}
+          </OText>
           {orders.map((order: any) => (
             <Row key={order.id}>
               <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
@@ -252,6 +275,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
                 navigation={navigation}
                 order={order}
                 handleGoToOrderDetails={handleGoToOrderDetails}
+                showProgressBar={showBarInIndividual.includes(progressBarStyle)}
               />
               <Divider />
             </React.Fragment>

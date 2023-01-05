@@ -41,7 +41,7 @@ export const SingleOrderContainer = styled.View`
   padding: 40px 0;
 `
 export const StaturBar = styled.View`
-	margin-top: 30px;
+	margin-top: ${(props: any) => props.isOrderDetails ? '10px' : '30px'};
 	margin-bottom: 10px;
 `
 export const Icons = styled.View`
