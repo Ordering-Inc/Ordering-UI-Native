@@ -288,7 +288,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   color={theme.colors.unselectText}>
                   {t('COMMENT', 'Comment')}
                 </OText>
-                <OText size={12} mLeft={10} color={theme.colors.unselectText}>
+                <OText size={12} mLeft={10} style={{ width: '100%' }} color={theme.colors.unselectText}>
                   {product.comment}
                 </OText>
               </ProductComment>
