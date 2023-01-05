@@ -54,7 +54,9 @@ const MultiCheckoutUI = (props: any) => {
     handleSelectPaymethod,
     handleSelectWallet,
     handlePaymethodDataChange,
-    cartUuid
+    cartUuid,
+    totalCartsFee,
+    cartGroup
   } = props
 
   const theme = useTheme();
@@ -244,7 +246,7 @@ const MultiCheckoutUI = (props: any) => {
                   <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
                 </React.Fragment>
               ))}
-              {openCarts.length === 0 && (
+              {!cartGroup?.loading && openCarts.length === 0 && (
                 <CCNotCarts>
                   <OText size={24} style={{ textAlign: 'center' }}>
                     {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
@@ -258,6 +260,14 @@ const MultiCheckoutUI = (props: any) => {
               )}
               {openCarts.length > 0 && (
                 <ChCartsTotal>
+                  {totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
+                      </OText>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>{parsePrice(totalCartsFee)}</OText>
+                    </View>
+                  )}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
                       {t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
