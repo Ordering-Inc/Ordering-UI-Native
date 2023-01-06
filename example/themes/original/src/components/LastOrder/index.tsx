@@ -6,6 +6,7 @@ import { NotFoundSource } from '../NotFoundSource'
 
 import { ItemWrap } from './styles'
 import { OrdersOptionParams } from '../../types'
+import { getOrderStatus } from '../../utils'
 
 import {
 	Placeholder,
@@ -65,40 +66,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	const formatDate = (dateStr: string) => {
 		return moment(dateStr).format('MMMM DD,YYYY - hh:mm a');
-	}
-
-	const getOrderStatus = (s: string) => {
-		const status = parseInt(s)
-		const orderStatus = [
-			{ key: 0, value: t('PENDING', 'Pending') },
-			{ key: 1, value: t('COMPLETED', 'Completed') },
-			{ key: 2, value: t('REJECTED', 'Rejected') },
-			{ key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business') },
-			{ key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed') },
-			{ key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
-			{ key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
-			{ key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
-			{ key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver') },
-			{ key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver') },
-			{ key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver') },
-			{ key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver') },
-			{ key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') },
-			{ key: 13, value: t('PREORDER', 'PreOrder') },
-			{ key: 14, value: t('ORDER_NOT_READY', 'Order not ready') },
-			{ key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer') },
-			{ key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer') },
-			{ key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer') },
-			{ key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
-			{ key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
-			{ key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
-			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
-			{ key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
-      		{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
-		]
-
-		const objectStatus = orderStatus.find((o) => o.key === status)
-
-		return objectStatus && objectStatus
 	}
 
 	return (
