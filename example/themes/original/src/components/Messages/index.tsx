@@ -13,6 +13,7 @@ import { Header, TitleHeader, Wrapper, QuickMessageContainer, ProfileMessageHead
 import { MessagesParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { getLogisticTag } from '../../utils'
 
 const ORDER_STATUS: any = {
 	0: 'ORDER_STATUS_PENDING',
@@ -120,23 +121,6 @@ const MessagesUI = (props: MessagesParams) => {
 		handleSend && handleSend()
 		setImage && setImage(null)
 		setMessage && setMessage('')
-	}
-
-	const getLogisticTag = (status: any) => {
-		switch (parseInt(status)) {
-			case 0:
-			return t('PENDING', 'Pending')
-			case 1:
-			return t('IN_PROGRESS', 'In progress')
-			case 2:
-			return t('IN_QUEUE', 'In queue')
-			case 3:
-			return t('EXPIRED', 'Expired')
-			case 4:
-			return t('RESOLVED', 'Resolved')
-			default:
-			return t('UNKNOWN', 'Unknown')
-		}
 	}
 
 	const messageConsole = (message: any) => {
