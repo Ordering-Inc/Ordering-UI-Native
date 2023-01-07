@@ -52,15 +52,14 @@ const ProfileListUI = (props: ProfileParams) => {
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const hideProfileImage = theme?.profile?.components?.picture?.hidden
 	const hideOrders = theme?.profile?.components?.orders?.hidden
-	const hideProfile = theme?.bar_menu?.components?.profile?.hidden
-	const hideWallet = theme?.bar_menu?.components?.wallet?.hidden
+	const hideProfile = theme?.profile?.components?.profile?.hidden
+	const hideWallet = theme?.profile?.components?.wallet?.hidden
 	const hideMessages = theme?.bar_menu?.components?.messages?.hidden
 	const hideHelp = theme?.bar_menu?.components?.help?.hidden
 	const hideFavorites = theme?.bar_menu?.components?.favortes?.hidden
 	const hideSession = theme?.bar_menu?.components?.sessions?.hidden
 	const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 	const hideAddressList = theme?.profile?.components?.address_list?.hidden
-	const showCustomerPromotions = !theme?.profile?.components?.promotions?.hidden
 	const showLanguages = !theme?.profile?.components?.languages?.hidden
 	const showNotifications = !theme?.profile?.components?.notification_settings?.hidden
 	const langPickerStyle = StyleSheet.create({
