@@ -12,6 +12,7 @@ import {
 import * as React from 'react';
 import styled, { useTheme } from 'styled-components/native';
 import { OIcon } from './';
+import { css } from 'styled-components';
 
 const StyledButton = styled.View<Props>`
 	background-color: ${(props: any) => props.theme.colors.primary};
@@ -26,6 +27,9 @@ const StyledButton = styled.View<Props>`
 	padding-left: 20px;
 	padding-right: 20px;
 	position: relative;
+	${(props : any) => props?.theme?.general?.components?.buttons?.borderRadius && css`
+      border-radius: ${props?.theme?.general?.components?.buttons?.borderRadius};
+  `}
 `
 const StyledButtonDisabled = styled(StyledButton)`
 	background-color: ${(props: any) => props.theme.colors.disabled};
