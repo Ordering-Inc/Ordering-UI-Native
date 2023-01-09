@@ -41,7 +41,10 @@ const CartUI = (props: any) => {
     commentState,
     onNavigationRedirect,
     handleRemoveOfferClick,
-    isMultiCheckout
+    isMultiCheckout,
+    hideDeliveryFee,
+    hideDriverTip,
+    showGeneralBtn
   } = props
 
   const theme = useTheme();
@@ -191,6 +194,26 @@ const CartUI = (props: any) => {
 
   return (
     <CContainer>
+      {showGeneralBtn && cart?.valid_products &&(
+        <CheckoutAction style={{ marginTop: 0 }}>
+          <OButton
+            text={(subtotalWithTaxes >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+              !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+            ) : !cart?.valid_address ? (
+              `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+            ) : (
+              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+            )}
+            bgColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+            isDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
+            borderColor={theme.colors.primary}
+            imgRightSrc={null}
+            textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+            onClick={() => handleUpsellingPage()}
+            style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+          />
+        </CheckoutAction>
+      )}
       {openUpselling && (
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
@@ -337,7 +360,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && !hideDeliveryFee && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                 <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount ?? cart?.delivery_price)}</OText>
@@ -364,7 +387,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {cart?.driver_tip > 0 && (
+            {cart?.driver_tip > 0 && !hideDriverTip && (
               <OSTable>
                 <OText size={12} lineHeight={18}>
                   {t('DRIVER_TIP', 'Driver tip')}
