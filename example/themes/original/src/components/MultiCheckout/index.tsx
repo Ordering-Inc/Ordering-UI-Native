@@ -246,6 +246,8 @@ const MultiCheckoutUI = (props: any) => {
                     cart={cart}
                     cartuuid={cart.uuid}
                     isMultiCheckout
+                    hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
+                    hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
                   />
                   <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
@@ -271,6 +273,17 @@ const MultiCheckoutUI = (props: any) => {
                         {t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
                       </OText>
                       <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>{parsePrice(totalCartsFee)}</OText>
+                    </View>
+                  )}
+                  {openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
+                    configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {t('DRIVER_TIP', 'Driver tip')}
+                      </OText>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {parsePrice(openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
+                      </OText>
                     </View>
                   )}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
