@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
@@ -17,9 +17,11 @@ export const CartContent = (props: any) => {
 
 	const theme = useTheme();
 	const [, t] = useLanguage()
+	const [{ configs }] = useConfig()
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
 
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
 
 	return (
 		<CCContainer
@@ -32,6 +34,7 @@ export const CartContent = (props: any) => {
 							{cart.products.length > 0 && (
 								<>
 									<Cart
+										showGeneralBtn={i === 0 && isMultiCheckout}
 										singleBusiness={props.singleBusiness}
 										isFranchiseApp={props.isFranchiseApp}
 										cart={cart}
@@ -39,6 +42,7 @@ export const CartContent = (props: any) => {
 										onNavigationRedirect={props.onNavigationRedirect}
 										isCartsLoading={isCartsLoading}
 										setIsCartsLoading={setIsCartsLoading}
+										isMultiCheckout={isMultiCheckout}
 										hideUpselling
 									/>
 									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginTop: 20 }} />
