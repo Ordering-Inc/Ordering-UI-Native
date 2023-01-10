@@ -11,7 +11,7 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
+import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper, WrapTags, TagsContainer } from './styles';
 import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -39,14 +39,19 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		enableIntersection,
 		navigation,
 		businessId,
-		isPreviously
+		isPreviously,
+		viewString
 	} = props;
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
-
+	const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
+	const hideProductLogo = viewString
+		? theme?.[viewString]?.components?.cart?.components?.products?.image?.hidden
+		: theme?.business_view?.components?.products?.components?.product?.components?.image?.hidden
 	const textSize = isChewLayout ? 12 : 10
+	const logoPosition = theme?.business_view?.components?.products?.components?.product?.components?.image?.position
 
 	const styles = StyleSheet.create({
 		container: {
@@ -100,6 +105,11 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			textDecorationLine: 'line-through',
 			marginLeft: 7,
 			marginRight: 7
+		},
+		productTagsStyle: {
+			width: 30,
+    		height: 30,
+			marginRight: 5
 		}
 	});
 
@@ -168,7 +178,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 						(style && { ...style })
 					]}
 				>
-					<View style={{ flexDirection: 'row' }}>
+					<View style={{ flexDirection: logoPosition === 'left' ? 'row-reverse' : 'row' }}>
 						{productAddedToCartLength > 0 && (
 							<QuantityContainer style={[styles.quantityContainer, {
 								transform: [{ translateX: 25 }, { translateY: -25 }],
@@ -205,15 +215,33 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								{product?.offer_price !== null && !!product?.in_offer && (
 									<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 								)}
+								{product?.tags && product?.tags.length > 0 && (
+									<WrapTags>
+										{product?.tags.map((tag: any, i: any) => (
+											<TagsContainer key={i}>
+												<FastImage
+													style={styles.productTagsStyle}
+													source={tag.image ? {
+														uri: optimizeImage(tag.image, 'h_250,c_limit'),
+														priority: FastImage.priority.normal,
+													} : theme?.images?.dummies?.product}
+													resizeMode={FastImage.resizeMode.cover}
+												/>
+											</TagsContainer>
+										))}
+									</WrapTags>
+								)}
 							</PricesContainer>
-							<OText
-								size={textSize}
-								numberOfLines={!isPreviously ? 2 : 1}
-								ellipsizeMode="tail"
-								color={theme.colors.textSecondary}
-								style={styles.line15}>
-								{product?.description}
-							</OText>
+							{!hideProductDescription && (
+								<OText
+									size={textSize}
+									numberOfLines={!isPreviously ? 2 : 1}
+									ellipsizeMode="tail"
+									color={theme.colors.textSecondary}
+									style={styles.line15}>
+									{product?.description}
+								</OText>
+							)}
 							{isPreviously && (
 								<OText
 									size={textSize}
@@ -225,7 +253,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								</OText>
 							)}
 						</CardInfo>
-						<LogoWrapper>
+						<LogoWrapper logoPosition={logoPosition}>
 							{!!product?.ribbon?.enabled && (
 								<RibbonBox
 									bgColor={product?.ribbon?.color}
@@ -244,14 +272,16 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									</OText>
 								</RibbonBox>
 							)}
-							<FastImage
-								style={styles.productStyle}
-								source={product?.images ? {
-									uri: optimizeImage(product?.images, 'h_250,c_limit'),
-									priority: FastImage.priority.normal,
-								} : theme?.images?.dummies?.product}
-								resizeMode={FastImage.resizeMode.cover}
-							/>
+							{!hideProductLogo && (
+								<FastImage
+									style={styles.productStyle}
+									source={product?.images ? {
+										uri: optimizeImage(product?.images, 'h_250,c_limit'),
+										priority: FastImage.priority.normal,
+									} : theme?.images?.dummies?.product}
+									resizeMode={FastImage.resizeMode.cover}
+								/>
+							)}
 						</LogoWrapper>
 
 						{(isSoldOut || maxProductQuantity <= 0) && (

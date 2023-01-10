@@ -318,6 +318,7 @@ export interface SingleProductCardParams {
 	navigation?: any;
 	isPreviously?: any;
 	isProductId?: any;
+	viewString?: string; 
 }
 export interface BusinessInformationParams {
 	navigation?: any,

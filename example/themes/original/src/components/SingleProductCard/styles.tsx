@@ -27,7 +27,17 @@ export const PricesContainer = styled.View`
 
 export const LogoWrapper = styled.View`
   position: relative;
-  margin-left: 12px;
+  margin-left: ${(props) => !props.logoPosition || props.logoPosition === 'right' ? '12px' : '0px'};
+  margin-right: ${(props) => props.logoPosition === 'right' ? '0px' : '12px'};
+`
+export const WrapTags = styled.View`
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+`
+export const TagsContainer = styled.View`
+    display: flex;
+    margin: auto;
 `
 
 export const RibbonBox = styled.View`

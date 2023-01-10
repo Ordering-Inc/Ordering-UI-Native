@@ -123,7 +123,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const activeStatus = [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
-
+  const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
+  const hideDeliveryProgress = theme?.confirmation?.components?.order?.components?.progress?.hidden
+  const hideBusinessPhone = theme?.confirmation?.components?.business?.components?.phone?.hidden
+  const hideBusinessMessages = theme?.confirmation?.components?.business?.components?.messages?.hidden
+  const hideBusinessEmail = theme?.confirmation?.components?.business?.components?.email?.hidden
+  const hideBusinessAddress = theme?.confirmation?.components?.business?.components?.address?.hidden
+  const hideDriverName = theme?.confirmation?.components?.driver?.components?.name?.hidden
+  const hideDriverPhone = theme?.confirmation?.components?.driver?.components?.phone?.hidden
+  const hideDriverMessages = theme?.confirmation?.components?.driver?.components?.messages?.hidden
+  const hideCustomerPhone = theme?.confirmation?.components?.customer?.components?.phone?.hidden
+  const hideCustomerAddress = theme?.confirmation?.components?.customer?.components?.address?.hidden
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -201,7 +211,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     ) && !order.review && !isReviewed && handleClickOrderReview(order)
   }
 
-  
+
   const resfreshOrder = () => {
     getOrder()
   }
@@ -326,7 +336,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [driverLocation]);
 
   return (
-    <OrderDetailsContainer 
+    <OrderDetailsContainer
       keyboardShouldPersistTaps="handled"
       refreshControl={
         <RefreshControl
@@ -399,13 +409,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               style={{ marginTop: Platform.OS === 'ios' ? 0 : 20 }}
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
-              subTitle={<OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+              subTitle={!hideDeliveryDate && <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
                 {
                   activeStatus.includes(order?.status)
                     ? order?.eta_time + 'min'
                     : order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })
+                      ? parseDate(order?.delivery_datetime_utc)
+                      : parseDate(order?.delivery_datetime, { utc: false })
                 }
               </OText>}
             />
@@ -445,7 +455,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       activeOpacity={0.7}
                       style={{ marginTop: 6 }}
                       onPress={() => setIsOrderHistory(true)}
-  
                     >
                       <OText
                         size={12}
@@ -457,26 +466,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       </OText>
                     </TouchableOpacity>
                   </View>
-  
-                  <StaturBar>
-                    <LinearGradient
-                      start={{ x: 0.0, y: 0.0 }}
-                      end={{
-                        x: getOrderStatus(order?.status)?.percentage || 0,
-                        y: 0,
-                      }}
-                      locations={[0.9999, 0.9999]}
-                      colors={[theme.colors.primary, theme.colors.backgroundGray100]}
-                      style={styles.statusBar}
-                    />
-                  </StaturBar>
-                  <OText
-                    size={16}
-                    lineHeight={24}
-                    weight={'600'}
-                    color={theme.colors.textNormal}>
-                    {getOrderStatus(order?.status)?.value}
-                  </OText>
+                  {!hideDeliveryProgress && (
+                    <>
+                      <StaturBar>
+                        <LinearGradient
+                          start={{ x: 0.0, y: 0.0 }}
+                          end={{
+                            x: getOrderStatus(order?.status)?.percentage || 0,
+                            y: 0,
+                          }}
+                          locations={[0.9999, 0.9999]}
+                          colors={[theme.colors.primary, theme.colors.backgroundGray100]}
+                          style={styles.statusBar}
+                        />
+                      </StaturBar>
+                      <OText
+                        size={16}
+                        lineHeight={24}
+                        weight={'600'}
+                        color={theme.colors.textNormal}>
+                        {getOrderStatus(order?.status)?.value}
+                      </OText>
+                    </>
+                  )}
                 </OrderData>
                 <View
                   style={{
@@ -520,7 +532,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {order?.business?.name}
                     </OText>
                     <Icons>
-                      {!!order?.business?.cellphone && (
+                      {!!order?.business?.cellphone && !hideBusinessPhone && (
                         <TouchableOpacity
                           onPress={() => order?.business?.cellphone &&
                             Linking.openURL(`tel:${order?.business?.cellphone}`)
@@ -534,25 +546,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           />
                         </TouchableOpacity>
                       )}
-                      <TouchableOpacity
-                        style={{ paddingStart: 5 }}
-                        onPress={() => handleGoToMessages('business')}>
-                        <OIcon
-                          src={theme.images.general.chat}
-                          width={16}
-                          color={theme.colors.disabled}
-                        />
-                      </TouchableOpacity>
+                      {!hideBusinessMessages && (
+                        <TouchableOpacity
+                          style={{ paddingStart: 5 }}
+                          onPress={() => handleGoToMessages('business')}>
+                          <OIcon
+                            src={theme.images.general.chat}
+                            width={16}
+                            color={theme.colors.disabled}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </Icons>
                   </View>
-                  <OText
-                    size={12}
-                    lineHeight={18}
-                    color={theme.colors.textNormal}
-                    mBottom={2}>
-                    {order?.business?.email}
-                  </OText>
-                  {!!order?.business?.cellphone && (
+                  {!hideBusinessEmail && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.business?.email}
+                    </OText>
+                  )}
+                  {!!order?.business?.cellphone && !hideBusinessPhone && (
                     <OText
                       size={12}
                       lineHeight={18}
@@ -561,9 +577,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {order?.business?.cellphone}
                     </OText>
                   )}
-                  <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                    {order?.business?.address}
-                  </OText>
+                  {!hideBusinessAddress && (
+                    <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+                      {order?.business?.address}
+                    </OText>
+                  )}
                 </View>
                 {directionTypes.includes(order?.delivery_type) && (
                   <OButton
@@ -587,7 +605,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )}
               </OrderBusiness>
             )}
-            
+
             {!isGiftCardOrder && placeSpotTypes.includes(order?.delivery_type) && (
               <PlaceSpotWrapper>
                 <PlaceSpot
@@ -625,14 +643,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     mBottom={2}>
                     {order?.customer?.name} {order?.customer?.lastname}
                   </OText>
-                  <OText
-                    size={12}
-                    lineHeight={18}
-                    color={theme.colors.textNormal}
-                    mBottom={2}>
-                    {order?.customer?.address}
-                  </OText>
-                  {(!!order?.customer?.cellphone) && (
+                  {!hideCustomerAddress && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.customer?.address}
+                    </OText>
+                  )}
+                  {(!!order?.customer?.cellphone && !hideCustomerPhone) && (
                     <OText
                       size={12}
                       lineHeight={18}
@@ -700,23 +720,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                         }}>
-                        <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2} style={{ flexGrow: 1, flexBasis: '80%' }}>
-                          {order?.driver?.name} {order?.driver?.lastname}
-                        </OText>
-                        <Icons>
-                          <TouchableOpacity
-                            onPress={() => handleGoToMessages('driver')}>
-                            <OIcon
-                              src={theme.images.general.chat}
-                              width={16}
-                              color={theme.colors.disabled}
-                            />
-                          </TouchableOpacity>
-                        </Icons>
+                        {!hideDriverName && (
+                          <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2} style={{ flexGrow: 1, flexBasis: '80%' }}>
+                            {order?.driver?.name} {order?.driver?.lastname}
+                          </OText>
+                        )}
+                        {!hideDriverMessages && (
+                          <Icons>
+                            <TouchableOpacity
+                              onPress={() => handleGoToMessages('driver')}>
+                              <OIcon
+                                src={theme.images.general.chat}
+                                width={16}
+                                color={theme.colors.disabled}
+                              />
+                            </TouchableOpacity>
+                          </Icons>
+                        )}
                       </View>
-                      <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
-                        {order?.driver?.cellphone}
-                      </OText>
+                      {!hideDriverPhone && (
+                        <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
+                          {order?.driver?.cellphone}
+                        </OText>
+                      )}
                     </InfoBlock>
                   </Customer>
                 </OrderDriver>
