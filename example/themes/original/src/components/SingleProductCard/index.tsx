@@ -11,7 +11,7 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
+import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper, WrapTags, TagsContainer } from './styles';
 import { StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -105,6 +105,11 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			textDecorationLine: 'line-through',
 			marginLeft: 7,
 			marginRight: 7
+		},
+		productTagsStyle: {
+			width: 30,
+    		height: 30,
+			marginRight: 5
 		}
 	});
 
@@ -209,6 +214,22 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								)}
 								{product?.offer_price !== null && !!product?.in_offer && (
 									<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
+								)}
+								{product?.tags && product?.tags.length > 0 && (
+									<WrapTags>
+										{product?.tags.map((tag: any, i: any) => (
+											<TagsContainer key={i}>
+												<FastImage
+													style={styles.productTagsStyle}
+													source={tag.image ? {
+														uri: optimizeImage(tag.image, 'h_250,c_limit'),
+														priority: FastImage.priority.normal,
+													} : theme?.images?.dummies?.product}
+													resizeMode={FastImage.resizeMode.cover}
+												/>
+											</TagsContainer>
+										))}
+									</WrapTags>
 								)}
 							</PricesContainer>
 							{!hideProductDescription && (
