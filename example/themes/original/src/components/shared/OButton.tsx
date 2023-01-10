@@ -120,7 +120,7 @@ const OButton = (props: Props): React.ReactElement => {
 					<props.icon {...props.iconProps} />
 				) : null}
 				{props.imgLeftSrc ? (
-					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} />
+					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} color={theme.colors.textNormal} />
 				) : null}
 				{props.text ? (
 					<StyledText style={props.textStyle}>{props.text}</StyledText>
