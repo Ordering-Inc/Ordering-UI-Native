@@ -355,6 +355,18 @@ export const priceList = [
   { level: '5', content: '$$$$$' }
 ]
 
+export const getLogisticTag = (status: any) => {
+  const [, t] = useLanguage()
+  const keyList: any = {
+    0: t('PENDING', 'Pending'),
+    1: t('IN_PROGRESS', 'In progress'),
+    2: t('IN_QUEUE', 'In queue'),
+    3: t('EXPIRED', 'Expired'),
+    4: t('RESOLVED', 'Resolved'),
+  }
+  return keyList[status] ? keyList[status] : t('UNKNOWN', 'Unknown')
+}
+
 export const getOrderStatus = (s: string) => {
   const status = parseInt(s);
   const orderStatus = [
