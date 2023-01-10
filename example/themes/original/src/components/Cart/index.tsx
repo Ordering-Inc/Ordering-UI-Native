@@ -70,7 +70,8 @@ const CartUI = (props: any) => {
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
-
+  const hideCartComments = theme?.business_view?.components?.cart?.components?.comments?.hidden
+  const hideCartDiscount = theme?.business_view?.components?.cart?.components?.discount?.hidden
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -251,6 +252,7 @@ const CartUI = (props: any) => {
             offsetDisabled={offsetDisabled}
             onDeleteProduct={handleDeleteClick}
             onEditProduct={handleEditProduct}
+            viewString='business_view'
           />
         ))}
 
@@ -262,7 +264,7 @@ const CartUI = (props: any) => {
                 {parsePrice(cart?.subtotal + getIncludedTaxes())}
               </OText>
             </OSTable>
-            {cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
+            {!hideCartDiscount && cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
                   <OText size={12} lineHeight={18}>
@@ -276,7 +278,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
+              !hideCartDiscount && cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
                 <OSTable key={`${offer.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18}>{offer.name}</OText>
@@ -297,7 +299,7 @@ const CartUI = (props: any) => {
               ))
             }
             {/* <Divider /> */}
-            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+            {!hideCartDiscount && cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
                 {cart?.business?.tax_type === 1 ? (
@@ -363,7 +365,7 @@ const CartUI = (props: any) => {
             {orderState?.options?.type === 1 && cart?.delivery_price > 0 && !hideDeliveryFee && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount ?? cart?.delivery_price)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price)}</OText>
               </OSTable>
             )}
             {
@@ -474,7 +476,7 @@ const CartUI = (props: any) => {
                 </TouchableOpacity>
               </OSTable>
             )}
-            {cart?.status !== 2 && (
+            {cart?.status !== 2 && !hideCartComments && (
               <OSTable>
                 <View style={{ width: '100%', marginTop: 20 }}>
                   <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>

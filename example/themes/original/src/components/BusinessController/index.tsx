@@ -65,6 +65,16 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const windowHeight = Dimensions.get('window').height
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 
+	const hideBusinessLogo = theme?.business_listing_view?.components?.business?.components?.logo?.hidden
+	const hideBusinessFee = theme?.business_listing_view?.components?.business?.components?.fee?.hidden
+	const hideBusinessTime = theme?.business_listing_view?.components?.business?.components?.time?.hidden
+	const hideBusinessDistance = theme?.business_listing_view?.components?.business?.components?.distance?.hidden
+	const hideBusinessReviews = theme?.business_listing_view?.components?.business?.components?.reviews?.hidden
+	const hideBusinessFavorite = theme?.business_listing_view?.components?.business?.components?.favorite?.hidden
+	const hideBusinessOffer = theme?.business_listing_view?.components?.business?.components?.offer?.hidden
+	const hideBusinessHeader = theme?.business_listing_view?.components?.business?.components?.header?.hidden
+	const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
+
 	const textSize = isCustomLayout ? 12 : 10
 	const cardHeight = windowHeight * 0.3
 
@@ -191,20 +201,22 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</RibbonBox>
 					)}
 					<BusinessHero>
-						<FastImage
-							style={{ height: isCustomLayout ? cardHeight * 0.66 : 120 }}
-							source={(businessHeader || business?.header) ? {
-								uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
-								priority: FastImage.priority.normal,
-							} : theme.images.dummies.businessHeader}
-							resizeMode={FastImage.resizeMode.cover}
-						/>
-						{(businessFeatured ?? business?.featured) && (
+						{!hideBusinessHeader && (
+							<FastImage
+								style={{ height: isCustomLayout ? cardHeight * 0.66 : 120 }}
+								source={(businessHeader || business?.header) ? {
+									uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
+									priority: FastImage.priority.normal,
+								} : theme.images.dummies.businessHeader}
+								resizeMode={FastImage.resizeMode.cover}
+							/>
+						)}
+						{(businessFeatured ?? business?.featured) && !hideBusinessFavoriteBadge && (
 							<View style={styles.featured}>
 								<FontAwesomeIcon name="crown" size={26} color="gold" />
 							</View>
 						)}
-						{(!isCustomLayout) && (
+						{(!isCustomLayout) && !hideBusinessOffer && (
 							getBusinessOffer((business?.offers)) &&
 							<OfferBox>
 								<OText
@@ -231,19 +243,21 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					</BusinessHero>
 					<BusinessContent>
 						<BusinessInfo style={isCustomLayout && { position: 'absolute', bottom: 85, left: 15 }}>
-							<BusinessLogo style={styles.businessLogo}>
-								<FastImage
-									style={{ width: 56, height: 56 }}
-									source={(businessLogo || business?.logo) ? {
-										uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
-										priority: FastImage.priority.normal,
-									} : theme.images.dummies.businessLogo}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
-							</BusinessLogo>
-							{!isCustomLayout && (
+							{!hideBusinessLogo && (
+								<BusinessLogo style={styles.businessLogo}>
+									<FastImage
+										style={{ width: 56, height: 56 }}
+										source={(businessLogo || business?.logo) ? {
+											uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
+											priority: FastImage.priority.normal,
+										} : theme.images.dummies.businessLogo}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								</BusinessLogo>
+							)}
+							{!isCustomLayout && (!hideBusinessFavorite || !hideBusinessReviews) && (
 								<ReviewAndFavorite>
-									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && !hideBusinessReviews && (
 										<Reviews>
 											<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
 											<OText size={10} style={{ lineHeight: 15 }}>
@@ -251,15 +265,17 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 											</OText>
 										</Reviews>
 									)}
-									<LottieAnimation
-										type='favorite'
-										onClick={handleChangeFavorite}
-										initialValue={business?.favorite ? 0.75 : 0}
-										toValue={business?.favorite ? 0 : 0.75}
-										disableAnimation={!auth}
-										iconProps={{ color: theme.colors.danger5, size: 18 }}
-										isActive={business?.favorite}
-									/>
+									{!hideBusinessFavorite && (
+										<LottieAnimation
+											type='favorite'
+											onClick={handleChangeFavorite}
+											initialValue={business?.favorite ? 0.75 : 0}
+											toValue={business?.favorite ? 0 : 0.75}
+											disableAnimation={!auth}
+											iconProps={{ color: theme.colors.danger5, size: 18 }}
+											isActive={business?.favorite}
+										/>
+									)}
 								</ReviewAndFavorite>
 							)}
 						</BusinessInfo>
@@ -270,9 +286,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								weight={'500'}>
 								{business?.name}
 							</OText>
-							{isCustomLayout && (
+							{isCustomLayout && (!hideBusinessFavorite || !hideBusinessReviews) && (
 								<ReviewAndFavorite>
-									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && !hideBusinessReviews && (
 										<Reviews>
 											<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
 											<OText size={10} style={{ lineHeight: 15 }}>
@@ -280,15 +296,17 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 											</OText>
 										</Reviews>
 									)}
-									<LottieAnimation
-										type='favorite'
-										onClick={handleChangeFavorite}
-										initialValue={business?.favorite ? 0.75 : 0}
-										toValue={business?.favorite ? 0 : 0.75}
-										disableAnimation={!auth}
-										iconProps={{ color: theme.colors.danger5, size: 18 }}
-										isActive={business?.favorite}
-									/>
+									{!hideBusinessFavorite && (
+										<LottieAnimation
+											type='favorite'
+											onClick={handleChangeFavorite}
+											initialValue={business?.favorite ? 0.75 : 0}
+											toValue={business?.favorite ? 0 : 0.75}
+											disableAnimation={!auth}
+											iconProps={{ color: theme.colors.danger5, size: 18 }}
+											isActive={business?.favorite}
+										/>
+									)}
 								</ReviewAndFavorite>
 							)}
 						</View>
@@ -304,17 +322,21 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								</View>
 							) : (
 								<View style={styles.bullet}>
-									{orderState?.options?.type === 1 && (
+									{orderState?.options?.type === 1 && !hideBusinessFee && (
 										<OText size={textSize} color={theme.colors.textSecondary}>
 											{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
 										</OText>
 									)}
-									<OText size={textSize} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
-										orderState?.options?.type === 1
-											? (businessDeliveryTime ?? business?.delivery_time)
-											: (businessPickupTime ?? business?.pickup_time),
-									)} \u2022 `}</OText>
-									<OText size={textSize} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
+									{!hideBusinessTime && (
+										<OText size={textSize} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
+											orderState?.options?.type === 1
+												? (businessDeliveryTime ?? business?.delivery_time)
+												: (businessPickupTime ?? business?.pickup_time),
+										)} \u2022 `}</OText>
+									)}
+									{!hideBusinessDistance && (
+										<OText size={textSize} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
+									)}
 								</View>
 							)}
 						</Metadata>

@@ -160,6 +160,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const maxLimitLocation =
 		configState?.configs?.meters_to_change_address?.value;
 	const countryCode = configState?.configs?.country_autocomplete?.value
+	const isHideMap = theme?.address?.components?.map?.hidden
+	const isHideIcons = theme?.address?.components?.icons?.hidden
 	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -631,7 +633,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									)}
 							</AutocompleteInput>
 
-							{(locationChange || formState.changes?.location) && (
+							{!isHideMap && (locationChange || formState.changes?.location) && (
 								<View
 									style={{
 										height: 189,
@@ -789,27 +791,29 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 							)}
 						</FormInput>
-						<IconsContainer>
-							{tagsName.map((tag) => (
-								<TouchableOpacity
-									key={tag.value}
-									onPress={() => handleAddressTag(tag.value)}>
-									<View
-										style={{
-											...styles.iconContainer,
-										}}>
-										<OIcon
-											src={tag.icon}
-											width={24}
-											color={
-												addressTag === tag.value ?
-													theme.colors.primary : theme.colors.disabled
-											}
-										/>
-									</View>
-								</TouchableOpacity>
-							))}
-						</IconsContainer>
+						{!isHideIcons && (
+							<IconsContainer>
+								{tagsName.map((tag) => (
+									<TouchableOpacity
+										key={tag.value}
+										onPress={() => handleAddressTag(tag.value)}>
+										<View
+											style={{
+												...styles.iconContainer,
+											}}>
+											<OIcon
+												src={tag.icon}
+												width={24}
+												color={
+													addressTag === tag.value ?
+														theme.colors.primary : theme.colors.disabled
+												}
+											/>
+										</View>
+									</TouchableOpacity>
+								))}
+							</IconsContainer>
+						)}
 					</View>
 
 					<View>

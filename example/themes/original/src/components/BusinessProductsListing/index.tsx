@@ -85,7 +85,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
-
+	const backgroundColor = theme?.business_view?.components?.style?.backgroundColor
 	const styles = StyleSheet.create({
 		mainContainer: {
 			flex: 1
@@ -314,7 +314,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor: backgroundColor }}>
 				<Animated.View style={{ position: 'relative' }}>
 					<TopHeader
 						style={{

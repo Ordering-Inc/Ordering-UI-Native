@@ -30,15 +30,17 @@ export const MyOrders = (props: any) => {
 
   const notOrderOptions = ['business', 'products']
   const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
-  const MyOrdersMenu = [
-    { key: 'orders', value: t('ORDERS', 'Orders') },
-    { key: 'business', value: t('BUSINESS', 'Business') },
-    { key: 'products', value: t('PRODUCTS', 'Products') }
-  ]
+
   const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
   const showNavbar = theme?.bar_menu?.components?.orders?.hidden
   const hideOrdersTheme = theme?.bar_menu?.components?.orders?.hidden
-
+  const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
+  const hideBusinessTab = theme?.orders?.components?.business_tab?.hidden
+  const MyOrdersMenu = [
+    { key: 'orders', value: t('ORDERS', 'Orders'), disabled: false },
+    { key: 'business', value: t('BUSINESS', 'Business'), disabled: hideBusinessTab },
+    { key: 'products', value: t('PRODUCTS', 'Products'), disabled: hideProductsTab }
+  ]
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const handleOnRefresh = () => {
@@ -125,7 +127,7 @@ export const MyOrders = (props: any) => {
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-          {MyOrdersMenu.filter(option => !hideOrders || option.key !== 'orders').map(option => (
+          {MyOrdersMenu.filter(option => (!hideOrders || option.key !== 'orders') && !option.disabled).map(option => (
             <Tab
               key={option.key}
               onPress={() => setSelectedOption(option.key)}
