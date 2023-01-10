@@ -65,9 +65,7 @@ const MultiCheckoutUI = (props: any) => {
       paddingLeft: 40,
       paddingRight: 40
     },
-    wrapperNavbar: Platform.OS === 'ios'
-      ? { paddingVertical: 0, paddingHorizontal: 40 }
-      : { paddingVertical: 20, paddingHorizontal: 40 }
+    wrapperNavbar: { paddingHorizontal: 40 }
   })
 
   const [, { showToast }] = useToast();
@@ -150,15 +148,12 @@ const MultiCheckoutUI = (props: any) => {
       <Container noPadding>
         <View style={styles.wrapperNavbar}>
           <NavBar
-            isVertical
             title={t('CHECKOUT', 'Checkout')}
             titleAlign={'center'}
             onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
             showCall={false}
+            paddingTop={Platform.OS === 'ios' ? 0 : 4}
             btnStyle={{ paddingLeft: 0 }}
-            style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
-            titleWrapStyle={{ paddingHorizontal: 0 }}
-            titleStyle={{ marginRight: 0, marginLeft: 0 }}
           />
         </View>
         <ChContainer style={styles.pagePadding}>
