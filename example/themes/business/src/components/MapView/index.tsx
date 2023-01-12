@@ -103,7 +103,7 @@ const MapViewComponent = (props: MapViewParams) => {
     return () => {
       stopFollowUserLocation();
     };
-  }, []);
+  }, [isFocused]);
 
   useFocusEffect(
     useCallback(() => {
@@ -252,7 +252,7 @@ const MapViewComponent = (props: MapViewParams) => {
                     orderIds={marker.map((order: any) => order.id).join(', ')}
                   />
                 ))}
-                {Object.values(customerMarkerGroups).map((marker: any) =>  (
+                {Object.values(customerMarkerGroups).map((marker: any) => (
                   <RenderMarker
                     key={marker[0]?.customer_id}
                     marker={marker[0]}
