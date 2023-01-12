@@ -356,7 +356,6 @@ export const priceList = [
 ]
 
 export const getLogisticTag = (status: any) => {
-  const [, t] = useLanguage()
   const keyList: any = {
     0: t('PENDING', 'Pending'),
     1: t('IN_PROGRESS', 'In progress'),
