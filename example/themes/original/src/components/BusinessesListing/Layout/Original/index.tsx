@@ -572,7 +572,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</>
 			)}
 
-			<PageBanner position='app_business_listing' />
+			<PageBanner position='app_business_listing' navigation={navigation} />
 
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
