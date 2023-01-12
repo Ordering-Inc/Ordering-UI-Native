@@ -9,10 +9,3 @@ export const PageBannerWrapper = styled.View`
   flex-direction: row;
   align-items: center;
 `
-export const ArrowButtonsContainer = styled.View`
-  position: absolute;
-  z-index: 100;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`
