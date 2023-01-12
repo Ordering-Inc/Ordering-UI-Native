@@ -151,7 +151,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
           order: {
             id: order?.id,
             business_id: order?.business_id,
-            logo: order?.business?.length > 1 ? order?.business?.map?.((business : any) => business?.logo): order?.business?.logo,
+            logo: order?.business?.length > 1 ? order?.business?.map?.((business: any) => business?.logo) : order?.business?.logo,
             driver: order?.driver,
             products: order?.products,
             review: order?.review,
@@ -174,7 +174,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       handleClickOrder(order?.uuid)
       return
     }
-    if (order?.cart_group_id){
+    if (order?.cart_group_id) {
       onNavigationRedirect?.('MultiOrdersDetails', { orderId: order?.cart_group_id });
     } else {
       onNavigationRedirect?.('OrderDetails', { orderId: order?.uuid });
@@ -189,6 +189,15 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     setConfirm({ ...confirm, open: false, title: null })
   }
 
+  const hideBusinessLogo = theme?.orders?.components?.business_logo?.hidden
+  const hideDate = theme?.orders?.components?.date?.hidden
+  const hideBusinessName = theme?.orders?.components?.business_name?.hidden
+  const hideOrderNumber = theme?.orders?.components?.order_number?.hidden
+  const hideReviewOrderButton = theme?.orders?.components?.review_order_button?.hidden
+  const hideReorderButton = theme?.orders?.components?.reorder_button?.hidden
+  const hideFavorite = theme?.orders?.components?.favorite?.hidden
+  const hideOrderStatus = theme?.orders?.components?.order_status?.hidden
+
   return (
     <>
       <CardAnimation
@@ -196,28 +205,26 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
         style={[styles.container]}
       >
         <InnerContainer>
-          {(!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
+          {!hideBusinessLogo && (!!order.business?.logo || theme?.images?.dummies?.businessLogo) && (
             <>
               {order?.business?.length > 1 ? (
                 <MultiLogosContainer>
-                  {order?.business?.map((business: any, i: number) => (
-                    <View key={business?.id}>
-                      {i > 1 ? (
-                        <>
-                          {console.log(order?.business?.length - 2)}
-                        <OText mRight={3}> + {order?.business?.length - 2}</OText>
-                        </>
-                      ) : (
-                        <Logo style={styles.logoWrapper} isMulti>
-                          <OIcon
-                            url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                            src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
-                            style={styles.minilogo}
-                          />
-                        </Logo>
-                      )}
-                    </View>
+                  {order?.business?.map((business: any, i: number) => i < 2 && (
+                    <Logo
+                      isMulti
+                      key={business?.id}
+                      style={styles.logoWrapper}
+                    >
+                      <OIcon
+                        url={optimizeImage(business?.logo, 'h_300,c_limit')}
+                        src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                        style={styles.minilogo}
+                      />
+                    </Logo>
                   ))}
+                  {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
+                    <OText mRight={3}> + {order?.business?.length - 2}</OText>
+                  )}
                 </MultiLogosContainer>
               ) : (
                 <Logo style={styles.logoWrapper}>
@@ -232,11 +239,13 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
           )}
           <CardInfoWrapper>
             <ContentHeader>
-              <View style={{ flex: 1 }}>
-                <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
-                  {order?.business?.length > 1 ? `${t('GROUP_ORDER', 'Group Order')} ${t('No', 'No')}. ${order?.cart_group_id}` : order.business?.name}
-                </OText>
-              </View>
+              {(order?.business?.length > 1 && !hideOrderNumber) || (!order?.business?.length && !hideBusinessName) && (
+                <View style={{ flex: 1 }}>
+                  <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
+                    {order?.business?.length > 1 ? `${t('GROUP_ORDER', 'Group Order')} ${t('No', 'No')}. ${order?.cart_group_id}` : order.business?.name}
+                  </OText>
+                </View>
+              )}
               {!!!pastOrders && (
                 <>
                   {isMessageView ? (
@@ -260,7 +269,8 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
               )}
               {!!pastOrders && (
                 <ButtonWrapper>
-                  {allowedOrderStatus.includes(parseInt(order?.status)) &&
+                  {!hideReviewOrderButton &&
+                    allowedOrderStatus.includes(parseInt(order?.status)) &&
                     !order.review && (
                       <TouchableOpacity
                         onPress={() => handleClickOrderReview(order)}
@@ -270,7 +280,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {order.cart && (
+                  {order.cart && !hideReorderButton && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}
@@ -290,7 +300,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
             <ContentFooter>
               <View style={{ flex: 1 }}>
                 <View style={styles.infoText}>
-                  {(!!!pastOrders || order?.business?.length > 1) && (
+                  {(!!!pastOrders || order?.business?.length > 1) && !hideOrderNumber && (
                     <>
                       <OText
                         size={10}
@@ -313,24 +323,32 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                       </OText>
                     </>
                   )}
+                  {!hideDate && (
+                    <OText
+                      size={10}
+                      lineHeight={15}
+                      color={theme.colors.textSecondary}
+                      style={{ marginVertical: 3 }}
+                      numberOfLines={1}>
+                      {
+                        pastOrders
+                          ? order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })
+                          : order?.eta_time + 'min'
+                      }
+                    </OText>
+                  )}
+                </View>
+                {!hideOrderStatus && (
                   <OText
+                    color={theme.colors.primary}
                     size={10}
                     lineHeight={15}
-                    color={theme.colors.textSecondary}
-                    style={{ marginVertical: 3 }}
                     numberOfLines={1}>
-                    {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
+                    {getOrderStatus(order.status)?.value}
                   </OText>
-                </View>
-                <OText
-                  color={theme.colors.primary}
-                  size={10}
-                  lineHeight={15}
-                  numberOfLines={1}>
-                  {getOrderStatus(order.status)?.value}
-                </OText>
+                )}
               </View>
-              {!isMessageView && !order?.business?.length && (
+              {!isMessageView && !order?.business?.length && !hideFavorite && (
                 <LottieAnimation
                   type='favorite'
                   onClick={handleChangeFavorite}

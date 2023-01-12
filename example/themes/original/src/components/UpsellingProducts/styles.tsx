@@ -48,3 +48,14 @@ export const TopActions = styled.TouchableOpacity`
 	height: 44px;
 	justify-content: center;
 `;
+
+export const CartList = styled.ScrollView`
+  padding: 10px 40px;
+  overflow: visible;
+`
+
+export const CartDivider = styled.View`
+  height: 8px;
+  background-color:  ${(props: any) => props.theme.colors.backgroundGray100};
+  margin: 20px -40px 0;
+`
