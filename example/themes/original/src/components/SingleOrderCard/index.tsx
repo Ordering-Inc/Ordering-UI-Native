@@ -209,24 +209,22 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
             <>
               {order?.business?.length > 1 ? (
                 <MultiLogosContainer>
-                  {order?.business?.map((business: any, i: number) => (
-                    <View key={business?.id}>
-                      {i > 1 ? (
-                        <>
-                          {console.log(order?.business?.length - 2)}
-                          <OText mRight={3}> + {order?.business?.length - 2}</OText>
-                        </>
-                      ) : (
-                        <Logo style={styles.logoWrapper} isMulti>
-                          <OIcon
-                            url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                            src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
-                            style={styles.minilogo}
-                          />
-                        </Logo>
-                      )}
-                    </View>
+                  {order?.business?.map((business: any, i: number) => i < 2 && (
+                    <Logo
+                      isMulti
+                      key={business?.id}
+                      style={styles.logoWrapper}
+                    >
+                      <OIcon
+                        url={optimizeImage(business?.logo, 'h_300,c_limit')}
+                        src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                        style={styles.minilogo}
+                      />
+                    </Logo>
                   ))}
+                  {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
+                    <OText mRight={3}> + {order?.business?.length - 2}</OText>
+                  )}
                 </MultiLogosContainer>
               ) : (
                 <Logo style={styles.logoWrapper}>

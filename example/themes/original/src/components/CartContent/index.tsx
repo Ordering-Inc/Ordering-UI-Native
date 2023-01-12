@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { CCContainer, CCNotCarts, CCList } from './styles';
+import { CCContainer, CCNotCarts, CCList, CheckoutAction } from './styles';
 
 import { Cart } from '../Cart';
 import { OButton, OText } from '../shared';
@@ -22,6 +22,38 @@ export const CartContent = (props: any) => {
 
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
+	const cartsAvailable: any = Object.values(carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+
+	const handleCheckoutRedirect = () => {
+    if (cartsAvailable.length === 1) {
+      onNavigationRedirect('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cartsAvailable[0]?.uuid,
+        businessLogo: cartsAvailable[0]?.business?.logo,
+        businessName: cartsAvailable[0]?.business?.name,
+        cartTotal: cartsAvailable[0]?.total
+      })
+    } else {
+      const groupKeys: any = {}
+      cartsAvailable.forEach((_cart: any) => {
+        groupKeys[_cart?.group?.uuid]
+          ? groupKeys[_cart?.group?.uuid] += 1
+          : groupKeys[_cart?.group?.uuid ?? 'null'] = 1
+      })
+
+      if (
+        (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
+        Object.keys(groupKeys).length > 1
+      ) {
+        onNavigationRedirect('CheckoutNavigator', { screen: 'MultiCart' })
+      } else {
+        onNavigationRedirect('CheckoutNavigator', {
+          screen: 'MultiCheckout',
+          cartUuid: cartsAvailable[0]?.group?.uuid
+        })
+      }
+    }
+	}
 
 	return (
 		<CCContainer
@@ -34,7 +66,6 @@ export const CartContent = (props: any) => {
 							{cart.products.length > 0 && (
 								<>
 									<Cart
-										showGeneralBtn={i === 0 && isMultiCheckout}
 										singleBusiness={props.singleBusiness}
 										isFranchiseApp={props.isFranchiseApp}
 										cart={cart}
@@ -50,6 +81,20 @@ export const CartContent = (props: any) => {
 							)}
 						</CCList>
 					))}
+					{isMultiCheckout && (
+						<CheckoutAction style={{ marginTop: 0 }}>
+							<OButton
+								text={t('CHECKOUT', 'Checkout')}
+								bgColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
+								isDisabled={!cartsAvailable.length}
+								borderColor={theme.colors.primary}
+								imgRightSrc={null}
+								textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+								onClick={() => handleCheckoutRedirect()}
+								style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+							/>
+						</CheckoutAction>
+					)}
 				</>
 			)}
 			{(!carts || carts?.length === 0) && (

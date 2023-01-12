@@ -595,6 +595,8 @@ export interface UpsellingProductsParams {
 	products?: any;
 	onNavigationRedirect?: any;
 	onGoBack?: any;
+	singleBusiness?: any;
+	isFranchiseApp?: any;
 }
 
 export interface GoogleMapsParams {

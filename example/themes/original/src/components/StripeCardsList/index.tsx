@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
 	},
 	cardsList: {
 		width: '100%',
-		maxHeight: 130
+		maxHeight: 150
 	},
 })
 
