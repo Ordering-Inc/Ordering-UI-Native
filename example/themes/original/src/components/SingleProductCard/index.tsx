@@ -11,8 +11,8 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper, WrapTags, TagsContainer } from './styles';
-import { StyleSheet, View } from 'react-native';
+import { CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper, TagsContainer } from './styles';
+import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
@@ -104,7 +104,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			color: '#808080',
 			textDecorationLine: 'line-through',
 			marginLeft: 7,
-			marginRight: 7
+			marginRight: 0
 		},
 		productTagsStyle: {
 			width: 30,
@@ -215,21 +215,29 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								{product?.offer_price !== null && !!product?.in_offer && (
 									<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 								)}
-								{product?.tags && product?.tags.length > 0 && (
-									<WrapTags>
+								{!isPreviously && product?.tags && product?.tags.length > 0 && (
+									<ScrollView
+										showsVerticalScrollIndicator={false}
+										showsHorizontalScrollIndicator={false}
+										horizontal
+										style={{ marginLeft: 10 }}
+										contentContainerStyle={{flexGrow: 1}}
+									>
 										{product?.tags.map((tag: any, i: any) => (
-											<TagsContainer key={i}>
-												<FastImage
-													style={styles.productTagsStyle}
-													source={tag.image ? {
-														uri: optimizeImage(tag.image, 'h_250,c_limit'),
-														priority: FastImage.priority.normal,
-													} : theme?.images?.dummies?.product}
-													resizeMode={FastImage.resizeMode.cover}
-												/>
-											</TagsContainer>
+											<TouchableWithoutFeedback key={i}>
+												<TagsContainer>
+													<FastImage
+														style={styles.productTagsStyle}
+														source={tag.image ? {
+															uri: optimizeImage(tag.image, 'h_250,c_limit'),
+															priority: FastImage.priority.normal,
+														} : theme?.images?.dummies?.product}
+														resizeMode={FastImage.resizeMode.cover}
+													/>
+												</TagsContainer>
+											</TouchableWithoutFeedback>
 										))}
-									</WrapTags>
+									</ScrollView>
 								)}
 							</PricesContainer>
 							{!hideProductDescription && (
