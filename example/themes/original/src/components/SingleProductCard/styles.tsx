@@ -27,7 +27,18 @@ export const PricesContainer = styled.View`
 
 export const LogoWrapper = styled.View`
   position: relative;
-  margin-left: 12px;
+  margin-left: ${(props) => !props.logoPosition || props.logoPosition === 'right' ? '12px' : '0px'};
+  margin-right: ${(props) => props.logoPosition === 'right' ? '0px' : '12px'};
+`
+export const WrapTags = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-left: 10px;
+`
+export const TagsContainer = styled.View`
+    display: flex;
+    margin: auto;
 `
 
 export const RibbonBox = styled.View`
@@ -38,15 +49,12 @@ export const RibbonBox = styled.View`
   background-color: ${(props: any) => props.theme.colors.primary};
   padding: 1px 8px;
   max-width: 60px;
-
   ${(props: any) => props.bgColor && css`
     background-color: ${props.bgColor};
   `}
-
   ${(props: any) => props.isRoundRect && css`
     border-radius: 7.6px;
   `}
-
   ${(props: any) => props.isCapsule && css`
     border-radius: 50px;
   `}
