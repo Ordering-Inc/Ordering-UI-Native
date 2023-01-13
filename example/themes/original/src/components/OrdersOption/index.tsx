@@ -70,23 +70,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	const _orders = customArray || values || []
 	const uniqueOrders: any = []
 
-
 	useEffect(() => {
 		if (loading || error) return
 		const ordersReduced = _orders.map((order: any) => order?.cart_group_id
-		? _orders
-				?.filter((_order : any) => _order?.cart_group_id === order?.cart_group_id)
-				?.reduce((orderCompleted : any, currentOrder : any) => ({
-					...orderCompleted,
-					total: orderCompleted.summary?.total + currentOrder?.summary?.total,
-					business: [orderCompleted.business, currentOrder.business].flat(),
-					business_id: [orderCompleted.business_id, currentOrder.business_id].flat(),
-					id: [orderCompleted.id, currentOrder.id].flat(),
-					review: orderCompleted.review && currentOrder.review,
-					user_review: orderCompleted.user_review && currentOrder.user_review,
-					products: [orderCompleted.products, currentOrder.products].flat()
-				}))
-				: order)
+      ? _orders
+        .filter((_order: any) => _order?.cart_group_id === order?.cart_group_id)
+        .map((_o: any, _: any, _ordersList: any) => {
+          const obj = {
+            ..._o,
+            id: _ordersList.map(o => o.id),
+            review: _o.review,
+            user_review: _o.user_review,
+            total: _ordersList.reduce((acc: any, o: any) => acc + o.summary.total, 0),
+            business: _ordersList.map((o: any) => o.business),
+            business_id: _ordersList.map((o: any) => o.business_id),
+            products: _ordersList.map((o: any) => o.products)
+          }
+          return obj
+        }).find((o: any) => o)
+      : order)
 		const orders = ordersReduced?.filter((order: any) => {
 			if (!order?.cart_group_id) return true
 			const isDuplicate = uniqueOrders.includes(order?.cart_group_id)
