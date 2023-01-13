@@ -33,6 +33,7 @@ export const LogoWrapper = styled.View`
 export const WrapTags = styled.View`
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   margin-left: 10px;
 `
 export const TagsContainer = styled.View`
