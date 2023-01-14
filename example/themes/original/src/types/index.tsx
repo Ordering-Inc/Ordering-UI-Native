@@ -318,6 +318,7 @@ export interface SingleProductCardParams {
 	navigation?: any;
 	isPreviously?: any;
 	isProductId?: any;
+	viewString?: string; 
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -594,6 +595,8 @@ export interface UpsellingProductsParams {
 	products?: any;
 	onNavigationRedirect?: any;
 	onGoBack?: any;
+	singleBusiness?: any;
+	isFranchiseApp?: any;
 }
 
 export interface GoogleMapsParams {

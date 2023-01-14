@@ -3,7 +3,7 @@ import { ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, TextStyle }
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { useTheme } from 'styled-components/native';
+import { useTheme, css } from 'styled-components/native';
 
 const Input = styled.TextInput`
   flex-grow: 1;
@@ -53,6 +53,9 @@ const Wrapper = styled.Pressable`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
+	${(props: any) => props.theme?.general?.components?.inputs?.borderRadius && css`
+      border-radius: ${props?.theme?.general?.components?.inputs?.borderRadius};
+  `}
 `;
 
 const OInput = (props: Props): React.ReactElement => {
@@ -100,7 +103,10 @@ const OInput = (props: Props): React.ReactElement => {
 				ref={(e: any) => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
-				style={props?.inputStyle}
+				style={{
+					color: theme?.general?.components?.inputs?.color,
+					...props?.inputStyle
+				}}
 				onFocus={() => setInputFocused(true)}
 				onBlur={() => setInputFocused(false)}
 			/>

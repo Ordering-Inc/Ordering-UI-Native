@@ -155,6 +155,10 @@ const CheckoutUI = (props: any) => {
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const hideBusinessAddress = theme?.checkout?.components?.business?.components?.address?.hidden
+	const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
+	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden
+	const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -353,7 +357,7 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
 					</ChSection>
 
-					{!isGiftCardCart && (
+					{!isGiftCardCart && !hideBusinessDetails && (
 						<ChSection>
 							<ChBusinessDetails>
 								{
@@ -384,9 +388,11 @@ const CheckoutUI = (props: any) => {
 												<OText size={12} lineHeight={18} weight={'400'}>
 													{businessDetails?.business?.cellphone}
 												</OText>
-												<OText size={12} lineHeight={18} weight={'400'}>
-													{businessDetails?.business?.address}
-												</OText>
+												{!hideBusinessAddress && (
+													<OText size={12} lineHeight={18} weight={'400'}>
+														{businessDetails?.business?.address}
+													</OText>
+												)}
 											</View>
 										</>
 									)}
@@ -402,33 +408,35 @@ const CheckoutUI = (props: any) => {
 							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 						</ChSection>
 					)}
+					{!hideCustomerDetails && (
 
-					<ChSection>
-						<ChUserDetails>
-							{cartState.loading ? (
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
-								</Placeholder>
-							) : (
-								<UserDetails
-									isUserDetailsEdit={isUserDetailsEdit}
-									HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
-									cartStatus={cart?.status}
-									businessId={cart?.business_id}
-									useValidationFields
-									useDefualtSessionManager
-									useSessionUser
-									isCheckout
-									phoneUpdate={phoneUpdate}
-									togglePhoneUpdate={togglePhoneUpdate}
-								/>
-							)}
-						</ChUserDetails>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-					</ChSection>
+						<ChSection>
+							<ChUserDetails>
+								{cartState.loading ? (
+									<Placeholder Animation={Fade}>
+										<PlaceholderLine height={20} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
+									</Placeholder>
+								) : (
+									<UserDetails
+										isUserDetailsEdit={isUserDetailsEdit}
+										HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
+										cartStatus={cart?.status}
+										businessId={cart?.business_id}
+										useValidationFields
+										useDefualtSessionManager
+										useSessionUser
+										isCheckout
+										phoneUpdate={phoneUpdate}
+										togglePhoneUpdate={togglePhoneUpdate}
+									/>
+								)}
+							</ChUserDetails>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
 					{options?.type === 1 && !isGiftCardCart && (
 						<DeliveryOptionsContainer>
@@ -509,7 +517,7 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					{!isGiftCardCart && (
+					{!isGiftCardCart && !hideBusinessMap && (
 						<ChSection>
 							<ChAddress>
 								{(businessDetails?.loading || cartState.loading) ? (
@@ -549,7 +557,7 @@ const CheckoutUI = (props: any) => {
 									<DriverTips
 										uuid={cartUuid}
 										businessId={cart?.business_id}
-										driverTipsOptions={driverTipsOptions}
+										driverTipsOptions={!driverTipsOptions.includes(0) ? [0, ...driverTipsOptions] : driverTipsOptions}
 										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
 										isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
 										driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)

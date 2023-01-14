@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { CContainer, CheckoutAction, Divider, DriverTipsContainer } from './styles';
+import { CContainer, CheckoutAction, DriverTipsContainer } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from '../OrderSummary/styles';
 
@@ -41,7 +41,9 @@ const CartUI = (props: any) => {
     commentState,
     onNavigationRedirect,
     handleRemoveOfferClick,
-    isMultiCheckout
+    isMultiCheckout,
+    hideDeliveryFee,
+    hideDriverTip
   } = props
 
   const theme = useTheme();
@@ -61,13 +63,11 @@ const CartUI = (props: any) => {
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
-  const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
-  const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
-
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
-
+  const hideCartComments = theme?.business_view?.components?.cart?.components?.comments?.hidden
+  const hideCartDiscount = theme?.business_view?.components?.cart?.components?.discount?.hidden
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -104,47 +104,34 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    const cartSelectedHasGroup = cart?.group?.uuid
-    const cartFilterValidation = (cart : any) => cart?.valid && cart?.status !== 2
-    const cartsGroupLength = cartSelectedHasGroup ? Object.values(orderState.carts).filter((_cart : any) => _cart?.group?.uuid === cartSelectedHasGroup && cartFilterValidation(_cart))?.length : 0
-    if (cartsGroupLength > 1 && isCheckoutMultiBusinessEnabled) {
-      props.onNavigationRedirect('CheckoutNavigator', {
-        screen: 'MultiCheckout',
-        cartUuid: cart?.group?.uuid
-      })
-      return
-    }
-    const cartGroupsCount : any = {}
-    Object.values(orderState.carts).filter(_cart => cartFilterValidation(_cart))?.forEach((_cart : any) => {
-      if (cartGroupsCount[_cart?.group?.uuid]) {
-        cartGroupsCount[_cart?.group?.uuid] += 1
-      } else {
-        cartGroupsCount[_cart?.group?.uuid] = 1
-      }
-    })
-    let groupForTheCart
-    const groupForAddCartArray = Object.keys(cartGroupsCount).filter(cartGroupUuid => cartGroupsCount[cartGroupUuid] > 0 && cartGroupsCount[cartGroupUuid] < 5)
-    const max = Math.max(...groupForAddCartArray.map(uuid => cartGroupsCount[uuid]))
-    const indexes = groupForAddCartArray.filter(uuid => cartGroupsCount[uuid] === max)
-    if (indexes?.length > 1) {
-      groupForTheCart = indexes.find(uuid => uuid !== 'undefined')
-    } else {
-      groupForTheCart = indexes[0]
-    }
-    if (isCheckoutMultiBusinessEnabled && openCarts.length > 1 && groupForTheCart) {
-      props.onNavigationRedirect('CheckoutNavigator', {
-        screen: 'MultiCart',
-        cartUuid: cart.uuid, 
-        cartGroup: groupForTheCart === 'undefined' ? 'create' : groupForTheCart
-      })
-    } else {
-      props.onNavigationRedirect('CheckoutNavigator', {
+    const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+    if (cartsAvailable.length === 1) {
+      onNavigationRedirect('CheckoutNavigator', {
         screen: 'CheckoutPage',
-        cartUuid: cart?.uuid,
-        businessLogo: cart?.business?.logo,
-        businessName: cart?.business?.name,
-        cartTotal: cart?.total
+        cartUuid: cartsAvailable[0]?.uuid,
+        businessLogo: cartsAvailable[0]?.business?.logo,
+        businessName: cartsAvailable[0]?.business?.name,
+        cartTotal: cartsAvailable[0]?.total
       })
+    } else {
+      const groupKeys: any = {}
+      cartsAvailable.forEach((_cart: any) => {
+        groupKeys[_cart?.group?.uuid]
+          ? groupKeys[_cart?.group?.uuid] += 1
+          : groupKeys[_cart?.group?.uuid ?? 'null'] = 1
+      })
+
+      if (
+        (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
+        Object.keys(groupKeys).length > 1
+      ) {
+        onNavigationRedirect('CheckoutNavigator', { screen: 'MultiCart' })
+      } else {
+        onNavigationRedirect('CheckoutNavigator', {
+          screen: 'MultiCheckout',
+          cartUuid: cartsAvailable[0]?.group?.uuid
+        })
+      }
     }
   }
 
@@ -228,6 +215,7 @@ const CartUI = (props: any) => {
             offsetDisabled={offsetDisabled}
             onDeleteProduct={handleDeleteClick}
             onEditProduct={handleEditProduct}
+            viewString='business_view'
           />
         ))}
 
@@ -239,7 +227,7 @@ const CartUI = (props: any) => {
                 {parsePrice(cart?.subtotal + getIncludedTaxes())}
               </OText>
             </OSTable>
-            {cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
+            {!hideCartDiscount && cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
                   <OText size={12} lineHeight={18}>
@@ -253,7 +241,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
+              !hideCartDiscount && cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
                 <OSTable key={`${offer.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18}>{offer.name}</OText>
@@ -274,7 +262,7 @@ const CartUI = (props: any) => {
               ))
             }
             {/* <Divider /> */}
-            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+            {!hideCartDiscount && cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
                 {cart?.business?.tax_type === 1 ? (
@@ -337,7 +325,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && !hideDeliveryFee && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                 <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price)}</OText>
@@ -364,7 +352,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {cart?.driver_tip > 0 && (
+            {cart?.driver_tip > 0 && !hideDriverTip && (
               <OSTable>
                 <OText size={12} lineHeight={18}>
                   {t('DRIVER_TIP', 'Driver tip')}
@@ -412,7 +400,7 @@ const CartUI = (props: any) => {
                   <DriverTips
                     uuid={cart?.uuid}
                     businessId={cart?.business_id}
-                    driverTipsOptions={driverTipsOptions}
+                    driverTipsOptions={!driverTipsOptions.includes(0) ? [0, ...driverTipsOptions] : driverTipsOptions}
                     isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
                     isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
                     driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)
@@ -451,7 +439,7 @@ const CartUI = (props: any) => {
                 </TouchableOpacity>
               </OSTable>
             )}
-            {cart?.status !== 2 && (
+            {cart?.status !== 2 && !hideCartComments && (
               <OSTable>
                 <View style={{ width: '100%', marginTop: 20 }}>
                   <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>

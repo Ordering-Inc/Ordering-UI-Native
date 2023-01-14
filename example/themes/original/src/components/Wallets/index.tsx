@@ -72,6 +72,7 @@ const WalletsUI = (props: any) => {
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
   const [openHistory, setOpenHistory] = useState(false)
   const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const hideWalletsTheme = theme?.bar_menu?.components?.wallets?.hidden
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
@@ -120,14 +121,47 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-        <OText
-          size={20}
-          style={{
-            marginTop: 30,
-            color: theme.colors.textNormal,
-          }}
-          weight={Platform.OS === 'ios' ? '600' : 'bold'}
-        >{t('WALLETS', 'Wallets')}</OText>
+        <View style={{
+          ...{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          },
+        }}>
+            {(!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout && (
+              <OButton
+                imgLeftStyle={{ width: 18 }}
+                imgRightSrc={null}
+                style={{
+                  borderWidth: 0,
+                  width: 26,
+                  height: 26,
+                  backgroundColor: '#FFF',
+                  borderColor: '#FFF',
+                  shadowColor: '#FFF',
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  marginTop: 30,
+                }}
+                onClick={goToBack}
+                icon={AntDesignIcon}
+                iconProps={{
+                  name: 'arrowleft',
+                  size: 26
+                }}
+              />
+            )}
+            <OText
+              size={20}
+              style={{
+                marginTop: 30,
+                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 10 : 0,
+                color: theme.colors.textNormal,
+              }}
+              weight={Platform.OS === 'ios' ? '600' : 'bold'}
+            >{t('WALLETS', 'Wallets')}</OText>
+        </View>
           {isChewLayout && (
             <OButton
               text={t('WALLET_HISTORY', 'Wallet history')}
@@ -162,8 +196,8 @@ const WalletsUI = (props: any) => {
                         borderBottomWidth: 1,
                         borderBottomColor:
                           tabSelected === wallet.type
-                          ? theme.colors.textNormal
-                          : theme.colors.border
+                            ? theme.colors.textNormal
+                            : theme.colors.border
                       }}
                     >
                       <OText>

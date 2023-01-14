@@ -553,7 +553,7 @@ export const ProductOptionsUI = (props: any) => {
 										>
 											{(String(img).includes('http') || typeof img === 'number') ? (
 												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 3 / 2 }}
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 16 / 9 }}
 													source={typeof img !== 'number' ? {
 														uri: optimizeImage(img, 'h_1024,c_limit'),
 														priority: FastImage.priority.normal,
@@ -581,7 +581,7 @@ export const ProductOptionsUI = (props: any) => {
 										paddingVertical: 15
 									}}
 								>
-									{gallery?.length > 0 && gallery.map((img, index) => (
+									{gallery?.length > 1 && gallery.map((img, index) => (
 										<TouchableOpacity
 											key={index}
 											onPress={() => handleClickThumb(index)}
