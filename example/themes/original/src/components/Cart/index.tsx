@@ -315,9 +315,11 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                      <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
-                    </TouchableOpacity>
+                    {!offer?.type && (
+                      <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
+                        <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
                     - {parsePrice(offer?.summary?.discount)}
@@ -352,6 +354,12 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
+            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && (
+              <OSTable>
+                <OText size={12} lineHeight={18}>{t('DELIVERY_FEE_AFTER_DISCOUNT', 'Delivery Fee After Discount')}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
+              </OSTable>
+            )}
             {cart?.driver_tip > 0 && !hideDriverTip && (
               <OSTable>
                 <OText size={12} lineHeight={18}>
