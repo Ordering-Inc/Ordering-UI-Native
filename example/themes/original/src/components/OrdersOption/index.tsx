@@ -3,7 +3,6 @@ import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
 import { OText, OButton } from '../shared'
-import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 import { PreviousBusinessOrdered } from './PreviousBusinessOrdered'
@@ -73,22 +72,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	useEffect(() => {
 		if (loading || error) return
 		const ordersReduced = _orders.map((order: any) => order?.cart_group_id
-      ? _orders
-        .filter((_order: any) => _order?.cart_group_id === order?.cart_group_id)
-        .map((_o: any, _: any, _ordersList: any) => {
-          const obj = {
-            ..._o,
-            id: _ordersList.map(o => o.id),
-            review: _o.review,
-            user_review: _o.user_review,
-            total: _ordersList.reduce((acc: any, o: any) => acc + o.summary.total, 0),
-            business: _ordersList.map((o: any) => o.business),
-            business_id: _ordersList.map((o: any) => o.business_id),
-            products: _ordersList.map((o: any) => o.products)
-          }
-          return obj
-        }).find((o: any) => o)
-      : order)
+			? _orders
+				.filter((_order: any) => _order?.cart_group_id === order?.cart_group_id)
+				.map((_o: any, _: any, _ordersList: any) => {
+					const obj = {
+						..._o,
+						id: _ordersList.map(o => o.id),
+						review: _o.review,
+						user_review: _o.user_review,
+						total: _ordersList.reduce((acc: any, o: any) => acc + o.summary.total, 0),
+						business: _ordersList.map((o: any) => o.business),
+						business_id: _ordersList.map((o: any) => o.business_id),
+						products: _ordersList.map((o: any) => o.products)
+					}
+					return obj
+				}).find((o: any) => o)
+			: order)
 		const orders = ordersReduced?.filter((order: any) => {
 			if (!order?.cart_group_id) return true
 			const isDuplicate = uniqueOrders.includes(order?.cart_group_id)
@@ -193,7 +192,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 				</NoOrdersWrapper>
 			)}
-			{(ordersLength?.activeOrdersLength > 0 || ordersLength?.previousOrdersLength > 0) && (
+			{((ordersLength?.activeOrdersLength > 0 && activeOrders) || (ordersLength?.previousOrdersLength > 0 && !activeOrders)) && (
 				<>
 					{((titleContent && ((isBusiness && businessOrderIds?.length > 0) || isProducts)) || !titleContent) && (
 						<OptionTitle titleContent={!!titleContent} isBusinessesSearchList={!!businessesSearchList}>
@@ -206,17 +205,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 							</OText>
 						</OptionTitle>
 					)}
-
-					{!(ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) &&
-						!loading &&
-						orders.filter((order: any) => orderStatus.includes(order.status)).length === 0 &&
-						(
-							<NotFoundSource
-								content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-								image={imageFails}
-								conditioned
-							/>
-						)}
 				</>
 			)}
 			{isBusiness && !!businessesSearchList && businesses?.loading && (
