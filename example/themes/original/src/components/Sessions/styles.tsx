@@ -16,4 +16,5 @@ export const DurationWrapper = styled.View`
 
 export const Container = styled.View`
   padding-top: ${(props: any) => props.pdng};
+  margin-bottom: 50px;
 `
