@@ -32,7 +32,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		setIsScrollAvailable
 	} = props
 
-	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
+	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max || state.quantity === suboption?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
 	const theme = useTheme();
@@ -41,7 +41,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const [showMessage, setShowMessage] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
 
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const iconsSize = isChewLayout ? 20 : 16
 
 	const handleSuboptionClick = () => {
@@ -68,7 +68,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	return (
 		<View>
-			<Container onPress={() => handleSuboptionClick()}>
+			<Container>
 				<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 					{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 						state?.selected ? (

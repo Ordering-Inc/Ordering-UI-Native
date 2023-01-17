@@ -12,10 +12,12 @@ interface Props {
   TextStyle?: TextStyle;
   type?: string;
   hasButton?: boolean;
+  numberOfLines?: number;
+  onTextLayout?: (e : any) => void;
 }
 
 const OLink = (props: Props): React.ReactElement => {
-  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton } = props;
+  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton, numberOfLines, onTextLayout } = props;
   const [, t] = useLanguage();
 
   const handleAlert = () =>
@@ -29,8 +31,19 @@ const OLink = (props: Props): React.ReactElement => {
       ],
     );
 
+  const handleInvalidNumberAlert = () =>
+    Alert.alert(
+      t('ERROR_OPENING_THE_LINK', 'Error opening the link'),
+      t('INVALID_NUMBER', 'Invalid number'),
+      [
+        {
+          text: t('OK', 'Ok'),
+        },
+      ],
+    );
+
   const handleOpenUrl = async (breakFunction = false) => {
-    if(breakFunction) {
+    if (breakFunction) {
       return
     }
     if (!url) {
@@ -40,8 +53,9 @@ const OLink = (props: Props): React.ReactElement => {
 
     try {
       const supported = await Linking.canOpenURL(url);
-
-      if (supported) {
+      if (url && url?.includes('tel:')) {
+        url?.includes('invalid') ? handleInvalidNumberAlert() : await Linking.openURL(url)
+      } else if (supported) {
         await Linking.openURL(url);
       } else {
         handleAlert();
@@ -57,20 +71,26 @@ const OLink = (props: Props): React.ReactElement => {
         <OButton
           onClick={() => handleOpenUrl()}
           text={shorcut} imgRightSrc=''
-          textStyle={{color: 'white'}}
-          style={{width: '100%', alignSelf: 'center', borderRadius: 10}}
+          textStyle={{ color: 'white' }}
+          style={{ width: '100%', alignSelf: 'center', borderRadius: 10 }}
         />
       ) : (
-      <OText
-        style={TextStyle}
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        color={color}>
-        {shorcut}
-      </OText>
+        <OText
+          style={TextStyle}
+          numberOfLines={numberOfLines ?? 1}
+          ellipsizeMode="tail"
+          color={color}
+          onTextLayout={onTextLayout}
+        >
+          {shorcut}
+        </OText>
       )}
     </Pressable>
   );
+};
+
+OLink.defaultProps = {
+  onTextLayout: (e: any) => {}
 };
 
 export default OLink;

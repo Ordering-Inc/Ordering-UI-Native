@@ -23,21 +23,24 @@ export const MyOrders = (props: any) => {
   const [isEmptyBusinesses, setIsEmptyBusinesses] = useState(false)
   const [businessOrderIds, setBusinessOrderIds] = useState([])
   const [ordersLength, setOrdersLength] = useState({
-    activeOrdersLength: 0,
+    activeOrdersLength: null,
     previousOrdersLength: 0,
   });
   const [selectedOption, setSelectedOption] = useState(!hideOrders ? 'orders' : 'business')
 
   const notOrderOptions = ['business', 'products']
   const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
-  const MyOrdersMenu = [
-    { key: 'orders', value: t('ORDERS', 'Orders') },
-    { key: 'business', value: t('BUSINESS', 'Business') },
-    { key: 'products', value: t('PRODUCTS', 'Products') }
-  ]
-  const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
-  const showNavbar = theme?.bar_menu?.components?.orders?.hidden
 
+  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const showNavbar = theme?.bar_menu?.components?.orders?.hidden
+  const hideOrdersTheme = theme?.bar_menu?.components?.orders?.hidden
+  const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
+  const hideBusinessTab = theme?.orders?.components?.business_tab?.hidden
+  const MyOrdersMenu = [
+    { key: 'orders', value: t('ORDERS', 'Orders'), disabled: false },
+    { key: 'business', value: t('BUSINESS', 'Business'), disabled: hideBusinessTab },
+    { key: 'products', value: t('PRODUCTS', 'Products'), disabled: hideProductsTab }
+  ]
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const handleOnRefresh = () => {
@@ -68,7 +71,6 @@ export const MyOrders = (props: any) => {
 
   return (
     <Container
-      pt={0}
       noPadding
       refreshControl={
         <RefreshControl
@@ -84,12 +86,11 @@ export const MyOrders = (props: any) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            paddingHorizontal: 40,
-            marginTop: Platform.OS === 'android' ? 50 : 30,
+            paddingHorizontal: isChewLayout ? 20 : 40,
           },
           ...props.titleStyle
         }}>
-          {!props.hideBackBtn && (
+          {(!props.hideBackBtn || !hideOrdersTheme) && !isChewLayout && (
             <OButton
               imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
@@ -101,7 +102,8 @@ export const MyOrders = (props: any) => {
                 borderColor: '#FFF',
                 shadowColor: '#FFF',
                 paddingLeft: 0,
-                paddingRight: 0
+                paddingRight: 0,
+                marginTop: 50,
               }}
               onClick={goToBack}
               icon={AntDesignIcon}
@@ -111,7 +113,7 @@ export const MyOrders = (props: any) => {
               }}
             />
           )}
-          <HeaderTitle ph={0} text={t('MY_ORDERS', 'My Orders')} />
+          <HeaderTitle ph={10} text={t('MY_ORDERS', 'My Orders')} />
         </View>
       )}
       {!hideOrders && !isChewLayout && !showNavbar && (
@@ -121,11 +123,11 @@ export const MyOrders = (props: any) => {
         <ScrollView
           horizontal
           style={{ ...styles.container, borderBottomWidth: 1 }}
-          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : 40 }}
+          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : isChewLayout ? 20 : 40 }}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-          {MyOrdersMenu.filter(option => !hideOrders || option.key !== 'orders').map(option => (
+          {MyOrdersMenu.filter(option => (!hideOrders || option.key !== 'orders') && !option.disabled).map(option => (
             <Tab
               key={option.key}
               onPress={() => setSelectedOption(option.key)}
@@ -145,19 +147,17 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          {ordersLength?.activeOrdersLength > 0 && (
-            <View style={{ paddingLeft: 40, paddingRight: 40 }}>
-              <OrdersOption
-                {...props}
-                activeOrders
-                ordersLength={ordersLength}
-                setOrdersLength={setOrdersLength}
-                setRefreshOrders={setRefreshOrders}
-                refreshOrders={refreshOrders}
-              />
-            </View>
-          )}
-          <View style={{ paddingLeft: 40, paddingRight: 40 }}>
+          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+            <OrdersOption
+              {...props}
+              activeOrders
+              ordersLength={ordersLength}
+              setOrdersLength={setOrdersLength}
+              setRefreshOrders={setRefreshOrders}
+              refreshOrders={refreshOrders}
+            />
+          </View>
+          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
             <OrdersOption
               {...props}
               ordersLength={ordersLength}

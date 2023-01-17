@@ -31,12 +31,14 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
-
+	const orderTypeTitle = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.title
+	const orderTypeDescription = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.description
+	const orderTypeCallAction = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.call_to_action
 	const items = _orderTypes.map((type) => {
 		return {
 			value: type.value,
-			label: t(type.content, type.content),
-			description: t(type.description, 'Lorem ipsum dolor sit amet, consectetur.')
+			label: orderTypeTitle(type.value) || t(type.content, type.content),
+			description: orderTypeDescription(type.value) || t(type.description, 'Lorem ipsum dolor sit amet, consectetur.')
 		}
 	})
 
@@ -96,7 +98,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 					<NavBar
 						onActionLeft={() => goToBack()}
 						btnStyle={{ paddingLeft: 0, width: 50 }}
-						paddingTop={0}
+						paddingTop={Platform.OS === 'ios' ? 10 : 0}
 						style={{ paddingBottom: 0 }}
 						title={t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will your order type?')}
 						titleAlign={'center'}
@@ -113,7 +115,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 													<OText size={12} lineHeight={18} color={theme.colors.white} weight={Platform.OS === 'android' ? 'bold' : '600'}>{item?.label}</OText>
 													<OText size={10} lineHeight={15} color={theme.colors.white}>{item?.description}</OText>
 													<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-														<OText size={10} lineHeight={15} color={theme.colors.white}>{t('START_MY_ORDER', 'Start my order')}</OText>
+														<OText size={10} lineHeight={15} color={theme.colors.white}>{orderTypeCallAction(item?.value) || t('START_MY_ORDER', 'Start my order')}</OText>
 														<AntDesignIcon name='arrowleft' size={26} color={theme.colors.white} style={{ transform: [{ rotate: '180deg' }], marginStart: 4 }} />
 													</View>
 												</MaskCont>

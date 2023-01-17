@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -30,7 +30,6 @@ import {
 	WrapSearchBar,
 	WrapContent,
 	FiltProductsContainer,
-	ContainerSafeAreaView,
 	BackgroundGray,
 	ProfessionalFilterWrapper,
 	NearBusiness,
@@ -67,6 +66,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		getNextProducts,
 		handleUpdateProducts,
 		professionalSelected,
+		handleUpdateProfessionals,
 		handleChangeProfessionalSelected,
 		onBusinessClick
 	} = props
@@ -82,10 +82,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const isFocused = useIsFocused();
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
-
+	const backgroundColor = theme?.business_view?.components?.style?.backgroundColor
 	const styles = StyleSheet.create({
 		mainContainer: {
 			flex: 1
@@ -139,7 +139,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
-	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 100
+	const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -156,6 +156,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				code: isProductAddedToCart?.code,
 				quantity: productQuantity + 1
 			}
+			Vibration.vibrate()
 			const cartData = currentCart?.business_id ? currentCart : { business_id: business.id }
 			if (isProductAddedToCart) {
 				await updateProduct(updateCurrentProduct, cartData, isQuickAddProduct)
@@ -184,20 +185,37 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
-		if (isCheckoutMultiBusinessEnabled && openCarts.length > 1) {
-			onRedirect('CheckoutNavigator', {
-				screen: 'MultiCheckout'
-			})
-		} else {
-			onRedirect('CheckoutNavigator', {
-				screen: 'CheckoutPage',
-				cartUuid: currentCart?.uuid,
-				businessLogo: logo,
-				businessName: business?.name,
-				cartTotal: currentCart?.total
-			})
-		}
 		setOpenUpselling(false)
+		setCanOpenUpselling(false)
+		const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+    if (cartsAvailable.length === 1) {
+      props.onNavigationRedirect('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cartsAvailable[0]?.uuid,
+        businessLogo: cartsAvailable[0]?.business?.logo,
+        businessName: cartsAvailable[0]?.business?.name,
+        cartTotal: cartsAvailable[0]?.total
+      })
+    } else {
+      const groupKeys: any = {}
+      cartsAvailable.forEach((_cart: any) => {
+        groupKeys[_cart?.group?.uuid]
+          ? groupKeys[_cart?.group?.uuid] += 1
+          : groupKeys[_cart?.group?.uuid ?? 'null'] = 1
+      })
+
+      if (
+        (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
+        Object.keys(groupKeys).length > 1
+      ) {
+        props.onNavigationRedirect('CheckoutNavigator', { screen: 'MultiCart' })
+      } else {
+        props.onNavigationRedirect('CheckoutNavigator', {
+          screen: 'MultiCheckout',
+          cartUuid: cartsAvailable[0]?.group?.uuid
+        })
+      }
+    }
 	}
 
 	const handleCloseUpsellingPage = () => {
@@ -284,7 +302,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor: backgroundColor }}>
 				<Animated.View style={{ position: 'relative' }}>
 					<TopHeader
 						style={{
@@ -353,7 +371,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					<FiltProductsContainer
 						style={{
 							height: Dimensions.get('window').height - filtProductsHeight,
-							top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight
+							top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight
 						}}
 						contentContainerStyle={{ flexGrow: 1 }}
 					>
@@ -430,7 +448,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							/>
 						</ProfessionalFilterWrapper>
 					)}
-					<PageBanner position='app_business_page' />
+					<PageBanner position='app_business_page' navigation={navigation} />
 					<View
 						style={{
 							height: 8,
@@ -458,6 +476,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						<>
 							<WrapContent
 								onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+								style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
 							>
 								<BusinessProductsList
 									categories={[
@@ -515,7 +534,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-					<View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }}>
+					<View style={{ marginBottom: 0 }}>
 						<FloatingButton
 							btnText={
 								openUpselling
@@ -530,7 +549,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
 							btnRightValue={parsePrice(currentCart?.total)}
 							disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
-							hideButton={isCheckoutMultiBusinessEnabled}
 							handleClick={() => setOpenUpselling(true)}
 						/>
 					</View>
@@ -571,6 +589,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					professionalList={business?.professionals}
 					professionalSelected={professionalSelected}
 					handleChangeProfessional={handleChangeProfessionalSelected}
+					handleChangeProfessional={handleChangeProfessionalSelected}
+					handleUpdateProfessionals={handleUpdateProfessionals}
 					onSave={() => setOpenService(false)}
 					onClose={() => setOpenService(false)}
 				/>

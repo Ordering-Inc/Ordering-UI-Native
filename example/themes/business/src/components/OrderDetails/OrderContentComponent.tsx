@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 import { OButton, OText, OLink, OModal } from '../shared'
 import {
@@ -43,6 +43,9 @@ export const OrderContentComponent = (props: OrderContent) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [openReviewModal, setOpenReviewModal] = useState(false)
+
+  const [isReadMore, setIsReadMore] = useState(false)
+  const [lengthMore, setLengthMore] = useState(false)
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
@@ -90,6 +93,14 @@ export const OrderContentComponent = (props: OrderContent) => {
   const getIncludedTaxesDiscounts = () => {
     return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
+
+  const containsOnlyNumbers = (str: string) => {
+    return /^\d+$/.test(str);
+  }
+
+  const onTextLayout = useCallback((e: any) => {
+    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
+  },[]);
 
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
@@ -148,7 +159,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               <View style={styles.linkWithIcons}>
                 <OLink
                   PressStyle={styles.linkWithIcons}
-                  url={`tel:${order?.business?.cellphone}`}
+                  url={`tel:${containsOnlyNumbers(order?.business?.cellphone) ? order?.business?.cellphone : 'invalid'}`}
                   shorcut={`${order?.business?.cellphone}`}
                   TextStyle={styles.textLink}
                 />
@@ -159,7 +170,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               <View style={styles.linkWithIcons}>
                 <OLink
                   PressStyle={styles.linkWithIcons}
-                  url={`tel:${order?.business?.phone}`}
+                  url={`tel:${containsOnlyNumbers(order?.business?.cellphone) ? order?.business?.phone : 'invalid'}`}
                   shorcut={order?.business?.phone}
                   TextStyle={styles.textLink}
                 />
@@ -176,6 +187,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 ios: `maps:0,0?q=${order?.business?.address}`,
                 android: `geo:0,0?q=${order?.business?.address}`,
               })}
+              numberOfLines={2}
               shorcut={order?.business?.address}
               TextStyle={styles.textLink}
             />
@@ -274,7 +286,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={styles.linkWithIcons}>
             <OLink
               PressStyle={styles.linkWithIcons}
-              url={`tel:${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
+              url={`tel:${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${containsOnlyNumbers(order?.customer?.cellphone) ? order?.customer?.cellphone : 'invalid'}`}
               shorcut={`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
               TextStyle={styles.textLink}
             />
@@ -285,7 +297,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={styles.linkWithIcons}>
             <OLink
               PressStyle={styles.linkWithIcons}
-              url={`tel:${order?.customer?.phone}`}
+              url={`tel:${containsOnlyNumbers(order?.customer?.phone) ? order?.customer?.phone : 'invalid'}`}
               shorcut={order?.customer?.phone}
               TextStyle={styles.textLink}
             />
@@ -293,17 +305,26 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
 
         {!!order?.customer?.address && (
-          <View style={styles.linkWithIcons}>
-            <OLink
-              PressStyle={styles.linkWithIcons}
-              url={Platform.select({
-                ios: `maps:0,0?q=${order?.customer?.address}`,
-                android: `geo:0,0?q=${order?.customer?.address}`,
-              })}
-              shorcut={order?.customer?.address}
-              TextStyle={styles.textLink}
-            />
-          </View>
+          <>
+            <View style={styles.linkWithIcons}>
+              <OLink
+                PressStyle={{ ...styles.linkWithIcons, marginBottom: 0 }}
+                url={Platform.select({
+                  ios: `maps:0,0?q=${order?.customer?.address}`,
+                  android: `geo:0,0?q=${order?.customer?.address}`,
+                })}
+                onTextLayout={onTextLayout}
+                numberOfLines={isReadMore ? 20 : 2}
+                shorcut={order?.customer?.address}
+                TextStyle={styles.textLink}
+              />
+            </View>
+            {lengthMore && (
+              <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
+                <OText size={12} color={theme.colors.statusOrderBlue}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+              </TouchableOpacity>
+            )}
+          </>
         )}
 
         {!!order?.customer?.internal_number && (

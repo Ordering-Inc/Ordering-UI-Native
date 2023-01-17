@@ -40,7 +40,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { OrderDetailsParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, getOrderStatus } from '../../utils';
 import { OSRow } from '../OrderSummary/styles';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
@@ -48,6 +48,7 @@ import { Placeholder, PlaceholderLine } from 'rn-placeholder';
 import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
 import { PlaceSpot } from '../PlaceSpot'
+import { SendGiftCard } from '../GiftCard/SendGiftCard'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -111,6 +112,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ carts }] = useOrder()
 
   const [isReviewed, setIsReviewed] = useState(false)
+  const [isGiftCardSent, setIsGiftCardSent] = useState(false)
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
   const [refreshing] = useState(false);
@@ -120,7 +122,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const directionTypes = [2, 3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
-
+  const isGiftCardOrder = !order?.business_id
+  const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
+  const hideDeliveryProgress = theme?.confirmation?.components?.order?.components?.progress?.hidden
+  const hideBusinessPhone = theme?.confirmation?.components?.business?.components?.phone?.hidden
+  const hideBusinessMessages = theme?.confirmation?.components?.business?.components?.messages?.hidden
+  const hideBusinessEmail = theme?.confirmation?.components?.business?.components?.email?.hidden
+  const hideBusinessAddress = theme?.confirmation?.components?.business?.components?.address?.hidden
+  const hideDriverName = theme?.confirmation?.components?.driver?.components?.name?.hidden
+  const hideDriverPhone = theme?.confirmation?.components?.driver?.components?.phone?.hidden
+  const hideDriverMessages = theme?.confirmation?.components?.driver?.components?.messages?.hidden
+  const hideCustomerPhone = theme?.confirmation?.components?.customer?.components?.phone?.hidden
+  const hideCustomerAddress = theme?.confirmation?.components?.customer?.components?.address?.hidden
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -129,205 +142,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
     }
   }
-
-  const getOrderStatus = (s: string) => {
-    const status = parseInt(s);
-    const orderStatus = [
-      {
-        key: 0,
-        value: t('PENDING', 'Pending'),
-        slug: 'PENDING',
-        percentage: 0.25,
-        image: theme.images.order.status0,
-      },
-      {
-        key: 1,
-        value: t('COMPLETED', 'Completed'),
-        slug: 'COMPLETED',
-        percentage: 1,
-        image: theme.images.order.status1,
-      },
-      {
-        key: 2,
-        value: t('REJECTED', 'Rejected'),
-        slug: 'REJECTED',
-        percentage: 0,
-        image: theme.images.order.status2,
-      },
-      {
-        key: 3,
-        value: t('DRIVER_IN_BUSINESS', 'Driver in business'),
-        slug: 'DRIVER_IN_BUSINESS',
-        percentage: 0.6,
-        image: theme.images.order.status3,
-      },
-      {
-        key: 4,
-        value: t('PREPARATION_COMPLETED', 'Preparation Completed'),
-        slug: 'PREPARATION_COMPLETED',
-        percentage: 0.7,
-        image: theme.images.order.status4,
-      },
-      {
-        key: 5,
-        value: t('REJECTED_BY_BUSINESS', 'Rejected by business'),
-        slug: 'REJECTED_BY_BUSINESS',
-        percentage: 0,
-        image: theme.images.order.status5,
-      },
-      {
-        key: 6,
-        value: t('REJECTED_BY_DRIVER', 'Rejected by Driver'),
-        slug: 'REJECTED_BY_DRIVER',
-        percentage: 0,
-        image: theme.images.order.status6,
-      },
-      {
-        key: 7,
-        value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'),
-        slug: 'ACCEPTED_BY_BUSINESS',
-        percentage: 0.35,
-        image: theme.images.order.status7,
-      },
-      {
-        key: 8,
-        value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'),
-        slug: 'ACCEPTED_BY_DRIVER',
-        percentage: 0.45,
-        image: theme.images.order.status8,
-      },
-      {
-        key: 9,
-        value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'),
-        slug: 'PICK_UP_COMPLETED_BY_DRIVER',
-        percentage: 0.8,
-        image: theme.images.order.status9,
-      },
-      {
-        key: 10,
-        value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'),
-        slug: 'PICK_UP_FAILED_BY_DRIVER',
-        percentage: 0,
-        image: theme.images.order.status10,
-      },
-      {
-        key: 11,
-        value: t(
-          'DELIVERY_COMPLETED_BY_DRIVER',
-          'Delivery completed by driver',
-        ),
-        slug: 'DELIVERY_COMPLETED_BY_DRIVER',
-        percentage: 1,
-        image: theme.images.order.status11,
-      },
-      {
-        key: 12,
-        value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'),
-        slug: 'DELIVERY_FAILED_BY_DRIVER',
-        percentage: 0,
-        image: theme.images.order.status12,
-      },
-      {
-        key: 13,
-        value: t('PREORDER', 'PreOrder'),
-        slug: 'PREORDER',
-        percentage: 0,
-        image: theme.images.order.status13,
-      },
-      {
-        key: 14,
-        value: t('ORDER_NOT_READY', 'Order not ready'),
-        slug: 'ORDER_NOT_READY',
-        percentage: 0,
-        image: theme.images.order.status13,
-      },
-      {
-        key: 15,
-        value: t(
-          'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-          'Order picked up completed by customer',
-        ),
-        slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-        percentage: 100,
-        image: theme.images.order.status1,
-      },
-      {
-        key: 16,
-        value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'),
-        slug: 'CANCELLED_BY_CUSTOMER',
-        percentage: 0,
-        image: theme.images.order.status2,
-      },
-      {
-        key: 17,
-        value: t(
-          'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
-          'Order not picked up by customer',
-        ),
-        slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
-        percentage: 0,
-        image: theme.images.order.status2,
-      },
-      {
-        key: 18,
-        value: t(
-          'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
-          'Driver almost arrived to business',
-        ),
-        slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
-        percentage: 0.15,
-        image: theme.images.order.status3,
-      },
-      {
-        key: 19,
-        value: t(
-          'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
-          'Driver almost arrived to customer',
-        ),
-        slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
-        percentage: 0.9,
-        image: theme.images.order.status11,
-      },
-      {
-        key: 20,
-        value: t(
-          'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-          'Customer almost arrived to business',
-        ),
-        slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-        percentage: 90,
-        image: theme.images.order.status7,
-      },
-      {
-        key: 21,
-        value: t(
-          'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-          'Customer arrived to business',
-        ),
-        slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-        percentage: 95,
-        image: theme.images.order.status7,
-      },
-      {
-        key: 22,
-        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
-        slug: 'ORDER_LOOKING_FOR_DRIVER',
-        percentage: 35,
-        image: theme.images.order.status8
-      },
-      {
-        key: 23,
-        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
-        slug: 'ORDER_DRIVER_ON_WAY',
-        percentage: 45,
-        image: theme.images.order.status8
-      }
-    ];
-
-    const objectStatus = orderStatus.find((o) => o.key === status);
-
-    return objectStatus && objectStatus;
-  };
 
   const handleGoToMessages = (type: string) => {
     readMessages && readMessages();
@@ -397,7 +211,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     ) && !order.review && !isReviewed && handleClickOrderReview(order)
   }
 
-  
+
   const resfreshOrder = () => {
     getOrder()
   }
@@ -522,7 +336,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [driverLocation]);
 
   return (
-    <OrderDetailsContainer 
+    <OrderDetailsContainer
       keyboardShouldPersistTaps="handled"
       refreshControl={
         <RefreshControl
@@ -595,13 +409,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               style={{ marginTop: Platform.OS === 'ios' ? 0 : 20 }}
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
-              subTitle={<OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+              subTitle={!hideDeliveryDate && <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
                 {
                   activeStatus.includes(order?.status)
                     ? order?.eta_time + 'min'
                     : order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })
+                      ? parseDate(order?.delivery_datetime_utc)
+                      : parseDate(order?.delivery_datetime, { utc: false })
                 }
               </OText>}
             />
@@ -612,175 +426,187 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OText>
               </View>
             )}
-            <OrderInfo>
-              <OrderData>
-                <View style={styles.linkWrapper}>
-                  {
-                    (
-                      parseInt(order?.status) === 1 ||
-                      parseInt(order?.status) === 11 ||
-                      parseInt(order?.status) === 15
-                    ) && !order.review && !isReviewed && (
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={{ marginTop: 6, marginRight: 10 }}
-                        onPress={() => handleClickOrderReview(order)}
-                      >
-                        <OText
-                          size={12}
-                          lineHeight={15}
-                          color={theme.colors.primary}
-                          style={{ textDecorationLine: 'underline' }}
+            {!isGiftCardOrder && (
+              <OrderInfo>
+                <OrderData>
+                  <View style={styles.linkWrapper}>
+                    {
+                      (
+                        parseInt(order?.status) === 1 ||
+                        parseInt(order?.status) === 11 ||
+                        parseInt(order?.status) === 15
+                      ) && !order.review && !isReviewed && (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          style={{ marginTop: 6, marginRight: 10 }}
+                          onPress={() => handleClickOrderReview(order)}
                         >
-                          {t('REVIEW_YOUR_ORDER', 'Review your order')}
-                        </OText>
-                      </TouchableOpacity>
-                    )}
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={{ marginTop: 6 }}
-                    onPress={() => setIsOrderHistory(true)}
-
-                  >
-                    <OText
-                      size={12}
-                      lineHeight={15}
-                      color={theme.colors.primary}
-                      style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
+                          <OText
+                            size={12}
+                            lineHeight={15}
+                            color={theme.colors.primary}
+                            style={{ textDecorationLine: 'underline' }}
+                          >
+                            {t('REVIEW_YOUR_ORDER', 'Review your order')}
+                          </OText>
+                        </TouchableOpacity>
+                      )}
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ marginTop: 6 }}
+                      onPress={() => setIsOrderHistory(true)}
                     >
-                      {t('VIEW_DETAILS', 'View Details')}
-                    </OText>
-                  </TouchableOpacity>
-                </View>
-
-                <StaturBar>
-                  <LinearGradient
-                    start={{ x: 0.0, y: 0.0 }}
-                    end={{
-                      x: getOrderStatus(order?.status)?.percentage || 0,
-                      y: 0,
-                    }}
-                    locations={[0.9999, 0.9999]}
-                    colors={[theme.colors.primary, theme.colors.backgroundGray100]}
-                    style={styles.statusBar}
-                  />
-                </StaturBar>
+                      <OText
+                        size={12}
+                        lineHeight={15}
+                        color={theme.colors.primary}
+                        style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
+                      >
+                        {t('VIEW_DETAILS', 'View Details')}
+                      </OText>
+                    </TouchableOpacity>
+                  </View>
+                  {!hideDeliveryProgress && (
+                    <>
+                      <StaturBar>
+                        <LinearGradient
+                          start={{ x: 0.0, y: 0.0 }}
+                          end={{
+                            x: getOrderStatus(order?.status)?.percentage || 0,
+                            y: 0,
+                          }}
+                          locations={[0.9999, 0.9999]}
+                          colors={[theme.colors.primary, theme.colors.backgroundGray100]}
+                          style={styles.statusBar}
+                        />
+                      </StaturBar>
+                      <OText
+                        size={16}
+                        lineHeight={24}
+                        weight={'600'}
+                        color={theme.colors.textNormal}>
+                        {getOrderStatus(order?.status)?.value}
+                      </OText>
+                    </>
+                  )}
+                </OrderData>
+                <View
+                  style={{
+                    height: 8,
+                    backgroundColor: theme.colors.backgroundGray100,
+                    marginTop: 18,
+                    marginHorizontal: -40,
+                  }}
+                />
+              </OrderInfo>
+            )}
+          </Header>
+          <OrderContent>
+            {!isGiftCardOrder && (
+              <OrderBusiness>
                 <OText
                   size={16}
                   lineHeight={24}
-                  weight={'600'}
-                  color={theme.colors.textNormal}>
-                  {getOrderStatus(order?.status)?.value}
+                  weight={'500'}
+                  color={theme.colors.textNormal}
+                  mBottom={12}>
+                  {t('FROM', 'From')}
                 </OText>
-              </OrderData>
-              <View
-                style={{
-                  height: 8,
-                  backgroundColor: theme.colors.backgroundGray100,
-                  marginTop: 18,
-                  marginHorizontal: -40,
-                }}
-              />
-            </OrderInfo>
-          </Header>
-          <OrderContent>
-            <OrderBusiness>
-              <OText
-                size={16}
-                lineHeight={24}
-                weight={'500'}
-                color={theme.colors.textNormal}
-                mBottom={12}>
-                {t('FROM', 'From')}
-              </OText>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
                   }}>
-                  <OText
-                    size={13}
-                    lineHeight={20}
-                    color={theme.colors.textNormal}
-                    style={{ flexGrow: 1, flexBasis: '80%' }}>
-                    {order?.business?.name}
-                  </OText>
-                  <Icons>
-                    {!!order?.business?.cellphone && (
-                      <TouchableOpacity
-                        onPress={() => order?.business?.cellphone &&
-                          Linking.openURL(`tel:${order?.business?.cellphone}`)
-                        }
-                        style={{ paddingEnd: 5 }}
-                      >
-                        <OIcon
-                          src={theme.images.general.phone}
-                          width={16}
-                          color={theme.colors.disabled}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    <TouchableOpacity
-                      style={{ paddingStart: 5 }}
-                      onPress={() => handleGoToMessages('business')}>
-                      <OIcon
-                        src={theme.images.general.chat}
-                        width={16}
-                        color={theme.colors.disabled}
-                      />
-                    </TouchableOpacity>
-                  </Icons>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <OText
+                      size={13}
+                      lineHeight={20}
+                      color={theme.colors.textNormal}
+                      style={{ flexGrow: 1, flexBasis: '80%' }}>
+                      {order?.business?.name}
+                    </OText>
+                    <Icons>
+                      {!!order?.business?.cellphone && !hideBusinessPhone && (
+                        <TouchableOpacity
+                          onPress={() => order?.business?.cellphone &&
+                            Linking.openURL(`tel:${order?.business?.cellphone}`)
+                          }
+                          style={{ paddingEnd: 5 }}
+                        >
+                          <OIcon
+                            src={theme.images.general.phone}
+                            width={16}
+                            color={theme.colors.disabled}
+                          />
+                        </TouchableOpacity>
+                      )}
+                      {!hideBusinessMessages && (
+                        <TouchableOpacity
+                          style={{ paddingStart: 5 }}
+                          onPress={() => handleGoToMessages('business')}>
+                          <OIcon
+                            src={theme.images.general.chat}
+                            width={16}
+                            color={theme.colors.disabled}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    </Icons>
+                  </View>
+                  {!hideBusinessEmail && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.business?.email}
+                    </OText>
+                  )}
+                  {!!order?.business?.cellphone && !hideBusinessPhone && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.business?.cellphone}
+                    </OText>
+                  )}
+                  {!hideBusinessAddress && (
+                    <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+                      {order?.business?.address}
+                    </OText>
+                  )}
                 </View>
-                <OText
-                  size={12}
-                  lineHeight={18}
-                  color={theme.colors.textNormal}
-                  mBottom={2}>
-                  {order?.business?.email}
-                </OText>
-                {!!order?.business?.cellphone && (
-                  <OText
-                    size={12}
-                    lineHeight={18}
-                    color={theme.colors.textNormal}
-                    mBottom={2}>
-                    {order?.business?.cellphone}
-                  </OText>
+                {directionTypes.includes(order?.delivery_type) && (
+                  <OButton
+                    text={t('GET_DIRECTIONS', 'Get Directions')}
+                    imgRightSrc=''
+                    textStyle={{ color: theme.colors.white }}
+                    style={{
+                      alignSelf: 'center',
+                      borderRadius: 10,
+                      marginTop: 30
+                    }}
+                    onClick={() => showLocation({
+                      latitude: order?.business?.location?.lat,
+                      longitude: order?.business?.location?.lng,
+                      naverCallerName: 'com.reactnativeappstemplate5',
+                      dialogTitle: t('GET_DIRECTIONS', 'Get Directions'),
+                      dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+                      cancelText: t('CANCEL', 'Cancel'),
+                    })}
+                  />
                 )}
-                <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                  {order?.business?.address}
-                </OText>
-              </View>
-              {directionTypes.includes(order?.delivery_type) && (
-                <OButton
-                  text={t('GET_DIRECTIONS', 'Get Directions')}
-                  imgRightSrc=''
-                  textStyle={{ color: theme.colors.white }}
-                  style={{
-                    alignSelf: 'center',
-                    borderRadius: 10,
-                    marginTop: 30
-                  }}
-                  onClick={() => showLocation({
-                    latitude: order?.business?.location?.lat,
-                    longitude: order?.business?.location?.lng,
-                    naverCallerName: 'com.reactnativeappstemplate5',
-                    dialogTitle: t('GET_DIRECTIONS', 'Get Directions'),
-                    dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
-                    cancelText: t('CANCEL', 'Cancel'),
-                  })}
-                />
-              )}
-            </OrderBusiness>
-            
-            {placeSpotTypes.includes(order?.delivery_type) && (
+              </OrderBusiness>
+            )}
+
+            {!isGiftCardOrder && placeSpotTypes.includes(order?.delivery_type) && (
               <PlaceSpotWrapper>
                 <PlaceSpot
                   isInputMode
@@ -806,7 +632,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 weight={'500'}
                 color={theme.colors.textNormal}
                 mBottom={12}>
-                {t('TO', 'To')}
+                {isGiftCardOrder ? t('CUSTOMER', 'Customer') : t('TO', 'To')}
               </OText>
               <Customer>
                 <InfoBlock>
@@ -817,14 +643,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     mBottom={2}>
                     {order?.customer?.name} {order?.customer?.lastname}
                   </OText>
-                  <OText
-                    size={12}
-                    lineHeight={18}
-                    color={theme.colors.textNormal}
-                    mBottom={2}>
-                    {order?.customer?.address}
-                  </OText>
-                  {(!!order?.customer?.cellphone) && (
+                  {!hideCustomerAddress && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {order?.customer?.address}
+                    </OText>
+                  )}
+                  {(!!order?.customer?.cellphone && !hideCustomerPhone) && (
                     <OText
                       size={12}
                       lineHeight={18}
@@ -835,7 +663,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   )}
                 </InfoBlock>
               </Customer>
-              {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+              {!isGiftCardOrder && order?.delivery_option !== undefined && order?.delivery_type === 1 && (
                 <View style={{ marginTop: 15 }}>
                   <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
                     {t('DELIVERY_PREFERENCE', 'Delivery Preference')}
@@ -892,23 +720,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                         }}>
-                        <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2} style={{ flexGrow: 1, flexBasis: '80%' }}>
-                          {order?.driver?.name} {order?.driver?.lastname}
-                        </OText>
-                        <Icons>
-                          <TouchableOpacity
-                            onPress={() => handleGoToMessages('driver')}>
-                            <OIcon
-                              src={theme.images.general.chat}
-                              width={16}
-                              color={theme.colors.disabled}
-                            />
-                          </TouchableOpacity>
-                        </Icons>
+                        {!hideDriverName && (
+                          <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2} style={{ flexGrow: 1, flexBasis: '80%' }}>
+                            {order?.driver?.name} {order?.driver?.lastname}
+                          </OText>
+                        )}
+                        {!hideDriverMessages && (
+                          <Icons>
+                            <TouchableOpacity
+                              onPress={() => handleGoToMessages('driver')}>
+                              <OIcon
+                                src={theme.images.general.chat}
+                                width={16}
+                                color={theme.colors.disabled}
+                              />
+                            </TouchableOpacity>
+                          </Icons>
+                        )}
                       </View>
-                      <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
-                        {order?.driver?.cellphone}
-                      </OText>
+                      {!hideDriverPhone && (
+                        <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
+                          {order?.driver?.cellphone}
+                        </OText>
+                      )}
                     </InfoBlock>
                   </Customer>
                 </OrderDriver>
@@ -1017,7 +851,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </Table>
                 ))
               }
-              <Divider />
+              {!isGiftCardOrder && (
+                <Divider />
+              )}
               {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
                 <Table>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
@@ -1191,6 +1027,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </View>
               )}
             </OrderBill>
+            {isGiftCardOrder && order?.products[0]?.gift_card?.status === 'pending' && !isGiftCardSent && (
+              <>
+                <View
+                  style={{
+                    height: 8,
+                    backgroundColor: theme.colors.backgroundGray100,
+                    marginTop: 10,
+                    marginHorizontal: -40,
+                    marginBottom: 20
+                  }}
+                />
+                <SendGiftCard
+                  giftCardId={order?.products[0]?.gift_card?.id}
+                  setIsGiftCardSent={setIsGiftCardSent}
+                />
+              </>
+            )}
           </OrderContent>
         </>
       )}

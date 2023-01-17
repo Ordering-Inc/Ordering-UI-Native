@@ -76,7 +76,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
-  const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 
   const priceList = [
     { level: '1', content: '$' },
@@ -191,7 +191,8 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
 
   const isInteger = (val: any) => Number.isInteger(Number(val)) && !!val
 
-  const onProductClick = (business: any, categoryId: any, productId: any) => {
+
+  const onProductClick = (business: any, categoryId: any, productId: any, product: any) => {
     if (!isInteger(business?.id) ||
       !isInteger(categoryId) ||
       !isInteger(productId) ||
@@ -199,17 +200,20 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       showToast(ToastType.error, t('NOT_AVAILABLE', 'Not Available'))
       return
     }
-
+    const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
+    const productAddedToCartLength = currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === productId ? Cproduct?.quantity : 0) }, 0) || 0
     navigation.navigate('ProductDetails', {
       isRedirect: 'business',
       businessId: business?.id,
       categoryId: categoryId,
       productId: productId,
+      product: product,
       business: {
         store: business.slug,
         header: business.header,
         logo: business.logo,
-      }
+      },
+      productAddedToCartLength
     })
   }
 
@@ -229,18 +233,23 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   }, [isFocused])
 
   return (
-    <BContainer>
+    <BContainer
+      style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+    >
       <SearchWrapper>
         <SearchBar
           lazyLoad
           {...(isChewLayout && { height: 55 })}
-          inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-          placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
+          inputStyle={{ ...styles.searchInput }}
+          placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
           onSearch={(val: string) => handleChangeTermValue(val)}
           value={termValue}
           iconCustomRight={<AntDesignIcon name='filter' size={16} style={{ bottom: 2 }} onPress={() => handleOpenfilters()} />}
         />
       </SearchWrapper>
+      <OText size={12} lineHeight={20} color={theme.colors.textThird} mLeft={5}>
+        {t('TYPE_AT_LEAST_3_CHARACTERS', 'Type at least 3 characters')}
+      </OText>
       {
         noResults && (
           <View>
@@ -267,11 +276,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         />
       )}
 
-      <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
-        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
-          {t('BUSINESSES', 'Businesses')}
-        </OText>
-      </OptionTitle>
+      {businessesSearchList.businesses?.length > 0 && (
+        <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
+          <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
+            {t('BUSINESSES', 'Businesses')}
+          </OText>
+        </OptionTitle>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
           <View
@@ -291,7 +302,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             />
           </View>
         ))}
-        {console.log(screenWidth)}
         {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
           <LoadMoreBusinessContainer>
             <OButton
@@ -359,7 +369,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   product={product}
                   enableIntersection={false}
                   businessId={business?.id}
-                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id)}
+                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id, product)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
                   style={{ width: screenWidth - 80, maxWidth: screenWidth - 80, marginRight: 20 }}

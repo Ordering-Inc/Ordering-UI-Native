@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform, TextInput } from 'react-native';
-import { useLanguage, useUtils, useToast, ToastType, OrderListGroups, useConfig } from 'ordering-components/native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform } from 'react-native';
+import { useLanguage, useUtils, useToast, OrderListGroups, useConfig } from 'ordering-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -20,7 +20,6 @@ import {
   IconWrapper,
   ModalContainer,
   ModalTitle,
-  FilterBtnWrapper,
   TabPressable,
   OrderStatus,
   SlaOption,
@@ -34,42 +33,17 @@ import {
   ItemContent,
   TimerInputWrapper,
   OverLine,
-  Actions,
   InputContainer
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
 
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import ODropDown from '../shared/ODropDown';
-import { OrdersOptionStatus } from '../OrdersOptionStatus'
 import { OrdersOptionCity } from '../OrdersOptionCity';
 import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 import { OrdersOptionDriver } from '../OrdersOptionDriver';
 import { OrdersOptionDate } from '../OrdersOptionDate';
-import { GestureEvent, GestureDetector } from 'react-native-gesture-handler'
-const tabsList: any = {
-  pending: 1,
-  inProgress: 2,
-  completed: 3,
-  cancelled: 4
-};
-
-const tabsListText: any = {
-  1: 'pending',
-  2: 'inProgress',
-  3: 'completed',
-  4: 'cancelled'
-};
-
-const swipeConfig = {
-  velocityThreshold: 0.3,
-  directionalOffsetThreshold: 80
-};
-
 const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
@@ -81,10 +55,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ordersGroup,
     setOrdersGroup,
     orderStatus,
+    ordersFormatted,
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
-    filtered,
     onFiltered,
     handleClickOrder,
     isBusinessApp,
@@ -92,7 +66,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     logisticOrders,
     loadLogisticOrders,
     isLogisticActivated,
-    isAlsea
+    isAlsea,
+    handleChangeOrderStatus,
+    handleSendCustomerReview
   } = props;
 
   const defaultSearchList = {
@@ -122,7 +98,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
-  const [selectedTabStatus, setSelectedTabStatus] = useState([])
+  const [selectedTabStatus, setSelectedTabStatus] = useState<any>([])
   const [hour, setHour] = useState(0)
   const [minute, setMinute] = useState(0)
   const [openedSelect, setOpenedSelect] = useState('')
@@ -346,26 +322,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     })
   }
 
-  const onSwipeLeft = () => {
-    let currentTab = tabsList[currentTabSelected]
-    currentTab = currentTab >= 4 ? null : currentTab + 1
-
-    if (!currentTab) return
-
-    const nextTab = tabsListText[currentTab]
-    nextTab && setCurrentTabSelected(nextTab)
-  }
-
-  const onSwipeRight = () => {
-    let currentTab = tabsList[currentTabSelected]
-    currentTab = currentTab <= 1 ? null : currentTab - 1
-
-    if (!currentTab) return
-
-    const nextTab = tabsListText[currentTab]
-    nextTab && setCurrentTabSelected(nextTab)
-  }
-
   const calculateDate = (type: any, from: any, to: any) => {
     switch (type) {
       case 'today':
@@ -419,14 +375,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   useEffect(() => {
     setSelectedTabStatus(deliveryStatus)
   }, [])
-  
+
   return (
-    // <GestureRecognizer
-    //   onSwipeLeft={onSwipeLeft}
-    //   onSwipeRight={onSwipeRight}
-    //   config={swipeConfig}
-    //   style={{ flex: 1 }}
-    // >
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
@@ -635,12 +585,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             currentTabSelected !== 'logisticOrders' &&
             (
               <PreviousOrders
-                orders={currentOrdersGroup?.orders}
+                orders={ordersFormatted}
+                navigation={props.navigation}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
                 slaSettingTime={slaSettingTime}
                 currentTabSelected={currentTabSelected}
+                appTitle={props.orderDetailsProps?.appTitle}
+                actions={props.orderDetailsProps?.actions}
+                orderTitle={props.orderDetailsProps?.orderTitle}
+                handleChangeOrderStatus={handleChangeOrderStatus}
+                handleSendCustomerReview={handleSendCustomerReview}
               />
             )}
           {!logisticOrders?.error?.length &&
@@ -730,7 +686,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             )}
         </ScrollView>
       </View>
-      {/* </GestureRecognizer> */}
 
       {isBusinessApp && (
         <NewOrderNotification isBusinessApp={isBusinessApp} />
@@ -884,7 +839,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   </ScrollView>
                 </FiltersTab>
                 <DeliveryStatusWrapper>
-                  {selectedTabStatus && selectedTabStatus.length > 0 && selectedTabStatus.map((item, i) => (
+                  {selectedTabStatus && selectedTabStatus.length > 0 && selectedTabStatus.map((item: any, i: number) => (
                     <StatusBlock
                       key={i}
                       item={item}

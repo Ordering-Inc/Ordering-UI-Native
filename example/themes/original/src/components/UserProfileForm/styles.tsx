@@ -9,6 +9,13 @@ export const UserData = styled.View`
   text-align: center;
 `
 
+export const Container = styled.ScrollView`
+    position: relative;
+    flex: 1;
+	  padding-top: ${(props: any) => props.pdng};
+    margin-bottom: 40px;
+`
+
 export const Names = styled.View`
   flex-direction: row;
 `

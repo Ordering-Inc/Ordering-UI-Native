@@ -22,8 +22,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 		disabled,
 		isSecondaryBtn,
 		handleEmpty,
-		iosBottom,
-		hideButton
+		iosBottom
 	} = props;
 
 	const [, t] = useLanguage();
@@ -63,7 +62,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 	return (
 		<Container
 			style={{
-				paddingBottom: Platform.OS === 'ios' ? iosBottom ?? 0 : bottom + 16
+				paddingBottom: Platform.OS === 'ios' ? 20 : bottom + 16
 			}}>
 
 			<View style={styles.infoCont}>
@@ -78,17 +77,15 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 					</View>
 				)}
 			</View>
-			{!hideButton && (
-				<Button
-					style={[isSecondaryBtn ? styles.secondaryBtn : styles.primaryBtn]}
-					onPress={handleButtonClick}
-					disabled={disabled}
-				>
-					<OText color={isSecondaryBtn ? theme.colors.textSecondary : theme.colors.white} lineHeight={24} size={14} weight={'400'}>
-						{btnText}
-					</OText>
-				</Button>
-			)}
+			<Button
+				style={[isSecondaryBtn ? styles.secondaryBtn : styles.primaryBtn]}
+				onPress={handleButtonClick}
+				disabled={disabled}
+			>
+				<OText color={isSecondaryBtn ? theme.colors.textSecondary : theme.colors.white} lineHeight={24} size={14} weight={'400'}>
+					{btnText}
+				</OText>
+			</Button>
 		</Container>
 	);
 };

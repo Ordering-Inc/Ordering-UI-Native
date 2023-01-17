@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Animated } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Animated, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUtils, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -36,6 +36,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [{ parsePrice }] = useUtils();
 
   const [isActive, setActiveState] = useState(false);
+  const [isReadMore, setIsReadMore] = useState(false);
+  const [lengthMore, setLengthMore] = useState(false);
 
   const productInfo = () => {
     if (isCartProduct) {
@@ -107,6 +109,10 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
       setActiveState(true);
     }
   }, []);
+
+  const onTextLayout = useCallback((e: any) => {
+    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
+  },[]);
 
   return (
     <AccordionSection>
@@ -288,9 +294,21 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   color={theme.colors.unselectText}>
                   {t('COMMENT', 'Comment')}
                 </OText>
-                <OText size={12} mLeft={10} color={theme.colors.unselectText}>
+                <OText
+                  size={12}
+                  style={{ width: '100%', paddingLeft: 10 }}
+                  color={theme.colors.unselectText}
+                  onTextLayout={onTextLayout}
+                  numberOfLines={isReadMore ? 15 : 2}
+                  ellipsizeMode="tail"
+                >
                   {product.comment}
                 </OText>
+                {lengthMore && (
+                  <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)} style={{ marginLeft: 10 }}>
+                    <OText size={10} color={theme.colors.statusOrderBlue}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+                  </TouchableOpacity>
+                )}
               </ProductComment>
             )}
           </AccordionContent>

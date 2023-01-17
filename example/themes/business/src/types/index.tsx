@@ -312,6 +312,10 @@ export interface OrdersOptionParams {
   isLogisticActivated?: boolean;
   isAlsea?: boolean;
   checkNotification?: boolean;
+  ordersFormatted?: any;
+  handleChangeOrderStatus?: () => void;
+  handleSendCustomerReview?: () => void;
+  orderDetailsProps?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -570,14 +574,17 @@ export interface AcceptOrRejectOrderParams {
   loading?: boolean;
   action: string;
   orderId?: number;
-  handleUpdateOrder?: (status: number, isAccept: any) => {};
+  handleUpdateOrder?: (p1: any, p2: any) => {};
   notShowCustomerPhone?: boolean | undefined;
-  actions?: actions;
+  actions?: any;
   titleAccept?: textTranslate;
   titleReject?: textTranslate;
   titleNotReady?: textTranslate;
   appTitle?: textTranslate;
   orderTitle?: any
+  isPage?: boolean
+  navigation?: any
+  route?: any
 }
 
 export interface MapViewParams {
@@ -599,6 +606,7 @@ export interface ReviewCustomerParams {
   actionState?: any,
   handleChangeQualification?: any,
   handleSendCustomerReview?: any,
+  handleCustomCustomerReview?: any,
 }
 
 export interface NoNetworkParams {

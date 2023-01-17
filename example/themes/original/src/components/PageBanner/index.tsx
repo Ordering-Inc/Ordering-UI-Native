@@ -1,17 +1,17 @@
 import React, { useRef } from 'react'
 import { useUtils, PageBanner as PageBannerController } from 'ordering-components/native'
-
 import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Carousel from 'react-native-snap-carousel'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useTheme } from 'styled-components/native';
-import { PageBannerWrapper, ArrowButtonsContainer } from './styles'
+import { PageBannerWrapper } from './styles'
 
 const PageBannerUI = (props: any) => {
   const {
-    pageBannerState
+    pageBannerState,
+    navigation
   } = props
 
 	const theme = useTheme();
@@ -25,7 +25,8 @@ const PageBannerUI = (props: any) => {
 			height: 300,
 		},
     swiperButton: {
-			marginHorizontal: 25,
+      position: 'absolute',
+      zIndex: 100,
 			alignItems: 'center',
 			justifyContent: 'center',
 			width: 32,
@@ -39,15 +40,43 @@ const PageBannerUI = (props: any) => {
     }
   })
 
+  const onRedirect = (route: string, params?: any) => {
+		navigation.navigate(route, params)
+	}
+
+  const handleGoToPage = (action: any) => {
+    if (!action?.url) return
+    let slug
+    if (action.type === 'business') {
+      slug = action.url.split('store/')[1]
+      onRedirect('Business', {
+        store: slug
+      })
+    }
+    if (action.type === 'product') {
+      slug = action.url.split('store/')[1]?.split('?')[0]
+      onRedirect('ProductDetails', {
+				businessSlug: slug,
+				businessId: action.business_id,
+        categoryId: action.category_id,
+        productId: action.product_id
+			})
+    }
+  }
+
   const renderItem = ({ item, index }) => {
     return (
-      <View style={styles.sliderWrapper}>
-        <FastImage
-          style={{ height: '100%', width: '100%' }}
-          resizeMode='cover'
-          source={{ uri: optimizeImage(item.url, 'h_300,c_limit') }}
-        />
-      </View>
+      <TouchableOpacity
+        onPress={() => handleGoToPage(item.action)}
+      >
+        <View style={styles.sliderWrapper}>
+          <FastImage
+            style={{ height: '100%', width: '100%' }}
+            resizeMode='cover'
+            source={{ uri: optimizeImage(item.url, 'h_300,c_limit') }}
+          />
+        </View>
+      </TouchableOpacity>
     )
   }
 
@@ -68,28 +97,26 @@ const PageBannerUI = (props: any) => {
         <>
           {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
             <PageBannerWrapper>
-              <ArrowButtonsContainer>
-                <TouchableOpacity
-                  style={styles.swiperButton}
-                  onPress={() => carouselRef.current.snapToPrev()}
-                >
-                  <IconAntDesign
-                    name="caretleft"
-                    color={theme.colors.white}
-                    size={13}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.swiperButton}
-                  onPress={() => carouselRef.current.snapToNext()}
-                >
-                  <IconAntDesign
-                    name="caretright"
-                    color={theme.colors.white}
-                    size={13}
-                  />
-                </TouchableOpacity>
-              </ArrowButtonsContainer>
+              <TouchableOpacity
+                style={[styles.swiperButton, { left: 25 }]}
+                onPress={() => carouselRef.current.snapToPrev()}
+              >
+                <IconAntDesign
+                  name="caretleft"
+                  color={theme.colors.white}
+                  size={13}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.swiperButton, { right: 25 }]}
+                onPress={() => carouselRef.current.snapToNext()}
+              >
+                <IconAntDesign
+                  name="caretright"
+                  color={theme.colors.white}
+                  size={13}
+                />
+              </TouchableOpacity>
               <Carousel
                 ref={carouselRef}
                 loop={pageBannerState.banner?.items.length > 1}

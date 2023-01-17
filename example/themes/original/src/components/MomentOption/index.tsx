@@ -13,7 +13,8 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import {
 	StyleSheet,
 	View,
-	TouchableOpacity
+	TouchableOpacity,
+	Platform
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types';
@@ -253,19 +254,22 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 	return (
 		<>
-			<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
-				<View style={{ paddingBottom: 90 }}>
+			<Container
+				style={{
+					paddingLeft: 40,
+					paddingRight: 40
+				}}>
+				<View style={{ paddingBottom: 90, paddingRight: 20 }}>
 					<NavBar
 						onActionLeft={() => goToBack()}
 						btnStyle={{ paddingLeft: 0 }}
-						paddingTop={0}
 						style={{ paddingBottom: 0 }}
+						paddingTop={Platform.OS === 'ios' ? 10 : 0}
 						title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
 						titleAlign={'center'}
 						titleStyle={{ fontSize: 20, marginRight: 0, marginLeft: 0 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 					/>
-
 					<WrapSelectOption
 						onPress={() => _handleAsap()}
 						disabled={orderState.loading} style={{ alignItems: 'flex-start' }}>

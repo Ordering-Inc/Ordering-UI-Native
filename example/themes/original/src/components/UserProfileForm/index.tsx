@@ -16,9 +16,8 @@ import { ProfileParams } from '../../types';
 import { UserFormDetailsUI } from '../UserFormDetails';
 
 import { OIcon, OIconButton, OModal } from '../shared';
-import { CenterView } from './styles';
+import { CenterView, Container } from './styles';
 import NavBar from '../NavBar';
-import { Container } from '../../layouts/Container';
 import { VerifyPhone } from '../VerifyPhone'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FastImage from 'react-native-fast-image'
@@ -50,11 +49,6 @@ const ProfileUI = (props: ProfileParams) => {
 			shadowRadius: 2,
 			shadowOpacity: 0.2,
 			backgroundColor: theme.colors.white,
-		},
-		pagePadding: {
-			paddingLeft: 40,
-			paddingRight: 40,
-			justifyContent: 'center',
 		},
 		navBarStyle: {
 			paddingLeft: 40,
@@ -284,17 +278,18 @@ const ProfileUI = (props: ProfileParams) => {
 
 	return (
 		<>
-			<NavBar
-				title={t('ACCOUNT', 'Account')}
-				titleAlign={'center'}
-				onActionLeft={() => navigation.goBack()}
-				showCall={false}
-				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 }}
-			/>
-			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-				<Container noPadding>
-
-					<CenterView style={styles.pagePadding}>
+			<Container
+				pdng={Platform.OS === 'ios' ? '20px' : '10px'}
+			>
+				<NavBar
+					title={t('ACCOUNT', 'Account')}
+					titleAlign={'center'}
+					onActionLeft={() => navigation.goBack()}
+					showCall={false}
+					btnStyle={{ paddingLeft: 0 }}
+				/>
+				<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+					<CenterView>
 						<View style={styles.photo}>
 							{user?.photo ? (
 								<FastImage
@@ -317,17 +312,15 @@ const ProfileUI = (props: ProfileParams) => {
 							onClick={() => handleImagePicker()}
 						/>
 					</CenterView>
-					<View style={{ height: 8, marginLeft: -40, marginRight: -40, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
+					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
 					<Spinner visible={formState?.loading || verifyPhoneState?.loading} />
-					<View style={styles.pagePadding}>
-						<UserFormDetailsUI
-							{...props}
-							isEdit
-							setWillVerifyOtpState={setWillVerifyOtpState}
-						/>
-					</View>
-				</Container>
-			</KeyboardAvoidingView>
+					<UserFormDetailsUI
+						{...props}
+						isEdit
+						setWillVerifyOtpState={setWillVerifyOtpState}
+					/>
+				</KeyboardAvoidingView>
+			</Container>
 			<OModal
 				open={isModalVisible}
 				onClose={() => setIsModalVisible(false)}

@@ -148,12 +148,17 @@ const CheckoutUI = (props: any) => {
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
+	const isGiftCardCart = !cart?.business_id
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const hideBusinessAddress = theme?.checkout?.components?.business?.components?.address?.hidden
+	const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
+	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden
+	const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -190,6 +195,7 @@ const CheckoutUI = (props: any) => {
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && !requiredFields?.length || forcePlace) {
+			Vibration.vibrate()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -270,7 +276,11 @@ const CheckoutUI = (props: any) => {
 
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
-			onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
+			if (cart?.business?.slug) {
+				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
+			} else {
+				onNavigationRedirect('Wallets')
+			}
 		}
 	}, [cart?.products])
 
@@ -302,7 +312,7 @@ const CheckoutUI = (props: any) => {
 						titleAlign={'center'}
 						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 						showCall={false}
-						btnStyle={{ paddingLeft: 0 }}
+						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
 					/>
@@ -347,82 +357,88 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
 					</ChSection>
 
-					<ChSection>
-						<ChBusinessDetails>
-							{
-								(businessDetails?.loading || cartState.loading || !businessDetails?.business || Object.values(businessDetails?.business).length === 0) &&
-								!businessDetails?.error &&
-								(
+					{!isGiftCardCart && !hideBusinessDetails && (
+						<ChSection>
+							<ChBusinessDetails>
+								{
+									(businessDetails?.loading || cartState.loading || !businessDetails?.business || Object.values(businessDetails?.business).length === 0) &&
+									!businessDetails?.error &&
+									(
+										<Placeholder Animation={Fade}>
+											<PlaceholderLine height={20} />
+											<PlaceholderLine height={12} />
+											<PlaceholderLine height={12} />
+											<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
+										</Placeholder>
+									)}
+								{
+									!cartState.loading &&
+									businessDetails?.business &&
+									Object.values(businessDetails?.business).length > 0 &&
+									(
+										<>
+											<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
+											<View>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.name}
+												</OText>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.email}
+												</OText>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.cellphone}
+												</OText>
+												{!hideBusinessAddress && (
+													<OText size={12} lineHeight={18} weight={'400'}>
+														{businessDetails?.business?.address}
+													</OText>
+												)}
+											</View>
+										</>
+									)}
+								{businessDetails?.error && businessDetails?.error?.length > 0 && (
+									<View>
+										<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
+										<NotFoundSource
+											content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+										/>
+									</View>
+								)}
+							</ChBusinessDetails>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
+					{!hideCustomerDetails && (
+
+						<ChSection>
+							<ChUserDetails>
+								{cartState.loading ? (
 									<Placeholder Animation={Fade}>
 										<PlaceholderLine height={20} />
 										<PlaceholderLine height={12} />
 										<PlaceholderLine height={12} />
 										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 									</Placeholder>
-								)}
-							{
-								!cartState.loading &&
-								businessDetails?.business &&
-								Object.values(businessDetails?.business).length > 0 &&
-								(
-									<>
-										<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
-										<View>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.name}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.email}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.cellphone}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.address}
-											</OText>
-										</View>
-									</>
-								)}
-							{businessDetails?.error && businessDetails?.error?.length > 0 && (
-								<View>
-									<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
-									<NotFoundSource
-										content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+								) : (
+									<UserDetails
+										isUserDetailsEdit={isUserDetailsEdit}
+										HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
+										cartStatus={cart?.status}
+										businessId={cart?.business_id}
+										useValidationFields
+										useDefualtSessionManager
+										useSessionUser
+										isCheckout
+										phoneUpdate={phoneUpdate}
+										togglePhoneUpdate={togglePhoneUpdate}
 									/>
-								</View>
-							)}
-						</ChBusinessDetails>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-					</ChSection>
+								)}
+							</ChUserDetails>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
-					<ChSection>
-						<ChUserDetails>
-							{cartState.loading ? (
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
-								</Placeholder>
-							) : (
-								<UserDetails
-									isUserDetailsEdit={isUserDetailsEdit}
-									HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
-									cartStatus={cart?.status}
-									businessId={cart?.business_id}
-									useValidationFields
-									useDefualtSessionManager
-									useSessionUser
-									isCheckout
-									phoneUpdate={phoneUpdate}
-									togglePhoneUpdate={togglePhoneUpdate}
-								/>
-							)}
-						</ChUserDetails>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-					</ChSection>
-
-					{options?.type === 1 && (
+					{options?.type === 1 && !isGiftCardCart && (
 						<DeliveryOptionsContainer>
 							{cartState.loading || deliveryOptionSelected === undefined ? (
 								<View style={{ height: 110 }}>
@@ -452,7 +468,7 @@ const CheckoutUI = (props: any) => {
 														<OText
 															size={14}
 														>
-															{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+															{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected)?.label}
 														</OText>
 														<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
 													</DeliveryOptionItem>
@@ -501,28 +517,30 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					<ChSection>
-						<ChAddress>
-							{(businessDetails?.loading || cartState.loading) ? (
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} style={{ marginBottom: 50 }} />
-									<PlaceholderLine height={100} />
-								</Placeholder>
-							) : (
-								<AddressDetails
-									navigation={navigation}
-									location={businessDetails?.business?.location}
-									businessLogo={businessDetails?.business?.logo}
-									isCartPending={cart?.status === 2}
-									uuid={cartUuid}
-									apiKey={configs?.google_maps_api_key?.value}
-									mapConfigs={mapConfigs}
-									HeaderTitle={<HeaderTitle text={t('DELIVERY_ADDRESS', 'Delivery address')} mb={0} />}
-								/>
-							)}
-						</ChAddress>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
-					</ChSection>
+					{!isGiftCardCart && !hideBusinessMap && (
+						<ChSection>
+							<ChAddress>
+								{(businessDetails?.loading || cartState.loading) ? (
+									<Placeholder Animation={Fade}>
+										<PlaceholderLine height={20} style={{ marginBottom: 50 }} />
+										<PlaceholderLine height={100} />
+									</Placeholder>
+								) : (
+									<AddressDetails
+										navigation={navigation}
+										location={businessDetails?.business?.location}
+										businessLogo={businessDetails?.business?.logo}
+										isCartPending={cart?.status === 2}
+										uuid={cartUuid}
+										apiKey={configs?.google_maps_api_key?.value}
+										mapConfigs={mapConfigs}
+										HeaderTitle={<HeaderTitle text={t('DELIVERY_ADDRESS', 'Delivery address')} mb={0} />}
+									/>
+								)}
+							</ChAddress>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
 					{!cartState.loading &&
 						cart &&
@@ -531,6 +549,7 @@ const CheckoutUI = (props: any) => {
 						cart?.status !== 2 &&
 						validationFields?.fields?.checkout?.driver_tip?.enabled &&
 						driverTipsOptions && driverTipsOptions?.length > 0 &&
+						!isGiftCardCart &&
 						(
 							<ChSection>
 								<ChDriverTips>
@@ -538,13 +557,14 @@ const CheckoutUI = (props: any) => {
 									<DriverTips
 										uuid={cartUuid}
 										businessId={cart?.business_id}
-										driverTipsOptions={driverTipsOptions}
-										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+										driverTipsOptions={!driverTipsOptions.includes(0) ? [0, ...driverTipsOptions] : driverTipsOptions}
+										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
 										isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-										driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)
+										driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
 											? cart?.driver_tip
 											: cart?.driver_tip_rate}
 										useOrderContext
+										cart={cart}
 									/>
 								</ChDriverTips>
 							</ChSection>
@@ -566,8 +586,8 @@ const CheckoutUI = (props: any) => {
 								<PaymentOptions
 									cart={cart}
 									isDisabled={cart?.status === 2}
-									businessId={businessDetails?.business?.id}
-									isLoading={businessDetails.loading}
+									businessId={!isGiftCardCart ? businessDetails?.business?.id : -1}
+									isLoading={!isGiftCardCart ? businessDetails.loading : false}
 									paymethods={businessDetails?.business?.paymethods}
 									onPaymentChange={handlePaymethodChange}
 									errorCash={errorCash}
@@ -593,7 +613,7 @@ const CheckoutUI = (props: any) => {
 					)}
 
 
-					{!cartState.loading && placeSpotsEnabled && (
+					{!cartState.loading && placeSpotsEnabled && !isGiftCardCart && (
 						<>
 							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 30, marginHorizontal: -40 }} />
 							<PlaceSpot
@@ -620,18 +640,20 @@ const CheckoutUI = (props: any) => {
 									<>
 										<CartHeader>
 											<HeaderTitle text={t('MOBILE_FRONT_YOUR_ORDER', 'Your order')} mb={0} />
-											<TouchableOpacity
-												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
-											>
-												<OText
-													size={12}
-													lineHeight={15}
-													color={theme.colors.primary}
-													style={{ textDecorationLine: 'underline' }}
+											{!isGiftCardCart && (
+												<TouchableOpacity
+													onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 												>
-													{t('ADD_PRODUCTS', 'Add products')}
-												</OText>
-											</TouchableOpacity>
+													<OText
+														size={12}
+														lineHeight={15}
+														color={theme.colors.primary}
+														style={{ textDecorationLine: 'underline' }}
+													>
+														{t('ADD_PRODUCTS', 'Add products')}
+													</OText>
+												</TouchableOpacity>
+											)}
 										</CartHeader>
 										{isBusinessChangeEnabled && (
 											<TouchableOpacity

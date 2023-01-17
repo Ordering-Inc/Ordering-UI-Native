@@ -249,6 +249,9 @@ export interface BusinessProductsListingParams {
 	handleUpdateProducts?: any;
 	professionalSelected?: any;
 	handleChangeProfessionalSelected?: any;
+	handleUpdateProfessionals?: any;
+	onBusinessClick?: any;
+	onNavigationRedirect?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -315,6 +318,7 @@ export interface SingleProductCardParams {
 	navigation?: any;
 	isPreviously?: any;
 	isProductId?: any;
+	viewString?: string; 
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -434,7 +438,8 @@ export interface ProductItemAccordionParams {
 	onDeleteProduct?: (product: any) => void,
 	onEditProduct?: (product: any) => void,
 	offsetDisabled?: any,
-	isFromCheckout?: any
+	isFromCheckout?: any,
+	isDisabledEdit?: any
 }
 export interface ReviewOrderParams {
 	order?: { id: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
@@ -530,7 +535,6 @@ export interface FloatingButtonParams {
 	handleClick?: any;
 	handleEmpty?: any;
 	iosBottom?: number
-	hideButton?: boolean
 }
 export interface MomentOptionParams {
 	navigation: any;
@@ -591,6 +595,8 @@ export interface UpsellingProductsParams {
 	products?: any;
 	onNavigationRedirect?: any;
 	onGoBack?: any;
+	singleBusiness?: any;
+	isFranchiseApp?: any;
 }
 
 export interface GoogleMapsParams {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RefreshControl } from 'react-native'
+import { Platform, RefreshControl } from 'react-native'
 import { HelpParams } from '../../types'
 import { useLanguage } from 'ordering-components/native'
 import NavBar from '../NavBar'
@@ -31,20 +31,20 @@ export const Help = (props: HelpParams) => {
 
   return (
     <Container
+      pt={Platform.OS === 'ios' ? 20 : 10}
       noPadding
       refreshControl={
-				<RefreshControl
-					refreshing={refreshing}
-					onRefresh={() => handleOnRefresh()}
-				/>
-			}
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => handleOnRefresh()}
+        />
+      }
     >
       <NavBar
         title={t('HELP', 'Help')}
         titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
-        paddingTop={10}
         btnStyle={{ paddingLeft: 0 }}
       />
       <HelpSubItem
@@ -53,7 +53,7 @@ export const Help = (props: HelpParams) => {
         <OText size={14}>{t('HELP_WITH_ORDER', 'Help with an order')}</OText>
       </HelpSubItem>
       <HelpSubItem
-        onPress={() => onRedirect('HelpAccountAndPayment')}      
+        onPress={() => onRedirect('HelpAccountAndPayment')}
       >
         <OText size={14}>{t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}</OText>
       </HelpSubItem>

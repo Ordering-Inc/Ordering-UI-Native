@@ -11,19 +11,17 @@ import {
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
-import { useLanguage, useSession } from 'ordering-components/native';
-import { Content, Timer, TimeField, Header, Action, Comments, CommentsButtonGroup } from './styles';
-import { FloatingButton } from '../FloatingButton';
+import { useLanguage } from 'ordering-components/native';
+import { Content, Timer, TimeField, Header, Comments, CommentsButtonGroup, TopActions } from './styles';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { orderCommentList } from '../../../../../src/utils'
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
+    isPage,
     customerCellphone,
-    loading,
     action,
     handleUpdateOrder,
     actions,
@@ -35,7 +33,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   } = props;
 
   const [, t] = useLanguage();
-  const [{ user }] = useSession();
   const theme = useTheme();
   const scrollViewRef = useRef<any>(null);
   const viewRef = useRef<any>(null);
@@ -46,11 +43,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [rejectReason, setRejectReason] = useState(null);
-  const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-  const { top, bottom } = useSafeAreaInsets()
+  const [keyboardState, setKeyboardState] = useState({ show: false, height: 0 });
 
   const isDriverApp = appTitle?.key === 'DELIVERY_APP'
-
   const orderCommentsList = orderCommentList(action)
 
   let codeNumberPhone, numberPhone, numberToShow;
@@ -93,6 +88,28 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       alignItems: 'center',
       paddingHorizontal: 10
     },
+    parent: {
+      flex: 1,
+      backgroundColor: theme.colors.backgroundPage,
+    },
+    upper: {
+      flex: 1,
+      zIndex: 1001,
+      paddingTop: isPage ? 30 : 80,
+      marginBottom: 10,
+      backgroundColor: theme.colors.backgroundPage
+    },
+    bottomParent: {
+      justifyContent: "center",
+      paddingHorizontal: 30,
+      alignItems: "center",
+      width: '100%',
+      height: 45,
+    },
+    bottom: {
+      textAlignVertical: "center",
+      textAlign: "center",
+    }
   })
 
   const handleFocus = () => {
@@ -100,25 +117,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
     });
   };
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setIsKeyboardShow(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setIsKeyboardShow(false);
-      },
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   if (!notShowCustomerPhone) {
     if (phoneNumber) {
@@ -172,15 +170,15 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   };
 
   const openTimerIOnput = () => {
-    const isFocus = timerRef.current.isFocused();
+    const isFocus = timerRef.current?.isFocused();
     if (isFocus) {
-      timerRef.current.blur();
+      timerRef.current?.blur();
     }
 
   };
 
   const openTextTareaOInput = () => {
-    const isFocus = textTareaRef.current.isFocused();
+    const isFocus = textTareaRef.current?.isFocused();
     if (isFocus && textTareaRef?.current) {
       textTareaRef.current.blur();
     }
@@ -281,227 +279,251 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
   }, [timerRef?.current])
 
+  useEffect(() => {
+    const keyboardDidShowListener =
+      Keyboard.addListener('keyboardDidShow', (e) => setKeyboardState({
+        show: true,
+        height: e.endCoordinates.height > 100
+          ? Platform.OS == 'ios' ? e.endCoordinates.height : 0 : 0
+      }))
+    const keyboardDidHideListener =
+      Keyboard.addListener('keyboardDidHide', () => setKeyboardState({ show: false, height: 0 }))
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
+
   return (
-    <KeyboardAvoidingView
-      enabled
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, paddingHorizontal: 30, paddingVertical: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
-      <View>
-        <OIconButton
-          icon={theme.images.general.arrow_left}
-          borderColor={theme.colors.clear}
-          iconStyle={{ width: 20, height: 20 }}
-          style={{
-            maxWidth: 40,
-            height: 35,
-            justifyContent: 'flex-end',
-            marginBottom: 30,
-          }}
-          onClick={() => handleArrowBack()}
-        />
-        <OText
-          size={20}
-          color={theme.colors.textGray}
-          style={{
-            fontFamily: 'Poppins',
-            fontStyle: 'normal',
-          }}
-          weight="600">
-          {titleOrder}
-        </OText>
-      </View>
-      <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-        <Header>
-          {action === 'reject' && (
-            <>
-              {!notShowCustomerPhone && (
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <View style={styles.parent}>
+        <View style={styles.upper}>
+          <TopActions>
+            <OIconButton
+              icon={theme.images.general.arrow_left}
+              borderColor={theme.colors.clear}
+              iconStyle={{ width: 20, height: 20 }}
+              style={{
+                maxWidth: 40,
+                height: 35,
+                justifyContent: 'flex-end',
+                marginBottom: 10,
+              }}
+              onClick={() => handleArrowBack()}
+            />
+            <OText
+              size={20}
+              color={theme.colors.textGray}
+              style={{
+                fontFamily: 'Poppins',
+                fontStyle: 'normal',
+                marginBottom: 10,
+              }}
+              weight="600">
+              {titleOrder}
+            </OText>
+          </TopActions>
+          <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+            <Header>
+              {action === 'reject' && (
                 <>
+                  {!notShowCustomerPhone && (
+                    <>
+                      <OText
+                        size={15}
+                        color={theme.colors.textGray}
+                        style={{ marginTop: 10 }}>
+                        {t(
+                          'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
+                          'Call your customer to resolve the issue as politely as possible',
+                        )}
+                      </OText>
+
+                      {numberToShow ? (
+                        <OButton
+                          bgColor="transparent"
+                          borderColor={theme.colors.primary}
+                          textStyle={{
+                            color: theme.colors.primary,
+                            fontSize: 20,
+                          }}
+                          style={{
+                            borderRadius: 10,
+                            marginVertical: 20,
+                          }}
+                          imgLeftStyle={{
+                            resizeMode: 'contain',
+                            left: 20,
+                            position: 'absolute',
+                          }}
+                          imgLeftSrc={theme.images.general.cellphone}
+                          text={numberToShow}
+                          onClick={() =>
+                            Linking.openURL(`tel:${customerCellphone}`)
+                          }
+                        />
+                      ) : (
+                        <OButton
+                          bgColor="transparent"
+                          borderColor={theme.colors.primary}
+                          textStyle={{
+                            color: theme.colors.primary,
+                            fontSize: 15,
+                          }}
+                          style={{
+                            borderRadius: 10,
+                            marginVertical: 20,
+                          }}
+                          imgLeftStyle={{
+                            resizeMode: 'contain',
+                            left: 20,
+                            position: 'absolute',
+                          }}
+                          isDisabled={true}
+                          imgLeftSrc={theme.images.general.cellphone}
+                          text={t('NOT_NUMBER', "There's not phonenumber.")}
+                          onClick={() =>
+                            Linking.openURL(`tel:${customerCellphone}`)
+                          }
+                        />
+                      )}
+                    </>
+                  )}
+
                   <OText
                     size={15}
                     color={theme.colors.textGray}
-                    style={{ marginTop: 10 }}>
+                    style={{ marginBottom: 10 }}>
                     {t(
-                      'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
-                      'Call your customer to resolve the issue as politely as possible',
+                      'MARK_THE_ORDER_AS_REJECTED',
+                      'Mark the order as rejected',
                     )}
                   </OText>
 
-                  {numberToShow ? (
-                    <OButton
-                      bgColor="transparent"
-                      borderColor={theme.colors.primary}
-                      textStyle={{
-                        color: theme.colors.primary,
-                        fontSize: 20,
-                      }}
-                      style={{
-                        borderRadius: 10,
-                        marginVertical: 20,
-                      }}
-                      imgLeftStyle={{
-                        resizeMode: 'contain',
-                        left: 20,
-                        position: 'absolute',
-                      }}
-                      imgLeftSrc={theme.images.general.cellphone}
-                      text={numberToShow}
-                      onClick={() =>
-                        Linking.openURL(`tel:${customerCellphone}`)
-                      }
-                    />
-                  ) : (
-                    <OButton
-                      bgColor="transparent"
-                      borderColor={theme.colors.primary}
-                      textStyle={{
-                        color: theme.colors.primary,
-                        fontSize: 15,
-                      }}
-                      style={{
-                        borderRadius: 10,
-                        marginVertical: 20,
-                      }}
-                      imgLeftStyle={{
-                        resizeMode: 'contain',
-                        left: 20,
-                        position: 'absolute',
-                      }}
-                      isDisabled={true}
-                      imgLeftSrc={theme.images.general.cellphone}
-                      text={t('NOT_NUMBER', "There's not phonenumber.")}
-                      onClick={() =>
-                        Linking.openURL(`tel:${customerCellphone}`)
-                      }
-                    />
-                  )}
+                  <OText>
+                    <OText style={{ fontWeight: '600' }}>
+                      {t('NOTE', 'Note')}
+                      {': '}
+                    </OText>
+
+                    <OText size={15} color={theme.colors.textGray}>
+                      {t(
+                        'YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
+                        'Your customer will receive a notification about this actions',
+                      )}
+                    </OText>
+                  </OText>
                 </>
               )}
+            </Header>
 
-              <OText
-                size={15}
-                color={theme.colors.textGray}
-                style={{ marginBottom: 10 }}>
-                {t(
-                  'MARK_THE_ORDER_AS_REJECTED',
-                  'Mark the order as rejected',
-                )}
-              </OText>
+            {action === 'accept' && (
+              <View style={{ height: 400, justifyContent: 'center' }}>
+                <Timer onPress={() => openTimerIOnput()}>
+                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                    {hour}
+                  </OText>
+                  {hour.length > 0 && <OText size={55}>:</OText>}
+                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                    {min}
+                  </OText>
+                </Timer>
+              </View>
+            )}
+            <TimeField
+              ref={timerRef}
+              keyboardType="numeric"
+              value={time}
+              placeholder={'00:00'}
+              onChangeText={handleTime}
+              onPressOut={() => handleFixTime()}
+              editable={true}
+              selectionColor={theme.colors.primary}
+              placeholderTextColor={theme.colors.textGray}
+              color={theme.colors.textGray}
+              onEndEditing={handleFixTime}
+              onSubmitEditing={() => handleAcceptOrReject()}
+              onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
+            />
 
-              <OText>
-                <OText style={{ fontWeight: '600' }}>
-                  {t('NOTE', 'Note')}
-                  {': '}
-                </OText>
-
-                <OText size={15} color={theme.colors.textGray}>
-                  {t(
-                    'YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
-                    'Your customer will receive a notification about this actions',
-                  )}
-                </OText>
-              </OText>
-            </>
-          )}
-        </Header>
-
-        {action === 'accept' && (
-          <View style={{ height: 400, justifyContent: 'center' }}>
-            <Timer onPress={() => openTimerIOnput()}>
-              <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                {hour}
-              </OText>
-              {hour.length > 0 && <OText size={55}>:</OText>}
-              <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                {min}
-              </OText>
-            </Timer>
-          </View>
-        )}
-        <TimeField
-          ref={timerRef}
-          keyboardType="numeric"
-          value={time}
-          placeholder={'00:00'}
-          onChangeText={handleTime}
-          onPressOut={() => handleFixTime()}
-          editable={true}
-          selectionColor={theme.colors.primary}
-          placeholderTextColor={theme.colors.textGray}
-          color={theme.colors.textGray}
-          onEndEditing={handleFixTime}
-          onSubmitEditing={() => handleAcceptOrReject()}
-          onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
-        />
-
-        {orderCommentsList && isDriverApp && (
-          <CommentsButtonGroup>
-            <SelectDropdown
-              defaultButtonText={t('REJECT_REASONS_OPTIONS', 'Reject reasons')}
-              data={orderCommentsList?.list}
-              onSelect={(selectedItem) => {
-                setRejectReason(selectedItem?.value)
-              }}
-              buttonTextAfterSelection={(selectedItem) => selectedItem.content}
-              rowTextForSelection={(item) => item.key}
-              buttonStyle={styles.selectOption}
-              buttonTextStyle={styles.buttonTextStyle}
-              renderDropdownIcon={isOpened => {
-                return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-              }}
-              dropdownStyle={styles.dropdownStyle}
-              dropdownOverlayColor='transparent'
-              rowStyle={styles.rowStyle}
-              renderCustomizedRowChild={(item) => {
-                return (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <View>
-                      <OText
-                        size={14}
-                        color={'#748194'}
-                        style={{ textTransform: 'capitalize' }}
+            {orderCommentsList && isDriverApp && (
+              <CommentsButtonGroup>
+                <SelectDropdown
+                  defaultButtonText={t('REJECT_REASONS_OPTIONS', 'Reject reasons')}
+                  data={orderCommentsList?.list}
+                  onSelect={(selectedItem) => {
+                    setRejectReason(selectedItem?.value)
+                  }}
+                  buttonTextAfterSelection={(selectedItem) => selectedItem.content}
+                  rowTextForSelection={(item) => item.key}
+                  buttonStyle={styles.selectOption}
+                  buttonTextStyle={styles.buttonTextStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownStyle={styles.dropdownStyle}
+                  dropdownOverlayColor='transparent'
+                  rowStyle={styles.rowStyle}
+                  renderCustomizedRowChild={(item) => {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center'
+                        }}
                       >
-                        {item?.content}
-                      </OText>
-                    </View>
-                  </View>
-                );
-              }}
-            />
-          </CommentsButtonGroup>
-        )}
+                        <View>
+                          <OText
+                            size={14}
+                            color={'#748194'}
+                            style={{ textTransform: 'capitalize' }}
+                          >
+                            {item?.content}
+                          </OText>
+                        </View>
+                      </View>
+                    );
+                  }}
+                />
+              </CommentsButtonGroup>
+            )}
 
-        {showTextArea && (
-          <Comments ref={viewRef}>
-            <OTextarea
-              textTareaRef={textTareaRef}
-              autoFocus
-              onFocus={handleFocus}
-              placeholder={t(
-                'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
-                'Please type your comments in here',
-              )}
-              value={comments}
-              onChange={setComments}
-            />
-          </Comments>
-        )}
-      </Content>
-
-      <Action>
-        <FloatingButton
-          firstButtonClick={() => {
-            handleAcceptOrReject();
+            {showTextArea && (
+              <Comments ref={viewRef}>
+                <OTextarea
+                  textTareaRef={textTareaRef}
+                  autoFocus
+                  onFocus={handleFocus}
+                  placeholder={t(
+                    'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
+                    'Please type your comments in here',
+                  )}
+                  value={comments}
+                  onChange={setComments}
+                />
+              </Comments>
+            )}
+          </Content>
+        </View>
+        <View
+          style={{
+            ...styles.bottomParent,
+            marginBottom: (keyboardState.height === 0) ? isPage ? 0 : 30 : keyboardState.height - (isPage ? 20 : -10)
           }}
-          btnText={buttonText}
-          color={action === 'accept' ? theme.colors.green : theme.colors.red}
-          widthButton={'100%'}
-        />
-      </Action>
+        >
+          <OButton
+            text={buttonText}
+            bgColor={action === 'accept' ? theme.colors.green : theme.colors.red}
+            borderColor={action === 'accept' ? theme.colors.green : theme.colors.red}
+            imgRightSrc={null}
+            style={{ borderRadius: 7, height: 45 }}
+            parentStyle={{ width: '100%' }}
+            textStyle={{color: '#FFF', fontSize: 18 }}
+            isDisabled={!rejectReason && showTextArea}
+            onClick={() => handleAcceptOrReject()}
+          />
+        </View>
+      </View>
     </KeyboardAvoidingView>
   );
 };

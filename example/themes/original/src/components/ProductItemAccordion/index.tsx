@@ -27,6 +27,7 @@ import { ProductItemAccordionParams } from '../../types'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const {
+		isDisabledEdit,
 		isCartPending,
 		isCartProduct,
 		product,
@@ -203,7 +204,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								</View>
 							) : (
 								<>
-									{isCartProduct && !isCartPending && getProductMax && (
+									{!isDisabledEdit && isCartProduct && !isCartPending && getProductMax && (
 										<ProductInfo>
 											<RNPickerSelect
 												items={productOptions}
@@ -225,19 +226,19 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										</ProductQuantity>
 									)}
 									<View style={{ flex: 1 }}>
-										<OText size={12} lineHeight={18} weight={'400'}>{product.name}</OText>
+										<OText size={12} lineHeight={18} weight={'400'} mLeft={8}>{product.name}</OText>
 									</View>
 								</>
 							)}
 							<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', maxWidth: 100 }}>
 								<View style={{ flexDirection: 'row' }}>
 									<OText size={12} lineHeight={18} weight={'400'}>{parsePrice(product.total || product.price)}</OText>
-									{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+									{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || !!product.comment) && (
 										<MaterialCommunityIcon name='chevron-down' size={18} />
 									)}
 								</View>
 								<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', height: 20 }}>
-									{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
+									{!isDisabledEdit && onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
 										<TouchableOpacity onPress={() => handleEditProduct(product)} style={{ marginRight: 5 }}>
 											<MaterialCommunityIcon
 												name='pencil-outline'
@@ -305,7 +306,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									))}
 								</ProductOptionsList>
 							)}
-							{product.comment && (
+							{!!product.comment && (
 								<ProductComment>
 									<OText size={10} color={theme.colors.textSecondary}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
 									<OText size={10} color={theme.colors.textThird}>{product.comment}</OText>

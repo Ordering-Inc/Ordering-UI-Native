@@ -9,8 +9,9 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Content,
-  HeaderWrapper
+  Container
 } from './styles'
+import NavBar from '../NavBar'
 
 export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
   const {
@@ -20,15 +21,6 @@ export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
   const theme = useTheme()
 
   const styles = StyleSheet.create({
-    btnBackArrow: {
-      borderWidth: 0,
-      backgroundColor: theme.colors.white,
-      borderColor: theme.colors.white,
-      shadowColor: theme.colors.white,
-      display: 'flex',
-      justifyContent: 'flex-start',
-      paddingLeft: 0,
-    },
     imageStyle: {
       width: '100%',
       height: 300,
@@ -39,26 +31,13 @@ export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   return (
-    <>
-      <HeaderWrapper>
-        <OButton
-          imgRightSrc={null}
-          style={styles.btnBackArrow}
-          onClick={() => goToBack()}
-          icon={AntDesignIcon}
-          iconProps={{
-            name: 'arrowleft',
-            size: 26
-          }}
-        />
-        <OText
-          size={24}
-          weight={Platform.OS === 'ios' ? '600' : 'bold'}
-          color={theme.colors.textNormal}
-        >
-          {t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}
-        </OText>
-      </HeaderWrapper>
+    <Container>
+      <NavBar
+        title={t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}
+        onActionLeft={goToBack}
+        btnStyle={{ paddingLeft: 0 }}
+        showCall={false}
+      />
       <Content>
         <OText mBottom={20}>
           -Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vel in congue nisl, nisi. Mauris, condimentum auctor sed cras cursus arcu pellentesque.
@@ -78,6 +57,6 @@ export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
           cover
         />
       </Content>
-    </>
+    </Container>
   )
 }
