@@ -240,13 +240,16 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         <SearchBar
           lazyLoad
           {...(isChewLayout && { height: 55 })}
-          inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-          placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
+          inputStyle={{ ...styles.searchInput }}
+          placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
           onSearch={(val: string) => handleChangeTermValue(val)}
           value={termValue}
           iconCustomRight={<AntDesignIcon name='filter' size={16} style={{ bottom: 2 }} onPress={() => handleOpenfilters()} />}
         />
       </SearchWrapper>
+      <OText size={12} lineHeight={20} color={theme.colors.textThird} mLeft={5}>
+        {t('TYPE_AT_LEAST_3_CHARACTERS', 'Type at least 3 characters')}
+      </OText>
       {
         noResults && (
           <View>
@@ -273,11 +276,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         />
       )}
 
-      <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
-        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
-          {t('BUSINESSES', 'Businesses')}
-        </OText>
-      </OptionTitle>
+      {businessesSearchList.businesses?.length > 0 && (
+        <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
+          <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
+            {t('BUSINESSES', 'Businesses')}
+          </OText>
+        </OptionTitle>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
           <View

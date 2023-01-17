@@ -26,7 +26,7 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
   const ProductList = ({ style }: any) => {
     return (
       <>
-        {products?.map((product: any) => (
+        {products?.filter((product : any) => product?.business?.available)?.map((product: any) => (
             <SingleProductCard
               key={product?.id}
               isProductId
