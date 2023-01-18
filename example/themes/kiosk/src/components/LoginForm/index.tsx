@@ -116,10 +116,6 @@ const LoginFormUI = (props: LoginParams) => {
     }
 
     if (values?.project_name) {
-      setOrdering({
-        ...ordering,
-        project: values?.project_name
-      })
       _setStoreData('project_name', values?.project_name)
       setFormsStateValues({
         ...formsStateValues,

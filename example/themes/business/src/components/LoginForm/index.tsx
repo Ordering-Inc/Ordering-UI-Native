@@ -280,7 +280,6 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const handleLoginOtp = (code: string) => {
 		handleButtonLoginClick({ code })
-		setWillVerifyOtpState(false)
 	}
 
 	const closeAlert = () => {
@@ -329,26 +328,16 @@ const LoginFormUI = (props: LoginParams) => {
         showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
         return
       }
-      formState?.result?.result &&
-        showToast(
-          ToastType.Error,
-          loginTab === 'email' && typeof formState.result?.result === 'string'
-            ? getTraduction(formState.result?.result)
-            : loginTab === 'email' &&
-              typeof formState.result?.result !== 'string'
-              ? getTraduction(formState.result?.result[0])
-              : loginTab === 'cellphone' &&
-                typeof formState.result?.result === 'string'
-                ? getTraduction(formState.result?.result).replace(
-                  t('USER', 'user').toLowerCase(),
-                  t('PHONE_NUMER', 'Phone number'),
-                )
-                : getTraduction(formState.result?.result[0]).replace(
-                  t('USER', 'user').toLowerCase(),
-                  t('PHONE_NUMER', 'Phone number'),
-                ),
-        );
+      formState.result?.result && showToast(
+        ToastType.Error,
+        typeof formState.result?.result === 'string'
+          ? formState.result?.result
+          : formState.result?.result[0]
+      )
       setSubmitted(false)
+    }
+    if (!formState?.loading && !formState?.result?.error) {
+      setWillVerifyOtpState(false)
     }
   }, [formState]);
 
@@ -929,6 +918,7 @@ const LoginFormUI = (props: LoginParams) => {
 					handleLoginOtp={handleLoginOtp}
 					onSubmit={handleLogin}
 					setAlertState={setAlertState}
+          formState={formState}
 				/>
 			</OModal>
 			<Alert

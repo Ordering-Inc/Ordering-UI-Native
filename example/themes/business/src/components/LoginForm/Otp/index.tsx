@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { formatSeconds } from '../../../utils'
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
@@ -16,11 +16,13 @@ export const Otp = (props: otpParams) => {
         onSubmit,
         handleLoginOtp,
         setAlertState,
-        pinCount
+        pinCount,
+        formState
     } = props
 
     const theme = useTheme();
     const [, t] = useLanguage();
+    const [code, setCode] = useState('')
     const [otpLeftTime, _, resetOtpLeftTime]: any = useCountdownTimer(
         600, willVerifyOtpState)
 
@@ -43,6 +45,30 @@ export const Otp = (props: otpParams) => {
             })
         }
     }, [otpLeftTime])
+
+    useEffect(() => {
+        if (!formState?.loading && formState?.result?.error) {
+            Alert.alert(
+                t('ERROR', 'Error'),
+                typeof formState.result?.result === 'string'
+                  ? formState.result?.result
+                  : formState.result?.result[0],
+                [
+                    {
+                        text: t('ACCEPT', 'Accept'),
+                        onPress: () => {},
+                        style: 'cancel'
+                    },
+                ],
+                { cancelable: false }
+            )
+
+            if (code.length === (pinCount || 6)) {
+                setCode('')
+            }
+
+        }
+    }, [formState])
 
     const loginStyle = StyleSheet.create({
         underlineStyleBase: {
@@ -72,6 +98,8 @@ export const Otp = (props: otpParams) => {
                     onCodeFilled={(code: string) => handleLoginOtp(code)}
                     selectionColor={theme.colors.primary}
                     editable
+                    code={code}
+                    onCodeChanged={(code: string) => setCode(code)}
                 />
                 <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
                     <OText size={16} mBottom={30} color={otpLeftTime > 520 ? theme.colors.disabled : theme.colors.primary}>
