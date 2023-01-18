@@ -131,7 +131,7 @@ export const OrderCreating = (props: any) => {
           <OText size={14}>{address}</OText>
         </LocationWrapper>
       )}
-      {cart && (
+      {cart && !orderState?.options?.moment && (
         <DeliveryWrapper>
           <DeliveryContentWrapper>
             <SimpleIcon
