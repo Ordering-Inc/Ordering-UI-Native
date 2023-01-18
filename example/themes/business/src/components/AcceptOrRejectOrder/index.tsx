@@ -95,7 +95,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     upper: {
       flex: 1,
       zIndex: 1001,
-      paddingTop: isPage ? 30 : 80,
+      paddingTop: isPage ? 30 : 50,
       marginBottom: 10,
       backgroundColor: theme.colors.backgroundPage
     },
@@ -418,7 +418,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             </Header>
 
             {action === 'accept' && (
-              <View style={{ height: 400, justifyContent: 'center' }}>
+              <View style={{ height: 300, justifyContent: 'center' }}>
                 <Timer onPress={() => openTimerIOnput()}>
                   <OText weight="600" style={{ textAlign: 'center' }} size={55}>
                     {hour}
