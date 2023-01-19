@@ -393,7 +393,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
 
-            {isMultiCheckout &&
+            {!isMultiCheckout &&
               cart &&
               cart?.valid &&
               orderState?.options?.type === 1 &&

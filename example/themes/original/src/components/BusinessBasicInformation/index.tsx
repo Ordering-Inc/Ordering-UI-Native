@@ -46,7 +46,7 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideLogo = theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
 	const hideTime = theme?.business_view?.components?.header?.components?.business?.components?.time?.hidden

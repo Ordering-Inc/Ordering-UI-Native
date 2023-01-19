@@ -45,7 +45,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
 	const hideProductLogo = viewString
 		? theme?.[viewString]?.components?.cart?.components?.products?.image?.hidden

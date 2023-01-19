@@ -49,7 +49,7 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const theme = useTheme();
 
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideProfileImage = theme?.profile?.components?.picture?.hidden
 	const hideOrders = theme?.profile?.components?.orders?.hidden
 	const hideProfile = theme?.profile?.components?.profile?.hidden
