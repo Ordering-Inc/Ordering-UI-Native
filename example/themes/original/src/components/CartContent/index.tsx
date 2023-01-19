@@ -20,7 +20,7 @@ export const CartContent = (props: any) => {
 	const [{ configs }] = useConfig()
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
 
-	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
 	const cartsAvailable: any = Object.values(carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
 
@@ -45,7 +45,10 @@ export const CartContent = (props: any) => {
         (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
         Object.keys(groupKeys).length > 1
       ) {
-        onNavigationRedirect('CheckoutNavigator', { screen: 'MultiCart' })
+        onNavigationRedirect('CheckoutNavigator', {
+					screen: 'MultiCheckout',
+					checkCarts: true
+				})
       } else {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
