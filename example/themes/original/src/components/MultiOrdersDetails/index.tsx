@@ -3,7 +3,6 @@ import { useLanguage, useUtils, useToast, ToastType, useConfig, MultiOrdersDetai
 import { View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OText, OButton } from '../shared'
-import { Container } from '../../layouts/Container'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { SingleOrderCard } from './SingleOrderCard'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -53,6 +52,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
   const [, { showToast }] = useToast();
   const [{ configs }] = useConfig()
 
+  const isTaxIncludedOnPrice = orders.every((_order: any) => _order.taxes?.length ? _order.taxes?.every((_tax: any) => _tax.type === 1) : true)
   const progressBarStyle = configs.multi_business_checkout_progress_bar_style?.value
   const showBarInOrder = ['group', 'both']
   const showBarInIndividual = ['individual', 'both']
@@ -225,23 +225,27 @@ export const MultiOrdersDetailsUI = (props: any) => {
             </Row>
           ))}
           <BorderLine />
-          <Row>
-            <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-              {t('TOTAL_BEFORE_TAX', 'Total before tax')}:
-            </OText>
-            <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-              {parsePrice(ordersSummary?.subtotal)}
-            </OText>
-          </Row>
-          <Row>
-            <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-              {t('ESTIMATED_TAX_TO_BE_COLLECTED', 'Estimated tax to be collected')}:
-            </OText>
-            <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-              {parsePrice(ordersSummary?.tax)}
-            </OText>
-          </Row>
-          <BorderLine />
+          {!isTaxIncludedOnPrice && (
+            <>
+              <Row>
+                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
+                  {t('TOTAL_BEFORE_TAX', 'Total before tax')}:
+                </OText>
+                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
+                  {parsePrice(ordersSummary?.subtotal)}
+                </OText>
+              </Row>
+              <Row>
+                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
+                  {t('ESTIMATED_TAX_TO_BE_COLLECTED', 'Estimated tax to be collected')}:
+                </OText>
+                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
+                  {parsePrice(ordersSummary?.tax)}
+                </OText>
+              </Row>
+              <BorderLine />
+            </>
+          )}
           <Row style={{ marginTop: 10 }}>
             <OText size={14} lineHeight={18} weight={'500'} color={theme.colors.textNormal}>
               {t('PAYMENT_TOTAL', 'Payment total')}:

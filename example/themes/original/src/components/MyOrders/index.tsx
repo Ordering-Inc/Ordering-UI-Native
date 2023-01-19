@@ -31,7 +31,7 @@ export const MyOrders = (props: any) => {
   const notOrderOptions = ['business', 'products']
   const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
 
-  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const showNavbar = theme?.bar_menu?.components?.orders?.hidden
   const hideOrdersTheme = theme?.bar_menu?.components?.orders?.hidden
   const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
@@ -90,7 +90,7 @@ export const MyOrders = (props: any) => {
           },
           ...props.titleStyle
         }}>
-          {(!props.hideBackBtn || !hideOrdersTheme) && !isChewLayout && (
+          {!props.hideBackBtn && (!isChewLayout || (isChewLayout && hideOrdersTheme)) && (
             <OButton
               imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
@@ -103,7 +103,7 @@ export const MyOrders = (props: any) => {
                 shadowColor: '#FFF',
                 paddingLeft: 0,
                 paddingRight: 0,
-                marginTop: 50,
+                marginTop: 30,
               }}
               onClick={goToBack}
               icon={AntDesignIcon}
