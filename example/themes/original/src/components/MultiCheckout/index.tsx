@@ -18,6 +18,7 @@ import { OText, OIcon, OModal } from '../shared';
 import { getTypesText } from '../../utils';
 import { UserDetails } from '../UserDetails'
 import { AddressDetails } from '../AddressDetails'
+import { MultiCart as MultiCartController } from '../MultiCart'
 import { MultiCartsPaymethodsAndWallets } from '../MultiCartsPaymethodsAndWallets'
 import { Cart } from '../Cart'
 import { FloatingButton } from '../FloatingButton'
@@ -345,9 +346,34 @@ const MultiCheckoutUI = (props: any) => {
 }
 
 export const MultiCheckout = (props: any) => {
+  const [loadMultiCarts, setLoadMultiCarts] = useState(!!props.route?.params?.checkCarts)
+  const [cartUuid, setCartUuid] = useState('')
+
   const multiCheckoutProps = {
     ...props,
+    cartUuid: props.route?.params?.cartUuid ?? cartUuid,
     UIComponent: MultiCheckoutUI
   }
-  return <MultiCheckoutController {...multiCheckoutProps} />
+
+  const multiCartProps = {
+    ...props,
+    handleOnRedirectMultiCheckout: (cartUuid: string) => {
+      setCartUuid(cartUuid)
+      setLoadMultiCarts(false)
+    },
+    handleOnRedirectCheckout: (cartUuid: string) => {
+      props.navigation.navigate('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cartUuid
+      })
+    }
+  }
+
+  return (
+    loadMultiCarts ? (
+      <MultiCartController {...multiCartProps} />
+    ) : (
+      <MultiCheckoutController {...multiCheckoutProps} />
+    )
+  )
 }
