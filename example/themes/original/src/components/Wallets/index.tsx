@@ -71,7 +71,7 @@ const WalletsUI = (props: any) => {
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
   const [openHistory, setOpenHistory] = useState(false)
-  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const hideWalletsTheme = theme?.bar_menu?.components?.wallets?.hidden
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)

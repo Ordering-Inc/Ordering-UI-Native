@@ -20,7 +20,7 @@ export const CartContent = (props: any) => {
 	const [{ configs }] = useConfig()
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
 
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
 	const cartsAvailable: any = Object.values(carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
 

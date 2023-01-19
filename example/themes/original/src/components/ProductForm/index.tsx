@@ -77,7 +77,7 @@ export const ProductOptionsUI = (props: any) => {
 	const theme = useTheme();
 	const [, { showToast }] = useToast()
 
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
 	const styles = StyleSheet.create({
 		mainContainer: {

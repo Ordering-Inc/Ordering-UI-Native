@@ -154,7 +154,7 @@ const CheckoutUI = (props: any) => {
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideBusinessAddress = theme?.checkout?.components?.business?.components?.address?.hidden
 	const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
 	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden

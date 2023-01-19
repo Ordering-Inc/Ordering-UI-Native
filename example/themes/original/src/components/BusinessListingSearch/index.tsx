@@ -76,7 +76,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
-  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const priceList = [
     { level: '1', content: '$' },
