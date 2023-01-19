@@ -22,17 +22,20 @@ const DriverTipsUI = (props: any) => {
 	const {
 		driverTip,
 		driverTipsOptions,
-		optionSelected,
-		isFixedPrice,
+		isMulti,
+		cart,
 		isDriverTipUseCustom,
-		handlerChangeOption
+		handlerChangeOption,
+		isFixedPrice
 	} = props;
 
 	const [{ parsePrice }] = useUtils();
+	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
-
-	const theme = useTheme();
+	const [customTip, setCustomTip] = useState((!isMulti && isDriverTipUseCustom && !driverTipsOptions.includes(driverTip)) ?? false)
+	const currentTip = customTip ? parseFloat(driverTip || 0) > 0 : (!customTip && !driverTipsOptions.includes(driverTip) && parseFloat(driverTip || 0)) > 0
+	const [value, setvalue] = useState('');
 
 	const style = StyleSheet.create({
 		semicircle: {
@@ -48,53 +51,59 @@ const DriverTipsUI = (props: any) => {
 		}
 	})
 
-	const [value, setvalue] = useState('');
-
-	const placeholderCurrency = (configs?.currency_position?.value || 'left') === 'left'
+	const placeholderCurrency = !isFixedPrice ? `0%` : (configs?.currency_position?.value || 'left') === 'left'
 		? `${configs?.format_number_currency?.value}0`
 		: `0${configs?.format_number_currency?.value}`
 
 	const handleChangeDriverTip = (val: any) => {
 		const tip = Number(val)
 		if ((isNaN(tip) || tip < 0)) {
-		  setvalue(value)
-		  return
+			setvalue(value)
+			return
 		}
 		setvalue(val)
 	}
-	
+
 	return (
 		<DTContainer>
 			<DTLabel>
 				{t('CUSTOM_DRIVER_TIP_MESSAGE', '100% of these tips go directly to your driver')}
 			</DTLabel>
 			<DTWrapperTips>
-				{!isDriverTipUseCustom && driverTipsOptions.map((option: any, i: number) => (
+				{driverTipsOptions.map((option: any, i: number) => (
 					<TouchableOpacity
 						key={i}
-						onPress={() => handlerChangeOption(option)}
+						onPress={() => {
+							handlerChangeOption(option)
+							setCustomTip(false)
+						}}
 					>
 						<DTCard
 							style={style.semicircle}
-							isActive={option === optionSelected}
+							isActive={(option === driverTip && !customTip)}
 						>
-							<OText size={12} numberOfLines={2} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
+							<OText size={12} numberOfLines={2} color={(option === driverTip && !customTip) ? '#FFF' : theme.colors.textSecondary}>
 								{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
 							</OText>
 						</DTCard>
 					</TouchableOpacity>
 				))}
+				{isDriverTipUseCustom && (
+					<TouchableOpacity
+						onPress={() => setCustomTip(true)}
+					>
+						<DTCard
+							style={style.semicircle}
+							isActive={customTip}
+						>
+							<OText size={12} numberOfLines={2} color={customTip ? '#FFF' : theme.colors.textSecondary}>
+								{t('CUSTOM_TIP', 'Custom')}
+							</OText>
+						</DTCard>
+					</TouchableOpacity>
+				)}
 			</DTWrapperTips>
-			{(!isDriverTipUseCustom && !driverTipsOptions.includes(driverTip) && driverTip > 0) && (
-				<OText
-					color={theme.colors.error}
-					size={16}
-					style={{ marginTop: 10, textAlign: 'center' }}
-				>
-					{t('CUSTOM_DRIVER_TIP_AMOUNT', 'The driver\'s current tip comes from a custom option')}
-				</OText>
-			)}
-			{isDriverTipUseCustom && (
+			{customTip && (
 				<DTForm>
 					<DTWrapperInput>
 						<OInput
@@ -120,16 +129,17 @@ const DriverTipsUI = (props: any) => {
 							}}
 						/>
 					</DTWrapperInput>
-					{parseFloat(driverTip || 0) > 0 && (
-						<OText
-							color={theme.colors.error}
-							size={16}
-							style={{ marginTop: 10, textAlign: 'center' }}
-						>
-							{t('CURRENT_DRIVER_TIP_AMOUNT', 'Current driver tip amount')}: {parsePrice(driverTip)}
-						</OText>
-					)}
 				</DTForm>
+			)}
+			{currentTip && (
+				<OText
+					color={theme.colors.primary}
+					size={16}
+					style={{ marginTop: 10, textAlign: 'center' }}
+				>
+					{t('CURRENT_DRIVER_TIP_AMOUNT', 'Current driver tip amount')}{!isFixedPrice &&
+						` (${driverTip}%)`}: {isFixedPrice ? parsePrice(driverTip) : parsePrice(cart?.driver_tip)}
+				</OText>
 			)}
 		</DTContainer>
 	)

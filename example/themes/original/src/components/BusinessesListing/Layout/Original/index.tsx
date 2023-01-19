@@ -76,7 +76,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
 	const bgHeader = orderingTheme?.theme?.business_listing_view?.components?.business_hero?.components?.image

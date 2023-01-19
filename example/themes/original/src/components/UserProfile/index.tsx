@@ -49,7 +49,7 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const theme = useTheme();
 
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {

@@ -30,14 +30,17 @@ export const MyOrders = (props: any) => {
 
   const notOrderOptions = ['business', 'products']
   const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
-  const MyOrdersMenu = [
-    { key: 'orders', value: t('ORDERS', 'Orders') },
-    { key: 'business', value: t('BUSINESS', 'Business') },
-    { key: 'products', value: t('PRODUCTS', 'Products') }
-  ]
-  const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
-  const showNavbar = theme?.bar_menu?.components?.orders?.hidden
 
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const showNavbar = theme?.bar_menu?.components?.orders?.hidden
+  const hideOrdersTheme = theme?.bar_menu?.components?.orders?.hidden
+  const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
+  const hideBusinessTab = theme?.orders?.components?.business_tab?.hidden
+  const MyOrdersMenu = [
+    { key: 'orders', value: t('ORDERS', 'Orders'), disabled: false },
+    { key: 'business', value: t('BUSINESS', 'Business'), disabled: hideBusinessTab },
+    { key: 'products', value: t('PRODUCTS', 'Products'), disabled: hideProductsTab }
+  ]
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const handleOnRefresh = () => {
@@ -87,7 +90,7 @@ export const MyOrders = (props: any) => {
           },
           ...props.titleStyle
         }}>
-          {!props.hideBackBtn && !isChewLayout && (
+          {!props.hideBackBtn && (!isChewLayout || (isChewLayout && hideOrdersTheme)) && (
             <OButton
               imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
@@ -99,7 +102,8 @@ export const MyOrders = (props: any) => {
                 borderColor: '#FFF',
                 shadowColor: '#FFF',
                 paddingLeft: 0,
-                paddingRight: 0
+                paddingRight: 0,
+                marginTop: 30,
               }}
               onClick={goToBack}
               icon={AntDesignIcon}
@@ -109,7 +113,7 @@ export const MyOrders = (props: any) => {
               }}
             />
           )}
-          <HeaderTitle ph={0} text={t('MY_ORDERS', 'My Orders')} />
+          <HeaderTitle ph={10} text={t('MY_ORDERS', 'My Orders')} />
         </View>
       )}
       {!hideOrders && !isChewLayout && !showNavbar && (
@@ -123,7 +127,7 @@ export const MyOrders = (props: any) => {
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-          {MyOrdersMenu.filter(option => !hideOrders || option.key !== 'orders').map(option => (
+          {MyOrdersMenu.filter(option => (!hideOrders || option.key !== 'orders') && !option.disabled).map(option => (
             <Tab
               key={option.key}
               onPress={() => setSelectedOption(option.key)}
@@ -143,18 +147,16 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          {ordersLength?.activeOrdersLength !== 0 && (
-            <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
-              <OrdersOption
-                {...props}
-                activeOrders
-                ordersLength={ordersLength}
-                setOrdersLength={setOrdersLength}
-                setRefreshOrders={setRefreshOrders}
-                refreshOrders={refreshOrders}
-              />
-            </View>
-          )}
+          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+            <OrdersOption
+              {...props}
+              activeOrders
+              ordersLength={ordersLength}
+              setOrdersLength={setOrdersLength}
+              setRefreshOrders={setRefreshOrders}
+              refreshOrders={refreshOrders}
+            />
+          </View>
           <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
             <OrdersOption
               {...props}
