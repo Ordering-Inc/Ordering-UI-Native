@@ -318,7 +318,7 @@ export interface SingleProductCardParams {
 	navigation?: any;
 	isPreviously?: any;
 	isProductId?: any;
-	viewString?: string; 
+	viewString?: string;
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -544,6 +544,14 @@ export interface MomentOptionParams {
 	dateSelected?: any;
 	timeSelected?: any;
 	isAsap?: boolean;
+	cateringPreorder?: boolean,
+	isCart?: boolean,
+	preorderLeadTime?: number,
+	business?: any,
+	getActualSchedule?: any,
+	preorderMaximumDays?: number,
+	preorderMinimumDays?: number,
+	isPage?: boolean,
 	handleAsap: () => {};
 	handleChangeDate: (value: any) => {};
 	handleChangeTime: (value: any) => {};

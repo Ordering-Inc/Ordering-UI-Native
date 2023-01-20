@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Cart as CartController,
   useOrder,
@@ -26,6 +26,7 @@ import { CartStoresListing } from '../CartStoresListing';
 import { OAlert } from '../../../../../src/components/shared'
 import { PlaceSpot } from '../PlaceSpot'
 import { DriverTips } from '../DriverTips'
+import { MomentOption } from '../MomentOption'
 
 const CartUI = (props: any) => {
   const {
@@ -43,7 +44,13 @@ const CartUI = (props: any) => {
     handleRemoveOfferClick,
     isMultiCheckout,
     hideDeliveryFee,
-    hideDriverTip
+    hideDriverTip,
+    preorderSlotInterval,
+    preorderLeadTime,
+    preorderTimeRange,
+    preorderMaximumDays,
+    preorderMinimumDays,
+    cateringTypes
   } = props
 
   const theme = useTheme();
@@ -60,7 +67,7 @@ const CartUI = (props: any) => {
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const [openPlaceModal, setOpenPlaceModal] = useState(false)
-
+  const [maxDate, setMaxDate] = useState<any>(null)
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
@@ -175,6 +182,19 @@ const CartUI = (props: any) => {
       return acc = acc + item?.summary?.tax
     return acc = acc
   }, cart?.subtotal)
+
+  useEffect(() => {
+    const limitDays = parseInt(preorderMaximumDays ?? configs?.max_days_preorder?.value, 10)
+    const currentDate = new Date()
+    const time = limitDays > 1
+      ? currentDate.getTime() + ((limitDays - 1) * 24 * 60 * 60 * 1000)
+      : limitDays === 1 ? currentDate.getTime() : currentDate.getTime() + (6 * 24 * 60 * 60 * 1000)
+
+    currentDate.setTime(time)
+    currentDate.setHours(23)
+    currentDate.setMinutes(59)
+    setMaxDate(currentDate)
+  }, [preorderMaximumDays, configs?.max_days_preorder?.value])
 
   return (
     <CContainer>
@@ -483,6 +503,21 @@ const CartUI = (props: any) => {
             )}
           </OSBill>
         )}
+        {cateringTypes.includes(orderState?.options?.type) && maxDate && cart?.valid_products && (
+          <View>
+            <MomentOption
+              maxDate={maxDate}
+              cateringPreorder
+              isCart
+              preorderSlotInterval={preorderSlotInterval}
+              preorderLeadTime={preorderLeadTime}
+              preorderTimeRange={preorderTimeRange}
+              preorderMaximumDays={preorderMaximumDays}
+              preorderMinimumDays={preorderMinimumDays}
+              business={cart?.business}
+            />
+          </View>
+        )}
         {!isMultiCheckout && (
           <>
             {cart?.valid_products ? (
@@ -499,7 +534,7 @@ const CartUI = (props: any) => {
                   isDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
                   borderColor={theme.colors.primary}
                   imgRightSrc={null}
-                  textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                  textStyle={{ color: '#fff', textAlign: 'center', flex: 1 }}
                   onClick={() => setOpenUpselling(true)}
                   style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
                 />
