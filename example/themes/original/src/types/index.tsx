@@ -118,6 +118,7 @@ export interface SignupParams {
 	useSignUpOtpEmail?: boolean;
 	useSignUpOtpCellphone?: boolean;
 	willVerifyOtpState?: boolean;
+	isGuest?: any;
 	numOtpInputs?: number;
 	handleChangePromotions: () => void;
 	handleChangeInput?: (in1: any, in2: any) => void;
@@ -761,7 +762,9 @@ export interface ServiceFormParams {
 	professionalList: any,
 	productObject?: any,
 	professionalListState?: any,
-	isCartProduct?: any
+	isCartProduct?: any,
+	actionStatus?: any,
+	handleCreateGuestUser?: any
 }
 
 export interface ProfessionalFilterParams {
