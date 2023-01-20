@@ -61,7 +61,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
       case 'paypal':
         return theme.images.general.paypal
       case 'stripe':
-        return theme.images.general.stripe
+        return theme.images.general.creditCard
       case 'stripe_direct':
         return theme.images.general.stripecc
       case 'stripe_connect':
@@ -83,7 +83,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
           isActive={paymethodSelected?.id === item.id}
         >
           <OIcon
-            src={getPayIcon(item.paymethod?.gateway)}
+            src={getPayIcon(item?.gateway ?? item.paymethod?.gateway)}
             width={20}
             height={20}
             color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}

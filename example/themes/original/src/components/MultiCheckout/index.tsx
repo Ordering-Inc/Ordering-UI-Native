@@ -18,9 +18,12 @@ import { OText, OIcon, OModal } from '../shared';
 import { getTypesText } from '../../utils';
 import { UserDetails } from '../UserDetails'
 import { AddressDetails } from '../AddressDetails'
+import { MultiCart as MultiCartController } from '../MultiCart'
 import { MultiCartsPaymethodsAndWallets } from '../MultiCartsPaymethodsAndWallets'
 import { Cart } from '../Cart'
 import { FloatingButton } from '../FloatingButton'
+import { DriverTips } from '../DriverTips'
+import { DriverTipsContainer } from '../Cart/styles'
 
 import {
   ChContainer,
@@ -78,8 +81,12 @@ const MultiCheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+  const isMultiDriverTips = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
+  const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
+    ? JSON.parse(configs?.driver_tip_options?.value) || []
+    : configs?.driver_tip_options?.value || []
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -227,6 +234,35 @@ const MultiCheckoutUI = (props: any) => {
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
           </ChSection>
 
+          {
+            isMultiDriverTips &&
+            options?.type === 1 &&
+            validationFields?.fields?.checkout?.driver_tip?.enabled &&
+            openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
+            driverTipsOptions && driverTipsOptions?.length > 0 &&
+          (
+            <ChSection>
+              <DriverTipsContainer>
+                <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+                  {t('DRIVER_TIPS', 'Driver Tips')}
+                </OText>
+                <DriverTips
+                  isMulti
+                  carts={openCarts}
+                  businessIds={openCarts.map((cart: any) => cart.business_id)}
+                  driverTipsOptions={driverTipsOptions}
+                  isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
+                  isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                  driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
+                    ? openCarts[0]?.driver_tip
+                    : openCarts[0]?.driver_tip_rate}
+                  useOrderContext
+                />
+              </DriverTipsContainer>
+              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+            </ChSection>
+          )}
+
           <ChSection>
             <ChCarts>
               <CartsHeader>
@@ -310,9 +346,34 @@ const MultiCheckoutUI = (props: any) => {
 }
 
 export const MultiCheckout = (props: any) => {
+  const [loadMultiCarts, setLoadMultiCarts] = useState(!!props.route?.params?.checkCarts)
+  const [cartUuid, setCartUuid] = useState('')
+
   const multiCheckoutProps = {
     ...props,
+    cartUuid: props.route?.params?.cartUuid ?? cartUuid,
     UIComponent: MultiCheckoutUI
   }
-  return <MultiCheckoutController {...multiCheckoutProps} />
+
+  const multiCartProps = {
+    ...props,
+    handleOnRedirectMultiCheckout: (cartUuid: string) => {
+      setCartUuid(cartUuid)
+      setLoadMultiCarts(false)
+    },
+    handleOnRedirectCheckout: (cartUuid: string) => {
+      props.navigation.navigate('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cartUuid
+      })
+    }
+  }
+
+  return (
+    loadMultiCarts ? (
+      <MultiCartController {...multiCartProps} />
+    ) : (
+      <MultiCheckoutController {...multiCheckoutProps} />
+    )
+  )
 }

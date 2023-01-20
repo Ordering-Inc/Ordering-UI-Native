@@ -22,7 +22,7 @@ const DriverTipsUI = (props: any) => {
 	const {
 		driverTip,
 		driverTipsOptions,
-		optionSelected,
+		isMulti,
 		cart,
 		isDriverTipUseCustom,
 		handlerChangeOption,
@@ -33,7 +33,7 @@ const DriverTipsUI = (props: any) => {
 	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
-	const [customTip, setCustomTip] = useState((isDriverTipUseCustom && !driverTipsOptions.includes(driverTip)) ?? false)
+	const [customTip, setCustomTip] = useState((!isMulti && isDriverTipUseCustom && !driverTipsOptions.includes(driverTip)) ?? false)
 	const currentTip = customTip ? parseFloat(driverTip || 0) > 0 : (!customTip && !driverTipsOptions.includes(driverTip) && parseFloat(driverTip || 0)) > 0
 	const [value, setvalue] = useState('');
 

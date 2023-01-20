@@ -132,7 +132,10 @@ const CartUI = (props: any) => {
         (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
         Object.keys(groupKeys).length > 1
       ) {
-        onNavigationRedirect('CheckoutNavigator', { screen: 'MultiCart' })
+        onNavigationRedirect('CheckoutNavigator', {
+          screen: 'MultiCheckout',
+          checkCarts: true
+        })
       } else {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
@@ -413,7 +416,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
 
-            {isMultiCheckout &&
+            {!isMultiCheckout &&
               cart &&
               cart?.valid &&
               orderState?.options?.type === 1 &&
