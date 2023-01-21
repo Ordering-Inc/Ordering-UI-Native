@@ -25,37 +25,37 @@ export const CartContent = (props: any) => {
 	const cartsAvailable: any = Object.values(carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
 
 	const handleCheckoutRedirect = () => {
-    if (cartsAvailable.length === 1) {
-      onNavigationRedirect('CheckoutNavigator', {
-        screen: 'CheckoutPage',
-        cartUuid: cartsAvailable[0]?.uuid,
-        businessLogo: cartsAvailable[0]?.business?.logo,
-        businessName: cartsAvailable[0]?.business?.name,
-        cartTotal: cartsAvailable[0]?.total
-      })
-    } else {
-      const groupKeys: any = {}
-      cartsAvailable.forEach((_cart: any) => {
-        groupKeys[_cart?.group?.uuid]
-          ? groupKeys[_cart?.group?.uuid] += 1
-          : groupKeys[_cart?.group?.uuid ?? 'null'] = 1
-      })
+		if (cartsAvailable.length === 1) {
+			onNavigationRedirect('CheckoutNavigator', {
+				screen: 'CheckoutPage',
+				cartUuid: cartsAvailable[0]?.uuid,
+				businessLogo: cartsAvailable[0]?.business?.logo,
+				businessName: cartsAvailable[0]?.business?.name,
+				cartTotal: cartsAvailable[0]?.total
+			})
+		} else {
+			const groupKeys: any = {}
+			cartsAvailable.forEach((_cart: any) => {
+				groupKeys[_cart?.group?.uuid]
+					? groupKeys[_cart?.group?.uuid] += 1
+					: groupKeys[_cart?.group?.uuid ?? 'null'] = 1
+			})
 
-      if (
-        (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
-        Object.keys(groupKeys).length > 1
-      ) {
-        onNavigationRedirect('CheckoutNavigator', {
+			if (
+				(Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
+				Object.keys(groupKeys).length > 1
+			) {
+				onNavigationRedirect('CheckoutNavigator', {
 					screen: 'MultiCheckout',
 					checkCarts: true
 				})
-      } else {
-        onNavigationRedirect('CheckoutNavigator', {
-          screen: 'MultiCheckout',
-          cartUuid: cartsAvailable[0]?.group?.uuid
-        })
-      }
-    }
+			} else {
+				onNavigationRedirect('CheckoutNavigator', {
+					screen: 'MultiCheckout',
+					cartUuid: cartsAvailable[0]?.group?.uuid
+				})
+			}
+		}
 	}
 
 	return (
@@ -65,7 +65,7 @@ export const CartContent = (props: any) => {
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
 					{carts.map((cart: any, i: number) => (
-						<CCList key={i} style={{ overflow: 'visible' }}>
+						<CCList nestedScrollEnabled={true} key={i} style={{ overflow: 'visible' }}>
 							{cart.products.length > 0 && (
 								<>
 									<Cart
@@ -78,6 +78,7 @@ export const CartContent = (props: any) => {
 										setIsCartsLoading={setIsCartsLoading}
 										isMultiCheckout={isMultiCheckout}
 										hideUpselling
+										businessConfigs={cart?.business?.configs}
 									/>
 									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginTop: 20 }} />
 								</>

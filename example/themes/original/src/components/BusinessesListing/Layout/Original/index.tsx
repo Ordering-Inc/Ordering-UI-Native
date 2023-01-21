@@ -160,7 +160,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
 	const [businessTypes, setBusinessTypes] = useState(null)
-	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options.value)
+	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options?.value)
 	const [isOpenCities, setIsOpenCities] = useState(false)
 	const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0

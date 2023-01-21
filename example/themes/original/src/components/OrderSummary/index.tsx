@@ -26,6 +26,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
 import { OAlert } from '../../../../../src/components/shared'
+import { MomentOption } from '../MomentOption';
 
 const OrderSummaryUI = (props: any) => {
   const {
@@ -38,7 +39,14 @@ const OrderSummaryUI = (props: any) => {
     commentState,
     handleChangeComment,
     onNavigationRedirect,
-    handleRemoveOfferClick
+    handleRemoveOfferClick,
+    preorderSlotInterval,
+    preorderLeadTime,
+    preorderTimeRange,
+    preorderMaximumDays,
+    preorderMinimumDays,
+    cateringTypes,
+    maxDate
   } = props;
 
   const theme = useTheme()
@@ -338,6 +346,21 @@ const OrderSummaryUI = (props: any) => {
                 </OSTable>
               )}
             </OSBill>
+          )}
+          {cateringTypes.includes(orderState?.options?.type) && maxDate && cart?.business && (
+            <View>
+              <MomentOption
+                maxDate={maxDate}
+                cateringPreorder
+                isCart
+                preorderSlotInterval={preorderSlotInterval}
+                preorderLeadTime={preorderLeadTime}
+                preorderTimeRange={preorderTimeRange}
+                preorderMaximumDays={preorderMaximumDays}
+                preorderMinimumDays={preorderMinimumDays}
+                business={cart?.business}
+              />
+            </View>
           )}
           <OModal
             open={openTaxModal.open}
