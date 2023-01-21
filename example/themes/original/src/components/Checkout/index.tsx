@@ -88,7 +88,8 @@ const CheckoutUI = (props: any) => {
 		handleChangeDeliveryOption,
 		currency,
 		merchantId,
-		setPlaceSpotNumber
+		setPlaceSpotNumber,
+		maxDate
 	} = props
 
 	const theme = useTheme();
@@ -675,6 +676,8 @@ const CheckoutUI = (props: any) => {
 											isCartPending={cart?.status === 2}
 											onNavigationRedirect={onNavigationRedirect}
 											placeSpotTypes={placeSpotTypes}
+											businessConfigs={businessConfigs}
+											maxDate={maxDate}
 										/>
 									</>
 								)}
@@ -709,6 +712,14 @@ const CheckoutUI = (props: any) => {
 										size={12}
 									>
 										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+									</OText>
+								)}
+								{!cart?.valid_preorder && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
 									</OText>
 								)}
 								{options.type === 1 &&

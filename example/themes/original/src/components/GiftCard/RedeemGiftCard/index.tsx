@@ -148,8 +148,8 @@ const RedeemGiftCardUI = (props: any) => {
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('TYPE', 'Type')}: {redeemedGiftCard?.type}</OText>
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('AMOUNT', 'Amount')}: {parsePrice(redeemedGiftCard?.amount)}</OText>
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('FROM', 'From')}: {redeemedGiftCard?.receiver?.name} {redeemedGiftCard?.receiver?.lastname}</OText>
-            <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('TITLE', 'Title')}: {redeemedGiftCard?.title}</OText>
-            <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('MESSAGES', 'Messages')}: {redeemedGiftCard?.message}</OText>
+            {!!redeemedGiftCard?.title && <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('TITLE', 'Title')}: {redeemedGiftCard?.title}</OText>}
+            {!!redeemedGiftCard?.message && <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('MESSAGES', 'Messages')}: {redeemedGiftCard?.message}</OText>}
             <OButton
               onClick={() => {
                 setRedeemedGiftCard(null)
