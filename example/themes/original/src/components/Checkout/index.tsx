@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import {
 	Checkout as CheckoutController,
@@ -46,7 +48,9 @@ import {
 	DeliveryOptionsContainer,
 	DeliveryOptionItem,
 	WalletPaymentOptionContainer,
-	CartHeader
+	CartHeader,
+	TopHeader,
+	TopActions
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { FloatingButton } from '../FloatingButton';
@@ -115,7 +119,7 @@ const CheckoutUI = (props: any) => {
 			padding: 20
 		},
 		pagePadding: {
-			paddingHorizontal: 40
+			paddingHorizontal: 20
 		},
 		icon: {
 			top: 15,
@@ -124,13 +128,14 @@ const CheckoutUI = (props: any) => {
 			fontSize: 20
 		},
 		detailWrapper: {
-			paddingHorizontal: 40,
+			paddingHorizontal: 20,
 			width: '100%'
 		},
 		wrapperNavbar: {
-			paddingVertical: 0,
-			paddingHorizontal: 40,
-			marginVertical: 2
+			paddingVertical: 2,
+			paddingHorizontal: 20,
+			backgroundColor: theme?.colors?.white,
+			borderWidth: 0
 		}
 	})
 
@@ -163,7 +168,9 @@ const CheckoutUI = (props: any) => {
 	const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
 	const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
 	const [paymethodClicked, setPaymethodClicked] = useState<any>(null)
+	const [showTitle, setShowTitle] = useState(false)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
+	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const placeSpotTypes = [3, 4, 5]
@@ -331,6 +338,10 @@ const CheckoutUI = (props: any) => {
 		setPhoneUpdate(val)
 	}
 
+	const handleScroll = ({ nativeEvent: { contentOffset } }: any) => {
+		setShowTitle(contentOffset.y > 30)
+	}
+
 	useEffect(() => {
 		if (validationFields && validationFields?.fields?.checkout) {
 			checkValidationFields()
@@ -391,11 +402,54 @@ const CheckoutUI = (props: any) => {
 		setLengthMore((e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[2].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3)
 	}, [])
 
+	useEffect(() => {
+		if (!cartState?.loading && (cartState?.error || typeof cartState?.cart === 'string')) {
+			const error = cartState?.error || typeof cartState.cart === 'string' && cartState.cart
+			if (error) {
+				showToast(ToastType.Error, cartState?.error || cartState.cart)
+				navigation.navigate('BusinessList')
+			}
+		}
+	}, [cartState?.error, cartState?.cart, cartState?.loading])
+
+	useEffect(() => {
+		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+			containerRef?.current?.scrollToEnd && containerRef.current.scrollToEnd({ animated: true })
+		})
+		return () => {
+			keyboardDidShowListener.remove()
+		}
+	}, [])
+
 	return (
 		<>
-			<Container noPadding>
+			<View style={styles.wrapperNavbar}>
+				<TopHeader>
+					<>
+						<TopActions onPress={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}>
+							<IconAntDesign
+								name='arrowleft'
+								size={26}
+							/>
+						</TopActions>
+						{showTitle && (
+							<OText
+								size={16}
+								style={{ flex: 1, textAlign: 'center', right: 15 }}
+								weight={Platform.OS === 'ios' ? '600' : 'bold'}
+								numberOfLines={2}
+								ellipsizeMode='tail'
+							>
+								{t('CHECKOUT', 'Checkout')}
+							</OText>
+						)}
+					</>
+				</TopHeader>
+			</View>
+			<Container forwardRef={containerRef} noPadding onScroll={handleScroll}>
 				<View style={styles.wrapperNavbar}>
 					<NavBar
+						hideArrowLeft
 						title={t('CHECKOUT', 'Checkout')}
 						titleAlign={'center'}
 						onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}

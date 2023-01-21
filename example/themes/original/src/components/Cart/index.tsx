@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Cart as CartController,
   useOrder,
@@ -26,6 +26,7 @@ import { CartStoresListing } from '../CartStoresListing';
 import { OAlert } from '../shared'
 import { PlaceSpot } from '../PlaceSpot'
 import { DriverTips } from '../DriverTips'
+import { MomentOption } from '../MomentOption'
 
 const CartUI = (props: any) => {
   const {
@@ -51,7 +52,11 @@ const CartUI = (props: any) => {
     preorderMaximumDays,
     preorderMinimumDays,
     cateringTypes,
-    isFromUpselling
+    isFromUpselling,
+    cartsOpened,
+    setCartsOpened,
+    changeActiveState,
+    isActive
   } = props
 
   const theme = useTheme();
@@ -61,13 +66,13 @@ const CartUI = (props: any) => {
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [validationFields] = useValidationFields()
-
+  const commentRef = useRef()
   const [openUpselling, setOpenUpselling] = useState(false)
   const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [openPlaceModal, setOpenPlaceModal] = useState(false)
-
+  const [maxDate, setMaxDate] = useState<any>(null)
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
@@ -108,7 +113,7 @@ const CartUI = (props: any) => {
     }
   }
 
-  const handleUpsellingPage = (individualCart : any) => {
+  const handleUpsellingPage = (individualCart: any) => {
     const isProductCartParam = !!individualCart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
@@ -191,6 +196,19 @@ const CartUI = (props: any) => {
     return acc = acc
   }, cart?.subtotal)
 
+  useEffect(() => {
+    const limitDays = parseInt(preorderMaximumDays ?? configs?.max_days_preorder?.value, 10)
+    const currentDate = new Date()
+    const time = limitDays > 1
+      ? currentDate.getTime() + ((limitDays - 1) * 24 * 60 * 60 * 1000)
+      : limitDays === 1 ? currentDate.getTime() : currentDate.getTime() + (6 * 24 * 60 * 60 * 1000)
+
+    currentDate.setTime(time)
+    currentDate.setHours(23)
+    currentDate.setMinutes(59)
+    setMaxDate(currentDate)
+  }, [preorderMaximumDays, configs?.max_days_preorder?.value])
+
   return (
     <CContainer>
       {openUpselling && (
@@ -218,6 +236,10 @@ const CartUI = (props: any) => {
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
         isFromUpselling={isFromUpselling}
+        cartsOpened={cartsOpened}
+        setCartsOpened={setCartsOpened}
+        changeActiveState={changeActiveState}
+        isActive={isActive}
         isGiftCart={!cart?.business_id}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
@@ -232,6 +254,7 @@ const CartUI = (props: any) => {
             offsetDisabled={offsetDisabled}
             onDeleteProduct={handleDeleteClick}
             onEditProduct={handleEditProduct}
+            viewString='business_view'
           />
         ))}
 
@@ -243,7 +266,7 @@ const CartUI = (props: any) => {
                 {parsePrice(cart?.subtotal + getIncludedTaxes())}
               </OText>
             </OSTable>
-            {cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
+            {!hideCartDiscount && cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
                   <OText size={12} lineHeight={18}>
@@ -257,7 +280,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
+              !hideCartDiscount && cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
                 <OSTable key={`${offer.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18}>{offer.name}</OText>
@@ -278,7 +301,7 @@ const CartUI = (props: any) => {
               ))
             }
             {/* <Divider /> */}
-            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+            {!hideCartDiscount && cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
                 {cart?.business?.tax_type === 1 ? (
@@ -458,7 +481,7 @@ const CartUI = (props: any) => {
                 </TouchableOpacity>
               </OSTable>
             )}
-            {cart?.status !== 2 && (
+            {cart?.status !== 2 && !hideCartComments && (
               <OSTable>
                 <View style={{ width: '100%', marginTop: 20 }}>
                   <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>
@@ -476,6 +499,7 @@ const CartUI = (props: any) => {
                         marginTop: 10,
                         borderRadius: 7.6
                       }}
+                      forwardRef={commentRef}
                       multiline
                     />
                     {commentState?.loading && (
@@ -493,6 +517,21 @@ const CartUI = (props: any) => {
             )}
           </OSBill>
         )}
+        {cateringTypes.includes(orderState?.options?.type) && maxDate && cart?.valid_products && (
+          <View>
+            <MomentOption
+              maxDate={maxDate}
+              cateringPreorder
+              isCart
+              preorderSlotInterval={preorderSlotInterval}
+              preorderLeadTime={preorderLeadTime}
+              preorderTimeRange={preorderTimeRange}
+              preorderMaximumDays={preorderMaximumDays}
+              preorderMinimumDays={preorderMinimumDays}
+              business={cart?.business}
+            />
+          </View>
+        )}
         {!isMultiCheckout && (
           <>
             {cart?.valid_products ? (
@@ -509,7 +548,7 @@ const CartUI = (props: any) => {
                   isDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
                   borderColor={theme.colors.primary}
                   imgRightSrc={null}
-                  textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                  textStyle={{ color: '#fff', textAlign: 'center', flex: 1 }}
                   onClick={() => setOpenUpselling(true)}
                   style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
                 />
