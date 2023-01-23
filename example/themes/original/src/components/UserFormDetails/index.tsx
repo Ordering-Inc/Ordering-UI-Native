@@ -448,8 +448,8 @@ export const UserFormDetailsUI = (props: any) => {
 										? t('UPDATING', 'Updating...')
 										: t('UPDATE', 'Update')
 								}
-								bgColor={theme.colors.white}
-								textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+								bgColor={theme.colors.primary}
+								textStyle={{ color: theme.colors.white, fontSize: 14 }}
 								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
