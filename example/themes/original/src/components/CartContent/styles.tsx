@@ -10,7 +10,7 @@ export const CCNotCarts = styled.View`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin: auto;
 `
 

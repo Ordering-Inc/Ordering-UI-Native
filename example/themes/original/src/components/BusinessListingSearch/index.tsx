@@ -275,7 +275,10 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           }}
         />
       )}
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
       {businessesSearchList.businesses?.length > 0 && (
         <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
           <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
@@ -372,7 +375,11 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   onProductClick={(product: any) => onProductClick(business, category?.id, product?.id, product)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
-                  style={{ width: screenWidth - 80, maxWidth: screenWidth - 80, marginRight: 20 }}
+                  style={{
+                    width: screenWidth - (category?.products?.length > 1 ? 120 : 80),
+                    maxWidth: screenWidth - (category?.products?.length > 1 ? 120 : 80),
+                    marginRight: 20
+                  }}
                 />
               )))}
 

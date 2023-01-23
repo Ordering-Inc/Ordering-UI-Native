@@ -7,6 +7,7 @@ import { CCContainer, CCNotCarts, CCList, CheckoutAction } from './styles';
 import { Cart } from '../Cart';
 import { OButton, OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { NotFoundSource } from '../NotFoundSource';
 
 export const CartContent = (props: any) => {
 	const {
@@ -103,7 +104,14 @@ export const CartContent = (props: any) => {
 			)}
 			{(!carts || carts?.length === 0) && (
 				<CCNotCarts>
-					<OText size={24} style={{ textAlign: 'center' }}>
+					<NotFoundSource
+						hideImage
+						btnStyle={{ borderRadius: 8 }}
+						content={t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
+						btnTitle={t('START_SHOPPING', 'Start shopping')}
+						onClickButton={() => onNavigationRedirect('BusinessList')}
+					/>
+					{/* <OText size={24} style={{ textAlign: 'center' }}>
 						{t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
 					</OText>
 					<OButton
@@ -118,7 +126,7 @@ export const CartContent = (props: any) => {
 						style={{ height: 35, marginVertical: 20, borderRadius: 8 }}
 						imgRightSrc={null}
 						onClick={() => onNavigationRedirect('BusinessList')}
-					/>
+					/> */}
 				</CCNotCarts>
 			)}
 			<Spinner visible={isCartsLoading} />
