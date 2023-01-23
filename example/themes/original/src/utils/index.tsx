@@ -11,6 +11,11 @@ const theme = useTheme()
 export const flatArray = (arr: any) => [].concat(...arr)
 
 /**
+ * List of order type
+ */
+export const orderTypeList = ['delivery', 'pickup', 'eatin', 'curbside', 'drivethru', 'seatdelivery']
+
+/**
  * Function to return the traduction depending of a key 't'
  * @param {string} key for traduction
  */

@@ -212,6 +212,11 @@ const CheckoutUI = (props: any) => {
 		setIsUserDetailsEdit(true)
 	}
 
+	const handlePlaceOrderAsGuest = () => {
+    setIsOpen(false)
+    handlerClickPlaceOrder && handlerClickPlaceOrder()
+  }
+
 	const handlePaymentMethodClick = (paymethod: any) => {
 		setShowGateway({ closedByUser: false, open: true })
 		setWebviewPaymethod(paymethod)
@@ -765,6 +770,7 @@ const CheckoutUI = (props: any) => {
 								togglePhoneUpdate={togglePhoneUpdate}
 								requiredFields={requiredFields}
 								hideUpdateButton
+								handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
 								onClose={() => {
 									setIsOpen(false)
 									handlePlaceOrder(null, true)

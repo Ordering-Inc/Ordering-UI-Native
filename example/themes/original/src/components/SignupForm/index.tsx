@@ -83,7 +83,8 @@ const SignupFormUI = (props: SignupParams) => {
 		signUpTab,
 		useSignUpFullDetails,
 		useSignUpOtpEmail,
-		useSignUpOtpCellphone
+		useSignUpOtpCellphone,
+		isGuest
 	} = props;
 
 	const theme = useTheme();
@@ -465,15 +466,19 @@ const SignupFormUI = (props: SignupParams) => {
 
 	return (
 		<View>
-			<NavBar
-				title={t('SIGNUP', 'Signup')}
-				titleAlign={'center'}
-				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-				showCall={false}
-				btnStyle={{ paddingLeft: 0 }}
-				titleWrapStyle={{ paddingHorizontal: 0 }}
-				titleStyle={{ marginLeft: 0, marginRight: 0 }}
-			/>
+			{isGuest ? (
+				<OText style={{ textAlign: 'center', marginBottom: 10 }} size={18}>{t('SIGNUP', 'Signup')}</OText>
+			) : (
+				<NavBar
+					title={t('SIGNUP', 'Signup')}
+					titleAlign={'center'}
+					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+					showCall={false}
+					btnStyle={{ paddingLeft: 0 }}
+					titleWrapStyle={{ paddingHorizontal: 0 }}
+					titleStyle={{ marginLeft: 0, marginRight: 0 }}
+				/>
+			)}
 			<FormSide>
 				{((Number(useSignUpFullDetails) + Number(useSignUpOtpEmail) + Number(useSignUpOtpCellphone)) > 1) && (
 					<SignupWith>
@@ -893,7 +898,7 @@ const SignupFormUI = (props: SignupParams) => {
 						</View>
 					)
 				}
-				{configs && Object.keys(configs).length > 0 && (
+				{configs && Object.keys(configs).length > 0 && !isGuest && (
 					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value && facebookLoginEnabled) ||
 						((configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled) ||
 						((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) &&
