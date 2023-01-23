@@ -19,8 +19,10 @@ import {
 	useOrder,
 	useUtils,
 	ToastType,
-	useToast
+	useToast,
+	useConfig
 } from 'ordering-components/native';
+import uuid from 'react-native-uuid';
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
 import { ProductOption } from '../ProductOption';
@@ -52,6 +54,7 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NavBar from '../NavBar';
+import { orderTypeList } from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 
 export const ProductOptionsUI = (props: any) => {
@@ -71,7 +74,9 @@ export const ProductOptionsUI = (props: any) => {
 		handleChangeSuboptionState,
 		handleChangeCommentState,
 		productObject,
-		productAddedToCartLength
+		productAddedToCartLength,
+		actionStatus,
+		handleCreateGuestUser
 	} = props;
 
 	const theme = useTheme();
@@ -178,6 +183,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
 	const [{ auth }] = useSession();
+	const [{ configs }] = useConfig()
 	const { product, loading, error } = productObject;
 	const [gallery, setGallery] = useState([])
 	const [thumbsSwiper, setThumbsSwiper] = useState(0)
@@ -197,6 +203,9 @@ export const ProductOptionsUI = (props: any) => {
 	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
 	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
 	const [editionsLayoutY, setEditionsLayoutY] = useState(null)
+
+	const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
+  const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -292,6 +301,11 @@ export const ProductOptionsUI = (props: any) => {
 				animated: true
 			})
 		}
+	}
+
+	const handleUpdateGuest = () => {
+		const guestToken = uuid.v4()
+		if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
 	}
 
 	const handleOnLayout = (event: any, optionId: any) => {
@@ -472,8 +486,21 @@ export const ProductOptionsUI = (props: any) => {
 							height: 44,
 							borderColor: theme.colors.primary,
 							backgroundColor: theme.colors.white,
+							paddingLeft: 0,
+							paddingRight: 0
 						}}
 					/>
+				)}
+				{!auth && guestCheckoutEnabled && orderTypeEnabled && (
+					<TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
+						{actionStatus?.loading ? (
+							<Placeholder Animation={Fade}>
+								<PlaceholderLine width={60} height={20} />
+							</Placeholder>
+						) : (
+							<OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+						)}
+					</TouchableOpacity>
 				)}
 			</View>
 		)
