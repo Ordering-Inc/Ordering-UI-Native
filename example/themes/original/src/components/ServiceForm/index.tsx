@@ -11,6 +11,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ServiceFormParams } from '../../types'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import uuid from 'react-native-uuid';
+import { orderTypeList } from '../../utils'
 
 import {
   ProductForm as ProductFormController,
@@ -45,7 +47,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     maxProductQuantity,
     onClose,
     professionalListState,
-    isCartProduct
+    isCartProduct,
+    actionStatus,
+    handleCreateGuestUser
   } = props
 
   const theme = useTheme()
@@ -64,6 +68,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const [dateSelected, setDateSelected] = useState<any>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [currentProfessional, setCurrentProfessional] = useState<any>(null)
+
+  const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
+  const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
 
   const dropdownRef = useRef<any>(null)
 
@@ -147,6 +154,11 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       />
     )
   }
+
+  const handleUpdateGuest = () => {
+		const guestToken = uuid.v4()
+		if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
+	}
 
   const customDayHeaderStylesCallback = () => {
     return {
@@ -570,6 +582,17 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                     backgroundColor: theme.colors.white,
                   }}
                 />
+              )}
+              {!auth && guestCheckoutEnabled && orderTypeEnabled &&  (
+                <TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
+                  {actionStatus?.loading ? (
+                    <Placeholder Animation={Fade}>
+                      <PlaceholderLine width={60} height={20} />
+                    </Placeholder>
+                  ) : (
+                    <OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+                  )}
+                </TouchableOpacity>
               )}
           </ButtonWrapper>
         </Container>

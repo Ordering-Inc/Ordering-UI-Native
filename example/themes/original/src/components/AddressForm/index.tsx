@@ -362,7 +362,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		if (
 			orderState.loading &&
 			!addressesList &&
-			orderState.options.address &&
+			orderState?.options?.address &&
 			auth &&
 			!afterSignup
 		) {
@@ -370,7 +370,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				? navigation.navigate('BottomTab')
 				: navigation.navigate('Business');
 		}
-	}, [orderState.options.address]);
+	}, [orderState?.options?.address]);
 
 	useEffect(() => {
 		if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION') {
