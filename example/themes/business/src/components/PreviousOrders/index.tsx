@@ -93,7 +93,7 @@ export const PreviousOrders = (props: any) => {
                   imgRightSrc={null}
                   style={{ borderRadius: 7, height: 40 }}
                   parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.dangerText }}
+                  textStyle={{ color: theme.colors.white }}
                 />
                 <OButton
                   text={t('ACCEPT', 'Accept')}
@@ -103,7 +103,7 @@ export const PreviousOrders = (props: any) => {
                   imgRightSrc={null}
                   style={{ borderRadius: 7, height: 40 }}
                   parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.successText }}
+                  textStyle={{ color: theme.colors.white }}
                 />
               </>
             )}
