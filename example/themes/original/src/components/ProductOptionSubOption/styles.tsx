@@ -4,12 +4,12 @@ export const Container = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
   width: 100%;
 `
 
 export const IconControl = styled.TouchableOpacity`
   flex-direction: row;
+  padding: 10px;
   width: 45%;
   align-items: center;
 `
