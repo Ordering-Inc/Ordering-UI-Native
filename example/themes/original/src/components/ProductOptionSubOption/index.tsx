@@ -68,7 +68,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	return (
 		<View>
-			<Container>
+			<Container onPress={() => handleSuboptionClick()}>
 				<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 					{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 						state?.selected ? (
@@ -139,7 +139,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					)}
 				</PositionControl>
 				{price > 0 && (
-					<OText size={12} lineHeight={18} color={theme.colors.textSecondary}>
+					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ paddingRight: 10 }}>
 						+ {parsePrice(price)}
 					</OText>
 				)}
