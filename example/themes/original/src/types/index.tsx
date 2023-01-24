@@ -593,7 +593,7 @@ export interface UpsellingProductsParams {
 	business?: any;
 	businessId?: number;
 	cartProducts?: Array<any>;
-	handleUpsellingPage: () => void;
+	handleUpsellingPage: (cart ?: any) => void;
 	openUpselling: boolean;
 	canOpenUpselling?: boolean;
 	setCanOpenUpselling?: (value: any) => void;
