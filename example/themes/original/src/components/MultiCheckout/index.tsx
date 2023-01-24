@@ -81,7 +81,7 @@ const MultiCheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-  const isMultiDriverTips = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
