@@ -52,7 +52,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     handleClickLogisticOrder,
     forceUpdate,
     getPermissions,
-    isGrantedPermissions
+    orderAssingId,
+    isGrantedPermissions,
   } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
@@ -154,12 +155,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleRejectLogisticOrder = () => {
-    handleClickLogisticOrder?.(2, order?.logistic_order_id)
+    handleClickLogisticOrder?.(2, orderAssingId || order?.logistic_order_id)
     handleArrowBack()
   }
 
   const handleAcceptLogisticOrder = (order: any) => {
-    handleClickLogisticOrder?.(1, order?.logistic_order_id)
+    handleClickLogisticOrder?.(1, orderAssingId || order?.logistic_order_id)
     if (order?.order_group) {
       handleArrowBack()
     }
