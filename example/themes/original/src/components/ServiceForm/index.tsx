@@ -117,16 +117,24 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   })
 
   const isBusyTime = (professional: any) => {
-    if (professional?.busy_times?.length === 0 || !dateSelected) return false
+    if (!dateSelected) return false
+    const startDay = moment(dateSelected).utc().format('d')
+    const isStartScheduleEnabled = professional?.schedule?.[startDay]?.enabled
     const duration = product?.duration ?? 0
+    const endDay = moment(dateSelected).add(duration - 1, 'minutes').utc().format('d')
+    const isEndScheduleEnabled = professional?.schedule?.[endDay]?.enabled
+    if (!isStartScheduleEnabled || !isEndScheduleEnabled) return true
+
+    if (professional?.busy_times?.length === 0) return false
+  
     const busyTimes = isCartProduct
       ? professional?.busy_times.filter((item: any) => !(item.start === productCart?.calendar_event?.start && item.end === productCart?.calendar_event?.end))
       : [...professional?.busy_times]
     const valid = busyTimes.some((item: any) => {
       return (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).valueOf() &&
-        moment(dateSelected).valueOf() <= moment.utc(item?.end).local().valueOf()) ||
+        moment(dateSelected).valueOf() < moment.utc(item?.end).local().valueOf()) ||
         (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).add(duration, 'minutes').valueOf() &&
-        moment(dateSelected).add(duration, 'minutes').valueOf() <= moment.utc(item?.end).local().valueOf())
+        moment(dateSelected).add(duration, 'minutes').valueOf() < moment.utc(item?.end).local().valueOf())
     })
     return valid
   }

@@ -147,7 +147,7 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
   }
 
   useEffect(() => {
-    if (selectDate === null) return
+    if (selectDate === null || !professional?.schedule) return
     const _times = getTimes(selectDate, professional)
     setTimeList(_times)
   }, [selectDate, professional])
