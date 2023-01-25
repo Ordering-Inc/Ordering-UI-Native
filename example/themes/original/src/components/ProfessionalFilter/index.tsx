@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
-import { ScrollView, TouchableOpacity, View, StyleSheet, Platform } from 'react-native'
-import { useUtils, useLanguage } from 'ordering-components/native'
+import { ScrollView, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
-import FastImage from 'react-native-fast-image'
-import { OIcon, OText, OModal } from '../shared'
+import { OText, OModal } from '../shared'
 import { ProfessionalProfile } from '../ProfessionalProfile'
 import { ProfessionalFilterParams } from '../../types'
+import { SingleProfessionalCard } from './SingleProfessionalCard'
 
 export const ProfessionalFilter = (props: ProfessionalFilterParams) => {
   const {
     professionals,
     professionalSelected,
-		handleChangeProfessionalSelected
+		handleChangeProfessionalSelected,
+    handleUpdateProfessionals
   } = props
 
   const theme = useTheme()
-  const [{ optimizeImage }] = useUtils()
   const [, t] = useLanguage()
   const [open, setOpen] = useState(false)
   const [currentProfessional, setCurrentProfessional] = useState(null)
@@ -30,6 +30,11 @@ export const ProfessionalFilter = (props: ProfessionalFilterParams) => {
     setOpen(false)
   }
 
+  const onUpdateProfessionals = (id, changes) => {
+    const updatedProfessional = professionals.find(professional => professional.id === id)
+    handleUpdateProfessionals({ ...updatedProfessional, ...changes })
+  }
+
   const styles = StyleSheet.create({
     professionalItem: {
       flexDirection: 'row',
@@ -39,12 +44,7 @@ export const ProfessionalFilter = (props: ProfessionalFilterParams) => {
       borderWidth: 1,
       marginRight: 12,
       minHeight: 64
-    },
-		photoStyle: {
-			width: 42,
-			height: 42,
-			borderRadius: 7.6
-		}
+    }
   })
 
   return (
@@ -73,44 +73,14 @@ export const ProfessionalFilter = (props: ProfessionalFilterParams) => {
             </OText>
           </View>
         </TouchableOpacity>
-        {professionals.map((professional: any, i: number) => (
-          <TouchableOpacity
-            key={i}
-            onPress={() => handleOpenProfile(professional)}
-          >
-            <View
-              style={{
-                ...styles.professionalItem,
-                borderColor: (professional?.id === professionalSelected?.id)
-                  ? theme.colors.primary
-                  : theme.colors.border 
-              }}
-            >
-              {professional?.photo ? (
-                <FastImage
-                  style={styles.photoStyle}
-                  source={{
-                    uri: optimizeImage(professional?.photo, 'h_250,c_limit'),
-                    priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              ) : (
-                <OIcon
-                  src={theme?.images?.general?.user}
-                  cover={false}
-                  style={styles.photoStyle}
-                />
-              )}
-              <OText
-                size={12}
-                style={{ marginLeft: 12 }}
-                weight={'400'}
-              >
-                {professional?.name} {professional?.lastname}
-              </OText>
-            </View>
-          </TouchableOpacity>
+        {professionals.map((professional: any) => (
+          <SingleProfessionalCard
+            key={professional.id}
+            professional={professional}
+            active={professional?.id === professionalSelected?.id}
+            handleProfessionalClick={handleOpenProfile}
+            handleUpdateProfessionals={onUpdateProfessionals}
+          />
         ))}
       </ScrollView>
       <OModal

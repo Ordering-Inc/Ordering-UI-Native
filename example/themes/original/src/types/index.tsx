@@ -765,7 +765,8 @@ export interface ServiceFormParams {
 export interface ProfessionalFilterParams {
 	professionals?: any,
 	professionalSelected?: any,
-	handleChangeProfessionalSelected: any
+	handleChangeProfessionalSelected: any,
+	handleUpdateProfessionals?: any
 }
 
 export interface ProfessionalProfileParams {

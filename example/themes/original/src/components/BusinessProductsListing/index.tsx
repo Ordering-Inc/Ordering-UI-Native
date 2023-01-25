@@ -447,6 +447,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 professionals={business?.professionals}
                 professionalSelected={professionalSelected}
                 handleChangeProfessionalSelected={handleChangeProfessionalSelected}
+                handleUpdateProfessionals={handleUpdateProfessionals}
               />
             </ProfessionalFilterWrapper>
           )}
