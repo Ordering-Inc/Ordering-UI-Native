@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 
-import { Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 
 import { OButton, OText, OLink, OModal } from '../shared'
 import {
@@ -334,9 +334,15 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
 
         {!!order?.customer?.address_notes && (
-          <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-            {order?.customer?.address_notes}
-          </OText>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
+            <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+              {order?.customer?.address_notes}
+            </OText>
+          </ScrollView>
         )}
 
         {!!order?.customer?.zipcode && (
