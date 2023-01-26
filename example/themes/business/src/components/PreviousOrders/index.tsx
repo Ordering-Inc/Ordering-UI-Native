@@ -48,8 +48,13 @@ export const PreviousOrders = (props: any) => {
     if (props.handleClickEvent) {
       props.handleClickEvent({ ...order, isLogistic: isLogisticOrder })
     } else {
-      onNavigationRedirect &&
-        onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+      if (isLogisticOrder){
+        onNavigationRedirect &&
+        onNavigationRedirect('OrderDetailsLogistic', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+      } else {
+        onNavigationRedirect &&
+          onNavigationRedirect('OrderDetails', { order });
+      }
     }
   };
 
