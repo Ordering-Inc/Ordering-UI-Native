@@ -536,6 +536,7 @@ export interface FloatingButtonParams {
 }
 export interface MomentOptionParams {
 	navigation: any;
+	isCart?: any;
 	nopadding?: boolean;
 	datesList: Array<any>;
 	hoursList: Array<any>;
