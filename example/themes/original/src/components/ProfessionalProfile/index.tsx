@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Platform, View, Dimensions } from 'react-native'
+import { StyleSheet, Platform, View, Dimensions, Text } from 'react-native'
 import { useUtils, useLanguage, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
 import CalendarPicker from 'react-native-calendar-picker'
@@ -60,7 +60,12 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
     },
     photoStyle: {
       alignSelf: 'center'
-    }
+    },
+    dropDownRow: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      marginHorizontal: 0
+    },
   })
 
   const onDateChange = (date: any) => {
@@ -90,6 +95,28 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
   const validateSelectedDate = (curdate: any, menu: any) => {
     const day = moment(curdate).format('d')
     setIsEnabled(menu?.schedule?.[day]?.enabled || false)
+  }
+
+  const getMomentTime = (time) => {
+    const _moment = moment(`${moment(selectDate).format('YYYY-MM-DD')} ${time}`, 'YYYY-MM-DD HH:mm').toDate()
+    return _moment
+  }
+
+  const isBusyTime = (professional, selectedMoment) => {
+    if (!selectedMoment) return false
+    const startDay = moment(selectedMoment).utc().format('d')
+    const isStartScheduleEnabled = professional?.schedule?.[startDay]?.enabled
+    if (!isStartScheduleEnabled) return true
+
+    if (professional?.busy_times?.length === 0) return false
+
+    const busyTimes = professional?.busy_times
+
+    const valid = busyTimes.some(item => {
+      return (moment.utc(item?.start).local().valueOf() <= moment(selectedMoment).valueOf() &&
+        moment(selectedMoment).valueOf() < moment.utc(item?.end).local().valueOf())
+    })
+    return valid
   }
 
   const getTimes = (curdate: any, menu: any) => {
@@ -238,10 +265,12 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
                   paddingTop: 8,
                   paddingHorizontal: 12
                 }}
-                rowTextStyle={{
-                  color: theme.colors.disabled,
-                  fontSize: 14,
-                  marginHorizontal: 0
+                renderCustomizedRowChild={(item, index) => {
+                  return (
+                    <Text style={[styles.dropDownRow, { color: isBusyTime(professional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary } ]}>
+                      {item.text}
+                    </Text>
+                  )
                 }}
                 renderDropdownIcon={() => dropDownIcon()}
                 dropdownOverlayColor='transparent'
