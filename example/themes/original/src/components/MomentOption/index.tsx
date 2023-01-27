@@ -383,39 +383,45 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 						)}
 						<OText color={optionSelected.isSchedule ? theme.colors.textNormal : theme.colors.disabled}>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</OText>
 					</WrapSelectOption>
-
 					{optionSelected.isSchedule && (
 						<OrderTimeWrapper>
-							<View style={{ flex: 1 }}>
-								{selectDate && datesWhitelist[0]?.start !== null && (
-									<CalendarStrip
-										scrollable
-										locale={locale}
-										style={styles.calendar}
-										calendarHeaderContainerStyle={styles.calendarHeaderContainer}
-										calendarHeaderStyle={styles.calendarHeader}
-										dateNumberStyle={styles.dateNumber}
-										dateNameStyle={styles.dateName}
-										iconContainer={{ flex: 0.1 }}
-										highlightDateNameStyle={styles.highlightDateName}
-										highlightDateNumberStyle={styles.highlightDateNumber}
-										dayContainerStyle={{ height: '100%' }}
-										highlightDateContainerStyle={{ height: '100%' }}
-										calendarHeaderFormat='MMMM, YYYY'
-										iconStyle={{ borderWidth: 1 }}
-										selectedDate={dateSelected}
-										datesWhitelist={datesWhitelist}
-										minDate={moment()}
-										maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
-										disabledDateNameStyle={styles.disabledDateName}
-										disabledDateNumberStyle={styles.disabledDateNumber}
-										disabledDateOpacity={0.6}
-										onDateSelected={(date) => onSelectDate(date)}
-										leftSelector={<LeftSelector />}
-										rightSelector={<RightSelector />}
-									/>
-								)}
-							</View>
+							{datesWhitelist?.length <= 1 && (
+								<OText>
+									{moment(selectDate).format('Do MMMM, YYYY')}
+								</OText>
+							)}
+							{datesWhitelist > 1 && (
+								<View style={{ flex: 1 }}>
+									{selectDate && datesWhitelist[0]?.start !== null && (
+										<CalendarStrip
+											scrollable
+											locale={locale}
+											style={styles.calendar}
+											calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+											calendarHeaderStyle={styles.calendarHeader}
+											dateNumberStyle={styles.dateNumber}
+											dateNameStyle={styles.dateName}
+											iconContainer={{ flex: 0.1 }}
+											highlightDateNameStyle={styles.highlightDateName}
+											highlightDateNumberStyle={styles.highlightDateNumber}
+											dayContainerStyle={{ height: '100%' }}
+											highlightDateContainerStyle={{ height: '100%' }}
+											calendarHeaderFormat='MMMM, YYYY'
+											iconStyle={{ borderWidth: 1 }}
+											selectedDate={dateSelected}
+											datesWhitelist={datesWhitelist}
+											minDate={moment()}
+											maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
+											disabledDateNameStyle={styles.disabledDateName}
+											disabledDateNumberStyle={styles.disabledDateNumber}
+											disabledDateOpacity={0.6}
+											onDateSelected={(date) => onSelectDate(date)}
+											leftSelector={<LeftSelector />}
+											rightSelector={<RightSelector />}
+										/>
+									)}
+								</View>
+							)}
 							<TimeListWrapper nestedScrollEnabled={true} cateringPreorder={cateringPreorder}>
 								<TimeContentWrapper>
 									{timeList.map((time: any, i: number) => (
