@@ -29,6 +29,10 @@ import { ReviewCustomer } from '../ReviewCustomer'
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+
+const { useDeviceOrientation } = DeviceOrientationMethods
+
 interface OrderContent {
   order: any,
   logisticOrderStatus?: Array<number>,
@@ -44,7 +48,9 @@ export const OrderContentComponent = (props: OrderContent) => {
   const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
-  const distanceUnit = configs?.distance_unit?.value
+  const [orientationState] = useDeviceOrientation();
+
+  const WIDTH_SCREEN = orientationState?.dimensions?.width
 
   const [openReviewModal, setOpenReviewModal] = useState(false)
 
@@ -103,7 +109,7 @@ export const OrderContentComponent = (props: OrderContent) => {
   }
 
   const onTextLayout = useCallback((e: any) => {
-    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
+    setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
   },[]);
 
   return (

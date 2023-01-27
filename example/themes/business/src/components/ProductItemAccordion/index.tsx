@@ -3,6 +3,10 @@ import { View, Animated, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUtils, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+
+const { useDeviceOrientation } = DeviceOrientationMethods
+
 import {
   Accordion,
   AccordionSection,
@@ -34,6 +38,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parsePrice }] = useUtils();
+  const [orientationState] = useDeviceOrientation();
+  const WIDTH_SCREEN = orientationState?.dimensions?.width
 
   const [isActive, setActiveState] = useState(false);
   const [isReadMore, setIsReadMore] = useState(false);
@@ -111,7 +117,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   }, []);
 
   const onTextLayout = useCallback((e: any) => {
-    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
+    setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
   },[]);
 
   return (
