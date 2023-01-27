@@ -25,18 +25,18 @@ export interface LoginParams {
   enableReCaptcha?: any;
 
   otpType?: string,
-	setOtpType: (type : string) => void,
-	generateOtpCode: (values ?: any) => void,
-	useLoginOtpEmail?: boolean,
-	useLoginOtpCellphone?: boolean,
-	useLoginOtp?: boolean
+  setOtpType: (type: string) => void,
+  generateOtpCode: (values?: any) => void,
+  useLoginOtpEmail?: boolean,
+  useLoginOtpCellphone?: boolean,
+  useLoginOtp?: boolean
 }
 export interface otpParams {
-	willVerifyOtpState: boolean,
-	setWillVerifyOtpState: (val : boolean) => void,
-	onSubmit: () => void,
-	handleLoginOtp: (code : string) => void,
-	setAlertState: any,
+  willVerifyOtpState: boolean,
+  setWillVerifyOtpState: (val: boolean) => void,
+  onSubmit: () => void,
+  handleLoginOtp: (code: string) => void,
+  setAlertState: any,
   formState?: any
 }
 export interface ProfileParams {
@@ -611,4 +611,11 @@ export interface ReviewCustomerParams {
 
 export interface NoNetworkParams {
   image?: any;
+}
+
+export interface OrderDetailsLogisticParams {
+  navigation: any,
+  handleClickLogisticOrder: any,
+  orderAssingId: number,
+  order: any
 }

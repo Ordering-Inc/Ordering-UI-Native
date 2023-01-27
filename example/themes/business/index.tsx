@@ -41,6 +41,7 @@ import { MapViewUI as MapView } from './src/components/MapView'
 import { NewOrderNotification } from './src/components/NewOrderNotification';
 import { DriverSchedule } from './src/components/DriverSchedule';
 import { ScheduleBlocked } from './src/components/ScheduleBlocked';
+import { OrderDetailsLogistic } from './src/components/OrderDetailsLogistic'
 //OComponents
 import {
   OText,
@@ -110,6 +111,7 @@ export {
   VerifyPhone,
   DriverSchedule,
   ScheduleBlocked,
+  OrderDetailsLogistic,
   //OComponents
   OAlert,
   OButton,
