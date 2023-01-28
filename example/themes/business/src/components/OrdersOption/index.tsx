@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform } from 'react-native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform, TouchableOpacity } from 'react-native';
 import { useLanguage, useUtils, useToast, OrderListGroups, useConfig } from 'ordering-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -238,6 +238,19 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       borderColor: theme.colors.lightGray,
       overflow: 'hidden',
       minHeight: 155
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginBottom: 30,
+      marginTop: 30
     },
     rowStyle: {
       display: 'flex',
@@ -696,20 +709,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <ModalContainer
             nestedScrollEnabled={true}
           >
-            <OIconButton
-              icon={theme.images.general.arrow_left}
-              borderColor={theme.colors.clear}
-              iconColor={theme.colors.backArrow}
-              iconStyle={{ width: 20, height: 13 }}
-              style={{
-                maxWidth: 40,
-                height: 35,
-                justifyContent: 'flex-end',
-                marginBottom: 30,
-                marginTop: 30
-              }}
-              onClick={() => handleClose()}
-            />
+            <TouchableOpacity onPress={() => handleClose()} style={styles.btnBackArrow}>
+              <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+            </TouchableOpacity>
             {openSearchModal && (
               <SearchModalContent>
                 <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>

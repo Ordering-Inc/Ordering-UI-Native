@@ -9,12 +9,15 @@ import {
 
 //Components
 import {
+  OIcon,
   OIconButton,
   OText,
 } from '../shared'
 
 import { useTheme } from 'styled-components/native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
   useLanguage,
@@ -54,6 +57,19 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
       height: 40,
       padding: 10,
       alignItems: 'flex-end',
+      color: theme.colors.textGray,
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginTop: 10
     },
   })
 
@@ -108,42 +124,30 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     <>
       {!props.isCustomView && (
         <Header>
-          <OIconButton
-            icon={theme.images.general.arrow_left}
-            iconStyle={{ width: 20, height: 20 }}
-            borderColor={theme.colors.clear}
-            style={{ ...styles.icons, justifyContent: 'flex-end' }}
-            onClick={() => handleArrowBack()}
-          />
-
+          <TouchableOpacity onPress={() => handleArrowBack()} style={styles.btnBackArrow}>
+            <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+          </TouchableOpacity>
           {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
             <Actions>
               {getOrderStatus(order?.status, t)?.value !==
                 t('PENDING', 'Pending') && (
                   <>
-                    <OIconButton
-                      icon={theme.images.general.copy}
-                      iconStyle={{
-                        width: 20,
-                        height: 25,
-                        top: 2,
-                        tintColor: theme.colors.backArrow,
-                      }}
-                      borderColor={theme.colors.clear}
-                      style={styles.icons}
-                      onClick={() => handleCopyClipboard?.()}
-                    />
-                    <OIconButton
-                      icon={theme.images.general.print}
-                      iconStyle={{
-                        width: 25,
-                        height: 22,
-                        tintColor: theme.colors.backArrow,
-                      }}
-                      borderColor={theme.colors.clear}
-                      style={styles.icons}
-                      onClick={() => handleViewSummaryOrder?.()}
-                    />
+                    <TouchableOpacity onPress={() => handleCopyClipboard?.()}>
+                      <MaterialCommunityIcons
+                        name='content-copy'
+                        color={theme.colors.textGray}
+                        size={20}
+                        style={styles.icons}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
+                      <SimpleLineIcons
+                        name='printer'
+                        color={theme.colors.textGray}
+                        size={20}
+                        style={styles.icons}
+                      />
+                    </TouchableOpacity>
                   </>
                 )}
               <OIconButton
@@ -151,7 +155,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 iconStyle={{
                   width: 20,
                   height: 20,
-                  tintColor: theme.colors.backArrow,
+                  tintColor: theme.colors.textGray,
                 }}
                 borderColor={theme.colors.clear}
                 style={styles.icons}
@@ -163,7 +167,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 iconStyle={{
                   width: 20,
                   height: 20,
-                  tintColor: theme.colors.backArrow,
+                  tintColor: theme.colors.textGray,
                 }}
                 borderColor={theme.colors.clear}
                 style={styles.icons}
@@ -193,29 +197,22 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 {getOrderStatus(order?.status, t)?.value !==
                   t('PENDING', 'Pending') && (
                     <>
-                      <OIconButton
-                        icon={theme.images.general.copy}
-                        iconStyle={{
-                          width: 20,
-                          height: 25,
-                          top: 2,
-                          tintColor: theme.colors.backArrow,
-                        }}
-                        borderColor={theme.colors.clear}
-                        style={styles.icons}
-                        onClick={() => handleCopyClipboard?.()}
-                      />
-                      <OIconButton
-                        icon={theme.images.general.print}
-                        iconStyle={{
-                          width: 25,
-                          height: 22,
-                          tintColor: theme.colors.backArrow,
-                        }}
-                        borderColor={theme.colors.clear}
-                        style={styles.icons}
-                        onClick={() => handleViewSummaryOrder?.()}
-                      />
+                      <TouchableOpacity onPress={() => handleCopyClipboard?.()}>
+                        <MaterialCommunityIcons
+                          name='content-copy'
+                          color={theme.colors.textGray}
+                          size={20}
+                          style={styles.icons}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
+                        <SimpleLineIcons
+                          name='printer'
+                          color={theme.colors.textGray}
+                          size={20}
+                          style={styles.icons}
+                        />
+                      </TouchableOpacity>
                     </>
                   )}
                 <OIconButton
@@ -223,7 +220,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                   iconStyle={{
                     width: 20,
                     height: 20,
-                    tintColor: theme.colors.backArrow,
+                    tintColor: theme.colors.textGray,
                   }}
                   borderColor={theme.colors.clear}
                   style={styles.icons}
@@ -235,7 +232,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                   iconStyle={{
                     width: 20,
                     height: 20,
-                    tintColor: theme.colors.backArrow,
+                    tintColor: theme.colors.textGray,
                   }}
                   borderColor={theme.colors.clear}
                   style={styles.icons}
