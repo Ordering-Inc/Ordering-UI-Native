@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { Chat } from '../Chat';
-import { StyleSheet, View, BackHandler } from 'react-native';
+import { StyleSheet, View, BackHandler, TouchableOpacity } from 'react-native';
 import {
   useLanguage,
   OrderDetails as OrderDetailsController,
@@ -9,7 +9,7 @@ import {
 } from 'ordering-components/native';
 import { useUtils } from 'ordering-components/native';
 
-import { OIcon, OIconButton, OText } from '../shared';
+import { OIcon, OText } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
@@ -146,13 +146,6 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       shadowRadius: 3.84,
       elevation: 3,
     },
-    cancelBtn: {
-      marginRight: 5,
-      zIndex: 10000,
-      height: 30,
-      width: 20,
-      justifyContent: 'flex-end',
-    },
     modalText: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
@@ -160,6 +153,18 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       color: theme.colors.textGray,
       textAlign: 'center',
       zIndex: 10,
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginTop: 10
     },
   });
 
@@ -260,13 +265,9 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
         <>
           <View style={styles.titleSection}>
             <View style={styles.titleGroups}>
-              <OIconButton
-                icon={theme.images.general.arrow_left}
-                iconStyle={{ width: 23, height: 23 }}
-                borderColor={theme.colors.clear}
-                style={styles.cancelBtn}
-                onClick={handleArrowBack}
-              />
+              <TouchableOpacity onPress={() => handleArrowBack()} style={styles.btnBackArrow}>
+                <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+              </TouchableOpacity>
 
               <OText size={16} style={styles.modalText} adjustsFontSizeToFit>
                 {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id}`}
@@ -292,7 +293,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
                 <OIcon
                   url={optimizeImage(
                     order?.customer?.photo ||
-                      theme?.images?.dummies?.customerPhoto,
+                    theme?.images?.dummies?.customerPhoto,
                     'h_300,c_limit',
                   )}
                   style={styles.titleIcons}
