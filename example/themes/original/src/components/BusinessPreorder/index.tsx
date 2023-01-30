@@ -287,7 +287,6 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             )
           }
         })
-        console.log(_timeLists)
       if (_timeLists?.length > 0) {
         setTimeList(_timeLists)
       }
@@ -314,7 +313,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   useEffect(() => {
     handleAsap && handleAsap()
   }, [])
-  console.log(business)
+
   return (
     <>
       <PreOrderContainer contentContainerStyle={{ paddingVertical: 32, paddingHorizontal: 40 }}>
