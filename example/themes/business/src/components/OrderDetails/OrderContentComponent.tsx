@@ -43,12 +43,12 @@ interface OrderContent {
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
-  const [{user}] = useSession()
-  console.log(user)
+  const [{ user }] = useSession()
   const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [orientationState] = useDeviceOrientation();
+  const distanceUnit = configs?.distance_unit?.value
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -110,7 +110,7 @@ export const OrderContentComponent = (props: OrderContent) => {
 
   const onTextLayout = useCallback((e: any) => {
     setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
-  },[]);
+  }, []);
 
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
