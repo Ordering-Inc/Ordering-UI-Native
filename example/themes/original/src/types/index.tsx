@@ -570,6 +570,9 @@ export interface BusinessPreorderParams {
 	goToBack: any;
 	business: any;
 	handleBusinessClick: (value: any) => {};
+	getActualSchedule?: any;
+	cateringPreorder?: boolean;
+	preorderLeadTime?: number 
 }
 export interface BusinessMenuListParams {
 	menu: any;

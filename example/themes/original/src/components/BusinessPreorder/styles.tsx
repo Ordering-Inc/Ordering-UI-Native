@@ -21,6 +21,10 @@ export const OrderTimeWrapper = styled.View`
 export const TimeListWrapper = styled.ScrollView`
   margin-top: 30px;
   max-height: 160px;
+  ${({ cateringPreorder }: any) => cateringPreorder && css`
+    max-height: 210px;
+    height: 210px;
+  `}
 `
 
 export const TimeContentWrapper = styled.View`
@@ -38,6 +42,16 @@ export const TimeItem = styled.View`
   justify-content: center;
   align-items: center;
   margin: 10px 0px;
+  ${({ cateringPreorder }: any) => cateringPreorder && css`
+    background: #fff;
+    width: 100%;
+    min-width: 100%;
+    height: 50px;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 10px;
+    margin: 0;
+  `}
   ${({ active }: any) => active && css`
     background: #F5F9FF;
   `}
