@@ -72,6 +72,7 @@ const LoginFormUI = (props: LoginParams) => {
 		generateOtpCode,
 		useLoginOtpEmail,
 		useLoginOtpCellphone,
+		isGuest
 	} = props;
 
 	const [, { showToast }] = useToast();
@@ -378,15 +379,19 @@ const LoginFormUI = (props: LoginParams) => {
 
 	return (
 		<Container>
-			<NavBar
-				title={t('LOGIN', 'Login')}
-				titleAlign={'center'}
-				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-				showCall={false}
-				btnStyle={{ paddingLeft: 0 }}
-				titleWrapStyle={{ paddingHorizontal: 0 }}
-				titleStyle={{ marginRight: 0, marginLeft: 0 }}
-			/>
+			{isGuest ? (
+				<OText style={{ textAlign: 'center', marginBottom: 10 }} size={18}>{t('LOGIN', 'Login')}</OText>
+			) : (
+				<NavBar
+					title={t('LOGIN', 'Login')}
+					titleAlign={'center'}
+					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+					showCall={false}
+					btnStyle={{ paddingLeft: 0 }}
+					titleWrapStyle={{ paddingHorizontal: 0 }}
+					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+				/>
+			)}
 			<FormSide>
 				{(Number(useLoginByEmail) + Number(useLoginByCellphone) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
 					<LoginWith>
@@ -733,7 +738,7 @@ const LoginFormUI = (props: LoginParams) => {
 				{configs && Object.keys(configs).length > 0 ? (
 					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value && facebookLoginEnabled) ||
 						((configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled) ||
-						((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) &&
+						((configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled)) && !isGuest &&
 					(
 						<>
 							<View

@@ -19,6 +19,7 @@ export interface LoginParams {
 	notificationState?: any;
 	handleReCaptcha?: any;
 	enableReCaptcha?: any;
+	isGuest?: any;
 	otpType?: string,
 	setOtpType: (type: string) => void,
 	generateOtpCode: (values?: any) => void,
