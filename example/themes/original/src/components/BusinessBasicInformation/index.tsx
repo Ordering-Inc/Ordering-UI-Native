@@ -46,8 +46,16 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
-  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const hideLogo = theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
+	const hideTime = theme?.business_view?.components?.header?.components?.business?.components?.time?.hidden
+	const hideReviews = theme?.business_view?.components?.header?.components?.business?.components?.reviews?.hidden
+	const hideReviewsPopup = theme?.business_view?.components?.header?.components?.reviews?.hidden
+	const hideDistance = theme?.business_view?.components?.header?.components?.business?.components?.distance?.hidden
+	const hideInfoIcon = theme?.business_view?.components?.header?.components?.business?.components?.business_info?.hidden
+	const hideCity = theme?.business_view?.components?.header?.components?.business?.components?.city?.hidden
+	const hideHeader = theme?.business_view?.components?.header?.hidden
 
 	const styles = StyleSheet.create({
 		businesInfoheaderStyle: {
@@ -249,9 +257,9 @@ export const BusinessBasicInformation = (
 								iconTitle='snapchat'
 							/>
 						)}
-						{isChewLayout && (
+						{isChewLayout && !hideInfoIcon && (
 							<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
-								<OText 
+								<OText
 									color={theme.colors.primary}
 									style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
 									size={12}
@@ -267,44 +275,46 @@ export const BusinessBasicInformation = (
 	}
 
 	return (
-		<BusinessContainer isChewLayout={isChewLayout && !showLogo}>
-			<BusinessHeader
-				isChewLayout={isChewLayout}
-				style={
-					isBusinessInfoShow
-						? styles.businesInfoheaderStyle
-						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
-				}
-				{...(!loading && {
-					source: (header || businessState?.business?.header) ? {
-						uri: header || optimizeImage(businessState?.business?.header, 'h_250,c_limit')
-					} : theme?.images?.dummies?.businessHeader
-				})}
-				imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
-			>
-				{!isBusinessInfoShow && !isChewLayout && (
-					<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
-						<OIcon src={theme.images.general.info} width={24} />
-					</WrapBusinessInfo>
-				)}
-				{isChewLayout && !loading && (
-					<View style={styles.headerChewStyle}>
-						<OText size={24} weight={'600'} mBottom={-5}>
-							{business?.name}
-						</OText>
-						{business?.city?.name && (
-							<OText>
-								{business?.city?.name}
+		<BusinessContainer isChewLayout={isChewLayout && hideLogo}>
+			{!hideHeader && (
+				<BusinessHeader
+					isChewLayout={isChewLayout}
+					style={
+						isBusinessInfoShow
+							? styles.businesInfoheaderStyle
+							: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
+					}
+					{...(!loading && {
+						source: (header || businessState?.business?.header) ? {
+							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header
+						} : theme?.images?.dummies?.businessHeader
+					})}
+					imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
+				>
+					{!isBusinessInfoShow && !hideInfoIcon && !isChewLayout && (
+						<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
+							<OIcon src={theme.images.general.info} width={24} />
+						</WrapBusinessInfo>
+					)}
+					{isChewLayout && !loading && (
+						<View style={styles.headerChewStyle}>
+							<OText size={24} weight={'600'} mBottom={-5}>
+								{business?.name}
 							</OText>
-						)}
-						<View style={styles.socialIconsChewContainer}>
-							<SocialIcons />
+							{business?.city?.name && !hideCity && (
+								<OText>
+									{business?.city?.name}
+								</OText>
+							)}
+							<View style={styles.socialIconsChewContainer}>
+								<SocialIcons />
+							</View>
 						</View>
-					</View>
-				)}
-			</BusinessHeader>
+					)}
+				</BusinessHeader>
+			)}
 			<BusinessInfo style={styles.businessInfo}>
-				{showLogo && (
+				{!hideLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
 							logo || businessState?.business?.logo ?
@@ -384,34 +394,43 @@ export const BusinessBasicInformation = (
 									</Placeholder>
 								)}
 								<View style={styles.bullet}>
-									<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-										{`${t('DELIVERY_FEE', 'Delivery fee')} ${business && parsePrice(business?.delivery_price || 0)} \u2022 `}
-									</OText>
-									{orderState?.options?.type === 1 ? (
+									{!hideDeliveryFee && (
 										<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-											{convertHoursToMinutes(business?.delivery_time) + `  \u2022 `}
-										</OText>
-									) : (
-										<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-											{convertHoursToMinutes(business?.pickup_time) + `  \u2022 `}
+											{`${t('DELIVERY_FEE', 'Delivery fee')} ${business && parsePrice(business?.delivery_price || 0)} \u2022 `}
 										</OText>
 									)}
-									<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-										{parseDistance(business?.distance || 0) + `  \u2022 `}
-									</OText>
+									{!hideTime && (
+										<>
+											{orderState?.options?.type === 1 ? (
+												<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+													{convertHoursToMinutes(business?.delivery_time) + `  \u2022 `}
+												</OText>
+											) : (
+												<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+													{convertHoursToMinutes(business?.pickup_time) + `  \u2022 `}
+												</OText>
+											)}
+										</>
+									)}
+									{!hideDistance && (
+										<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+											{parseDistance(business?.distance || 0) + `  \u2022 `}
+										</OText>
+									)}
 								</View>
-
-								<View style={styles.reviewStyle}>
-									<OIcon
-										src={theme.images.general.star}
-										width={14}
-										color={theme.colors.textSecondary}
-										style={{ marginTop: -2, marginEnd: 2 }}
-									/>
-									<OText size={12} color={theme.colors.textSecondary}>
-										{business?.reviews?.total}
-									</OText>
-								</View>
+								{!hideReviews && (
+									<View style={styles.reviewStyle}>
+										<OIcon
+											src={theme.images.general.star}
+											width={14}
+											color={theme.colors.textSecondary}
+											style={{ marginTop: -2, marginEnd: 2 }}
+										/>
+										<OText size={12} color={theme.colors.textSecondary}>
+											{business?.reviews?.total}
+										</OText>
+									</View>
+								)}
 							</BusinessInfoItem>
 						</View>
 						<WrapReviews>
@@ -420,7 +439,7 @@ export const BusinessBasicInformation = (
 									{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
 										<>
 											<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
-												<OText 
+												<OText
 													color={theme.colors.primary}
 													style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
 													size={12}
@@ -431,15 +450,17 @@ export const BusinessBasicInformation = (
 											<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 										</>
 									)}
-									<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
-										<OText
-											color={theme.colors.primary}
-											style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
-											size={12}
-										>
-											{t('REVIEWS', 'Reviews')}
-										</OText>
-									</TouchableOpacity>
+									{!hideReviewsPopup && (
+										<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+											<OText
+												color={theme.colors.primary}
+												style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+												size={12}
+											>
+												{t('REVIEWS', 'Reviews')}
+											</OText>
+										</TouchableOpacity>
+									)}
 								</>
 							)}
 						</WrapReviews>
