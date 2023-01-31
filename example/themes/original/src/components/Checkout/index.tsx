@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -16,7 +16,7 @@ import {
 	ToastType,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OText, OIcon, OModal } from '../shared';
+import { OText, OIcon, OModal, OButton } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -25,6 +25,8 @@ import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { PaymentOptionWallet } from '../PaymentOptionWallet';
 import { PlaceSpot } from '../PlaceSpot'
+import { SignupForm } from '../SignupForm'
+import { LoginForm } from '../LoginForm'
 
 import {
 	ChContainer,
@@ -78,6 +80,7 @@ const CheckoutUI = (props: any) => {
 		placing,
 		cartState,
 		cartUuid,
+		loyaltyPlansState,
 		businessDetails,
 		paymethodSelected,
 		handlePaymethodChange,
@@ -88,7 +91,8 @@ const CheckoutUI = (props: any) => {
 		handleChangeDeliveryOption,
 		currency,
 		merchantId,
-		setPlaceSpotNumber
+		setPlaceSpotNumber,
+		maxDate
 	} = props
 
 	const theme = useTheme();
@@ -128,7 +132,7 @@ const CheckoutUI = (props: any) => {
 
 	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
-	const [{ user, token }] = useSession();
+	const [{ user, token }, { login }] = useSession();
 	const [ordering] = useApi()
 	const [{ configs }] = useConfig();
 	const [{ parsePrice, parseDate }] = useUtils();
@@ -145,15 +149,22 @@ const CheckoutUI = (props: any) => {
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
+	const [openModal, setOpenModal] = useState({ login: false, signup: false })
+  const [allowedGuest, setAllowedGuest] = useState(false)
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
+	const isGiftCardCart = !cart?.business_id
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
 	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
-  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const hideBusinessAddress = theme?.checkout?.components?.business?.components?.address?.hidden
+	const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
+	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden
+	const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -188,8 +199,20 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
+	const handleSuccessSignup = (user: any) => {
+    login({
+      user,
+      token: user?.session?.access_token
+    })
+    setOpenModal({ ...openModal, signup: false })
+  }
+
+	const handleSuccessLogin = (user: any) => {
+    if (user) setOpenModal({ ...openModal, login: false })
+  }
+
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
-		if (!userErrors.length && !requiredFields?.length || forcePlace) {
+		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
 			Vibration.vibrate()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
@@ -276,7 +299,11 @@ const CheckoutUI = (props: any) => {
 
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
-			onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
+			if (cart?.business?.slug) {
+				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
+			} else {
+				onNavigationRedirect('Wallets')
+			}
 		}
 	}, [cart?.products])
 
@@ -353,82 +380,116 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
 					</ChSection>
 
-					<ChSection>
-						<ChBusinessDetails>
-							{
-								(businessDetails?.loading || cartState.loading || !businessDetails?.business || Object.values(businessDetails?.business).length === 0) &&
-								!businessDetails?.error &&
-								(
+					{!isGiftCardCart && !hideBusinessDetails && (
+						<ChSection>
+							<ChBusinessDetails>
+								{
+									(businessDetails?.loading || cartState.loading || !businessDetails?.business || Object.values(businessDetails?.business).length === 0) &&
+									!businessDetails?.error &&
+									(
+										<Placeholder Animation={Fade}>
+											<PlaceholderLine height={20} />
+											<PlaceholderLine height={12} />
+											<PlaceholderLine height={12} />
+											<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
+										</Placeholder>
+									)}
+								{
+									!cartState.loading &&
+									businessDetails?.business &&
+									Object.values(businessDetails?.business).length > 0 &&
+									(
+										<>
+											<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
+											<View>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.name}
+												</OText>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.email}
+												</OText>
+												<OText size={12} lineHeight={18} weight={'400'}>
+													{businessDetails?.business?.cellphone}
+												</OText>
+												{!hideBusinessAddress && (
+													<OText size={12} lineHeight={18} weight={'400'}>
+														{businessDetails?.business?.address}
+													</OText>
+												)}
+											</View>
+										</>
+									)}
+								{businessDetails?.error && businessDetails?.error?.length > 0 && (
+									<View>
+										<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
+										<NotFoundSource
+											content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+										/>
+									</View>
+								)}
+							</ChBusinessDetails>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
+					{!hideCustomerDetails && (
+
+						<ChSection>
+							<ChUserDetails>
+								{cartState.loading ? (
 									<Placeholder Animation={Fade}>
 										<PlaceholderLine height={20} />
 										<PlaceholderLine height={12} />
 										<PlaceholderLine height={12} />
 										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 									</Placeholder>
-								)}
-							{
-								!cartState.loading &&
-								businessDetails?.business &&
-								Object.values(businessDetails?.business).length > 0 &&
-								(
-									<>
-										<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
+								) : (
+									(user?.guest_id && !allowedGuest) ? (
 										<View>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.name}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.email}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.cellphone}
-											</OText>
-											<OText size={12} lineHeight={18} weight={'400'}>
-												{businessDetails?.business?.address}
-											</OText>
+											<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer details')} />
+											<OButton
+												text={t('SIGN_UP', 'Sign up')}
+												textStyle={{ color: theme.colors.white }}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setOpenModal({ ...openModal, signup: true })}
+											/>
+											<OButton
+												text={t('LOGIN', 'Login')}
+												textStyle={{ color: theme.colors.primary }}
+												bgColor={theme.colors.white}
+												borderColor={theme.colors.primary}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setOpenModal({ ...openModal, login: true })}
+											/>
+											<OButton
+												text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+												textStyle={{ color: theme.colors.black }}
+												bgColor={theme.colors.white}
+												borderColor={theme.colors.black}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setAllowedGuest(true)}
+											/>
 										</View>
-									</>
+									) : (
+										<UserDetails
+											isUserDetailsEdit={isUserDetailsEdit}
+											HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
+											cartStatus={cart?.status}
+											businessId={cart?.business_id}
+											useValidationFields
+											useDefualtSessionManager
+											useSessionUser
+											isCheckout
+											phoneUpdate={phoneUpdate}
+											togglePhoneUpdate={togglePhoneUpdate}
+										/>
+									)
 								)}
-							{businessDetails?.error && businessDetails?.error?.length > 0 && (
-								<View>
-									<HeaderTitle text={t('BUSINESS_DETAILS', 'Business Details')} />
-									<NotFoundSource
-										content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
-									/>
-								</View>
-							)}
-						</ChBusinessDetails>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-					</ChSection>
+							</ChUserDetails>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
-					<ChSection>
-						<ChUserDetails>
-							{cartState.loading ? (
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} />
-									<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
-								</Placeholder>
-							) : (
-								<UserDetails
-									isUserDetailsEdit={isUserDetailsEdit}
-									HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
-									cartStatus={cart?.status}
-									businessId={cart?.business_id}
-									useValidationFields
-									useDefualtSessionManager
-									useSessionUser
-									isCheckout
-									phoneUpdate={phoneUpdate}
-									togglePhoneUpdate={togglePhoneUpdate}
-								/>
-							)}
-						</ChUserDetails>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
-					</ChSection>
-
-					{options?.type === 1 && (
+					{options?.type === 1 && !isGiftCardCart && (
 						<DeliveryOptionsContainer>
 							{cartState.loading || deliveryOptionSelected === undefined ? (
 								<View style={{ height: 110 }}>
@@ -507,28 +568,30 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					<ChSection>
-						<ChAddress>
-							{(businessDetails?.loading || cartState.loading) ? (
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} style={{ marginBottom: 50 }} />
-									<PlaceholderLine height={100} />
-								</Placeholder>
-							) : (
-								<AddressDetails
-									navigation={navigation}
-									location={businessDetails?.business?.location}
-									businessLogo={businessDetails?.business?.logo}
-									isCartPending={cart?.status === 2}
-									uuid={cartUuid}
-									apiKey={configs?.google_maps_api_key?.value}
-									mapConfigs={mapConfigs}
-									HeaderTitle={<HeaderTitle text={t('DELIVERY_ADDRESS', 'Delivery address')} mb={0} />}
-								/>
-							)}
-						</ChAddress>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
-					</ChSection>
+					{!isGiftCardCart && !hideBusinessMap && (
+						<ChSection>
+							<ChAddress>
+								{(businessDetails?.loading || cartState.loading) ? (
+									<Placeholder Animation={Fade}>
+										<PlaceholderLine height={20} style={{ marginBottom: 50 }} />
+										<PlaceholderLine height={100} />
+									</Placeholder>
+								) : (
+									<AddressDetails
+										navigation={navigation}
+										location={businessDetails?.business?.location}
+										businessLogo={businessDetails?.business?.logo}
+										isCartPending={cart?.status === 2}
+										uuid={cartUuid}
+										apiKey={configs?.google_maps_api_key?.value}
+										mapConfigs={mapConfigs}
+										HeaderTitle={<HeaderTitle text={t('DELIVERY_ADDRESS', 'Delivery address')} mb={0} />}
+									/>
+								)}
+							</ChAddress>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
 					{!cartState.loading &&
 						cart &&
@@ -537,6 +600,7 @@ const CheckoutUI = (props: any) => {
 						cart?.status !== 2 &&
 						validationFields?.fields?.checkout?.driver_tip?.enabled &&
 						driverTipsOptions && driverTipsOptions?.length > 0 &&
+						!isGiftCardCart &&
 						(
 							<ChSection>
 								<ChDriverTips>
@@ -573,8 +637,8 @@ const CheckoutUI = (props: any) => {
 								<PaymentOptions
 									cart={cart}
 									isDisabled={cart?.status === 2}
-									businessId={businessDetails?.business?.id}
-									isLoading={businessDetails.loading}
+									businessId={!isGiftCardCart ? businessDetails?.business?.id : -1}
+									isLoading={!isGiftCardCart ? businessDetails.loading : false}
 									paymethods={businessDetails?.business?.paymethods}
 									onPaymentChange={handlePaymethodChange}
 									errorCash={errorCash}
@@ -593,6 +657,7 @@ const CheckoutUI = (props: any) => {
 						<WalletPaymentOptionContainer>
 							<PaymentOptionWallet
 								cart={cart}
+								loyaltyPlansState={loyaltyPlansState}
 								businessId={cart?.business_id}
 								businessConfigs={businessDetails?.business?.configs}
 							/>
@@ -600,7 +665,7 @@ const CheckoutUI = (props: any) => {
 					)}
 
 
-					{!cartState.loading && placeSpotsEnabled && (
+					{!cartState.loading && placeSpotsEnabled && !isGiftCardCart && (
 						<>
 							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 30, marginHorizontal: -40 }} />
 							<PlaceSpot
@@ -627,18 +692,20 @@ const CheckoutUI = (props: any) => {
 									<>
 										<CartHeader>
 											<HeaderTitle text={t('MOBILE_FRONT_YOUR_ORDER', 'Your order')} mb={0} />
-											<TouchableOpacity
-												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
-											>
-												<OText
-													size={12}
-													lineHeight={15}
-													color={theme.colors.primary}
-													style={{ textDecorationLine: 'underline' }}
+											{!isGiftCardCart && (
+												<TouchableOpacity
+													onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
 												>
-													{t('ADD_PRODUCTS', 'Add products')}
-												</OText>
-											</TouchableOpacity>
+													<OText
+														size={12}
+														lineHeight={15}
+														color={theme.colors.primary}
+														style={{ textDecorationLine: 'underline' }}
+													>
+														{t('ADD_PRODUCTS', 'Add products')}
+													</OText>
+												</TouchableOpacity>
+											)}
 										</CartHeader>
 										{isBusinessChangeEnabled && (
 											<TouchableOpacity
@@ -660,6 +727,9 @@ const CheckoutUI = (props: any) => {
 											isCartPending={cart?.status === 2}
 											onNavigationRedirect={onNavigationRedirect}
 											placeSpotTypes={placeSpotTypes}
+											businessConfigs={businessConfigs}
+											maxDate={maxDate}
+											loyaltyRewardRate={loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')?.accumulation_rate ?? 0}
 										/>
 									</>
 								)}
@@ -694,6 +764,14 @@ const CheckoutUI = (props: any) => {
 										size={12}
 									>
 										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+									</OText>
+								)}
+								{!cart?.valid_preorder && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
 									</OText>
 								)}
 								{options.type === 1 &&
@@ -748,6 +826,33 @@ const CheckoutUI = (props: any) => {
 							/>
 						</View>
 					</OModal>
+					<OModal
+						open={openModal.signup}
+						onClose={() => setOpenModal({ ...openModal, signup: false })}
+					>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+							<SignupForm
+								handleSuccessSignup={handleSuccessSignup}
+								isGuest
+								signupButtonText={t('SIGNUP', 'Signup')}
+								useSignupByEmail
+								useChekoutFileds
+							/>
+						</ScrollView>
+					</OModal>
+					<OModal
+						open={openModal.login}
+						onClose={() => setOpenModal({ ...openModal, login: false })}
+					>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+							<LoginForm
+								handleSuccessLogin={handleSuccessLogin}
+								isGuest
+								loginButtonText={t('LOGIN', 'Login')}
+								loginButtonBackground={theme.colors.primary}
+							/>
+						</ScrollView>
+					</OModal>
 				</ChContainer>
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
@@ -780,6 +885,19 @@ const CheckoutUI = (props: any) => {
 					currency={currency}
 					webviewPaymethod={webviewPaymethod}
 					setShowGateway={setShowGateway}
+				/>
+			)}
+			{webviewPaymethod?.gateway === 'square' && showGateway.open && (
+				<PaymentOptionsWebView
+					onNavigationRedirect={onNavigationRedirect}
+					uri={`https://test-square-f50f7.web.app`}
+					user={user}
+					token={token}
+					cart={cart}
+					currency={currency}
+					webviewPaymethod={webviewPaymethod}
+					setShowGateway={setShowGateway}
+					locationId={'L1NGAY5M6KJRX'}
 				/>
 			)}
 		</>
