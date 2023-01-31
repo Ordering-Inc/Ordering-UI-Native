@@ -286,7 +286,7 @@ export const BusinessBasicInformation = (
 					}
 					{...(!loading && {
 						source: (header || businessState?.business?.header) ? {
-							uri: header || optimizeImage(businessState?.business?.header, 'h_250,c_limit')
+							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header
 						} : theme?.images?.dummies?.businessHeader
 					})}
 					imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}

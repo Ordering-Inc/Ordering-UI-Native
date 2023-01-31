@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLanguage, useOrder } from 'ordering-components/native';
+import React, { useEffect } from 'react';
+import { useLanguage, useOrder, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View } from 'react-native';
 import { OButton, OIcon, OText } from '../shared';
@@ -12,8 +12,17 @@ export const Home = (props: any) => {
 	const { width, height } = useWindowDimensions();
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
+	const [{ configs }] = useConfig()
 
 	const theme = useTheme();
+	const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
+
+	useEffect(() => {
+		if (isAllowUnaddressOrderType) {
+			onNavigationRedirect('BusinessList')
+		}
+	}, [isAllowUnaddressOrderType])
 
 	return (
 		<View style={styles.container}>

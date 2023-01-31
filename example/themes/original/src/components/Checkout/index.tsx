@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -16,7 +16,7 @@ import {
 	ToastType,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OText, OIcon, OModal } from '../shared';
+import { OText, OIcon, OModal, OButton } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -25,6 +25,8 @@ import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { PaymentOptionWallet } from '../PaymentOptionWallet';
 import { PlaceSpot } from '../PlaceSpot'
+import { SignupForm } from '../SignupForm'
+import { LoginForm } from '../LoginForm'
 
 import {
 	ChContainer,
@@ -129,7 +131,7 @@ const CheckoutUI = (props: any) => {
 
 	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
-	const [{ user, token }] = useSession();
+	const [{ user, token }, { login }] = useSession();
 	const [ordering] = useApi()
 	const [{ configs }] = useConfig();
 	const [{ parsePrice, parseDate }] = useUtils();
@@ -146,6 +148,8 @@ const CheckoutUI = (props: any) => {
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
+	const [openModal, setOpenModal] = useState({ login: false, signup: false })
+  const [allowedGuest, setAllowedGuest] = useState(false)
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
@@ -194,8 +198,20 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
+	const handleSuccessSignup = (user: any) => {
+    login({
+      user,
+      token: user?.session?.access_token
+    })
+    setOpenModal({ ...openModal, signup: false })
+  }
+
+	const handleSuccessLogin = (user: any) => {
+    if (user) setOpenModal({ ...openModal, login: false })
+  }
+
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
-		if (!userErrors.length && !requiredFields?.length || forcePlace) {
+		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
 			Vibration.vibrate()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
@@ -426,18 +442,46 @@ const CheckoutUI = (props: any) => {
 										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 									</Placeholder>
 								) : (
-									<UserDetails
-										isUserDetailsEdit={isUserDetailsEdit}
-										HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
-										cartStatus={cart?.status}
-										businessId={cart?.business_id}
-										useValidationFields
-										useDefualtSessionManager
-										useSessionUser
-										isCheckout
-										phoneUpdate={phoneUpdate}
-										togglePhoneUpdate={togglePhoneUpdate}
-									/>
+									(user?.guest_id && !allowedGuest) ? (
+										<View>
+											<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer details')} />
+											<OButton
+												text={t('SIGN_UP', 'Sign up')}
+												textStyle={{ color: theme.colors.white }}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setOpenModal({ ...openModal, signup: true })}
+											/>
+											<OButton
+												text={t('LOGIN', 'Login')}
+												textStyle={{ color: theme.colors.primary }}
+												bgColor={theme.colors.white}
+												borderColor={theme.colors.primary}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setOpenModal({ ...openModal, login: true })}
+											/>
+											<OButton
+												text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+												textStyle={{ color: theme.colors.black }}
+												bgColor={theme.colors.white}
+												borderColor={theme.colors.black}
+												style={{ borderRadius: 7.6, marginTop: 20 }}
+												onClick={() => setAllowedGuest(true)}
+											/>
+										</View>
+									) : (
+										<UserDetails
+											isUserDetailsEdit={isUserDetailsEdit}
+											HeaderTitle={<HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer Details')} mb={0} />}
+											cartStatus={cart?.status}
+											businessId={cart?.business_id}
+											useValidationFields
+											useDefualtSessionManager
+											useSessionUser
+											isCheckout
+											phoneUpdate={phoneUpdate}
+											togglePhoneUpdate={togglePhoneUpdate}
+										/>
+									)
 								)}
 							</ChUserDetails>
 							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
@@ -777,6 +821,33 @@ const CheckoutUI = (props: any) => {
 								}}
 							/>
 						</View>
+					</OModal>
+					<OModal
+						open={openModal.signup}
+						onClose={() => setOpenModal({ ...openModal, signup: false })}
+					>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+							<SignupForm
+								handleSuccessSignup={handleSuccessSignup}
+								isGuest
+								signupButtonText={t('SIGNUP', 'Signup')}
+								useSignupByEmail
+								useChekoutFileds
+							/>
+						</ScrollView>
+					</OModal>
+					<OModal
+						open={openModal.login}
+						onClose={() => setOpenModal({ ...openModal, login: false })}
+					>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+							<LoginForm
+								handleSuccessLogin={handleSuccessLogin}
+								isGuest
+								loginButtonText={t('LOGIN', 'Login')}
+								loginButtonBackground={theme.colors.primary}
+							/>
+						</ScrollView>
 					</OModal>
 				</ChContainer>
 			</Container>
