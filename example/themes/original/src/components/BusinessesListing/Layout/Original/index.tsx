@@ -399,7 +399,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								style={{ marginRight: isChewLayout ? 0 : 10 }}
 							/>
 							<OText size={12} numberOfLines={1} style={{ flex: 1 }}>
-								{orderState?.options?.address?.address}
+								{orderState?.options?.address?.address || t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
 							</OText>
 							{!isChewLayout && (
 								<OIcon
