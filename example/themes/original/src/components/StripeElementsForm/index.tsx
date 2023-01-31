@@ -177,7 +177,7 @@ const StripeElementsFormUI = (props: any) => {
 				<View style={{ flex: 1 }}>
 					<StripeProvider
 						publishableKey={publicKey}
-						merchantIdentifier={`merchant.${merchantId}`}
+						merchantIdentifier={merchantId}
 						urlScheme={merchantId}
 					>
 						{methodsPay?.includes(paymethod) ? (
