@@ -44,7 +44,7 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const notificationSound = new Sound(theme.sounds.notification);
+  const notificationSound = new Sound(theme.sounds.notification, '', () => {});
 
   let _timeout: any = null
 
@@ -59,7 +59,7 @@ const NewOrderNotificationUI = (props: any) => {
     let times = 1
     if (times < SOUND_LOOP) {
       _timeout = setInterval(() => {
-        notificationSound.setVolume(1).play(success => success && (times = times + 1))
+        notificationSound.play(success => success && (times = times + 1))
         if (times === SOUND_LOOP) {
           clearInterval(_timeout)
         }
