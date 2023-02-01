@@ -346,7 +346,7 @@ export const getOrderStatus = (s: string, t: any) => {
   return objectStatus && objectStatus;
 };
 
-export const transformDistance = (value : number, distanceUnit?: string) => {
+export const transformDistance = (value: number, distanceUnit?: string) => {
   return distanceUnit === 'mi'
     ? (value / 1.609).toFixed(2)
     : distanceUnit === 'ft'
@@ -354,7 +354,7 @@ export const transformDistance = (value : number, distanceUnit?: string) => {
       : (value).toFixed(2)
 }
 
-export const formatSeconds = (seconds : number) => {
+export const formatSeconds = (seconds: number) => {
   // Hours, minutes and seconds
   const hrs = Math.floor(seconds / 3600)
   const mins = Math.floor((seconds % 3600) / 60)
@@ -377,8 +377,8 @@ export const calculateDistance = (
   const lat1 = pointA.lat;
   const lon1 = pointA.lng;
 
-  const lat2 = pointB.latitude;
-  const lon2 = pointB.longitude;
+  const lat2 = pointB?.latitude;
+  const lon2 = pointB?.longitude;
 
   const R = 6371e3;
   const φ1 = lat1 * (Math.PI / 180);

@@ -54,12 +54,12 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
     };
 
     const handleRejectLogisticOrder = (order: any) => {
-        handleClickLogisticOrder?.(2, orderAssingId || order?.logistic_order_id)
+        handleClickLogisticOrder?.(2, orderAssingId || order?.logistic_order_id, order)
         handleArrowBack()
     }
 
     const handleAcceptLogisticOrder = (order: any) => {
-        handleClickLogisticOrder?.(1, orderAssingId || order?.logistic_order_id)
+        handleClickLogisticOrder?.(1, orderAssingId || order?.logistic_order_id, order)
         handleArrowBack()
     }
 
