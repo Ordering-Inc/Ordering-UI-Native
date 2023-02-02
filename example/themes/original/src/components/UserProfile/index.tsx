@@ -60,7 +60,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const hideSession = theme?.bar_menu?.components?.sessions?.hidden
 	const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 	const hideAddressList = theme?.profile?.components?.address_list?.hidden
-	const showLanguages = !theme?.profile?.components?.languages?.hidden
+	const showLanguages = theme?.profile?.components?.languages?.hidden
 	const showNotifications = !theme?.profile?.components?.notification_settings?.hidden
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {
