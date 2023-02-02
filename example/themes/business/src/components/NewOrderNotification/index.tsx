@@ -44,6 +44,9 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
+  Sound.setCategory('Playback', true)
+  Sound.setMode('Default')
+
   const notificationSound = new Sound(theme.sounds.notification, '', () => {});
 
   let _timeout: any = null
