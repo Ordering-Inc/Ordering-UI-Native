@@ -395,7 +395,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
 											scrollable
-											locale={locale}
 											style={styles.calendar}
 											calendarHeaderContainerStyle={styles.calendarHeaderContainer}
 											calendarHeaderStyle={styles.calendarHeader}
