@@ -10,7 +10,8 @@ import { OText, OIcon } from '../shared'
 import { NotificationContainer } from './styles'
 import { useLocation } from '../../hooks/useLocation'
 
-Sound.setCategory('Playback')
+Sound.setCategory('Playback', true)
+Sound.setMode('Default')
 
 const windowWidth = Dimensions.get('screen').width
 
@@ -43,9 +44,6 @@ const NewOrderNotificationUI = (props: any) => {
       message2: t('ORDER_N_UPDATED', 'Order #_order_id_ has been updated.').replace('_order_id_', currentEvent?.orderId),
     },
   }
-
-  Sound.setCategory('Playback', true)
-  Sound.setMode('Default')
 
   const notificationSound = new Sound(theme.sounds.notification, '', () => {});
 
