@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OButton } from '../shared';
 import { SingleOrderCardParams } from '../../types';
 import { OAlert } from '../../../../../src/components/shared'
-
+import { OrderEta } from '../OrderDetails/OrderEta'
 import {
   InnerContainer,
   Logo,
@@ -333,7 +333,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                       {
                         pastOrders
                           ? order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })
-                          : order?.eta_time + 'min'
+                          : <OrderEta order={order} />
                       }
                     </OText>
                   )}

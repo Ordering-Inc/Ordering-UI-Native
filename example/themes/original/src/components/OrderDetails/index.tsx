@@ -49,6 +49,7 @@ import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
 import { PlaceSpot } from '../PlaceSpot'
 import { SendGiftCard } from '../GiftCard/SendGiftCard'
+import { OrderEta } from './OrderEta'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -410,13 +411,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
               subTitle={!hideDeliveryDate && <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                {
-                  activeStatus.includes(order?.status)
-                    ? order?.eta_time + 'min'
-                    : order?.delivery_datetime_utc
-                      ? parseDate(order?.delivery_datetime_utc)
-                      : parseDate(order?.delivery_datetime, { utc: false })
-                }
+                {activeStatus.includes(order?.status) ? (
+                  <OrderEta order={order} />
+                ) : (
+                  parseDate(order?.reporting_data?.at[`status:${order.status}`])
+                )}
               </OText>}
             />
             {enabledPoweredByOrdering && (
