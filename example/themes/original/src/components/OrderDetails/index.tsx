@@ -191,7 +191,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         order: {
           id: order?.id,
           business_id: order?.business_id,
-          logo: order.business?.logo,
+          logo: order.business?.logo || theme.images.dummies.businessLogo,
           driver: order?.driver,
           products: order?.products,
           review: order?.review,

@@ -285,8 +285,8 @@ export const BusinessBasicInformation = (
 							: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 					}
 					{...(!loading && {
-						source: (header || businessState?.business?.header) ? {
-							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header
+						source: (header || businessState?.business?.header || typeof theme?.images?.dummies?.businessHeader === 'string') ? {
+							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header || theme?.images?.dummies?.businessHeader
 						} : theme?.images?.dummies?.businessHeader
 					})}
 					imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
@@ -317,11 +317,11 @@ export const BusinessBasicInformation = (
 				{!hideLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							logo || businessState?.business?.logo ?
+							logo || businessState?.business?.logo || typeof theme.images.dummies.businessLogo === 'string' ?
 								<FastImage
 									style={styles.logoStyle}
 									source={{
-										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
+										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit') || theme.images.dummies.businessLogo,
 										priority: FastImage.priority.high,
 										cache: FastImage.cacheControl.web
 									}}

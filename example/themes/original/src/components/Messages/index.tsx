@@ -450,7 +450,7 @@ const MessagesUI = (props: MessagesParams) => {
 										active={business}
 									>
 										<OIcon
-											url={order?.business?.logo}
+											url={order?.business?.logo || theme.images.dummies.businessLogo}
 											width={32}
 											height={32}
 											style={{ borderRadius: 32 }}
