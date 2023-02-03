@@ -283,8 +283,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							{!hideProductLogo && (
 								<FastImage
 									style={styles.productStyle}
-									source={product?.images ? {
-										uri: optimizeImage(product?.images, 'h_250,c_limit'),
+									source={product?.images || typeof theme?.images?.dummies?.product === 'string' ? {
+										uri: optimizeImage(product?.images || theme?.images?.dummies?.products, 'h_250,c_limit'),
 										priority: FastImage.priority.normal,
 									} : theme?.images?.dummies?.product}
 									resizeMode={FastImage.resizeMode.cover}
