@@ -28,7 +28,7 @@ const StyledButton = styled.View<Props>`
 	padding-right: 20px;
 	position: relative;
 	${(props : any) => props?.theme?.general?.components?.buttons?.borderRadius && css`
-      border-radius: ${props?.theme?.general?.components?.buttons?.borderRadius};
+      border-radius: ${props?.theme?.general?.components?.buttons?.borderRadius}px;
   `}
 `
 const StyledButtonDisabled = styled(StyledButton)`
@@ -119,7 +119,7 @@ const OButton = (props: Props): React.ReactElement => {
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
 			disabled={props.isDisabledWithSameStyles}
 		>
-			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
+			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor, borderRadius: theme?.general?.components?.buttons?.borderRadius || props.style?.borderRadius} : {...props.style, borderRadius: theme?.general?.components?.buttons?.borderRadius || props.style?.borderRadius}}>
 				{props.icon ? (
 					<props.icon {...props.iconProps} />
 				) : null}
