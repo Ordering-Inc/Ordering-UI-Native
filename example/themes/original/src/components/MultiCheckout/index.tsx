@@ -307,7 +307,9 @@ const MultiCheckoutUI = (props: any) => {
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
                     businessConfigs={cart?.business?.configs}
                   />
-                  <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+                  {openCarts.length > 1 && (
+                    <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+                  )}
                 </React.Fragment>
               ))}
               {!cartGroup?.loading && openCarts.length === 0 && (
@@ -322,7 +324,7 @@ const MultiCheckoutUI = (props: any) => {
                   {t('WARNING_PARTIAL_WALLET_CARTS', 'Important: One or more carts can`t be completed due a partial payment with cash/points wallet and requires to be paid individually')}
                 </OText>
               )}
-              {openCarts.length > 0 && (
+              {openCarts.length > 1 && (
                 <ChCartsTotal>
                   {totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
