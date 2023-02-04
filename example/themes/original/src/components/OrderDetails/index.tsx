@@ -1009,7 +1009,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <OText>
                             {event?.wallet_event
                               ? walletName[event?.wallet_event?.wallet?.type]?.name
-                              : event?.paymethod?.name}
+                              : t(event?.paymethod?.name.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                           </OText>
                           {event?.data?.charge_id && (
                             <OText>
