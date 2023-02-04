@@ -123,7 +123,9 @@ const OrderMessageUI = (props: any) => {
 		setMessages,
 		readMessages,
 		messagesReadList,
-		setOpenMessges
+		setOpenMessges,
+		setSeletedOrder,
+		setSelectedOrderId
 	} = props;
 	const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
 	const [openModalForDriver, setOpenModalForDriver] = useState(false);
@@ -140,6 +142,8 @@ const OrderMessageUI = (props: any) => {
 
 	const handleClose = () => {
 		setOpenMessges(false)
+		setSeletedOrder(null)
+		setSelectedOrderId(null)
 	}
 
 	const handleOpenMessages = (data: any) => {
@@ -269,7 +273,7 @@ export const MessageListing = (props: MessageListingParams) => {
 				setOpenMessges={setOpenMessges}
 				franchiseId={props.franchiseId}
 			/>
-			{openMessages && seletedOrder && (
+			{openMessages && !!seletedOrder?.id && (
 				<OModal
 					open={openMessages}
 					entireModal
@@ -278,7 +282,10 @@ export const MessageListing = (props: MessageListingParams) => {
 				>
 					<MessagesView
 						order={seletedOrder}
+						orderId={seletedOrder?.id}
 						setOpenMessges={setOpenMessges}
+						setSeletedOrder={setSeletedOrder}
+						setSelectedOrderId={setSelectedOrderId}
 					/>
 				</OModal>
 			)}
