@@ -481,9 +481,9 @@ export const ProductOptionsUI = (props: any) => {
 								: t('LOGIN_SIGNUP', 'Login / Sign Up')
 						}
 						imgRightSrc=""
-						textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+						textStyle={{ color: theme.colors.primary, fontSize: 13, textAlign: 'center' }}
 						style={{
-							height: 44,
+							height: 42,
 							borderColor: theme.colors.primary,
 							backgroundColor: theme.colors.white,
 							paddingLeft: 0,
@@ -498,7 +498,7 @@ export const ProductOptionsUI = (props: any) => {
 								<PlaceholderLine width={60} height={20} />
 							</Placeholder>
 						) : (
-							<OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+							<OText color={theme.colors.primary} size={13} style={{ textAlign: 'center' }}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
 						)}
 					</TouchableOpacity>
 				)}

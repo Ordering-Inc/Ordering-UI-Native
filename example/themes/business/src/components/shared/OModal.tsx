@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, StyleSheet, SafeAreaView, View } from 'react-native';
+import { Modal, StyleSheet, SafeAreaView, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import OIcon from './OIcon';
 import OText from './OText';
@@ -158,6 +158,18 @@ const OModal = (props: Props): React.ReactElement => {
       fontWeight: '600',
       textAlign: 'center',
     },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginTop: 10
+    },
   });
 
   return (
@@ -205,14 +217,9 @@ const OModal = (props: Props): React.ReactElement => {
             {!customClose && (
               <View style={styles.titleSection}>
                 <View style={styles.titleGroups}>
-                  <OIconButton
-                    icon={theme.images.general.arrow_left}
-                    iconStyle={{ width: 20, height: 20 }}
-                    borderColor={theme.colors.clear}
-                    style={styleCloseButton || styles.cancelBtn}
-                    onClick={onClose}
-                  />
-
+                  <TouchableOpacity onPress={() => onClose()} style={styles.btnBackArrow}>
+                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+                  </TouchableOpacity>
                   <OText
                     size={16}
                     style={styles.modalText}

@@ -19,6 +19,7 @@ export interface LoginParams {
 	notificationState?: any;
 	handleReCaptcha?: any;
 	enableReCaptcha?: any;
+	isGuest?: any;
 	otpType?: string,
 	setOtpType: (type: string) => void,
 	generateOtpCode: (values?: any) => void,
@@ -570,6 +571,9 @@ export interface BusinessPreorderParams {
 	goToBack: any;
 	business: any;
 	handleBusinessClick: (value: any) => {};
+	getActualSchedule?: any;
+	cateringPreorder?: boolean;
+	preorderLeadTime?: number 
 }
 export interface BusinessMenuListParams {
 	menu: any;

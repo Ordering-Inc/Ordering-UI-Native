@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
 import { FloatingButton } from '../FloatingButton';
-import { showLocation } from 'react-native-map-link';
+import { Popup } from 'react-native-map-link';
 import { transformDistance } from '../../utils';
 
 export const DriverMap = (props: GoogleMapsParams) => {
@@ -48,6 +48,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
   const [distancesFromTwoPlacesKm, setDistancesFromTwoPlacesKm] = useState(0);
   const [isMin, setIsMin] = useState(false);
   const [{ parseDate }] = useUtils();
+  const [popUp, setPopUp] = useState<boolean>(false);
   const mapErrors: any = {
     ERROR_NOT_FOUND_ADDRESS: "Sorry, we couldn't find an address",
     ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to',
@@ -478,7 +479,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 style={styles.arrowDistance}
               />
               <OText size={12} numberOfLines={3}>
-                {`${transformDistance(distancesFromTwoPlacesKm, distanceUnit)} ${t(distanceUnit.toUpperCase(), distanceUnit)}`} 
+                {`${transformDistance(distancesFromTwoPlacesKm, distanceUnit)} ${t(distanceUnit.toUpperCase(), distanceUnit)}`}
               </OText>
 
             </View>
@@ -501,7 +502,18 @@ export const DriverMap = (props: GoogleMapsParams) => {
             imgRightSrc=''
             textStyle={{ color: theme.colors.white }}
             style={styles.showButton}
-            onClick={() => showLocation({
+            onClick={() => setPopUp(true)}
+            text={t('SHOW_IN_OTHER_MAPS', 'Show in other maps')}
+          />
+          <Popup
+            isVisible={popUp}
+            onCancelPressed={() => setPopUp(false)}
+            onAppPressed={() => setPopUp(false)}
+            onBackButtonPressed={() => setPopUp(false)}
+            modalProps={{
+              animationIn: 'slideInUp'
+            }}
+            options={{
               latitude: destination.latitude,
               longitude: destination.longitude,
               sourceLatitude: userLocation.latitude,
@@ -510,8 +522,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
               dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
               dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
               cancelText: t('CANCEL', 'Cancel'),
-            })}
-            text={t('SHOW_IN_OTHER_MAPS', 'Show in other maps')}
+            }}
           />
         </View>
         {showAcceptOrReject && (
