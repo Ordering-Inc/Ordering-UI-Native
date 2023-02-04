@@ -412,6 +412,11 @@ const MessagesUI = (props: MessagesParams) => {
 		);
 	}
 
+	useEffect(() => {
+		if (!order?.id || messages?.loading) return
+		readMessages && readMessages()
+	}, [order?.id, messages?.loading])
+
 	return (
 		<View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
 			<Wrapper>

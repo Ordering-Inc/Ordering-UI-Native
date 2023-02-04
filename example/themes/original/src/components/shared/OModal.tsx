@@ -52,7 +52,7 @@ const OModal = (props: Props): React.ReactElement => {
 
 	const theme = useTheme();
 
-	const RenderSafeAreaView = () => (
+	const renderSafeAreaView = () => (
 		<SafeAreaView style={styles.container}>
 			{!entireModal ? (
 				<View style={styles.centeredView}>
@@ -101,10 +101,10 @@ const OModal = (props: Props): React.ReactElement => {
 					enabled
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 				>
-					<RenderSafeAreaView/>
+					{renderSafeAreaView()}
 				</KeyboardView>
 			) : (
-				<RenderSafeAreaView/>
+				renderSafeAreaView()
 			)}
 		</Modal>
 	);
