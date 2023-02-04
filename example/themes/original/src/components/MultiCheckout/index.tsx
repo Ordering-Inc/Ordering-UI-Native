@@ -279,6 +279,7 @@ const MultiCheckoutUI = (props: any) => {
                     hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
                     hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
+                    businessConfigs={cart?.business?.configs}
                   />
                   <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
                 </React.Fragment>
