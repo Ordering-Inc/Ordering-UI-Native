@@ -171,7 +171,7 @@ const MessagesUI = (props: MessagesParams) => {
 					image: message.source,
 					system: message.type === 1,
 					user: {
-						_id: message.author && message.author.id ,
+						_id: message.author && message.author.id,
 						name: message.author && message.author.name,
 						avatar: message.author && (message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo)
 					}
@@ -242,6 +242,7 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const renderAccessory = () => {
 		return (
+			!chatDisabled &&
 			<QuickMessageContainer
 				style={{
 					marginLeft: 10,
