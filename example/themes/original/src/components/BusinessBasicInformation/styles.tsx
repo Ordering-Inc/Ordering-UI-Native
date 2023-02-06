@@ -44,13 +44,10 @@ export const WrapBusinessInfo = styled.TouchableOpacity`
 
 export const TitleWrapper = styled.View`
   width: 100%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 `
 
 export const RibbonBox = styled.View`
-  margin-left: 5px;
   background-color: ${(props: any) => props.theme.colors.primary};
   padding: 2px 8px;
   max-width: 180px;
