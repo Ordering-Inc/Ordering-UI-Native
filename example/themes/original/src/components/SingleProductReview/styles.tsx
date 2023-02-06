@@ -19,7 +19,7 @@ export const LogoWrapper = styled.View`
   shadowRadius: 3;
   shadowOffset: { width: 1, height: 4 };
   elevation: 3;
-  borderRadius: 8;
+  border-radius: 8;
   shadowOpacity: 0.1;
   overflow: hidden;
   width: 80;
