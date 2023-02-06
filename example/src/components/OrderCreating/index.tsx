@@ -131,26 +131,6 @@ export const OrderCreating = (props: any) => {
           <OText size={14}>{address}</OText>
         </LocationWrapper>
       )}
-      {cart && !orderState?.options?.moment && (
-        <DeliveryWrapper>
-          <DeliveryContentWrapper>
-            <SimpleIcon
-              name='clock'
-              size={20}
-              color={theme.colors.primary}
-              style={{ marginRight: 10 }}
-            />
-            <OText size={14}>
-            {orderState?.options?.type === 1
-              ? t('DELIVERY_TIME', 'Delivery Time')
-              : t('PICK_UP', 'Pick Time')}
-            </OText>
-          </DeliveryContentWrapper>
-          <View>
-            <OText size={14} weight='700'>{parseDeliveryTime()}</OText>
-          </View>
-        </DeliveryWrapper>
-      )}
       {cardData?.card?.brand && (
         <View style={{ flexDirection: 'row', marginBottom: 27 }}>
           {getIconCard(cardData?.card?.brand, 20)}

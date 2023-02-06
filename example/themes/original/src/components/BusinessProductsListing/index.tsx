@@ -188,13 +188,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
     const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
-    if (cartsAvailable.length === 1) {
+    if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
+      const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
+
       props.onNavigationRedirect('CheckoutNavigator', {
         screen: 'CheckoutPage',
-        cartUuid: cartsAvailable[0]?.uuid,
-        businessLogo: cartsAvailable[0]?.business?.logo,
-        businessName: cartsAvailable[0]?.business?.name,
-        cartTotal: cartsAvailable[0]?.total
+        cartUuid: cart?.uuid,
+        businessLogo: cart?.business?.logo,
+        businessName: cart?.business?.name,
+        cartTotal: cart?.total
       })
     } else {
       const groupKeys: any = {}

@@ -256,7 +256,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				setDateWhitelist([{ start: _minDate, end: _maxDate }])
 			}
 		}
-	}, [JSON.stringify(datesList), preorderMinimumDays, preorderMaximumDays])
+	}, [JSON.stringify(datesList), preorderMinimumDays, preorderMaximumDays, cateringPreorder])
 
 	useEffect(() => {
 		if (dateSelected) {
@@ -321,7 +321,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				}
 			}))
 		}
-	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), cateringPreorder])
+	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), cateringPreorder, JSON.stringify(business)])
 
 	return (
 		<>
@@ -385,12 +385,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 					</WrapSelectOption>
 					{optionSelected.isSchedule && (
 						<OrderTimeWrapper>
-							{datesWhitelist?.length <= 1 && (
+							{datesWhitelist[0]?.start === datesWhitelist[0]?.end && (
 								<OText>
 									{moment(selectDate).format('Do MMMM, YYYY')}
 								</OText>
 							)}
-							{datesWhitelist > 1 && (
+							{datesWhitelist[0]?.start !== datesWhitelist[0]?.end && (
 								<View style={{ flex: 1 }}>
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
@@ -466,7 +466,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				</View>
 				<Spinner visible={momentState.isLoading === 1} />
 			</Container>
-			{!isCart && (
+			{!isCart && !cateringPreorder && (
 				<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%' }}>
 					<OButton onClick={() => handleChangeMoment()} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }} textStyle={{ color: 'white', fontSize: 14 }} showNextIcon />
 				</View>
