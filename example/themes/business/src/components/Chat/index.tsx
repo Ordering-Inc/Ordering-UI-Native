@@ -69,6 +69,8 @@ const ChatUI = (props: MessagesParams) => {
   const [, { showToast }] = useToast();
   const theme = useTheme();
   const [messageList, setMessageList] = useState<any>([])
+  const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+  const chatDisabled = previousStatus.includes(order?.status)
 
   const ORDER_STATUS: any = {
     0: t('ORDER_STATUS_PENDING', 'Order status pending'),
@@ -176,12 +178,8 @@ const ChatUI = (props: MessagesParams) => {
       fontSize: 12,
     },
     toolbarStyle: {
-      flexDirection: 'column-reverse',
-      paddingVertical: 15,
-      paddingHorizontal: 30,
-      backgroundColor: theme.colors.white,
-      borderTopWidth: 1,
-      borderTopColor: theme.colors.tabBar,
+      padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+      flexDirection: 'column-reverse'
     },
     accessoryIcon: {
       height: 32,
@@ -586,16 +584,12 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAccessory = () => (
+    !chatDisabled &&
     <View>
       <Header
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal
-        // contentContainerStyle={{
-        //   justifyContent:
-        //     orientation === 'Landscape' ? 'center' : 'space-between',
-        //   width: '100%',
-        // }}
         nestedScrollEnabled={true}
       >
         {user?.level !== 2 && (
@@ -766,113 +760,130 @@ const ChatUI = (props: MessagesParams) => {
       containerStyle={styles.toolbarStyle}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 45 }}
-      renderAccessory={order ? () => renderAccessory && renderAccessory() : undefined}
+      renderAccessory={() => renderAccessory()}
     />
   );
 
   const renderComposer = (props: any) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        height: 44,
-        width: '85%',
-        backgroundColor: theme.colors.composerView,
-        borderRadius: 7.6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingRight: 10,
-      }}>
-      <Composer
-        {...props}
-        textInputStyle={{
-          borderRadius: 7.6,
-          borderColor: theme.colors.transparent,
-          borderWidth: 0,
-          color: '#010300',
+    chatDisabled ? (
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
-        textInputProps={{
-          value: message,
-          onSubmitEditing: onSubmit,
-          returnKeyType: message ? 'send' : 'done',
-          blurOnSubmit: true,
-          multiline: false,
-          numberOfLines: 1,
-          autoCorrect: false,
-          autoCompleteType: 'off',
-          enablesReturnKeyAutomatically: false,
-          selectionColor: theme.colors.primary,
-        }}
-        placeholder={t('WRITE_MESSAGE', 'Write message')}
-        placeholderTextColor={theme.colors.composerPlaceHolder}
-      />
-
-      <TouchableOpacity
-        onPress={() => {
-          setImage && setImage(null);
-          setIsShowSignaturePad(!isShowSignaturePad);
-        }}>
+      >
         <MaterialCommunityIcon
-          name="pen"
-          color={
-            isShowSignaturePad ? theme.colors.primary : theme.colors.arrowColor
-          }
+          name='close-octagon-outline'
           size={24}
         />
-      </TouchableOpacity>
-
-      {!file.type && (
-        <Actions
+        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
+      </View>
+    ) : (
+      <View
+        style={{
+          flexDirection: 'row',
+          height: 44,
+          width: '85%',
+          backgroundColor: theme.colors.composerView,
+          borderRadius: 7.6,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingRight: 10,
+        }}>
+        <Composer
           {...props}
-          containerStyle={styles.containerActions}
-          optionTintColor="#222845"
-          icon={() => (
-            <>
-              {!file?.type && (
-                <>
-                  <OIconButton
-                    borderColor={theme.colors.transparent}
-                    icon={
-                      !isShowSignaturePad && image
-                        ? { uri: image }
-                        : theme.images.general.imageChat
-                    }
-                    iconStyle={{
-                      borderRadius: image ? 10 : 0,
-                      width: image ? 32 : 28,
-                      height: image ? 32 : 28,
-                    }}
-                    onClick={handleImagePicker}
-                    iconCover
-                  />
-
-                  {image && !isShowSignaturePad && (
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        top: -5,
-                        right: -5,
-                        borderColor: theme.colors.backgroundDark,
-                        backgroundColor: theme.colors.white,
-                        borderRadius: 25,
-                      }}
-                      onPress={() => removeImage()}>
-                      <MaterialCommunityIcon
-                        name="close-circle-outline"
-                        color={theme.colors.backgroundDark}
-                        size={24}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </>
-              )}
-            </>
-          )}
+          textInputStyle={{
+            borderRadius: 7.6,
+            borderColor: theme.colors.transparent,
+            borderWidth: 0,
+            color: '#010300',
+          }}
+          textInputProps={{
+            value: message,
+            onSubmitEditing: onSubmit,
+            returnKeyType: message ? 'send' : 'done',
+            blurOnSubmit: true,
+            multiline: false,
+            numberOfLines: 1,
+            autoCorrect: false,
+            autoCompleteType: 'off',
+            enablesReturnKeyAutomatically: false,
+            selectionColor: theme.colors.primary,
+          }}
+          placeholder={t('WRITE_MESSAGE', 'Write message')}
+          placeholderTextColor={theme.colors.composerPlaceHolder}
         />
-      )}
-    </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setImage && setImage(null);
+            setIsShowSignaturePad(!isShowSignaturePad);
+          }}>
+          <MaterialCommunityIcon
+            name="pen"
+            color={
+              isShowSignaturePad ? theme.colors.primary : theme.colors.arrowColor
+            }
+            size={24}
+          />
+        </TouchableOpacity>
+
+        {!file.type && (
+          <Actions
+            {...props}
+            containerStyle={styles.containerActions}
+            optionTintColor="#222845"
+            icon={() => (
+              <>
+                {!file?.type && (
+                  <>
+                    <OIconButton
+                      borderColor={theme.colors.transparent}
+                      icon={
+                        !isShowSignaturePad && image
+                          ? { uri: image }
+                          : theme.images.general.imageChat
+                      }
+                      iconStyle={{
+                        borderRadius: image ? 10 : 0,
+                        width: image ? 32 : 28,
+                        height: image ? 32 : 28,
+                      }}
+                      onClick={handleImagePicker}
+                      iconCover
+                    />
+
+                    {image && !isShowSignaturePad && (
+                      <TouchableOpacity
+                        style={{
+                          position: 'absolute',
+                          top: -5,
+                          right: -5,
+                          borderColor: theme.colors.backgroundDark,
+                          backgroundColor: theme.colors.white,
+                          borderRadius: 25,
+                        }}
+                        onPress={() => removeImage()}>
+                        <MaterialCommunityIcon
+                          name="close-circle-outline"
+                          color={theme.colors.backgroundDark}
+                          size={24}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          />
+        )}
+      </View>
+    )
   );
 
   const renderSend = (props: any) => (
+    !chatDisabled &&
     <Send
       {...props}
       disabled={
