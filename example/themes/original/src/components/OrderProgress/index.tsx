@@ -117,11 +117,11 @@ const OrderProgressUI = (props: any) => {
               <View style={styles.logoWrapper}>
                 <FastImage
                   style={{ width: 50, height: 50 }}
-                  source={{
+                  source={orderList?.orders.length === 1 ? {
                     uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
                     priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
+                  } : theme.images.logos.logotype}
+                  resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
               <View style={{
@@ -190,7 +190,7 @@ export const OrderProgress = (props: any) => {
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
-      pageSize: 1,
+      pageSize: 10,
       controlType: 'infinity'
     }
   }

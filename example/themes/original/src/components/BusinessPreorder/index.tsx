@@ -557,7 +557,7 @@ export const BusinessPreorder = (props: any) => {
     : null
 
 const splitCateringValue = (configName : string) =>
-  Object.values(a || props?.business?.configs || {})
+  Object.values(props?.business?.configs || {})
     ?.find(config => config?.key === configName)
     ?.value?.split('|')
     ?.find(val => val.includes(cateringTypeString || ''))?.split(',')[1]

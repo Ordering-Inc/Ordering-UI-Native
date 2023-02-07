@@ -80,9 +80,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     locations.map((location: { lat: number; lng: number; level: number }) => {
       return location.level === 4 && driverLocation?.lat
         ? {
-            latitude: driverLocation?.lat,
-            longitude: driverLocation?.lng,
-          }
+          latitude: driverLocation?.lat,
+          longitude: driverLocation?.lng,
+        }
         : { latitude: location.lat, longitude: location.lng };
     });
 
@@ -107,7 +107,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           }
           let data = null;
           const details = {
-            geometry: { location: { lat: pos.latitude, lng: pos.longitude } },
+            geometry: { location: { lat: pos?.latitude, lng: pos?.longitude } },
           };
           if (isSetInputs) {
             data = {
@@ -165,8 +165,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     const lat1 = pointA.lat;
     const lon1 = pointA.lng;
 
-    const lat2 = pointB.latitude;
-    const lon2 = pointB.longitude;
+    const lat2 = pointB?.latitude;
+    const lon2 = pointB?.longitude;
 
     const R = 6371e3;
     const φ1 = lat1 * (Math.PI / 180);
@@ -201,11 +201,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION_TO')
         ? [t(errKey, mapErrors[errKey])]
         : [
-            `${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t(
-              'METTERS',
-              'meters',
-            )}`,
-          ],
+          `${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t(
+            'METTERS',
+            'meters',
+          )}`,
+        ],
       key: errKey,
     });
   };
@@ -237,9 +237,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     MARKERS = locations.map((location: { lat: number; lng: number; level: number }) => {
       return location.level === 4 && driverLocation?.lat
         ? {
-            latitude: driverLocation?.lat,
-            longitude: driverLocation?.lng,
-          }
+          latitude: driverLocation?.lat,
+          longitude: driverLocation?.lng,
+        }
         : { latitude: location.lat, longitude: location.lng };
     })
     fitAllMarkers();
@@ -284,7 +284,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           onRegionChangeComplete={
             !readOnly
               ? coordinates => handleChangeRegion(coordinates)
-              : () => {}
+              : () => { }
           }
           zoomTapEnabled
           zoomEnabled
@@ -302,12 +302,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                     i: number,
                   ) => (
                     <React.Fragment key={i}>
-                      <Marker 
-                        coordinate={location} 
-                        onPress={() => { 
+                      <Marker
+                        coordinate={location}
+                        onPress={() => {
                           mapRef.current?.animateCamera({
-                          center: { latitude: location.latitude, longitude:location.longitude },
-                        })}}
+                            center: { latitude: location?.latitude, longitude: location?.longitude },
+                          })
+                        }}
                       >
                         <Icon
                           name="map-marker"
@@ -328,46 +329,46 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                         <Callout
                           onPress={() => {
                             showLocation({
-                                      latitude: location.latitude,
-                                      longitude: location.longitude,
-                                      sourceLatitude: userLocation.latitude,
-                                      sourceLongitude: userLocation.longitude,
-                                      naverCallerName: 'com.businessapp',
-                                      dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
-                                      dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
-                                      cancelText: t('CANCEL', 'Cancel'),
+                              latitude: location?.latitude,
+                              longitude: location?.longitude,
+                              sourceLatitude: userLocation?.latitude,
+                              sourceLongitude: userLocation.longitude,
+                              naverCallerName: 'com.businessapp',
+                              dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
+                              dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+                              cancelText: t('CANCEL', 'Cancel'),
                             })
                           }}
                         >
-                          <View style={{flex: 1,width: 250, paddingRight: 10, paddingLeft: 10, justifyContent:'space-between' }}>
-                              <View style={{flex: 1, marginBottom: 20}}>
-                                <OText size={16} weight={'bold'} style={{paddingTop: 10, marginBottom: 10}}>{locations[i]?.title}</OText>
-                                { locations[i]?.address && (
-                                  <>
-                                    <OText size={16} >{locations[i]?.address.addressName}</OText>
-                                    <OText size={16} >{locations[i]?.address.zipcode}</OText>
-                                  </>
-                                )}
-                              </View>
-                              <OButton
-                                text={t('GO_TO_THIS_LOCATION', 'Go to this location')}
-                                imgRightSrc={null}
-                                textStyle={{
-                                  color: theme.colors.white,
-                                  fontFamily: 'Poppins',
-                                  fontStyle: 'normal',
-                                  fontWeight: 'normal',
-                                  fontSize: 16
-                                }}
-                                style={{
-                                  alignContent:'center',
-                                  borderRadius: 10,
-                                  height: 35,
-                                  bottom:10
-                                }}
-                                bgColor={theme.colors.primary}
-                                borderColor={theme.colors.primary}
-                              />   
+                          <View style={{ flex: 1, width: 250, paddingRight: 10, paddingLeft: 10, justifyContent: 'space-between' }}>
+                            <View style={{ flex: 1, marginBottom: 20 }}>
+                              <OText size={16} weight={'bold'} style={{ paddingTop: 10, marginBottom: 10 }}>{locations[i]?.title}</OText>
+                              {locations[i]?.address && (
+                                <>
+                                  <OText size={16} >{locations[i]?.address.addressName}</OText>
+                                  <OText size={16} >{locations[i]?.address.zipcode}</OText>
+                                </>
+                              )}
+                            </View>
+                            <OButton
+                              text={t('GO_TO_THIS_LOCATION', 'Go to this location')}
+                              imgRightSrc={null}
+                              textStyle={{
+                                color: theme.colors.white,
+                                fontFamily: 'Poppins',
+                                fontStyle: 'normal',
+                                fontWeight: 'normal',
+                                fontSize: 16
+                              }}
+                              style={{
+                                alignContent: 'center',
+                                borderRadius: 10,
+                                height: 35,
+                                bottom: 10
+                              }}
+                              bgColor={theme.colors.primary}
+                              borderColor={theme.colors.primary}
+                            />
                           </View>
                         </Callout>
                       </Marker>
