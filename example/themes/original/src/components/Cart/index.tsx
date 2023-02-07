@@ -43,7 +43,14 @@ const CartUI = (props: any) => {
     handleRemoveOfferClick,
     isMultiCheckout,
     hideDeliveryFee,
-    hideDriverTip
+    hideDriverTip,
+    hideCouponInput,
+    preorderSlotInterval,
+    preorderLeadTime,
+    preorderTimeRange,
+    preorderMaximumDays,
+    preorderMinimumDays,
+    cateringTypes
   } = props
 
   const theme = useTheme();
@@ -383,7 +390,7 @@ const CartUI = (props: any) => {
                 <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
               </OSTable>
             ))}
-            {isCouponEnabled && !isCartPending && (
+            {isCouponEnabled && !isCartPending && !hideCouponInput && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl

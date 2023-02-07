@@ -23,7 +23,9 @@ import { MultiCartsPaymethodsAndWallets } from '../MultiCartsPaymethodsAndWallet
 import { Cart } from '../Cart'
 import { FloatingButton } from '../FloatingButton'
 import { DriverTips } from '../DriverTips'
+import { CouponControl } from '../CouponControl';
 import { DriverTipsContainer } from '../Cart/styles'
+import { OSTable, OSCoupon } from '../OrderSummary/styles';
 
 import {
   ChContainer,
@@ -263,6 +265,29 @@ const MultiCheckoutUI = (props: any) => {
             </ChSection>
           )}
 
+          {
+            validationFields?.fields?.checkout?.coupon?.enabled &&
+            openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
+            configs?.multi_business_checkout_coupon_input_style?.value === 'group' &&
+          (
+            <ChSection>
+              <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+                {t('DISCOUNT_COUPON', 'Discount coupon')}
+              </OText>
+              <OSTable>
+                <OSCoupon>
+                  <CouponControl
+                    isMulti
+                    carts={openCarts}
+                    businessIds={openCarts.map((cart: any) => cart.business_id)}
+                    price={openCarts.reduce((total: any, cart: any) => total + cart.total, 0)}
+                  />
+                </OSCoupon>
+              </OSTable>
+              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+            </ChSection>
+          )}
+
           <ChSection>
             <ChCarts>
               <CartsHeader>
@@ -276,6 +301,7 @@ const MultiCheckoutUI = (props: any) => {
                     cart={cart}
                     cartuuid={cart.uuid}
                     isMultiCheckout
+                    hideCouponInput={configs?.multi_business_checkout_coupon_input_style?.value === 'group'}
                     hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
                     hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
