@@ -292,6 +292,7 @@ const PaymentOptionsUI = (props: any) => {
 						onSelectCard={handlePaymethodDataChange}
 						onNavigationRedirect={onNavigationRedirect}
 						onCancel={() => handlePaymethodClick(null)}
+						setAddCardOpen={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
 					/>
 				</View>
 			)}

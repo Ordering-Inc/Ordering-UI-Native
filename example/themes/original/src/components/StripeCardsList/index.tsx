@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import {
 	PaymentOptionStripe,
@@ -25,6 +25,7 @@ const StripeCardsListUI = (props: any) => {
 		cardSelected,
 		cardsList,
 		handleCardClick,
+		setAddCardOpen
 	} = props;
 
 	const theme = useTheme();
@@ -36,6 +37,12 @@ const StripeCardsListUI = (props: any) => {
 		handleCardClick(card);
 		onSelectCard(card);
 	}
+
+	useEffect(() => {
+		if (!cardsList?.loading && cardsList?.cards?.length === 0) {
+			setAddCardOpen(true)
+		}
+	}, [cardsList?.loading])
 
 	return (
 		<>
