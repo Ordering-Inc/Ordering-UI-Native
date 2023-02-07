@@ -75,7 +75,7 @@ const PaymentOptionsUI = (props: any) => {
 			case 'paypal':
 				return theme.images.general.paypal
 			case 'stripe':
-				return theme.images.general.stripe
+				return theme.images.general.creditCard
 			case 'stripe_direct':
 				return theme.images.general.stripecc
 			case 'stripe_connect':
