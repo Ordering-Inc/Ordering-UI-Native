@@ -45,6 +45,7 @@ const CartUI = (props: any) => {
     isMultiCheckout,
     hideDeliveryFee,
     hideDriverTip,
+    hideCouponInput,
     preorderSlotInterval,
     preorderLeadTime,
     preorderTimeRange,
@@ -406,7 +407,7 @@ const CartUI = (props: any) => {
                 <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
               </OSTable>
             ))}
-            {isCouponEnabled && !isCartPending && (
+            {isCouponEnabled && !isCartPending && !hideCouponInput && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl
