@@ -25,6 +25,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
     businessIds,
     paymethodsAndWallets,
     walletsState,
+    walletsPaymethod,
     paymethodSelected,
     handleSelectPaymethod,
     handleSelectWallet,
@@ -169,13 +170,16 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         </>
       ) : (
         <>
-          {walletsState?.result?.filter((wallet: any) => paymethodsAndWallets.wallets.find((item: any) => item.type === wallet.type)).map((wallet: any, idx: any) => walletName[wallet.type]?.isActive && (
+          {walletsState?.result?.filter((wallet: any) =>
+            paymethodsAndWallets.wallets.find((item: any) => item.type === wallet.type))
+              .map((wallet: any, idx: any) => walletName[wallet.type]?.isActive &&
+          (
             <WalletItem
               key={wallet.type}
               isBottomBorder={idx === paymethodsAndWallets.wallets?.length - 1}
-              onPress={() => handleSelectWallet(paymethodSelected.wallet_id === wallet.id ? false : true, wallet)}
+              onPress={() => handleSelectWallet(!!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id, wallet)}
             >
-              {paymethodSelected.wallet_id === wallet.id ? (
+              {!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id ? (
                 <MaterialCommunityIcons
                   name="checkbox-marked"
                   size={25}
