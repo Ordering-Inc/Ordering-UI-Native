@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useWindowDimensions, Platform } from 'react-native';
 
 export const Home = (props: any) => {
-	const { onNavigationRedirect } = props;
+	const { onNavigationRedirect, businessSlug } = props;
 	const { width, height } = useWindowDimensions();
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
@@ -20,7 +20,7 @@ export const Home = (props: any) => {
 
 	useEffect(() => {
 		if (isAllowUnaddressOrderType) {
-			onNavigationRedirect('BusinessList')
+			onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList')
 		}
 	}, [isAllowUnaddressOrderType])
 
@@ -69,7 +69,7 @@ export const Home = (props: any) => {
 					style={{ ...styles.textLink, marginTop: 12 }}
 					onPress={() =>
 						orderState?.options?.address?.address
-							? onNavigationRedirect('BusinessList', { isGuestUser: true })
+							? onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList', { isGuestUser: true })
 							: onNavigationRedirect('AddressForm', { isGuestUser: true })
 					}>
 					<OText weight="normal" size={18} color={theme.colors.white}>
