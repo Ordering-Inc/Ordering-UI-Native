@@ -113,7 +113,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					!isNaN(defaultCode)
 						? transformCountryCode(defaultCode)
 						: defaultCode
-					: configs?.default_country_code?.value}
+					: configs?.default_country_code?.value?.toUpperCase()}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
 				onChangeCountry={(country) => changeCountry?.(country)}
