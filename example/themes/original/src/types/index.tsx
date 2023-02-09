@@ -92,7 +92,8 @@ export interface AddressFormParams {
 	hasAddressDefault?: any,
 	isFromCheckout?: boolean
 	afterSignup?: boolean
-	isGuestFromStore?: boolean
+	isGuestFromStore?: boolean,
+	businessSlug?: number | string
 }
 export interface SignupParams {
 	navigation?: any;
@@ -254,6 +255,7 @@ export interface BusinessProductsListingParams {
 	handleUpdateProfessionals?: any;
 	onBusinessClick?: any;
 	onNavigationRedirect?: any;
+	businessSingleId?: number | string
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -305,6 +307,7 @@ export interface BusinessProductsListParams {
 	handleUpdateProducts?: any,
 	navigation?: any;
 	previouslyProducts?: any;
+	businessSingleId?: number | string
 }
 export interface SingleProductCardParams {
 	businessId: any;
@@ -321,6 +324,7 @@ export interface SingleProductCardParams {
 	isPreviously?: any;
 	isProductId?: any;
 	viewString?: string;
+	businessSingleId?: number
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -800,7 +804,8 @@ export interface OrderItAgainParams {
 	currentCart: any,
 	handleUpdateProducts: any,
 	navigation: any,
-	searchValue?: string
+	searchValue?: string,
+	businessSingleId?: number | string
 }
 
 export interface PreviousProductsOrderedParams {

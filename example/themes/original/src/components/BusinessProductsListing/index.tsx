@@ -68,7 +68,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     professionalSelected,
     handleUpdateProfessionals,
     handleChangeProfessionalSelected,
-    onBusinessClick
+    onBusinessClick,
+    businessSingleId
   } = props
 
   const insets = useSafeAreaInsets()
@@ -314,12 +315,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               marginTop: Platform.OS === 'ios' ? insets.top : 0
             }}
             onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height)}
+            hideArrow={(businessSingleId && auth)}
           >
             {!isOpenSearchBar && (
               <>
-                <TopActions onPress={() => handleBackNavigation()}>
-                  <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
-                </TopActions>
+                {!(businessSingleId && auth) && (
+                  <TopActions onPress={() => handleBackNavigation()}>
+                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+                  </TopActions>
+                )}
                 {!errorQuantityProducts && (
                   <View style={{ ...styles.headerItem }}>
                     <TouchableOpacity
@@ -409,6 +413,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 previouslyProducts={business?.previously_products}
                 navigation={navigation}
                 isFiltMode
+                businessSingleId={businessSingleId}
               />
             </View>
           </FiltProductsContainer>
@@ -511,6 +516,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   handleUpdateProducts={handleUpdateProducts}
                   navigation={navigation}
                   previouslyProducts={business?.previously_products}
+                  businessSingleId={businessSingleId}
                 />
               </WrapContent>
             </>
