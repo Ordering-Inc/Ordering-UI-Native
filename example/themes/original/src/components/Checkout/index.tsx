@@ -80,6 +80,7 @@ const CheckoutUI = (props: any) => {
 		placing,
 		cartState,
 		cartUuid,
+		loyaltyPlansState,
 		businessDetails,
 		paymethodSelected,
 		handlePaymethodChange,
@@ -656,6 +657,7 @@ const CheckoutUI = (props: any) => {
 						<WalletPaymentOptionContainer>
 							<PaymentOptionWallet
 								cart={cart}
+								loyaltyPlansState={loyaltyPlansState}
 								businessId={cart?.business_id}
 								businessConfigs={businessDetails?.business?.configs}
 							/>
@@ -727,6 +729,7 @@ const CheckoutUI = (props: any) => {
 											placeSpotTypes={placeSpotTypes}
 											businessConfigs={businessConfigs}
 											maxDate={maxDate}
+											loyaltyRewardRate={loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')?.accumulation_rate ?? 0}
 										/>
 									</>
 								)}
