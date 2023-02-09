@@ -62,6 +62,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		isFromProductsList,
 		hasAddressDefault,
 		afterSignup,
+		businessSlug
 	} = props;
 
 	const theme = useTheme();
@@ -160,7 +161,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const maxLimitLocation =
 		configState?.configs?.meters_to_change_address?.value;
 	const countryCode = configState?.configs?.country_autocomplete?.value
-	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
+	const isHideMap = theme?.address?.components?.map?.hidden
+	const isHideIcons = theme?.address?.components?.icons?.hidden
+	const continueAsGuest = () => navigation.navigate(!!businessSlug ? 'Business' : 'BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
 	const getAddressFormatted = (address: any) => {
