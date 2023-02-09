@@ -591,7 +591,7 @@ const SignupFormUI = (props: SignupParams) => {
 												control={control}
 												render={({ onChange, value }: any) => (
 													<OInput
-														placeholder={t(field.name)}
+														placeholder={t(field.name?.replace(/\s/g, '_')?.toUpperCase(), field.name)}
 														style={style.inputStyle}
 														icon={
 															field.code === 'email'
