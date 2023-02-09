@@ -26,6 +26,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
 import { OAlert } from '../../../../../src/components/shared'
+import { MomentOption } from '../MomentOption';
 
 const OrderSummaryUI = (props: any) => {
   const {
@@ -38,7 +39,15 @@ const OrderSummaryUI = (props: any) => {
     commentState,
     handleChangeComment,
     onNavigationRedirect,
-    handleRemoveOfferClick
+    handleRemoveOfferClick,
+    preorderSlotInterval,
+    preorderLeadTime,
+    preorderTimeRange,
+    preorderMaximumDays,
+    preorderMinimumDays,
+    cateringTypes,
+    loyaltyRewardRate,
+    maxDate
   } = props;
 
   const theme = useTheme()
@@ -50,6 +59,18 @@ const OrderSummaryUI = (props: any) => {
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
+
+  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
+  const loyaltyRewardValue = Math.round(cart?.subtotal / loyaltyRewardRate)
+
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -93,17 +114,6 @@ const OrderSummaryUI = (props: any) => {
     })
   }
 
-  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
-
-  const walletName: any = {
-    cash: {
-      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
-    },
-    credit_point: {
-      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
-    }
-  }
-
   return (
     <OSContainer>
       {cart?.products?.length > 0 && (
@@ -121,6 +131,7 @@ const OrderSummaryUI = (props: any) => {
                 onDeleteProduct={handleDeleteClick}
                 onEditProduct={handleEditProduct}
                 isFromCheckout={isFromCheckout}
+                isDisabledEdit={!cart?.business_id}
               />
             ))}
           </OSProductList>
@@ -166,7 +177,9 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 ))
               }
-              <Divider />
+              {cart?.business_id && (
+                <Divider />
+              )}
               {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
                 <OSTable>
                   <OText size={12} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
@@ -279,7 +292,7 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
                 </OSTable>
               ))}
-              {isCouponEnabled && !isCartPending && (
+              {isCouponEnabled && !isCartPending && cart?.business_id && (
                 <View>
                   <View style={{ paddingVertical: 5 }}>
                     <CouponControl
@@ -299,9 +312,16 @@ const OrderSummaryUI = (props: any) => {
                       {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                     </OText>
                   </OSTable>
+                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                    <OSTable style={{ justifyContent: 'flex-end' }}>
+                      <OText size={12} color={theme.colors.textNormal}>
+                        {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}
+                      </OText>
+                    </OSTable>
+                  )}
                 </View>
               )}
-              {cart?.status !== 2 && (
+              {cart?.business_id && cart?.status !== 2 && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
                     <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
@@ -335,6 +355,21 @@ const OrderSummaryUI = (props: any) => {
                 </OSTable>
               )}
             </OSBill>
+          )}
+          {cateringTypes.includes(orderState?.options?.type) && maxDate && cart?.business && (
+            <View>
+              <MomentOption
+                maxDate={maxDate}
+                cateringPreorder
+                isCart
+                preorderSlotInterval={preorderSlotInterval}
+                preorderLeadTime={preorderLeadTime}
+                preorderTimeRange={preorderTimeRange}
+                preorderMaximumDays={preorderMaximumDays}
+                preorderMinimumDays={preorderMinimumDays}
+                business={cart?.business}
+              />
+            </View>
           )}
           <OModal
             open={openTaxModal.open}
