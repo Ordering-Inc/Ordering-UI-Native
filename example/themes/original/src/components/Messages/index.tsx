@@ -171,7 +171,7 @@ const MessagesUI = (props: MessagesParams) => {
 					image: message.source,
 					system: message.type === 1,
 					user: {
-						_id: message.author && message.author.id ,
+						_id: message.author && message.author.id,
 						name: message.author && message.author.name,
 						avatar: message.author && (message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo)
 					}
@@ -242,6 +242,7 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const renderAccessory = () => {
 		return (
+			!chatDisabled &&
 			<QuickMessageContainer
 				style={{
 					marginLeft: 10,
@@ -412,6 +413,11 @@ const MessagesUI = (props: MessagesParams) => {
 		);
 	}
 
+	useEffect(() => {
+		if (!order?.id || messages?.loading) return
+		readMessages && readMessages()
+	}, [order?.id, messages?.loading])
+
 	return (
 		<View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
 			<Wrapper>
@@ -450,7 +456,7 @@ const MessagesUI = (props: MessagesParams) => {
 										active={business}
 									>
 										<OIcon
-											url={order?.business?.logo}
+											url={order?.business?.logo || theme.images.dummies.businessLogo}
 											width={32}
 											height={32}
 											style={{ borderRadius: 32 }}

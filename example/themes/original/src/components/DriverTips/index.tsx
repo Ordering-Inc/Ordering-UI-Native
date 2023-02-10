@@ -24,6 +24,7 @@ const DriverTipsUI = (props: any) => {
 		driverTipsOptions,
 		isMulti,
 		cart,
+		carts,
 		isDriverTipUseCustom,
 		handlerChangeOption,
 		isFixedPrice
@@ -63,6 +64,10 @@ const DriverTipsUI = (props: any) => {
 		}
 		setvalue(val)
 	}
+
+	const multiCartTipsAmmout = carts?.reduce((total: any, cart: any) => {
+		return total + parseFloat(cart?.driver_tip || 0)
+	}, 0)
 
 	return (
 		<DTContainer>
@@ -138,7 +143,7 @@ const DriverTipsUI = (props: any) => {
 					style={{ marginTop: 10, textAlign: 'center' }}
 				>
 					{t('CURRENT_DRIVER_TIP_AMOUNT', 'Current driver tip amount')}{!isFixedPrice &&
-						` (${driverTip}%)`}: {isFixedPrice ? parsePrice(driverTip) : parsePrice(cart?.driver_tip)}
+						` (${driverTip}%)`}: {isFixedPrice ? parsePrice(multiCartTipsAmmout ?? driverTip) : parsePrice(multiCartTipsAmmout ?? cart?.driver_tip)}
 				</OText>
 			)}
 		</DTContainer>

@@ -49,6 +49,7 @@ import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
 import { PlaceSpot } from '../PlaceSpot'
 import { SendGiftCard } from '../GiftCard/SendGiftCard'
+import { OrderEta } from './OrderEta'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -191,7 +192,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         order: {
           id: order?.id,
           business_id: order?.business_id,
-          logo: order.business?.logo,
+          logo: order.business?.logo || theme.images.dummies.businessLogo,
           driver: order?.driver,
           products: order?.products,
           review: order?.review,
@@ -410,13 +411,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
               subTitle={!hideDeliveryDate && <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                {
-                  activeStatus.includes(order?.status)
-                    ? order?.eta_time + 'min'
-                    : order?.delivery_datetime_utc
-                      ? parseDate(order?.delivery_datetime_utc)
-                      : parseDate(order?.delivery_datetime, { utc: false })
-                }
+                {activeStatus.includes(order?.status) ? (
+                  <OrderEta order={order} />
+                ) : (
+                  parseDate(order?.reporting_data?.at[`status:${order.status}`])
+                )}
               </OText>}
             />
             {enabledPoweredByOrdering && (
@@ -1010,7 +1009,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <OText>
                             {event?.wallet_event
                               ? walletName[event?.wallet_event?.wallet?.type]?.name
-                              : event?.paymethod?.name}
+                              : t(event?.paymethod?.name.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                           </OText>
                           {event?.data?.charge_id && (
                             <OText>

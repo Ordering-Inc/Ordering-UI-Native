@@ -45,6 +45,7 @@ const CartUI = (props: any) => {
     isMultiCheckout,
     hideDeliveryFee,
     hideDriverTip,
+    hideCouponInput,
     preorderSlotInterval,
     preorderLeadTime,
     preorderTimeRange,
@@ -108,17 +109,18 @@ const CartUI = (props: any) => {
     }
   }
 
-  const handleUpsellingPage = () => {
+  const handleUpsellingPage = (individualCart : any) => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
     const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
-    if (cartsAvailable.length === 1) {
+    if (cartsAvailable.length === 1 || !isMultiCheckout) {
+      const cart = isMultiCheckout ? cartsAvailable[0] : individualCart
       onNavigationRedirect('CheckoutNavigator', {
         screen: 'CheckoutPage',
-        cartUuid: cartsAvailable[0]?.uuid,
-        businessLogo: cartsAvailable[0]?.business?.logo,
-        businessName: cartsAvailable[0]?.business?.name,
-        cartTotal: cartsAvailable[0]?.total
+        cartUuid: cart?.uuid,
+        businessLogo: cart?.business?.logo,
+        businessName: cart?.business?.name,
+        cartTotal: cart?.total
       })
     } else {
       const groupKeys: any = {}
@@ -405,7 +407,7 @@ const CartUI = (props: any) => {
                 <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
               </OSTable>
             ))}
-            {isCouponEnabled && !isCartPending && (
+            {isCouponEnabled && !isCartPending && !hideCouponInput && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl

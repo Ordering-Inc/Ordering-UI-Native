@@ -7,13 +7,14 @@ import {
   View,
   KeyboardAvoidingView,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useLanguage } from 'ordering-components/native';
 import { Content, Timer, TimeField, Header, Comments, CommentsButtonGroup, TopActions } from './styles';
-import { OText, OButton, OTextarea, OIconButton } from '../shared';
+import { OText, OButton, OTextarea, OIcon } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
 
 import { orderCommentList } from '../../../../../src/utils'
@@ -95,7 +96,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     upper: {
       flex: 1,
       zIndex: 1001,
-      paddingTop: isPage ? 30 : 50,
+      paddingTop: isPage ? 30 : 40,
       marginBottom: 10,
       backgroundColor: theme.colors.backgroundPage
     },
@@ -109,7 +110,18 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     bottom: {
       textAlignVertical: "center",
       textAlign: "center",
-    }
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0
+    },
   })
 
   const handleFocus = () => {
@@ -299,18 +311,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       <View style={styles.parent}>
         <View style={styles.upper}>
           <TopActions>
-            <OIconButton
-              icon={theme.images.general.arrow_left}
-              borderColor={theme.colors.clear}
-              iconStyle={{ width: 20, height: 20 }}
-              style={{
-                maxWidth: 40,
-                height: 35,
-                justifyContent: 'flex-end',
-                marginBottom: 10,
-              }}
-              onClick={() => handleArrowBack()}
-            />
+            <TouchableOpacity onPress={() => handleArrowBack()} style={styles.btnBackArrow}>
+              <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+            </TouchableOpacity>
             <OText
               size={20}
               color={theme.colors.textGray}
@@ -518,7 +521,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             imgRightSrc={null}
             style={{ borderRadius: 7, height: 45 }}
             parentStyle={{ width: '100%' }}
-            textStyle={{color: '#FFF', fontSize: 18 }}
+            textStyle={{ color: '#FFF', fontSize: 18 }}
             isDisabled={!rejectReason && showTextArea}
             onClick={() => handleAcceptOrReject()}
           />

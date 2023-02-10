@@ -20,7 +20,8 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
     currentCart,
     handleUpdateProducts,
     navigation,
-    searchValue
+    searchValue,
+    businessSingleId
   } = props
 
   const [, t] = useLanguage()
@@ -65,6 +66,7 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
                 handleUpdateProducts={handleUpdateProducts}
                 navigation={navigation}
                 isPreviously
+                businessSingleId={businessSingleId}
               />
             </ProductWrapper>
           ))}

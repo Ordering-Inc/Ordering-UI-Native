@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'styled-components/native'
-import { Platform, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Platform, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Text } from 'react-native'
 import { OText, OButton, OModal, OIcon } from '../shared'
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -11,6 +11,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ServiceFormParams } from '../../types'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import uuid from 'react-native-uuid';
+import { orderTypeList } from '../../utils'
 
 import {
   ProductForm as ProductFormController,
@@ -45,7 +47,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     maxProductQuantity,
     onClose,
     professionalListState,
-    isCartProduct
+    isCartProduct,
+    actionStatus,
+    handleCreateGuestUser
   } = props
 
   const theme = useTheme()
@@ -64,6 +68,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const [dateSelected, setDateSelected] = useState<any>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [currentProfessional, setCurrentProfessional] = useState<any>(null)
+
+  const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
+  const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
 
   const dropdownRef = useRef<any>(null)
 
@@ -103,23 +110,41 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       height: 40,
       marginBottom: 30
     },
+    dropDownRow: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      marginHorizontal: 0
+    },
     professionalList: {
       paddingHorizontal: 40,
-      paddingVertical: 30
+      paddingVertical: 30,
     }
   })
 
-  const isBusyTime = (professional: any) => {
-    if (professional?.busy_times?.length === 0 || !dateSelected) return false
+  const getMomentTime = (time) => {
+    const _moment = moment(`${moment(selectDate).format('YYYY-MM-DD')} ${time}`, 'YYYY-MM-DD HH:mm').toDate()
+    return _moment
+  }
+
+  const isBusyTime = (professional, selectedMoment) => {
+    if (!selectedMoment) return false
+    const startDay = moment(selectedMoment).utc().format('d')
+    const isStartScheduleEnabled = professional?.schedule?.[startDay]?.enabled
     const duration = product?.duration ?? 0
+    const endDay = moment(selectedMoment).add(duration - 1, 'minutes').utc().format('d')
+    const isEndScheduleEnabled = professional?.schedule?.[endDay]?.enabled
+    if (!isStartScheduleEnabled || !isEndScheduleEnabled) return true
+
+    if (professional?.busy_times?.length === 0) return false
+
     const busyTimes = isCartProduct
-      ? professional?.busy_times.filter((item: any) => !(item.start === productCart?.calendar_event?.start && item.end === productCart?.calendar_event?.end))
+      ? professional?.busy_times.filter(item => !(item.start === productCart?.calendar_event?.start && item.end === productCart?.calendar_event?.end))
       : [...professional?.busy_times]
-    const valid = busyTimes.some((item: any) => {
-      return (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).valueOf() &&
-        moment(dateSelected).valueOf() <= moment.utc(item?.end).local().valueOf()) ||
-        (moment.utc(item?.start).local().valueOf() <= moment(dateSelected).add(duration, 'minutes').valueOf() &&
-        moment(dateSelected).add(duration, 'minutes').valueOf() <= moment.utc(item?.end).local().valueOf())
+    const valid = busyTimes.some(item => {
+      return (moment.utc(item?.start).local().valueOf() <= moment(selectedMoment).valueOf() &&
+        moment(selectedMoment).valueOf() < moment.utc(item?.end).local().valueOf()) ||
+        (moment.utc(item?.start).local().valueOf() < moment(selectedMoment).add(duration, 'minutes').valueOf() &&
+        moment(selectedMoment).add(duration, 'minutes').valueOf() < moment.utc(item?.end).local().valueOf())
     })
     return valid
   }
@@ -139,6 +164,11 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       />
     )
   }
+
+  const handleUpdateGuest = () => {
+		const guestToken = uuid.v4()
+		if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
+	}
 
   const customDayHeaderStylesCallback = () => {
     return {
@@ -371,9 +401,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                         size={12}
                         weight={'400'}
                         lineHeight={17}
-                        color={isBusyTime(currentProfessional) ? theme.colors.danger5 : theme.colors.success500}
+                        color={isBusyTime(currentProfessional, dateSelected) ? theme.colors.danger5 : theme.colors.success500}
                       >
-                        {isBusyTime(currentProfessional)
+                        {isBusyTime(currentProfessional, dateSelected)
                           ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
                           : t('AVAILABLE', 'Available')
                         }
@@ -453,10 +483,12 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                       paddingTop: 8,
                       paddingHorizontal: 12
                     }}
-                    rowTextStyle={{
-                      color: theme.colors.disabled,
-                      fontSize: 14,
-                      marginHorizontal: 0
+                    renderCustomizedRowChild={(item, index) => {
+                      return (
+                        <Text style={[styles.dropDownRow, { color: isBusyTime(currentProfessional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary } ]}>
+                          {item.text}
+                        </Text>
+                      )
                     }}
                     renderDropdownIcon={() => dropDownIcon()}
                     dropdownOverlayColor='transparent'
@@ -529,7 +561,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                       ? t('SOLD_OUT', 'Sold out')
                       : t('BOOK', 'Book'))}
                   style={styles.buttonStyle}
-                  isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected || isBusyTime(currentProfessional)}
+                  isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected || isBusyTime(currentProfessional, dateSelected)}
                   textStyle={{ fontSize: 14, color: theme.colors.white }}
                 />
               )}
@@ -562,6 +594,17 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                     backgroundColor: theme.colors.white,
                   }}
                 />
+              )}
+              {!auth && guestCheckoutEnabled && orderTypeEnabled &&  (
+                <TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
+                  {actionStatus?.loading ? (
+                    <Placeholder Animation={Fade}>
+                      <PlaceholderLine width={60} height={20} />
+                    </Placeholder>
+                  ) : (
+                    <OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+                  )}
+                </TouchableOpacity>
               )}
           </ButtonWrapper>
         </Container>
@@ -616,9 +659,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                     size={12}
                     weight={'400'}
                     lineHeight={17}
-                    color={isBusyTime(professional) ? theme.colors.danger5 : theme.colors.success500}
+                    color={isBusyTime(professional, dateSelected) ? theme.colors.danger5 : theme.colors.success500}
                   >
-                    {isBusyTime(professional)
+                    {isBusyTime(professional, dateSelected)
                       ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
                       : t('AVAILABLE', 'Available')
                     }

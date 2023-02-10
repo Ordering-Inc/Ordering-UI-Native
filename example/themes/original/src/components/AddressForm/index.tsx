@@ -62,6 +62,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		isFromProductsList,
 		hasAddressDefault,
 		afterSignup,
+		businessSlug
 	} = props;
 
 	const theme = useTheme();
@@ -162,7 +163,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const countryCode = configState?.configs?.country_autocomplete?.value
 	const isHideMap = theme?.address?.components?.map?.hidden
 	const isHideIcons = theme?.address?.components?.icons?.hidden
-	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
+	const continueAsGuest = () => navigation.navigate(!!businessSlug ? 'Business' : 'BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
 	const getAddressFormatted = (address: any) => {
@@ -364,7 +365,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		if (
 			orderState.loading &&
 			!addressesList &&
-			orderState.options.address &&
+			orderState?.options?.address &&
 			auth &&
 			!afterSignup
 		) {
@@ -372,7 +373,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				? navigation.navigate('BottomTab')
 				: navigation.navigate('Business');
 		}
-	}, [orderState.options.address]);
+	}, [orderState?.options?.address]);
 
 	useEffect(() => {
 		if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION') {

@@ -346,7 +346,7 @@ export const getOrderStatus = (s: string, t: any) => {
   return objectStatus && objectStatus;
 };
 
-export const transformDistance = (value : number, distanceUnit?: string) => {
+export const transformDistance = (value: number, distanceUnit?: string) => {
   return distanceUnit === 'mi'
     ? (value / 1.609).toFixed(2)
     : distanceUnit === 'ft'
@@ -354,7 +354,7 @@ export const transformDistance = (value : number, distanceUnit?: string) => {
       : (value).toFixed(2)
 }
 
-export const formatSeconds = (seconds : number) => {
+export const formatSeconds = (seconds: number) => {
   // Hours, minutes and seconds
   const hrs = Math.floor(seconds / 3600)
   const mins = Math.floor((seconds % 3600) / 60)
@@ -369,3 +369,30 @@ export const formatSeconds = (seconds : number) => {
   ret += '' + secs
   return ret
 }
+
+export const calculateDistance = (
+  pointA: { lat: number; lng: number },
+  pointB: { latitude: number; longitude: number },
+) => {
+  const lat1 = pointA.lat;
+  const lon1 = pointA.lng;
+
+  const lat2 = pointB?.latitude;
+  const lon2 = pointB?.longitude;
+
+  const R = 6371e3;
+  const φ1 = lat1 * (Math.PI / 180);
+  const φ2 = lat2 * (Math.PI / 180);
+  const Δφ = (lat2 - lat1) * (Math.PI / 180);
+  const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2));
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c;
+  const distanceInKm = distance / 1000;
+  return distanceInKm;
+};

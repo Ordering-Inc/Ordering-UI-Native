@@ -476,6 +476,8 @@ const LoginFormUI = (props: LoginParams) => {
       borderRadius: 7.6,
       borderColor: theme.colors.inputSignup,
       backgroundColor: theme.colors.transparent,
+      minHeight: 50,
+      maxHeight : 50
     },
     btn: {
       borderRadius: 7.6,
@@ -941,3 +943,4 @@ export const LoginForm = (props: any) => {
 
   return <LoginFormController {...loginProps} />;
 };
+

@@ -48,8 +48,13 @@ export const PreviousOrders = (props: any) => {
     if (props.handleClickEvent) {
       props.handleClickEvent({ ...order, isLogistic: isLogisticOrder })
     } else {
-      onNavigationRedirect &&
-        onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+      if (isLogisticOrder){
+        onNavigationRedirect &&
+        onNavigationRedirect('OrderDetailsLogistic', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+      } else {
+        onNavigationRedirect &&
+          onNavigationRedirect('OrderDetails', { order });
+      }
     }
   };
 
@@ -81,29 +86,29 @@ export const PreviousOrders = (props: any) => {
                 imgRightSrc={null}
                 style={{ borderRadius: 7, height: 40 }}
                 parentStyle={{ width: '100%' }}
-                textStyle={{ color: theme.colors.primary }}
+                textStyle={{ color: theme?.colors?.white }}
               />
             ) : (
               <>
                 <OButton
                   text={t('REJECT', 'Reject')}
                   onClick={() => handleClickLogisticOrder(2, _order?.id)}
-                  bgColor={theme.colors.danger}
-                  borderColor={theme.colors.danger}
+                  bgColor={theme.colors.red}
+                  borderColor={theme.colors.red}
                   imgRightSrc={null}
                   style={{ borderRadius: 7, height: 40 }}
                   parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.dangerText }}
+                  textStyle={{ color: theme.colors.white }}
                 />
                 <OButton
                   text={t('ACCEPT', 'Accept')}
                   onClick={() => handleClickLogisticOrder(1, _order?.id)}
-                  bgColor={theme.colors.successOrder}
-                  borderColor={theme.colors.successOrder}
+                  bgColor={theme.colors.green}
+                  borderColor={theme.colors.green}
                   imgRightSrc={null}
                   style={{ borderRadius: 7, height: 40 }}
                   parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.successText }}
+                  textStyle={{ color: theme.colors.white }}
                 />
               </>
             )}

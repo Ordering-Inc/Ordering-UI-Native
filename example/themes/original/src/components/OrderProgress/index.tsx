@@ -12,6 +12,7 @@ import { NotFoundSource } from '../NotFoundSource'
 import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native'
 import { Placeholder, Fade, PlaceholderLine } from "rn-placeholder";
 import FastImage from 'react-native-fast-image'
+import { OrderEta } from '../OrderDetails/OrderEta'
 import {
   ProgressContentWrapper,
   ProgressBar,
@@ -33,7 +34,7 @@ const OrderProgressUI = (props: any) => {
   const theme = useTheme();
 
   const [, t] = useLanguage()
-  const [{ optimizeImage, parseDate, parseTime }] = useUtils()
+  const [{ optimizeImage, parseTime }] = useUtils()
   const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
   const [initialLoaded, setInitialLoaded] = useState(false)
@@ -76,15 +77,6 @@ const OrderProgressUI = (props: any) => {
     }
   });
 
-  const convertDiffToHours = (order: any) => {
-    const minute = order?.eta_time
-    const deliveryTime = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm' })
-      : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD HH:mm' })
-    const returnedDate = moment(deliveryTime).add(minute, 'minutes').format('hh:mm A')
-    return returnedDate
-  }
-
   const handleGoToOrder = (index: string) => {
     navigation && navigation.navigate(index)
   }
@@ -125,11 +117,11 @@ const OrderProgressUI = (props: any) => {
               <View style={styles.logoWrapper}>
                 <FastImage
                   style={{ width: 50, height: 50 }}
-                  source={{
+                  source={orderList?.orders.length === 1 ? {
                     uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
                     priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
+                  } : theme.images.logos.logotype}
+                  resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
               <View style={{
@@ -171,7 +163,7 @@ const OrderProgressUI = (props: any) => {
                       ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
                       : parseTime(lastOrder?.delivery_datetime, { utc: false })}
                     &nbsp;-&nbsp;
-                    {convertDiffToHours(lastOrder)}
+                    <OrderEta order={lastOrder} outputFormat='hh:mm A' />
                   </OText>
                 </TimeWrapper>
               </ProgressTextWrapper>
@@ -198,7 +190,7 @@ export const OrderProgress = (props: any) => {
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
-      pageSize: 1,
+      pageSize: 10,
       controlType: 'infinity'
     }
   }

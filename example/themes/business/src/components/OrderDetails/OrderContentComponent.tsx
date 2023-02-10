@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 
-import { Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 
 import { OButton, OText, OLink, OModal } from '../shared'
 import {
@@ -16,17 +16,22 @@ import {
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, calculateDistance, transformDistance } from '../../utils';
 
 import {
   useLanguage,
   useUtils,
   useConfig,
+  useSession
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ReviewCustomer } from '../ReviewCustomer'
 
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+
+const { useDeviceOrientation } = DeviceOrientationMethods
 
 interface OrderContent {
   order: any,
@@ -38,10 +43,15 @@ interface OrderContent {
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
-
+  const [{ user }] = useSession()
   const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
+  const [orientationState] = useDeviceOrientation();
+  const distanceUnit = configs?.distance_unit?.value
+
+  const WIDTH_SCREEN = orientationState?.dimensions?.width
+
   const [openReviewModal, setOpenReviewModal] = useState(false)
 
   const [isReadMore, setIsReadMore] = useState(false)
@@ -99,13 +109,13 @@ export const OrderContentComponent = (props: OrderContent) => {
   }
 
   const onTextLayout = useCallback((e: any) => {
-    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 2 lines or not
-  },[]);
+    setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
+  }, []);
 
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
       {isOrderGroup && (
-        <OText size={18}>{t('ORDER', 'Order')} #{isOrderGroup ? order?.order_group_id : order?.id}</OText>
+        <OText size={18}>{t('ORDER', 'Order')} #{order?.id}</OText>
       )}
 
       {order?.metafields?.length > 0 && (
@@ -193,7 +203,11 @@ export const OrderContentComponent = (props: OrderContent) => {
             />
           </View>
         )}
-
+        {!!order?.business?.location && (
+          <OText>
+            {t('DISTANCE_TO_THE_BUSINESS', 'Distance to the business')}: {transformDistance(calculateDistance(order?.business?.location, user?.location), distanceUnit)} {t(distanceUnit.toUpperCase(), distanceUnit)}
+          </OText>
+        )}
         {!!order?.business?.address_notes && (
           <View style={styles.linkWithIcons}>
             <OLink
@@ -334,9 +348,15 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
 
         {!!order?.customer?.address_notes && (
-          <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-            {order?.customer?.address_notes}
-          </OText>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
+            <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+              {order?.customer?.address_notes}
+            </OText>
+          </ScrollView>
         )}
 
         {!!order?.customer?.zipcode && (

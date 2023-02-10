@@ -40,7 +40,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		navigation,
 		businessId,
 		isPreviously,
-		viewString
+		viewString,
+		businessSingleId
 	} = props;
 
 	const theme = useTheme();
@@ -180,7 +181,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 				>
 					<View style={{ flexDirection: logoPosition === 'left' ? 'row-reverse' : 'row' }}>
 						{productAddedToCartLength > 0 && (
-							<QuantityContainer style={[styles.quantityContainer, {
+							<QuantityContainer businessSingleId={businessSingleId} style={[styles.quantityContainer, {
 								transform: [{ translateX: 25 }, { translateY: -25 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>

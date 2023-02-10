@@ -23,7 +23,9 @@ import { MultiCartsPaymethodsAndWallets } from '../MultiCartsPaymethodsAndWallet
 import { Cart } from '../Cart'
 import { FloatingButton } from '../FloatingButton'
 import { DriverTips } from '../DriverTips'
+import { CouponControl } from '../CouponControl';
 import { DriverTipsContainer } from '../Cart/styles'
+import { OSTable, OSCoupon } from '../OrderSummary/styles';
 
 import {
   ChContainer,
@@ -58,6 +60,7 @@ const MultiCheckoutUI = (props: any) => {
     handleSelectWallet,
     handlePaymethodDataChange,
     cartUuid,
+    rewardRate,
     totalCartsFee,
     cartGroup
   } = props
@@ -81,12 +84,14 @@ const MultiCheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-  const isMultiDriverTips = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
+
+  const loyaltyRewardValue = Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / rewardRate)
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -263,6 +268,29 @@ const MultiCheckoutUI = (props: any) => {
             </ChSection>
           )}
 
+          {
+            validationFields?.fields?.checkout?.coupon?.enabled &&
+            openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
+            configs?.multi_business_checkout_coupon_input_style?.value === 'group' &&
+          (
+            <ChSection>
+              <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+                {t('DISCOUNT_COUPON', 'Discount coupon')}
+              </OText>
+              <OSTable>
+                <OSCoupon>
+                  <CouponControl
+                    isMulti
+                    carts={openCarts}
+                    businessIds={openCarts.map((cart: any) => cart.business_id)}
+                    price={openCarts.reduce((total: any, cart: any) => total + cart.total, 0)}
+                  />
+                </OSCoupon>
+              </OSTable>
+              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+            </ChSection>
+          )}
+
           <ChSection>
             <ChCarts>
               <CartsHeader>
@@ -276,11 +304,15 @@ const MultiCheckoutUI = (props: any) => {
                     cart={cart}
                     cartuuid={cart.uuid}
                     isMultiCheckout
+                    hideCouponInput={configs?.multi_business_checkout_coupon_input_style?.value === 'group'}
                     hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
                     hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
+                    businessConfigs={cart?.business?.configs}
                   />
-                  <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+                  {openCarts.length > 1 && (
+                    <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+                  )}
                 </React.Fragment>
               ))}
               {!cartGroup?.loading && openCarts.length === 0 && (
@@ -295,7 +327,7 @@ const MultiCheckoutUI = (props: any) => {
                   {t('WARNING_PARTIAL_WALLET_CARTS', 'Important: One or more carts can`t be completed due a partial payment with cash/points wallet and requires to be paid individually')}
                 </OText>
               )}
-              {openCarts.length > 0 && (
+              {openCarts.length > 1 && (
                 <ChCartsTotal>
                   {totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -322,6 +354,13 @@ const MultiCheckoutUI = (props: any) => {
                     </OText>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
                   </View>
+                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                    <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'flex-end' }}>
+                      <OText size={12} color={theme.colors.textNormal}>
+                        {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}
+                      </OText>
+                    </View>
+                  )}
                   <OText size={12} color={theme.colors.mediumGray} mRight={70} style={{ marginTop: 10 }}>
                     {t('MULTI_CHECKOUT_DESCRIPTION', 'You will receive a receipt for each business. The payment is not combined between multiple stores. Each payment is processed by the store')}
                   </OText>

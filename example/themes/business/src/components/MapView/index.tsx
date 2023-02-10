@@ -42,7 +42,7 @@ const MapViewComponent = (props: MapViewParams) => {
     followUserLocation
   } = useLocation();
 
-  const location = { lat: userLocation.latitude, lng: userLocation.longitude }
+  const location = { lat: userLocation?.latitude, lng: userLocation?.longitude }
   const haveOrders = Object.values(markerGroups)?.length > 0 && Object.values(customerMarkerGroups)?.length > 0
   const closeAlert = () => {
     setAlertState({
@@ -57,8 +57,8 @@ const MapViewComponent = (props: MapViewParams) => {
         [
           { latitude: location.latitude, longitude: location.longitude },
           {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
+            latitude: userLocation?.latitude,
+            longitude: userLocation?.longitude,
           },
         ],
         {
@@ -213,10 +213,10 @@ const MapViewComponent = (props: MapViewParams) => {
   }
 
   useEffect(() => {
-    if (userLocation.latitude !== 0 && userLocation.longitude !== 0) {
+    if (userLocation?.latitude !== 0 && userLocation?.longitude !== 0) {
       const location = {
-        lat: userLocation.latitude,
-        lng: userLocation.longitude
+        lat: userLocation?.latitude,
+        lng: userLocation?.longitude
       }
       setDriverLocation({ location })
     }
@@ -231,8 +231,8 @@ const MapViewComponent = (props: MapViewParams) => {
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
               initialRegion={{
-                latitude: initialPosition.latitude,
-                longitude: initialPosition.longitude,
+                latitude: initialPosition?.latitude,
+                longitude: initialPosition?.longitude,
                 latitudeDelta: haveOrders ? 0.01 : 0.1,
                 longitudeDelta: haveOrders ? 0.01 * ASPECT_RATIO : 0.1 * ASPECT_RATIO,
               }}

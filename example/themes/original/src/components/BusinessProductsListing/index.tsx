@@ -68,7 +68,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     professionalSelected,
     handleUpdateProfessionals,
     handleChangeProfessionalSelected,
-    onBusinessClick
+    onBusinessClick,
+    businessSingleId
   } = props
 
   const insets = useSafeAreaInsets()
@@ -188,13 +189,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
     const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
-    if (cartsAvailable.length === 1) {
+    if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
+      const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
+
       props.onNavigationRedirect('CheckoutNavigator', {
         screen: 'CheckoutPage',
-        cartUuid: cartsAvailable[0]?.uuid,
-        businessLogo: cartsAvailable[0]?.business?.logo,
-        businessName: cartsAvailable[0]?.business?.name,
-        cartTotal: cartsAvailable[0]?.total
+        cartUuid: cart?.uuid,
+        businessLogo: cart?.business?.logo,
+        businessName: cart?.business?.name,
+        cartTotal: cart?.total
       })
     } else {
       const groupKeys: any = {}
@@ -312,12 +315,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               marginTop: Platform.OS === 'ios' ? insets.top : 0
             }}
             onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height)}
+            hideArrow={(businessSingleId && auth)}
           >
             {!isOpenSearchBar && (
               <>
-                <TopActions onPress={() => handleBackNavigation()}>
-                  <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
-                </TopActions>
+                {!(businessSingleId && auth) && (
+                  <TopActions onPress={() => handleBackNavigation()}>
+                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+                  </TopActions>
+                )}
                 {!errorQuantityProducts && (
                   <View style={{ ...styles.headerItem }}>
                     <TouchableOpacity
@@ -407,6 +413,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 previouslyProducts={business?.previously_products}
                 navigation={navigation}
                 isFiltMode
+                businessSingleId={businessSingleId}
               />
             </View>
           </FiltProductsContainer>
@@ -415,7 +422,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <BackgroundGray isIos={Platform.OS === 'ios'} />
         )}
         <IOScrollView
-          stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 2]}
+          stickyHeaderIndices={[business?.professionals?.length > 0 ? 3 : 2]}
           style={{
             ...styles.mainContainer,
             marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
@@ -448,6 +455,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 professionals={business?.professionals}
                 professionalSelected={professionalSelected}
                 handleChangeProfessionalSelected={handleChangeProfessionalSelected}
+                handleUpdateProfessionals={handleUpdateProfessionals}
               />
             </ProfessionalFilterWrapper>
           )}
@@ -508,6 +516,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   handleUpdateProducts={handleUpdateProducts}
                   navigation={navigation}
                   previouslyProducts={business?.previously_products}
+                  businessSingleId={businessSingleId}
                 />
               </WrapContent>
             </>

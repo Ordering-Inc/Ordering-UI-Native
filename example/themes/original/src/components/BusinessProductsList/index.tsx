@@ -39,7 +39,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     handleUpdateProducts,
     previouslyProducts,
     isFiltMode,
-    navigation
+    navigation,
+    businessSingleId
   } = props;
 
   const [, t] = useLanguage();
@@ -92,6 +93,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           handleUpdateProducts={handleUpdateProducts}
           currentCart={currentCart}
           searchValue={searchValue}
+          businessSingleId={businessSingleId}
         />
       )}
       {category.id &&
@@ -112,6 +114,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
               handleUpdateProducts={handleUpdateProducts}
               navigation={navigation}
+              businessSingleId={businessSingleId}
             />
           ))
       }
@@ -139,6 +142,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       handleUpdateProducts={handleUpdateProducts}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                       navigation={navigation}
+                      businessSingleId={businessSingleId}
                     />
                   ),
               )}
@@ -240,6 +244,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       handleUpdateProducts={handleUpdateProducts}
                       navigation={navigation}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                      businessSingleId={businessSingleId}
                     />
                   ))}
                 </>

@@ -19,6 +19,7 @@ export interface LoginParams {
 	notificationState?: any;
 	handleReCaptcha?: any;
 	enableReCaptcha?: any;
+	isGuest?: any;
 	otpType?: string,
 	setOtpType: (type: string) => void,
 	generateOtpCode: (values?: any) => void,
@@ -91,7 +92,8 @@ export interface AddressFormParams {
 	hasAddressDefault?: any,
 	isFromCheckout?: boolean
 	afterSignup?: boolean
-	isGuestFromStore?: boolean
+	isGuestFromStore?: boolean,
+	businessSlug?: number | string
 }
 export interface SignupParams {
 	navigation?: any;
@@ -118,6 +120,7 @@ export interface SignupParams {
 	useSignUpOtpEmail?: boolean;
 	useSignUpOtpCellphone?: boolean;
 	willVerifyOtpState?: boolean;
+	isGuest?: any;
 	numOtpInputs?: number;
 	handleChangePromotions: () => void;
 	handleChangeInput?: (in1: any, in2: any) => void;
@@ -252,6 +255,7 @@ export interface BusinessProductsListingParams {
 	handleUpdateProfessionals?: any;
 	onBusinessClick?: any;
 	onNavigationRedirect?: any;
+	businessSingleId?: number | string
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -303,6 +307,7 @@ export interface BusinessProductsListParams {
 	handleUpdateProducts?: any,
 	navigation?: any;
 	previouslyProducts?: any;
+	businessSingleId?: number | string
 }
 export interface SingleProductCardParams {
 	businessId: any;
@@ -319,6 +324,7 @@ export interface SingleProductCardParams {
 	isPreviously?: any;
 	isProductId?: any;
 	viewString?: string;
+	businessSingleId?: number
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -569,6 +575,9 @@ export interface BusinessPreorderParams {
 	goToBack: any;
 	business: any;
 	handleBusinessClick: (value: any) => {};
+	getActualSchedule?: any;
+	cateringPreorder?: boolean;
+	preorderLeadTime?: number 
 }
 export interface BusinessMenuListParams {
 	menu: any;
@@ -592,7 +601,7 @@ export interface UpsellingProductsParams {
 	business?: any;
 	businessId?: number;
 	cartProducts?: Array<any>;
-	handleUpsellingPage: () => void;
+	handleUpsellingPage: (cart ?: any) => void;
 	openUpselling: boolean;
 	canOpenUpselling?: boolean;
 	setCanOpenUpselling?: (value: any) => void;
@@ -769,13 +778,16 @@ export interface ServiceFormParams {
 	professionalList: any,
 	productObject?: any,
 	professionalListState?: any,
-	isCartProduct?: any
+	isCartProduct?: any,
+	actionStatus?: any,
+	handleCreateGuestUser?: any
 }
 
 export interface ProfessionalFilterParams {
 	professionals?: any,
 	professionalSelected?: any,
-	handleChangeProfessionalSelected: any
+	handleChangeProfessionalSelected: any,
+	handleUpdateProfessionals?: any
 }
 
 export interface ProfessionalProfileParams {
@@ -792,7 +804,8 @@ export interface OrderItAgainParams {
 	currentCart: any,
 	handleUpdateProducts: any,
 	navigation: any,
-	searchValue?: string
+	searchValue?: string,
+	businessSingleId?: number | string
 }
 
 export interface PreviousProductsOrderedParams {
