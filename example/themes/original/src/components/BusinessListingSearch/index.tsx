@@ -275,10 +275,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           }}
         />
       )}
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
       {businessesSearchList.businesses?.length > 0 && (
         <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
           <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
