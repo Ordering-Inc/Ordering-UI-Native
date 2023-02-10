@@ -111,22 +111,6 @@ export const CartContent = (props: any) => {
 						btnTitle={t('START_SHOPPING', 'Start shopping')}
 						onClickButton={() => onNavigationRedirect('BusinessList')}
 					/>
-					{/* <OText size={24} style={{ textAlign: 'center' }}>
-						{t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
-					</OText>
-					<OButton
-						text={t('START_SHOPPING', 'Start shopping')}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
-						textStyle={{
-							color: theme.colors.white,
-							fontSize: 14,
-							paddingRight: 0
-						}}
-						style={{ height: 35, marginVertical: 20, borderRadius: 8 }}
-						imgRightSrc={null}
-						onClick={() => onNavigationRedirect('BusinessList')}
-					/> */}
 				</CCNotCarts>
 			)}
 			<Spinner visible={isCartsLoading} />
