@@ -25,37 +25,21 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
 
   const ProductList = () => {
     return (
-<<<<<<< Updated upstream
       <>
         {products?.filter((product : any) => product?.business?.available)?.map((product: any) => (
-            <SingleProductCard
-              key={product?.id}
-              isProductId
-              isSoldOut={(product.inventoried && !product.quantity)}
-              product={product}
-              businessId={product?.business?.id}
-              onProductClick={onProductClick}
-              style={style}
-              productAddedToCartLength={0}
-              handleUpdateProducts={handleUpdateProducts}
-            />
+          <SingleProductCard
+            key={product?.id}
+            isProductId
+            isSoldOut={(product.inventoried && !product.quantity)}
+            product={product}
+            businessId={product?.business?.id}
+            onProductClick={onProductClick}
+            style={{ width: windowWidth - (products?.length > 1 ? 120 : 80), marginRight: 20 }}
+            productAddedToCartLength={0}
+            handleUpdateProducts={handleUpdateProducts}
+          />
         ))}
       </>
-=======
-      products?.map((product: any) => (
-        <SingleProductCard
-          key={product?.id}
-          isProductId
-          isSoldOut={(product.inventoried && !product.quantity)}
-          product={product}
-          businessId={product?.business?.id}
-          onProductClick={onProductClick}
-          style={{ width: windowWidth - (products?.length > 1 ? 120 : 80), marginRight: 20 }}
-          productAddedToCartLength={0}
-          handleUpdateProducts={handleUpdateProducts}
-        />
-      ))
->>>>>>> Stashed changes
     )
   }
   return (
