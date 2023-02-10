@@ -225,6 +225,7 @@ export const UserFormDetailsUI = (props: any) => {
 					open: true,
 					content: formState.result?.result[0]
 				})
+				cleanFormState && cleanFormState({ changes: {} })
 			}
 		}
 	}, [formState?.loading]);
