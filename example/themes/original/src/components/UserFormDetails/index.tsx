@@ -8,6 +8,7 @@ import { SignupForm } from '../SignupForm'
 import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { OText, OButton, OInput, OModal } from '../shared';
+import Alert from '../../providers/AlertProvider'
 
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
@@ -83,16 +84,17 @@ export const UserFormDetailsUI = (props: any) => {
 			cellphone: null,
 		},
 	});
+	const [alertState, setAlertState] = useState({ open: false, content: '' })
 
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
 	const handleSuccessSignup = (user: any) => {
-    login({
-      user,
-      token: user?.session?.access_token
-    })
-    handlePlaceOrderAsGuest && handlePlaceOrderAsGuest()
-  }
+		login({
+			user,
+			token: user?.session?.access_token
+		})
+		handlePlaceOrderAsGuest && handlePlaceOrderAsGuest()
+	}
 
 	const getInputRules = (field: any) => {
 		const rules: any = {
@@ -199,11 +201,6 @@ export const UserFormDetailsUI = (props: any) => {
 		handleChangeInput(countryCode, true);
 	}
 
-	const handleClickBtn = () => {
-		if (!user?.guest_id) handleSubmit(onSubmit)
-		else setIsModalOpen(true)
-	}
-
 	useEffect(() => {
 		if (Object.keys(errors).length > 0) {
 			const list = Object.values(errors);
@@ -223,6 +220,12 @@ export const UserFormDetailsUI = (props: any) => {
 		if (!formState?.loading && formState?.result?.error) {
 			formState.result?.result &&
 				showToast(ToastType.Error, formState.result?.result[0]);
+			if (isCheckout) {
+				setAlertState({
+					open: true,
+					content: formState.result?.result[0]
+				})
+			}
 		}
 	}, [formState?.loading]);
 
@@ -441,8 +444,8 @@ export const UserFormDetailsUI = (props: any) => {
 						formState.loading
 							? t('UPDATING', 'Updating...')
 							: ((isCheckout && !!user?.guest_id)
-									? t('SIGN_UP_AND_PLACE_ORDER', 'Sign up and place order')
-									: t('CONTINUE', 'Continue'))
+								? t('SIGN_UP_AND_PLACE_ORDER', 'Sign up and place order')
+								: t('CONTINUE', 'Continue'))
 					}
 					bgColor={theme.colors.white}
 					textStyle={{ color: theme.colors.primary, fontSize: 14 }}
@@ -450,7 +453,7 @@ export const UserFormDetailsUI = (props: any) => {
 					isDisabled={!user?.guest_id && (formState.loading || !isValid)}
 					imgRightSrc={null}
 					style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20, marginBottom: 20 }}
-					onClick={handleClickBtn}
+					onClick={!user?.guest_id ? handleSubmit(onSubmit) : () => setIsModalOpen(true)}
 				/>
 			)}
 			{isCheckout && !!user?.guest_id && (
@@ -462,7 +465,7 @@ export const UserFormDetailsUI = (props: any) => {
 				open={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 			>
-				<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+				<ScrollView style={{ paddingHorizontal: 20, width: '100%' }}>
 					<SignupForm
 						handleSuccessSignup={handleSuccessSignup}
 						isGuest
@@ -472,6 +475,13 @@ export const UserFormDetailsUI = (props: any) => {
 					/>
 				</ScrollView>
 			</OModal>
+			<Alert
+				open={alertState.open}
+				title=''
+				content={[alertState.content]}
+				onAccept={() => setAlertState({ open: false, content: '' })}
+				onClose={() => setAlertState({ open: false, content: '' })}
+			/>
 		</>
 	);
 };
