@@ -30,7 +30,8 @@ export const UserFormDetailsUI = (props: any) => {
 		hideUpdateButton,
 		setWillVerifyOtpState,
 		handlePlaceOrderAsGuest,
-		isCheckout
+		isCheckout,
+		setIsOpen
 	} = props;
 
 	const theme = useTheme();
@@ -221,11 +222,7 @@ export const UserFormDetailsUI = (props: any) => {
 			formState.result?.result &&
 				showToast(ToastType.Error, formState.result?.result[0]);
 			if (isCheckout) {
-				setAlertState({
-					open: true,
-					content: formState.result?.result[0]
-				})
-				cleanFormState && cleanFormState({ changes: {} })
+				setIsOpen && setIsOpen(false)
 			}
 		}
 	}, [formState?.loading]);
@@ -476,13 +473,7 @@ export const UserFormDetailsUI = (props: any) => {
 					/>
 				</ScrollView>
 			</OModal>
-			<Alert
-				open={alertState.open}
-				title=''
-				content={[alertState.content]}
-				onAccept={() => setAlertState({ open: false, content: '' })}
-				onClose={() => setAlertState({ open: false, content: '' })}
-			/>
+			
 		</>
 	);
 };
