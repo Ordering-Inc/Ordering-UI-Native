@@ -17,7 +17,7 @@ import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
-import { shape } from '../../utils';
+import { lightenDarkenColor, shape } from '../../utils';
 import { LottieAnimation } from '../LottieAnimation';
 import { CardAnimation } from '../shared/CardAnimation'
 
@@ -109,7 +109,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		},
 		productTagsStyle: {
 			width: 30,
-    		height: 30,
+			height: 30,
 			marginRight: 5
 		}
 	});
@@ -222,7 +222,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 										showsHorizontalScrollIndicator={false}
 										horizontal
 										style={{ marginLeft: 10 }}
-										contentContainerStyle={{flexGrow: 1}}
+										contentContainerStyle={{ flexGrow: 1 }}
 									>
 										{product?.tags.map((tag: any, i: any) => (
 											<TouchableWithoutFeedback key={i}>
@@ -266,13 +266,15 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							{!!product?.ribbon?.enabled && (
 								<RibbonBox
 									bgColor={product?.ribbon?.color}
+									colorText={lightenDarkenColor(product?.ribbon?.color)}
+									borderRibbon={lightenDarkenColor(product?.ribbon?.color)}
 									isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
 									isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
 								>
 									<OText
 										size={textSize}
 										weight={'400'}
-										color={theme.colors.white}
+										color={lightenDarkenColor(product?.ribbon?.color) ? theme.colors.black : theme.colors.white}
 										numberOfLines={2}
 										ellipsizeMode='tail'
 										lineHeight={13}
