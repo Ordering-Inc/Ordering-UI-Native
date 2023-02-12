@@ -223,6 +223,7 @@ export const UserFormDetailsUI = (props: any) => {
 				showToast(ToastType.Error, formState.result?.result[0]);
 			if (isCheckout) {
 				setIsOpen && setIsOpen(false)
+				cleanFormState && cleanFormState({ changes: {} })
 			}
 		}
 	}, [formState?.loading]);
