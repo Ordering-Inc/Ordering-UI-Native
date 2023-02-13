@@ -323,7 +323,7 @@ const SignupFormUI = (props: SignupParams) => {
 	};
 
 	const handleChangeInputEmail = (value: string, onChange: any) => {
-		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
+		onChange(value.toLowerCase().trim().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
 
 	const handleOpenTermsUrl = async (url: any) => {

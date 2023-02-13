@@ -1,8 +1,9 @@
 import React from 'react'
 import { View } from 'react-native'
-import { OButton, OIcon, OText } from '../shared'
+import { OButton, OText } from '../shared'
 import { NotFoundSourceParams } from '../../types'
 import { useTheme } from 'styled-components/native';
+import Foundation from 'react-native-vector-icons/Foundation'
 import {
 	NotFound,
 	NotFoundImage
@@ -10,34 +11,37 @@ import {
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
 	const {
-		image,
+		hideImage,
 		content,
 		btnTitle,
+		btnStyle,
 		conditioned,
 		onClickButton
 	} = props
 
 	const theme = useTheme();
 
-	const errorImage = image || theme.images.general.notFound
-	const isUrl = typeof errorImage === 'string' && errorImage.includes('http')
-
 	return (
 		<NotFound>
-			{errorImage && (
+			{!hideImage && (
 				<NotFoundImage>
-					<OIcon url={isUrl && errorImage} src={!isUrl && errorImage} width={260} height={220} />
+					<Foundation
+						name='page-search'
+						color={theme.colors.primary}
+						size={60}
+						style={{ marginBottom: 10 }}
+					/>
 				</NotFoundImage>
 			)}
-			{content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={18} style={{ textAlign: 'center' }}>{content}</OText>}
-			{content && !conditioned && <OText color={theme.colors.disabled} size={18} style={{ textAlign: 'center' }}>{content}</OText>}
+			{content && conditioned && <OText color={theme.colors.disabled} size={16} style={{ textAlign: 'center' }}>{content}</OText>}
+			{content && !conditioned && <OText color={theme.colors.disabled} size={16} style={{ textAlign: 'center' }}>{content}</OText>}
 			{!onClickButton && props.children && (
 				props.children
 			)}
 			{onClickButton && (
 				<View style={{ marginTop: 10, width: '100%' }}>
 					<OButton
-						style={{ width: '100%', height: 50 }}
+						style={{ width: '100%', height: 50, ...btnStyle }}
 						bgColor={theme.colors.primary}
 						borderColor={theme.colors.primary}
 						onClick={() => onClickButton()}
