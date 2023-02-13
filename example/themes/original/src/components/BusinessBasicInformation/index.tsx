@@ -5,7 +5,7 @@ import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
-import { convertHoursToMinutes, shape } from '../../utils';
+import { convertHoursToMinutes, lightenDarkenColor, shape } from '../../utils';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -351,13 +351,15 @@ export const BusinessBasicInformation = (
 									{business?.ribbon?.enabled && (
 										<RibbonBox
 											bgColor={business?.ribbon?.color}
+											colorText={lightenDarkenColor(business?.ribbon?.color)}
+											borderRibbon={lightenDarkenColor(business?.ribbon?.color)}
 											isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
 											isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
 										>
 											<OText
 												size={10}
 												weight={'400'}
-												color={theme.colors.white}
+												color={lightenDarkenColor(business?.ribbon?.color) ? theme.colors.black : theme.colors.white}
 												numberOfLines={2}
 												ellipsizeMode='tail'
 												lineHeight={13}
