@@ -744,6 +744,7 @@ const CheckoutUI = (props: any) => {
 									setIsOpen(false)
 									handlePlaceOrder(null, true)
 								}}
+								setIsOpen={setIsOpen}
 							/>
 						</View>
 					</OModal>
