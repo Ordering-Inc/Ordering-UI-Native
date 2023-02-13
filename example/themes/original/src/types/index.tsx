@@ -353,6 +353,8 @@ export interface NotFoundSourceParams {
 	conditioned?: boolean,
 	onClickButton?: any,
 	children?: any
+	hideImage?: any
+	btnStyle?: any
 }
 export interface OrdersOptionParams {
 	orderList?: any,

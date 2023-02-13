@@ -375,8 +375,8 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                 <LottieAnimation
                   type='favorite'
                   onClick={handleChangeFavorite}
-                  initialValue={order?.favorite ? 0.75 : 0}
-                  toValue={order?.favorite ? 0 : 0.75}
+                  initialValue={order?.favorite ? 0.5 : 0}
+                  toValue={order?.favorite ? 0 : 0.5}
                   style={{ marginBottom: 5 }}
                   iconProps={{ color: theme.colors.danger5, size: 16, style: { top: 7 } }}
                   isActive={order?.favorite}

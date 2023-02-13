@@ -10,5 +10,5 @@ export const OptionTitle = styled.View`
 export const NoOrdersWrapper = styled.View`
 	flex-direction: column;
 	align-items: center;
-	margin-top: 50px;
+	margin-top: 60px;
 `

@@ -10,6 +10,7 @@ import { PreviousProductsOrdered } from './PreviousProductsOrdered'
 import { OptionTitle, NoOrdersWrapper } from './styles'
 import { OrdersOptionParams } from '../../types'
 import { _setStoreData } from '../../providers/StoreUtil';
+import { NotFoundSource } from '../NotFoundSource';
 import {
 	Placeholder,
 	PlaceholderLine,
@@ -199,16 +200,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		<>
 			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && !activeOrders && (
 				<NoOrdersWrapper>
-					<OText size={14} numberOfLines={1}>
-						{t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
-					</OText>
-					<OButton
-						text={t('ORDER_NOW', 'Order now')}
-						onClick={() => onNavigationRedirect && onNavigationRedirect('BusinessList')}
-						textStyle={{ color: 'white', fontSize: 14 }}
-						style={{ borderRadius: 7.6, marginBottom: 10, marginTop: 10, height: 44, paddingLeft: 10, paddingRight: 10 }}
+					<NotFoundSource
+						hideImage
+						btnStyle={{ borderRadius: 8 }}
+						content={t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
+						btnTitle={t('ORDER_NOW', 'Order now')}
+						onClickButton={() => onNavigationRedirect && onNavigationRedirect('BusinessList')}
 					/>
-
 				</NoOrdersWrapper>
 			)}
 			{((ordersLength?.activeOrdersLength > 0 && activeOrders) || (ordersLength?.previousOrdersLength > 0 && !activeOrders)) && (
