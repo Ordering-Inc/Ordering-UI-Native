@@ -522,7 +522,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             style={{ borderRadius: 7, height: 45 }}
             parentStyle={{ width: '100%' }}
             textStyle={{ color: '#FFF', fontSize: 18 }}
-            isDisabled={!rejectReason && showTextArea}
+            isDisabled={showTextArea && !comments}
             onClick={() => handleAcceptOrReject()}
           />
         </View>

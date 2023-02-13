@@ -64,6 +64,14 @@ export const RibbonBox = styled.View`
   ${(props: any) => props.isCapsule && css`
     border-radius: 50px;
   `}
+
+  ${(props: any) => props.colorText && css`
+    color: ${props.colorText ? 'black' : 'white'};
+  `}
+
+  ${(props: any) => props.borderRibbon && css`
+    border: 1px solid ${props.borderRibbon ? 'black' : 'white'};
+  `}
 `
 
 export const SocialListWrapper = styled.ScrollView`
