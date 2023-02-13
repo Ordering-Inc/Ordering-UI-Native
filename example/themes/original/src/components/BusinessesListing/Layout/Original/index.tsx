@@ -585,7 +585,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						setBusinessTypes={setBusinessTypes}
 					/>
 				)}
-				{!businessesList.loading && businessesList.businesses.length === 0 && (
+				{!businessesList.loading && businessesList.businesses.length === 0 && businessesList?.fetched && (
 					<NotFoundSource
 						content={t(
 							'NOT_FOUND_BUSINESSES',
@@ -618,7 +618,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						/>
 					)
 				)}
-				{businessesList.loading && (
+				{(businessesList.loading || !businessesList?.fetched) && (
 					<>
 						{[
 							...Array(
