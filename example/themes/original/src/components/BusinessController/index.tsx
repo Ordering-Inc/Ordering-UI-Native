@@ -269,8 +269,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										<LottieAnimation
 											type='favorite'
 											onClick={handleChangeFavorite}
-											initialValue={business?.favorite ? 0.75 : 0}
-											toValue={business?.favorite ? 0 : 0.75}
+											initialValue={business?.favorite ? 0.5 : 0}
+											toValue={business?.favorite ? 0 : 0.5}
 											disableAnimation={!auth}
 											iconProps={{ color: theme.colors.danger5, size: 18 }}
 											isActive={business?.favorite}
@@ -300,8 +300,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										<LottieAnimation
 											type='favorite'
 											onClick={handleChangeFavorite}
-											initialValue={business?.favorite ? 0.75 : 0}
-											toValue={business?.favorite ? 0 : 0.75}
+											initialValue={business?.favorite ? 0.5 : 0}
+											toValue={business?.favorite ? 0 : 0.5}
 											disableAnimation={!auth}
 											iconProps={{ color: theme.colors.danger5, size: 18 }}
 											isActive={business?.favorite}
