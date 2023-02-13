@@ -9,7 +9,7 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { View, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { shape } from '../../utils'
+import { lightenDarkenColor, shape } from '../../utils'
 import { CategoryDescriptionMemoized } from './CategoryDescription';
 import { OrderItAgain } from '../OrderItAgain'
 import { SubcategoriesComponentMemoized } from './SubcategoriesComponent';
@@ -186,13 +186,15 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   {category?.ribbon?.enabled && (
                     <RibbonBox
                       bgColor={category?.ribbon?.color}
+                      colorText={lightenDarkenColor(category?.ribbon?.color)}
+                      borderRibbon={lightenDarkenColor(category?.ribbon?.color)}
                       isRoundRect={category?.ribbon?.shape === shape?.rectangleRound}
                       isCapsule={category?.ribbon?.shape === shape?.capsuleShape}
                     >
                       <OText
                         size={10}
                         weight={'400'}
-                        color={theme.colors.white}
+                        color={lightenDarkenColor(category?.ribbon?.color) ? theme.colors.black : theme.colors.white}
                         numberOfLines={2}
                         ellipsizeMode='tail'
                         lineHeight={13}
