@@ -62,7 +62,8 @@ const MultiCheckoutUI = (props: any) => {
     cartUuid,
     rewardRate,
     totalCartsFee,
-    cartGroup
+    cartGroup,
+    slug
   } = props
 
   const theme = useTheme();
@@ -153,6 +154,17 @@ const MultiCheckoutUI = (props: any) => {
       checkValidationFields()
     }
   }, [validationFields, user])
+
+  useEffect(() => {
+		if (openCarts.length === 0 && !cartGroup?.loading) {
+			if (slug) {
+				navigation.navigate('Business', { store: slug, header: null, logo: null })
+			} else {
+				navigation.navigate('BottomTab')
+			}
+		}
+	}, [openCarts.length])
+
 
   return (
     <>
@@ -329,7 +341,7 @@ const MultiCheckoutUI = (props: any) => {
               )}
               {openCarts.length > 1 && (
                 <ChCartsTotal>
-                  {totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
+                  {!!totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
                         {t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}

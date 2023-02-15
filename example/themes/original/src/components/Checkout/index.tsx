@@ -739,7 +739,7 @@ const CheckoutUI = (props: any) => {
 
 					{!cartState.loading && cart && (
 						<View>
-							<ChErrors style={{ marginBottom: 10 }}>
+							<ChErrors style={{ marginBottom: Platform.OS === 'ios' ? 35 : 10 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										color={theme.colors.error}

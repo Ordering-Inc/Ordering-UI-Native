@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration, Keyboard, KeyboardEvent } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -133,19 +133,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [openService, setOpenService] = useState(false)
   const [currentProduct, setCurrentProduct] = useState(null)
   const [searchBarHeight, setSearchBarHeight] = useState(60)
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
   const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
-
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
   const isOpenFiltProducts = isOpenSearchBar && !!searchValue
   const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
+  const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 
+
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
   const onProductClick = async (product: any) => {
-    if (product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
+    if (product.ingredients?.length === 0 && product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
       const isProductAddedToCart = currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)
       const productQuantity = isProductAddedToCart?.quantity
       const addCurrentProduct = {
@@ -153,6 +155,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         quantity: 1
       }
       const updateCurrentProduct = {
+        name: product?.name,
         id: product.id,
         code: isProductAddedToCart?.code,
         quantity: productQuantity + 1
@@ -213,12 +216,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       ) {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
-          checkCarts: true
+          checkCarts: true,
+          slug: business?.slug
         })
       } else {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
-          cartUuid: cartsAvailable[0]?.group?.uuid
+          cartUuid: cartsAvailable[0]?.group?.uuid,
+          slug: business?.slug
         })
       }
     }
@@ -300,6 +305,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     }
   }, [isFocused])
 
+  
+  useEffect(() => {
+    function onKeyboardDidShow(e: KeyboardEvent) {
+      setKeyboardHeight(e?.endCoordinates?.height);
+    }
+
+    function onKeyboardDidHide() {
+      setKeyboardHeight(0);
+    }
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', onKeyboardDidHide);
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   const subtotalWithTaxes = currentCart?.taxes?.reduce((acc: any, item: any) => {
     if (item?.type === 1)
       return acc = acc + item?.summary?.tax
@@ -379,8 +402,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         {business?.categories?.length > 0 && isOpenFiltProducts && (
           <FiltProductsContainer
             style={{
-              height: Dimensions.get('window').height - filtProductsHeight,
-              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight
+              height: Dimensions.get('window').height - filtProductsHeight - keyboardHeight - (keyboardHeight > 0 && viewOrderButtonVisible ? 55 : 0),
+              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight,
             }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
@@ -545,7 +568,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </>
           )}
         </IOScrollView>
-        {!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+        {viewOrderButtonVisible && (
           <View style={{ marginBottom: 0 }}>
             <FloatingButton
               btnText={
