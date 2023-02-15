@@ -14,7 +14,7 @@ import { OIcon, OText } from '../shared';
 import { Dimensions, StyleSheet, Vibration, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
-import { convertHoursToMinutes, shape } from '../../utils';
+import { convertHoursToMinutes, lightenDarkenColor, shape } from '../../utils';
 
 import {
 	BusinessHero,
@@ -185,13 +185,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					{business?.ribbon?.enabled && (
 						<RibbonBox
 							bgColor={business?.ribbon?.color}
+							colorText={lightenDarkenColor(business?.ribbon?.color)}
+							borderRibbon={lightenDarkenColor(business?.ribbon?.color)}
 							isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
 							isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
 						>
 							<OText
 								size={10}
 								weight={'400'}
-								color={theme.colors.white}
+								color={lightenDarkenColor(business?.ribbon?.color) ? theme.colors.black : theme.colors.white}
 								numberOfLines={2}
 								ellipsizeMode='tail'
 								lineHeight={13}
@@ -207,7 +209,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								source={(businessHeader || business?.header || typeof theme.images.dummies.businessHeader === 'string') ? {
 									uri: optimizeImage(businessHeader || business?.header || theme.images.dummies.businessHeader, 'h_500,c_limit'),
 									priority: FastImage.priority.normal,
-								} : theme.images.dummies.businessHeader}								
+								} : theme.images.dummies.businessHeader}
 								resizeMode={FastImage.resizeMode.cover}
 							/>
 						)}
@@ -269,8 +271,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										<LottieAnimation
 											type='favorite'
 											onClick={handleChangeFavorite}
-											initialValue={business?.favorite ? 0.75 : 0}
-											toValue={business?.favorite ? 0 : 0.75}
+											initialValue={business?.favorite ? 0.5 : 0}
+											toValue={business?.favorite ? 0 : 0.5}
 											disableAnimation={!auth}
 											iconProps={{ color: theme.colors.danger5, size: 18 }}
 											isActive={business?.favorite}
@@ -300,8 +302,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 										<LottieAnimation
 											type='favorite'
 											onClick={handleChangeFavorite}
-											initialValue={business?.favorite ? 0.75 : 0}
-											toValue={business?.favorite ? 0 : 0.75}
+											initialValue={business?.favorite ? 0.5 : 0}
+											toValue={business?.favorite ? 0 : 0.5}
 											disableAnimation={!auth}
 											iconProps={{ color: theme.colors.danger5, size: 18 }}
 											isActive={business?.favorite}

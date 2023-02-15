@@ -188,10 +188,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch('')
   }
 
-  const handleUpsellingPage = () => {
+  const handleUpsellingPage = (cart: any) => {
+    const isProductCartParam = !!cart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+    const cartsAvailable: any = Object.values(orderState?.carts)
+      ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
     if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
       const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
 
@@ -201,7 +204,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
         cartTotal: cart?.total
-      })
+      }, true)
     } else {
       const groupKeys: any = {}
       cartsAvailable.forEach((_cart: any) => {
@@ -216,15 +219,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       ) {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
-          checkCarts: true,
-          slug: business?.slug
-        })
+          checkCarts: true
+        }, true)
       } else {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
-          cartUuid: cartsAvailable[0]?.group?.uuid,
-          slug: business?.slug
-        })
+          cartUuid: cartsAvailable[0]?.group?.uuid
+        }, true)
       }
     }
   }
@@ -623,7 +624,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={business.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
-          handleChangeProfessional={handleChangeProfessionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}

@@ -5,13 +5,9 @@ export const CCContainer = styled.View`
 `
 
 export const CCNotCarts = styled.View`
-  height: 300px;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
-  margin: auto;
+	align-items: center;
+	margin-top: 40px;
 `
 
 export const CCList = styled.ScrollView`

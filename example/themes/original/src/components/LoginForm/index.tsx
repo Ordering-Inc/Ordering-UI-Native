@@ -222,7 +222,7 @@ const LoginFormUI = (props: LoginParams) => {
 	};
 
 	const handleChangeInputEmail = (value: string, onChange: any) => {
-		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
+		onChange(value.toLowerCase().trim().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
 
 	const handleOpenRecaptcha = () => {

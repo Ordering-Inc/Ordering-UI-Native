@@ -23,21 +23,21 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
     },
   });
 
-  const ProductList = ({ style }: any) => {
+  const ProductList = () => {
     return (
       <>
         {products?.filter((product : any) => product?.business?.available)?.map((product: any) => (
-            <SingleProductCard
-              key={product?.id}
-              isProductId
-              isSoldOut={(product.inventoried && !product.quantity)}
-              product={product}
-              businessId={product?.business?.id}
-              onProductClick={onProductClick}
-              style={style}
-              productAddedToCartLength={0}
-              handleUpdateProducts={handleUpdateProducts}
-            />
+          <SingleProductCard
+            key={product?.id}
+            isProductId
+            isSoldOut={(product.inventoried && !product.quantity)}
+            product={product}
+            businessId={product?.business?.id}
+            onProductClick={onProductClick}
+            style={{ width: windowWidth - (products?.length > 1 ? 120 : 80), marginRight: 20 }}
+            productAddedToCartLength={0}
+            handleUpdateProducts={handleUpdateProducts}
+          />
         ))}
       </>
     )
@@ -45,7 +45,7 @@ export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) =>
   return (
     <ScrollView horizontal={isBusinessesSearchList} style={styles.container} showsVerticalScrollIndicator={false}>
       {isBusinessesSearchList ? (
-        <ProductList style={{ width: windowWidth - 80, marginRight: 20 }} />
+        <ProductList />
       ) : (
         <ListWrapper isBusinessesSearchList={isBusinessesSearchList}>
           <ProductList />

@@ -63,7 +63,7 @@ const MultiCheckoutUI = (props: any) => {
     rewardRate,
     totalCartsFee,
     cartGroup,
-    slug
+    onNavigationRedirectReplace
   } = props
 
   const theme = useTheme();
@@ -156,15 +156,14 @@ const MultiCheckoutUI = (props: any) => {
   }, [validationFields, user])
 
   useEffect(() => {
-		if (openCarts.length === 0 && !cartGroup?.loading) {
-			if (slug) {
-				navigation.navigate('Business', { store: slug, header: null, logo: null })
-			} else {
-				navigation.navigate('BottomTab')
-			}
-		}
-	}, [openCarts.length])
-
+    if (openCarts.length === 1) {
+      onNavigationRedirectReplace('CheckoutPage', {
+        cartUuid: openCarts[0]?.uuid,
+        fromMulti: true
+      })
+      return
+    }
+  }, [openCarts])
 
   return (
     <>
