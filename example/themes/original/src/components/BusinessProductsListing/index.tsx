@@ -420,7 +420,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <BackgroundGray isIos={Platform.OS === 'ios'} />
         )}
         <IOScrollView
-          stickyHeaderIndices={[business?.professionals?.length > 0 ? 3 : 2]}
+          stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 3]}
           style={{
             ...styles.mainContainer,
             marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
