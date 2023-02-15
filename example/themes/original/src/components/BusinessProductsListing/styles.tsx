@@ -7,7 +7,7 @@ export const TopHeader = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${({ hideArrow }: any) => hideArrow ? 'flex-end' : 'space-between'};
   z-index: 1;
   height: 60px;
   min-height: 60px;

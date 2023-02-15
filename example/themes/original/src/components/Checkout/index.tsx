@@ -80,6 +80,7 @@ const CheckoutUI = (props: any) => {
 		placing,
 		cartState,
 		cartUuid,
+		loyaltyPlansState,
 		businessDetails,
 		paymethodSelected,
 		handlePaymethodChange,
@@ -332,7 +333,7 @@ const CheckoutUI = (props: any) => {
 					<NavBar
 						title={t('CHECKOUT', 'Checkout')}
 						titleAlign={'center'}
-						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+						onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
@@ -656,6 +657,7 @@ const CheckoutUI = (props: any) => {
 						<WalletPaymentOptionContainer>
 							<PaymentOptionWallet
 								cart={cart}
+								loyaltyPlansState={loyaltyPlansState}
 								businessId={cart?.business_id}
 								businessConfigs={businessDetails?.business?.configs}
 							/>
@@ -727,6 +729,7 @@ const CheckoutUI = (props: any) => {
 											placeSpotTypes={placeSpotTypes}
 											businessConfigs={businessConfigs}
 											maxDate={maxDate}
+											loyaltyRewardRate={loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')?.accumulation_rate ?? 0}
 										/>
 									</>
 								)}
@@ -819,6 +822,7 @@ const CheckoutUI = (props: any) => {
 									setIsOpen(false)
 									handlePlaceOrder(null, true)
 								}}
+								setIsOpen={setIsOpen}
 							/>
 						</View>
 					</OModal>

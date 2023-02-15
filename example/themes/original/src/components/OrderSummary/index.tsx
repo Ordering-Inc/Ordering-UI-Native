@@ -46,6 +46,7 @@ const OrderSummaryUI = (props: any) => {
     preorderMaximumDays,
     preorderMinimumDays,
     cateringTypes,
+    loyaltyRewardRate,
     maxDate
   } = props;
 
@@ -58,6 +59,18 @@ const OrderSummaryUI = (props: any) => {
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
+
+  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
+  const loyaltyRewardValue = Math.round(cart?.subtotal / loyaltyRewardRate)
+
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -99,17 +112,6 @@ const OrderSummaryUI = (props: any) => {
         handleRemoveOfferClick(id)
       }
     })
-  }
-
-  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
-
-  const walletName: any = {
-    cash: {
-      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
-    },
-    credit_point: {
-      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
-    }
   }
 
   return (
@@ -310,6 +312,13 @@ const OrderSummaryUI = (props: any) => {
                       {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                     </OText>
                   </OSTable>
+                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                    <OSTable style={{ justifyContent: 'flex-end' }}>
+                      <OText size={12} color={theme.colors.textNormal}>
+                        {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}
+                      </OText>
+                    </OSTable>
+                  )}
                 </View>
               )}
               {cart?.business_id && cart?.status !== 2 && (

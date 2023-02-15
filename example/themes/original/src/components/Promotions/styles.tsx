@@ -9,6 +9,7 @@ export const PromotionsContainer = styled.View`
 export const WrapperSingleOffer = styled.View`
   flex-direction: column;
   width: 100%;
+  margin-bottom: 30px;
 `
 
 export const SingleOfferContainer = styled.View`
@@ -16,11 +17,12 @@ export const SingleOfferContainer = styled.View`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 export const OfferInformation = styled.View`
   justify-content: space-between;
+  min-width: 70%;
   max-width: 70%;
 `
 

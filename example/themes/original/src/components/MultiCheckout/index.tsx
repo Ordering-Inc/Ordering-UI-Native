@@ -60,8 +60,10 @@ const MultiCheckoutUI = (props: any) => {
     handleSelectWallet,
     handlePaymethodDataChange,
     cartUuid,
+    rewardRate,
     totalCartsFee,
-    cartGroup
+    cartGroup,
+    onNavigationRedirectReplace
   } = props
 
   const theme = useTheme();
@@ -89,6 +91,8 @@ const MultiCheckoutUI = (props: any) => {
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
+
+  const loyaltyRewardValue = Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / rewardRate)
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -150,6 +154,16 @@ const MultiCheckoutUI = (props: any) => {
       checkValidationFields()
     }
   }, [validationFields, user])
+
+  useEffect(() => {
+    if (openCarts.length === 1) {
+      onNavigationRedirectReplace('CheckoutPage', {
+        cartUuid: openCarts[0]?.uuid,
+        fromMulti: true
+      })
+      return
+    }
+  }, [openCarts])
 
   return (
     <>
@@ -352,6 +366,13 @@ const MultiCheckoutUI = (props: any) => {
                     </OText>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
                   </View>
+                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                    <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'flex-end' }}>
+                      <OText size={12} color={theme.colors.textNormal}>
+                        {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}
+                      </OText>
+                    </View>
+                  )}
                   <OText size={12} color={theme.colors.mediumGray} mRight={70} style={{ marginTop: 10 }}>
                     {t('MULTI_CHECKOUT_DESCRIPTION', 'You will receive a receipt for each business. The payment is not combined between multiple stores. Each payment is processed by the store')}
                   </OText>

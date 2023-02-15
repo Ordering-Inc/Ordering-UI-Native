@@ -34,7 +34,8 @@ const UserDetailsUI = (props: any) => {
 		isCheckout,
 		handleSendVerifyCode,
 		verifyPhoneState,
-		setFormState
+		setFormState,
+		setIsOpen
 	} = props
 
 	const theme = useTheme();
@@ -209,6 +210,7 @@ const UserDetailsUI = (props: any) => {
 							isCheckout={isCheckout}
 							setWillVerifyOtpState={setWillVerifyOtpState}
 							setIsSubmit={setIsSubmit}
+							setIsOpen={setIsOpen}
 						/>
 					)}
 				</UDContainer>

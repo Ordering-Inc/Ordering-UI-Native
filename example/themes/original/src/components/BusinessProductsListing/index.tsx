@@ -68,7 +68,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     professionalSelected,
     handleUpdateProfessionals,
     handleChangeProfessionalSelected,
-    onBusinessClick
+    onBusinessClick,
+    businessSingleId
   } = props
 
   const insets = useSafeAreaInsets()
@@ -184,10 +185,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch('')
   }
 
-  const handleUpsellingPage = () => {
+  const handleUpsellingPage = (cart: any) => {
+    const isProductCartParam = !!cart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+    const cartsAvailable: any = Object.values(orderState?.carts)
+      ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
     if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
       const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
 
@@ -197,7 +201,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
         cartTotal: cart?.total
-      })
+      }, true)
     } else {
       const groupKeys: any = {}
       cartsAvailable.forEach((_cart: any) => {
@@ -213,12 +217,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           checkCarts: true
-        })
+        }, true)
       } else {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           cartUuid: cartsAvailable[0]?.group?.uuid
-        })
+        }, true)
       }
     }
   }
@@ -314,12 +318,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               marginTop: Platform.OS === 'ios' ? insets.top : 0
             }}
             onLayout={(event: any) => setSearchBarHeight(event.nativeEvent.layout.height)}
+            hideArrow={(businessSingleId && auth)}
           >
             {!isOpenSearchBar && (
               <>
-                <TopActions onPress={() => handleBackNavigation()}>
-                  <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
-                </TopActions>
+                {!(businessSingleId && auth) && (
+                  <TopActions onPress={() => handleBackNavigation()}>
+                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+                  </TopActions>
+                )}
                 {!errorQuantityProducts && (
                   <View style={{ ...styles.headerItem }}>
                     <TouchableOpacity
@@ -409,6 +416,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 previouslyProducts={business?.previously_products}
                 navigation={navigation}
                 isFiltMode
+                businessSingleId={businessSingleId}
               />
             </View>
           </FiltProductsContainer>
@@ -417,7 +425,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <BackgroundGray isIos={Platform.OS === 'ios'} />
         )}
         <IOScrollView
-          stickyHeaderIndices={[business?.professionals?.length > 0 ? 3 : 2]}
+          stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 3]}
           style={{
             ...styles.mainContainer,
             marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
@@ -511,6 +519,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   handleUpdateProducts={handleUpdateProducts}
                   navigation={navigation}
                   previouslyProducts={business?.previously_products}
+                  businessSingleId={businessSingleId}
                 />
               </WrapContent>
             </>
@@ -594,7 +603,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={business.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
-          handleChangeProfessional={handleChangeProfessionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}

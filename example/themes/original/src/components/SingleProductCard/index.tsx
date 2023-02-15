@@ -17,7 +17,7 @@ import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
-import { shape } from '../../utils';
+import { lightenDarkenColor, shape } from '../../utils';
 import { LottieAnimation } from '../LottieAnimation';
 import { CardAnimation } from '../shared/CardAnimation'
 
@@ -40,7 +40,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		navigation,
 		businessId,
 		isPreviously,
-		viewString
+		viewString,
+		businessSingleId
 	} = props;
 
 	const theme = useTheme();
@@ -108,7 +109,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		},
 		productTagsStyle: {
 			width: 30,
-    		height: 30,
+			height: 30,
 			marginRight: 5
 		}
 	});
@@ -180,7 +181,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 				>
 					<View style={{ flexDirection: logoPosition === 'left' ? 'row-reverse' : 'row' }}>
 						{productAddedToCartLength > 0 && (
-							<QuantityContainer style={[styles.quantityContainer, {
+							<QuantityContainer businessSingleId={businessSingleId} style={[styles.quantityContainer, {
 								transform: [{ translateX: 25 }, { translateY: -25 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
@@ -200,8 +201,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									<LottieAnimation
 										type='favorite'
 										onClick={handleChangeFavorite}
-										initialValue={product?.favorite ? 0.75 : 0}
-										toValue={product?.favorite ? 0 : 0.75}
+										initialValue={product?.favorite ? 0.5 : 0}
+										toValue={product?.favorite ? 0 : 0.5}
 										disableAnimation={!auth}
 										iconProps={{ color: theme.colors.danger5, size: 18 }}
 										isActive={product?.favorite}
@@ -221,7 +222,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 										showsHorizontalScrollIndicator={false}
 										horizontal
 										style={{ marginLeft: 10 }}
-										contentContainerStyle={{flexGrow: 1}}
+										contentContainerStyle={{ flexGrow: 1 }}
 									>
 										{product?.tags.map((tag: any, i: any) => (
 											<TouchableWithoutFeedback key={i}>
@@ -265,13 +266,15 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							{!!product?.ribbon?.enabled && (
 								<RibbonBox
 									bgColor={product?.ribbon?.color}
+									colorText={lightenDarkenColor(product?.ribbon?.color)}
+									borderRibbon={lightenDarkenColor(product?.ribbon?.color)}
 									isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
 									isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
 								>
 									<OText
 										size={textSize}
 										weight={'400'}
-										color={theme.colors.white}
+										color={lightenDarkenColor(product?.ribbon?.color) ? theme.colors.black : theme.colors.white}
 										numberOfLines={2}
 										ellipsizeMode='tail'
 										lineHeight={13}
@@ -283,8 +286,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							{!hideProductLogo && (
 								<FastImage
 									style={styles.productStyle}
-									source={product?.images || typeof theme?.images?.dummies?.product === 'string' ? {
-										uri: optimizeImage(product?.images || theme?.images?.dummies?.products, 'h_250,c_limit'),
+									source={product?.images ? {
+										uri: optimizeImage(product?.images, 'h_250,c_limit'),
 										priority: FastImage.priority.normal,
 									} : theme?.images?.dummies?.product}
 									resizeMode={FastImage.resizeMode.cover}
