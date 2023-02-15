@@ -333,7 +333,7 @@ const CheckoutUI = (props: any) => {
 					<NavBar
 						title={t('CHECKOUT', 'Checkout')}
 						titleAlign={'center'}
-						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+						onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}

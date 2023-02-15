@@ -62,7 +62,8 @@ const MultiCheckoutUI = (props: any) => {
     cartUuid,
     rewardRate,
     totalCartsFee,
-    cartGroup
+    cartGroup,
+    onNavigationRedirectReplace
   } = props
 
   const theme = useTheme();
@@ -153,6 +154,16 @@ const MultiCheckoutUI = (props: any) => {
       checkValidationFields()
     }
   }, [validationFields, user])
+
+  useEffect(() => {
+    if (openCarts.length === 1) {
+      onNavigationRedirectReplace('CheckoutPage', {
+        cartUuid: openCarts[0]?.uuid,
+        fromMulti: true
+      })
+      return
+    }
+  }, [openCarts])
 
   return (
     <>

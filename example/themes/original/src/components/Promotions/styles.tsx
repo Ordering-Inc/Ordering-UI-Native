@@ -22,7 +22,8 @@ export const SingleOfferContainer = styled.View`
 
 export const OfferInformation = styled.View`
   justify-content: space-between;
-  max-width: 80%;
+  min-width: 70%;
+  max-width: 70%;
 `
 
 export const SearchBarContainer = styled.View`
