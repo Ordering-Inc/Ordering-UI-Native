@@ -116,7 +116,7 @@ const CartUI = (props: any) => {
 
     const cartsAvailable: any = Object.values(orderState?.carts)
       ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
-      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== individualCart?.uuid : _c)
     if (cartsAvailable.length === 1 || !isMultiCheckout) {
       const cart = isMultiCheckout ? cartsAvailable[0] : individualCart
       onNavigationRedirect('CheckoutNavigator', {
