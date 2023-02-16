@@ -190,7 +190,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setCanOpenUpselling(false)
     const cartsAvailable: any = Object.values(orderState?.carts)
       ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
-      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart?.uuid : _c)
     if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
       const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
 
