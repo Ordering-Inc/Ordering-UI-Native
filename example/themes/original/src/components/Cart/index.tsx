@@ -74,6 +74,7 @@ const CartUI = (props: any) => {
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const hideCartComments = theme?.business_view?.components?.cart?.components?.comments?.hidden
   const hideCartDiscount = theme?.business_view?.components?.cart?.components?.discount?.hidden
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -383,7 +384,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && (
+            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && isChewLayout && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE_AFTER_DISCOUNT', 'Delivery Fee After Discount')}</OText>
                 <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
