@@ -50,7 +50,8 @@ const CartUI = (props: any) => {
     preorderTimeRange,
     preorderMaximumDays,
     preorderMinimumDays,
-    cateringTypes
+    cateringTypes,
+    isFromUpselling
   } = props
 
   const theme = useTheme();
@@ -218,6 +219,7 @@ const CartUI = (props: any) => {
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
+        isFromUpselling={isFromUpselling}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
@@ -402,6 +404,7 @@ const CartUI = (props: any) => {
                   <CouponControl
                     businessId={businessId}
                     price={cart.total}
+                    cart={cart}
                   />
                 </OSCoupon>
               </OSTable>

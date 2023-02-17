@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Alert, Text } from 'react-native';
-import { CouponControl as CouponController, useLanguage } from 'ordering-components/native';
+import { CouponControl as CouponController, useLanguage, useEvent } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
 	CContainer,
@@ -18,11 +18,13 @@ const CouponControlUI = (props: any) => {
 		handleRemoveCouponClick,
 		onChangeInputCoupon,
 		confirm,
-		setConfirm
+		setConfirm,
+		cart
 	} = props
 
 	const [, t] = useLanguage()
 	const theme = useTheme();
+	const [events] = useEvent()
 
 	const styles = StyleSheet.create({
 		inputsStyle: {
@@ -43,6 +45,11 @@ const CouponControlUI = (props: any) => {
 
 	const cleanSetConfirm = () => {
 		setConfirm({ ...confirm, open: false, error: false })
+	}
+
+	const onButtonApplyClick = () => {
+		events.emit('coupon_entered', { ...cart, coupon: couponInput })
+		handleButtonApplyClick()
 	}
 
 	useEffect(() => {
@@ -94,7 +101,7 @@ const CouponControlUI = (props: any) => {
 						inputStyle={{ fontSize: 12 }}
 					/>
 					<OButton
-						onClick={() => handleButtonApplyClick()}
+						onClick={() => onButtonApplyClick()}
 						bgColor={theme.colors.primary}
 						borderColor={theme.colors.primary}
 						textStyle={{ color: 'white', fontSize: 12 }}
