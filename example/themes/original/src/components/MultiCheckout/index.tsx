@@ -60,9 +60,10 @@ const MultiCheckoutUI = (props: any) => {
     handleSelectWallet,
     handlePaymethodDataChange,
     cartUuid,
-    rewardRate,
+    loyaltyPlansState,
     totalCartsFee,
-    cartGroup
+    cartGroup,
+    onNavigationRedirectReplace
   } = props
 
   const theme = useTheme();
@@ -91,7 +92,13 @@ const MultiCheckoutUI = (props: any) => {
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
 
-  const loyaltyRewardValue = Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / rewardRate)
+  const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
+  const businessIds = openCarts.map((cart: any) => cart.business_id)
+  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id)
+  const creditPointPlanOnBusiness = businessIds.every((bid: any) => loyalBusinessIds.includes(bid)) && creditPointPlan
+
+  const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate
+    ? Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / creditPointPlanOnBusiness?.accumulation_rate) : 0
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -153,6 +160,16 @@ const MultiCheckoutUI = (props: any) => {
       checkValidationFields()
     }
   }, [validationFields, user])
+
+  useEffect(() => {
+    if (openCarts.length === 1) {
+      onNavigationRedirectReplace('CheckoutPage', {
+        cartUuid: openCarts[0]?.uuid,
+        fromMulti: true
+      })
+      return
+    }
+  }, [openCarts])
 
   return (
     <>

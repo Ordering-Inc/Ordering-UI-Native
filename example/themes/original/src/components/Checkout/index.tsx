@@ -168,6 +168,9 @@ const CheckoutUI = (props: any) => {
 	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden
 	const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
 
+	const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
+	const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find((b: any) => b.business_id === cart?.business_id && b.accumulates)
+
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
 		if (item?.type === 1)
@@ -735,7 +738,10 @@ const CheckoutUI = (props: any) => {
 											placeSpotTypes={placeSpotTypes}
 											businessConfigs={businessConfigs}
 											maxDate={maxDate}
-											loyaltyRewardRate={loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')?.accumulation_rate ?? 0}
+											loyaltyRewardRate={
+												creditPointPlanOnBusiness?.accumulation_rate ??
+													(!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
+											}
 										/>
 									</>
 								)}
@@ -745,7 +751,7 @@ const CheckoutUI = (props: any) => {
 
 					{!cartState.loading && cart && (
 						<View>
-							<ChErrors style={{ marginBottom: 10 }}>
+							<ChErrors style={{ marginBottom: 30 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										color={theme.colors.error}
@@ -772,7 +778,7 @@ const CheckoutUI = (props: any) => {
 										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
 									</OText>
 								)}
-								{!cart?.valid_preorder && (
+								{cart?.valid_preorder !== undefined && !cart?.valid_preorder && (
 									<OText
 										color={theme.colors.error}
 										size={12}
