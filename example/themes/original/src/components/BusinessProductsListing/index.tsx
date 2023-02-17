@@ -11,7 +11,8 @@ import {
   useUtils,
   ToastType,
   useToast,
-  useConfig
+  useConfig,
+  useEvent
 } from 'ordering-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OModal, OText } from '../shared'
@@ -80,6 +81,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [{ parsePrice }] = useUtils()
   const [, { showToast }] = useToast()
   const [{ configs }] = useConfig()
+  const [events] = useEvent()
   const isFocused = useIsFocused();
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
@@ -133,6 +135,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [openService, setOpenService] = useState(false)
   const [currentProduct, setCurrentProduct] = useState(null)
   const [searchBarHeight, setSearchBarHeight] = useState(60)
+  const [viewedCategory, setViewedCategory] = useState<any>(null)
 
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
@@ -178,6 +181,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         productAddedToCartLength
       })
     }
+    events.emit('product_clicked', product)
   }
 
   const handleCancel = () => {
@@ -191,7 +195,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setCanOpenUpselling(false)
     const cartsAvailable: any = Object.values(orderState?.carts)
       ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
-      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart?.uuid : _c)
     if (cartsAvailable.length === 1 || !isCheckoutMultiBusinessEnabled) {
       const cart = isCheckoutMultiBusinessEnabled ? cartsAvailable[0] : currentCart
 
@@ -309,6 +313,36 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     return acc = acc
   }, currentCart?.subtotal)
 
+  const onChangeSearch = (query: any) => {
+    handleChangeSearch(query)
+    if (query) {
+      events.emit('products_searched', query)
+    }
+  }
+
+  useEffect(() => {
+    let categoryId: any = null
+    if (business?.lazy_load_products_recommended) {
+      if (categorySelected?.id) {
+        categoryId = categorySelected.id
+      }
+    } else {
+      if (selectedCategoryId) {
+        const originCategoryId = selectedCategoryId.replace('cat_', '')
+        if (!isNaN(originCategoryId)) {
+          categoryId = Number(originCategoryId)
+        }
+      }
+    }
+    if (categoryId) {
+      const _viewedCategory = business.categories.find(category => category.id === categoryId)
+      if (_viewedCategory?.id !== viewedCategory?.id) {
+        setViewedCategory(_viewedCategory)
+        events.emit('product_list_viewed', _viewedCategory)
+      }
+    }
+  }, [business?.lazy_load_products_recommended, selectedCategoryId, categorySelected?.id, viewedCategory])
+
   return (
     <>
       <View style={{ flex: 1, backgroundColor: backgroundColor }}>
@@ -343,12 +377,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <WrapSearchBar>
                 <SearchBar
                   autoFocus
-                  onSearch={handleChangeSearch}
+                  onSearch={onChangeSearch}
                   onCancel={() => handleCancel()}
                   isCancelXButtonShow
                   noBorderShow
                   placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
-                  lazyLoad={businessState?.business?.lazy_load_products_recommended}
+                  lazyLoad
                 />
               </WrapSearchBar>
             )}

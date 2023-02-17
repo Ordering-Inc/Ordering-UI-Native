@@ -51,7 +51,8 @@ const CartUI = (props: any) => {
     preorderTimeRange,
     preorderMaximumDays,
     preorderMinimumDays,
-    cateringTypes
+    cateringTypes,
+    isFromUpselling
   } = props
 
   const theme = useTheme();
@@ -74,6 +75,7 @@ const CartUI = (props: any) => {
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const hideCartComments = theme?.business_view?.components?.cart?.components?.comments?.hidden
   const hideCartDiscount = theme?.business_view?.components?.cart?.components?.discount?.hidden
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -116,7 +118,7 @@ const CartUI = (props: any) => {
 
     const cartsAvailable: any = Object.values(orderState?.carts)
       ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
-      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== individualCart?.uuid : _c)
     if (cartsAvailable.length === 1 || !isMultiCheckout) {
       const cart = isMultiCheckout ? cartsAvailable[0] : individualCart
       onNavigationRedirect('CheckoutNavigator', {
@@ -231,6 +233,7 @@ const CartUI = (props: any) => {
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
+        isFromUpselling={isFromUpselling}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
@@ -383,7 +386,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && (
+            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && isChewLayout && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE_AFTER_DISCOUNT', 'Delivery Fee After Discount')}</OText>
                 <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
@@ -417,6 +420,7 @@ const CartUI = (props: any) => {
                   <CouponControl
                     businessId={businessId}
                     price={cart.total}
+                    cart={cart}
                   />
                 </OSCoupon>
               </OSTable>
