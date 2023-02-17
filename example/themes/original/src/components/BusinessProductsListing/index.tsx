@@ -315,7 +315,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const onChangeSearch = (query: any) => {
     handleChangeSearch(query)
-    if (query !== searchValue && !query) {
+    if (query) {
       events.emit('products_searched', query)
     }
   }
