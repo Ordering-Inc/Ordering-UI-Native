@@ -51,7 +51,8 @@ const CartUI = (props: any) => {
     preorderTimeRange,
     preorderMaximumDays,
     preorderMinimumDays,
-    cateringTypes
+    cateringTypes,
+    isFromUpselling
   } = props
 
   const theme = useTheme();
@@ -110,9 +111,13 @@ const CartUI = (props: any) => {
   }
 
   const handleUpsellingPage = (individualCart : any) => {
+    const isProductCartParam = !!individualCart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    const cartsAvailable: any = Object.values(orderState?.carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+
+    const cartsAvailable: any = Object.values(orderState?.carts)
+      ?.filter((_cart: any) => _cart?.valid && _cart?.status !== 2 && _cart?.products?.length)
+      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart.uuid : _c)
     if (cartsAvailable.length === 1 || !isMultiCheckout) {
       const cart = isMultiCheckout ? cartsAvailable[0] : individualCart
       onNavigationRedirect('CheckoutNavigator', {
@@ -121,7 +126,7 @@ const CartUI = (props: any) => {
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
         cartTotal: cart?.total
-      })
+      }, true)
     } else {
       const groupKeys: any = {}
       cartsAvailable.forEach((_cart: any) => {
@@ -137,12 +142,12 @@ const CartUI = (props: any) => {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           checkCarts: true
-        })
+        }, true)
       } else {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           cartUuid: cartsAvailable[0]?.group?.uuid
-        })
+        }, true)
       }
     }
   }
@@ -227,6 +232,7 @@ const CartUI = (props: any) => {
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
+        isFromUpselling={isFromUpselling}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
@@ -413,6 +419,7 @@ const CartUI = (props: any) => {
                   <CouponControl
                     businessId={businessId}
                     price={cart.total}
+                    cart={cart}
                   />
                 </OSCoupon>
               </OSTable>

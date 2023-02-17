@@ -143,7 +143,7 @@ const PromotionsUI = (props: PromotionParams) => {
             <WrapperSingleOffer key={offer.id}>
               <SingleOfferContainer>
                 <FastImage
-                  style={{ height: 80, width: 80, aspectRatio: 3 / 2, borderRadius: 8 }}
+                  style={{ height: 80, width: 80, aspectRatio: 1, borderRadius: 8 }}
                   source={typeof offer?.image !== 'number' ? {
                     uri: optimizeImage(offer?.image, 'h_1024,c_limit'),
                     priority: FastImage.priority.normal,

@@ -14,6 +14,7 @@ import {
 	useConfig,
 	useToast,
 	ToastType,
+	useEvent
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OText, OIcon, OModal, OButton } from '../shared';
@@ -138,6 +139,7 @@ const CheckoutUI = (props: any) => {
 	const [{ parsePrice, parseDate }] = useUtils();
 	const [{ options, carts, loading }, { confirmCart }] = useOrder();
 	const [validationFields] = useValidationFields();
+	const [events] = useEvent()
 
 	const [errorCash, setErrorCash] = useState(false);
 	const [userErrors, setUserErrors] = useState<any>([]);
@@ -326,6 +328,10 @@ const CheckoutUI = (props: any) => {
 		)
 	}
 
+	useEffect(() => {
+		cart && events.emit('checkout_started', cart)
+	}, [])
+
 	return (
 		<>
 			<Container noPadding>
@@ -333,7 +339,7 @@ const CheckoutUI = (props: any) => {
 					<NavBar
 						title={t('CHECKOUT', 'Checkout')}
 						titleAlign={'center'}
-						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+						onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}

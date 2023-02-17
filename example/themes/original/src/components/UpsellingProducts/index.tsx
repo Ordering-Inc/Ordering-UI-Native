@@ -30,7 +30,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     upsellingProducts,
     business,
     handleUpsellingPage,
-    handleCloseUpsellingPage,
     openUpselling,
     canOpenUpselling,
     setCanOpenUpselling,
@@ -85,13 +84,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     },
   })
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
   const [{ carts }] = useOrder()
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
   const [, t] = useLanguage()
   const { bottom } = useSafeAreaInsets()
-  const [isCheckout, setIsCheckout] = useState(false)
   const [isCartsLoading, setIsCartsLoading] = useState(false)
 
   const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
@@ -199,6 +196,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           {showCartList && cartList.map((cart: any, i: number) => (
             <CartList key={i}>
               <Cart
+                isFromUpselling
                 cart={cart}
                 cartuuid={cart.uuid}
                 hideUpselling
@@ -224,10 +222,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
             text={t('CHECKOUT', 'Checkout')}
             style={{ ...styles.closeUpsellingButton }}
             textStyle={{ color: theme.colors.white, fontSize: 14 }}
-            onClick={() => {
-              handleUpsellingPage(cart)
-              setIsCheckout(true)
-            }}
+            onClick={() => handleUpsellingPage(cart)}
           />
         </View>
       </>
@@ -243,7 +238,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           {props.isPage ? (
             <UpsellingContent />
           ) : (
-            canOpenUpselling && !modalIsOpen && (
+            canOpenUpselling && (
               <OBottomPopup
                 title={''}
                 open={openUpselling}
