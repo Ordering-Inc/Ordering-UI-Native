@@ -14,6 +14,7 @@ import {
 	useConfig,
 	useToast,
 	ToastType,
+	useEvent
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OText, OIcon, OModal, OButton } from '../shared';
@@ -138,6 +139,7 @@ const CheckoutUI = (props: any) => {
 	const [{ parsePrice, parseDate }] = useUtils();
 	const [{ options, carts, loading }, { confirmCart }] = useOrder();
 	const [validationFields] = useValidationFields();
+	const [events] = useEvent()
 
 	const [errorCash, setErrorCash] = useState(false);
 	const [userErrors, setUserErrors] = useState<any>([]);
@@ -328,6 +330,10 @@ const CheckoutUI = (props: any) => {
 			</OText>
 		)
 	}
+
+	useEffect(() => {
+		cart && events.emit('checkout_started', cart)
+	}, [])
 
 	return (
 		<>

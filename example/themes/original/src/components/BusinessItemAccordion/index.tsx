@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useOrder, useLanguage, useUtils, useConfig } from 'ordering-components/native';
+import { useOrder, useLanguage, useUtils, useConfig, useEvent } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
 	BIContainer,
@@ -22,7 +22,8 @@ export const BusinessItemAccordion = (props: any) => {
 		handleClearProducts,
 		handleClickCheckout,
 		checkoutButtonDisabled,
-		isMultiCheckout
+		isMultiCheckout,
+		isFromUpselling
 	} = props
 
 	const [orderState] = useOrder();
@@ -30,6 +31,7 @@ export const BusinessItemAccordion = (props: any) => {
 	const [{ parsePrice }] = useUtils();
 	const [{ configs }] = useConfig()
 	const theme = useTheme();
+	const [events] = useEvent()
 
 	const isCartPending = cart?.status === 2
 	const isClosed = !cart?.valid_schedule
@@ -37,6 +39,7 @@ export const BusinessItemAccordion = (props: any) => {
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const [isActive, setActiveState] = useState(!!singleBusiness)
+	const [viewedCart, setViewedCart] = useState<any>(null)
 
 	useEffect(() => {
 		const cartsArray = Object.values(orderState?.carts)
@@ -51,6 +54,15 @@ export const BusinessItemAccordion = (props: any) => {
 			return acc = acc + item?.summary?.tax
 		return acc = acc
 	}, cart?.subtotal)
+
+	useEffect(() => {
+		if (isActive && !isFromUpselling) {
+			if (cart?.uuid !== viewedCart?.uuid) {
+				setViewedCart(cart)
+				events.emit('cart_viewed', cart)
+			}
+		}
+	}, [isActive, viewedCart])
 
 	return (
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
