@@ -266,8 +266,7 @@ export const AnalyticsSegment = (props: any) => {
   useEffect(() => {
     if (configState?.configs?.segment_track_id?.value) {
       const _segmentClient: any = createClient({
-        // writeKey: configState?.configs?.segment_track_id?.value,
-        writeKey: 'BB9pL62KS8x1AuxHpXpFM2bpDTpMKZGZ'
+        writeKey: configState?.configs?.segment_track_id?.value,
       });
       setSegmentClient(_segmentClient)
     }
