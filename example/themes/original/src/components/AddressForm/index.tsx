@@ -532,7 +532,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<AddressFormContainer style={{ height: HEIGHT_SCREEN * .75, overflow: 'scroll' }}>
+				<AddressFormContainer style={{ height: HEIGHT_SCREEN * .80, overflow: 'scroll' }}>
 					<View>
 						<FormInput>
 							<AutocompleteInput>
