@@ -44,7 +44,7 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const notificationSound = new Sound(theme.sounds.notification);
+  const notificationSound = new Sound(theme.sounds.notification, '', () => { });
 
   let _timeout: any = null
 
@@ -74,11 +74,11 @@ const NewOrderNotificationUI = (props: any) => {
         await fetch(`${ordering.root}/users/${user.id}/locations`, {
           method: 'POST',
           body: JSON.stringify({
-            location: JSON.stringify({location: `{lat: ${location.latitude}, lng: ${location.longitude}}`})
+            location: JSON.stringify({ location: `{lat: ${location.latitude}, lng: ${location.longitude}}` })
           }),
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
         })
-      } catch {}
+      } catch { }
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
       if (assignedSecondsDiff < 5 && !isBusinessApp) {
@@ -88,7 +88,7 @@ const NewOrderNotificationUI = (props: any) => {
     if (evtType === 3 || value.author_id === user.id) return
     handlePlayNotificationSound({
       evt: evtType,
-      orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
+      orderId: value?.order_id
     })
   }
 
