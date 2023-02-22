@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration, BackHandler } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -342,6 +342,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       }
     }
   }, [business?.lazy_load_products_recommended, selectedCategoryId, categorySelected?.id, viewedCategory])
+
+  useEffect(() => {
+    const handleArrowBack: any = () => {
+      navigation.goBack()
+      return true
+    }
+    BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
+    }
+  }, [])
 
   return (
     <>
