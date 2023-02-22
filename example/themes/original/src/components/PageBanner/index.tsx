@@ -44,7 +44,7 @@ const PageBannerUI = (props: any) => {
   })
 
   const onRedirect = (route: string, params?: any) => {
-		navigation.navigate(route, params)
+		navigation.push(route, params)
 	}
 
   const handleGoToPage = (item: any) => {
