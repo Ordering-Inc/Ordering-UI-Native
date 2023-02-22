@@ -53,6 +53,8 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
     }
   }
 
+  const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate, { isTruncable: true })}`
+
   const getPayIcon = (method: string) => {
     switch (method) {
       case 'cash':
@@ -193,7 +195,23 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
                 />
               )}
               <OText size={12} style={{ flex: 1, marginLeft: 15 }}>{walletName[wallet.type]?.name}</OText>
-              <OText size={12}>{parsePrice(wallet.balance)}</OText>
+              {wallet.type === 'cash' && (
+                <OText>
+                  {parsePrice(wallet?.balance, { isTruncable: true })}
+                </OText>
+              )}
+              {wallet.type === 'credit_point' && (
+                <OText>
+                  <OText color={theme.colors.primary} weight='bold'>
+                    {`${wallet?.balance} ${t('POINTS', 'Points')}`}
+                  </OText>
+                  <OText>
+                    {wallet?.balance > 0
+                      ? creditBalance(wallet)
+                      : null}
+                  </OText>
+                </OText>
+              )}
             </WalletItem>
           ))}
         </>
