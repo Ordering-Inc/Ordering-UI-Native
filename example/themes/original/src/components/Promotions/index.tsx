@@ -212,7 +212,7 @@ const PromotionsUI = (props: PromotionParams) => {
             </OText>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{ height: '75%' }}
+              style={{ height: '68%' }}
             >
               {offerSelected?.businesses?.map((business: any) => {
                 return (
