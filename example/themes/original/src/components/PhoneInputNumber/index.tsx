@@ -7,7 +7,7 @@ import { Wrapper } from './styles'
 
 import { PhoneInputParams } from '../../types';
 import { OIcon, OText } from '../shared';
-import { transformCountryCode } from '../../utils'
+import { findExitingCode, transformCountryCode } from '../../utils'
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
 	const {
@@ -113,7 +113,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					!isNaN(defaultCode)
 						? transformCountryCode(defaultCode)
 						: defaultCode
-					: configs?.default_country_code?.value?.toUpperCase()}
+					: findExitingCode(configs?.default_country_code?.value?.toUpperCase())}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
 				onChangeCountry={(country) => changeCountry?.(country)}
