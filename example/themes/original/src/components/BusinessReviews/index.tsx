@@ -3,6 +3,7 @@ import {
 	BusinessReviews as BusinessReviewController,
 	useLanguage,
 	useOrder,
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -30,6 +31,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 	const theme = useTheme();
 	const [searchReview, setSearchReview] = useState('')
 	const [orderState] = useOrder();
+	const [{ parseDate }] = useUtils()
 
 	const styles = StyleSheet.create({
 		starIcon: {
@@ -94,7 +96,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 	const ReviewItem = ({ comment, created_at, total }: any) => (
 		<View style={{ marginBottom: 30 }}>
 			<OText size={12} color={theme.colors.textSecondary}>
-				{moment(created_at).format('MMMM d, yyyy • hh:mm')}
+				{parseDate(created_at, { outputFormat: 'MMMM D, YYYY • hh:mm A' })}
 			</OText>
 			<OText size={12} color={theme.colors.textNormal}>{comment}</OText>
 		</View>
