@@ -7,7 +7,7 @@ import { Wrapper } from './styles'
 
 import { PhoneInputParams } from '../../../../../src/types';
 import { OText } from '../shared';
-import {transformCountryCode} from '../../../../../src/utils'
+import { transformCountryCode, verifyCountryCode } from '../../../../../src/utils'
 import {I18nManager} from 'react-native'
 import { useTheme } from 'styled-components/native';
 
@@ -89,7 +89,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         containerStyle={{ width: '100%' }}
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
-        defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
+        defaultCode={defaultCode ? transformCountryCode(defaultCode) : verifyCountryCode(configs?.default_country_code?.value)}
         onChangeFormattedText={(text : string) => handleChangeNumber(text)}
         withDarkTheme
         textInputStyle={{textAlign: I18nManager.isRTL ? 'right' : 'left'}}
