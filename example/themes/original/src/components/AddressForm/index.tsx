@@ -16,6 +16,8 @@ import {
 	useToast,
 	ToastType
 } from 'ordering-components/native';
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
@@ -37,6 +39,8 @@ import {
 } from './styles';
 import { GPSButton } from '../GPSButton';
 import { ScrollView } from 'react-native-gesture-handler';
+
+const { useDeviceOrientation } = DeviceOrientationMethods
 
 const inputNames = [
 	{ name: 'address', code: 'Address' },
@@ -66,6 +70,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 	} = props;
 
 	const theme = useTheme();
+	const [orientationState] = useDeviceOrientation();
+
 	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
 	const tagsName = [
@@ -74,6 +80,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 		{ icon: theme.images.general.tag_heart, value: 'favorite' },
 		{ icon: theme.images.general.tag_plus, value: 'other' },
 	];
+
+	const HEIGHT_SCREEN = orientationState?.dimensions?.height
 
 	const styles = StyleSheet.create({
 		iconContainer: {
@@ -527,7 +535,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
+				<AddressFormContainer style={{ height: HEIGHT_SCREEN * .78, overflow: 'scroll' }}>
 					<View>
 						<FormInput>
 							<AutocompleteInput>

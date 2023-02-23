@@ -196,6 +196,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           {showCartList && cartList.map((cart: any, i: number) => (
             <CartList key={i}>
               <Cart
+                isFromUpselling
                 cart={cart}
                 cartuuid={cart.uuid}
                 hideUpselling

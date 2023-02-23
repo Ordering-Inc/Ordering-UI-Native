@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { useUtils, PageBanner as PageBannerController } from 'ordering-components/native'
+import React, { useEffect, useState, useRef } from 'react'
+import { useUtils, useEvent, PageBanner as PageBannerController } from 'ordering-components/native'
 import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Carousel from 'react-native-snap-carousel'
@@ -16,7 +16,10 @@ const PageBannerUI = (props: any) => {
 
 	const theme = useTheme();
 	const [{ optimizeImage }] = useUtils();
-  const carouselRef = useRef(null)
+  const [events] = useEvent()
+  const carouselRef = useRef<any>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [viewedBanner, setViewedBanner] = useState<any>(null)
 
   const windowWidth = Dimensions.get('window').width;
 
@@ -41,10 +44,11 @@ const PageBannerUI = (props: any) => {
   })
 
   const onRedirect = (route: string, params?: any) => {
-		navigation.navigate(route, params)
+		navigation.push(route, params)
 	}
 
-  const handleGoToPage = (action: any) => {
+  const handleGoToPage = (item: any) => {
+    const action = item.action
     if (!action?.url) return
     let slug
     if (action.type === 'business') {
@@ -62,12 +66,14 @@ const PageBannerUI = (props: any) => {
         productId: action.product_id
 			})
     }
+    const clickedBanner = pageBannerState.result.find(banner => banner.id === item?.banner_id)
+    events.emit('promotion_clicked', clickedBanner)
   }
 
   const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
-        onPress={() => handleGoToPage(item.action)}
+        onPress={() => handleGoToPage(item)}
       >
         <View style={styles.sliderWrapper}>
           <FastImage
@@ -79,6 +85,24 @@ const PageBannerUI = (props: any) => {
       </TouchableOpacity>
     )
   }
+
+  const updateIndex = () => {
+    setCurrentIndex(carouselRef?.current?.currentIndex)
+  }
+
+  useEffect(() => {
+    if (pageBannerState.loading) return
+    if (pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0) {
+      const bannerId = pageBannerState.banner.items[currentIndex]?.banner_id
+      if (pageBannerState.result && bannerId) {
+        const _viewedBanner = pageBannerState.result.find(banner => banner.id === bannerId)
+        if (_viewedBanner?.id !== viewedBanner?.id) {
+          setViewedBanner(_viewedBanner)
+          events.emit('promotion_viewed', _viewedBanner)
+        }
+      }
+    }
+  }, [pageBannerState.loading, currentIndex, viewedBanner])
 
   return (
     <>
@@ -128,6 +152,7 @@ const PageBannerUI = (props: any) => {
                 pagingEnabled
                 removeClippedSubviews={false}
                 inactiveSlideOpacity={1}
+                onSnapToItem={updateIndex}
               />
             </PageBannerWrapper>
           )}

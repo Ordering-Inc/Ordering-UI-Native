@@ -19,7 +19,8 @@ import {
 	useUtils,
 	ToastType,
 	useToast,
-	useConfig
+	useConfig,
+	useEvent
 } from 'ordering-components/native';
 import uuid from 'react-native-uuid';
 import { useTheme } from 'styled-components/native';
@@ -80,6 +81,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const theme = useTheme();
 	const [, { showToast }] = useToast()
+	const [events] = useEvent()
 
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
@@ -202,6 +204,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
 	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
 	const [editionsLayoutY, setEditionsLayoutY] = useState(null)
+	const [viewedProduct, setViewedProduct] = useState<any>(null)
 
 	const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
   const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
@@ -513,6 +516,12 @@ export const ProductOptionsUI = (props: any) => {
 			keyboardDidShowListener.remove()
 		}
 	}, [])
+
+	useEffect(() => {
+		if (!product?.id || product?.id === viewedProduct?.id) return
+		setViewedProduct(product)
+		events.emit('product_viewed', product)
+	}, [product?.id, viewedProduct])
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>

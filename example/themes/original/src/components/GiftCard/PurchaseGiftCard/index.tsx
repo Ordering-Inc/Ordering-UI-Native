@@ -3,7 +3,7 @@ import {
   useLanguage,
   PurchaseGiftCard as PurchaseGiftCardController
 } from 'ordering-components/native'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import { OText, OButton, OIcon } from '../../shared';
@@ -44,7 +44,11 @@ const PurchaseGiftCardUI = (props: any) => {
     <Container>
       <OText color={theme.colors.textNormal} weight='bold' size={20} mBottom={40}>{t('PURCHASE_GIFT_CARD', 'Purchase gift card')}</OText>
       <OText color={theme.colors.textNormal} size={14}>{t('SELECT_ONE_OPTION', 'Select one option')}</OText>
-      <View>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1
+        }}
+      >
         {productsListState.loading && (
           [...Array(5).keys()].map(i => (
             <View key={i} style={style.itemStyle}>
@@ -72,7 +76,7 @@ const PurchaseGiftCardUI = (props: any) => {
             <OText color={theme.colors.textNormal} size={14}>{product.name}</OText>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       <OButton
         onClick={() => handleAccept()}
         text={t('ACCEPT', 'Accept')}

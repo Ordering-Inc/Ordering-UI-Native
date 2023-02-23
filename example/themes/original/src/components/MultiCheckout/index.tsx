@@ -60,9 +60,10 @@ const MultiCheckoutUI = (props: any) => {
     handleSelectWallet,
     handlePaymethodDataChange,
     cartUuid,
-    rewardRate,
+    loyaltyPlansState,
     totalCartsFee,
     cartGroup,
+    walletState,
     onNavigationRedirectReplace
   } = props
 
@@ -86,13 +87,22 @@ const MultiCheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
-  const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data)
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
+  const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
+    (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
+    walletCarts.length > 0
+
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
 
-  const loyaltyRewardValue = Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / rewardRate)
+  const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
+  const businessIds = openCarts.map((cart: any) => cart.business_id)
+  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id)
+  const creditPointPlanOnBusiness = businessIds.every((bid: any) => loyalBusinessIds.includes(bid)) && creditPointPlan
+
+  const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate
+    ? Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / creditPointPlanOnBusiness?.accumulation_rate) : 0
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -164,6 +174,12 @@ const MultiCheckoutUI = (props: any) => {
       return
     }
   }, [openCarts])
+
+  useEffect(() => {
+    if (walletState.error) {
+      showToast(ToastType.Error, t(walletState.error, walletState.error?.[0]?.replace(/_/g, ' ')))
+    }
+  }, [walletState.error])
 
   return (
     <>
@@ -242,6 +258,7 @@ const MultiCheckoutUI = (props: any) => {
             <MultiCartsPaymethodsAndWallets
               openCarts={openCarts}
               paymethodSelected={paymethodSelected}
+              walletsPaymethod={cartGroup?.result?.wallets}
               handleSelectPaymethod={handleSelectPaymethod}
               handleSelectWallet={handleSelectWallet}
               handlePaymethodDataChange={handlePaymethodDataChange}
@@ -345,7 +362,9 @@ const MultiCheckoutUI = (props: any) => {
                       <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
                         {t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
                       </OText>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>{parsePrice(totalCartsFee)}</OText>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {parsePrice(totalCartsFee)}
+                      </OText>
                     </View>
                   )}
                   {openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
