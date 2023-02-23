@@ -216,6 +216,25 @@ export const AnalyticsSegment = (props: any) => {
     })
   }
 
+  const handleProductAddedToWishlist = (product: any) => {
+    segmentClient.track('Product Added to Wishlist', product)
+  }
+
+  const handleProductRemovedFromWishlist = (product: any) => {
+    segmentClient.track('Product Removed from Wishlist', product)
+  }
+
+  const handleWishlistProductAddedToCart = (product: any, result: any) => {
+    segmentClient.track('Wishlist Product Added to Cart', {
+      cart_id: result.uuid,
+      product_id: product.id,
+      name: product.name,
+      category: product.categoryId,
+      price: product.price,
+      quantity: product.quantity
+    })
+  }
+
   useEffect(() => {
     if (segmentClient?.config?.writeKey) {
       events.on('products_searched', handleProductsSearched)
@@ -237,6 +256,9 @@ export const AnalyticsSegment = (props: any) => {
       events.on('userLogin', handleLogin)
       events.on('order_placed', handleOrderPlaced)
       events.on('order_added', handleAddOrder)
+      events.on('product_added_to_wishlist', handleProductAddedToWishlist)
+      events.on('product_removed_from_wishlist', handleProductRemovedFromWishlist)
+      events.on('wishlist_product_added_to_cart', handleWishlistProductAddedToCart)
     }
     return () => {
       if (segmentClient?.config?.writeKey) {
@@ -259,6 +281,9 @@ export const AnalyticsSegment = (props: any) => {
         events.off('userLogin', handleLogin)
         events.off('order_placed', handleOrderPlaced)
         events.off('order_added', handleAddOrder)
+        events.off('product_added_to_wishlist', handleProductAddedToWishlist)
+        events.off('product_removed_from_wishlist', handleProductRemovedFromWishlist)
+        events.off('wishlist_product_added_to_cart', handleWishlistProductAddedToCart)
       }
     }
   }, [segmentClient])
@@ -278,6 +303,5 @@ export const AnalyticsSegment = (props: any) => {
         {children}
       </AnalyticsProvider>
     </>
-
   )
 }
