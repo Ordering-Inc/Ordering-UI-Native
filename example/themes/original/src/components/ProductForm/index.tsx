@@ -9,8 +9,7 @@ import {
 	I18nManager,
 	SafeAreaView,
 	Platform,
-	Button,
-	Vibration
+	Button
 } from 'react-native';
 import {
 	ProductForm as ProductOptions,
@@ -54,7 +53,7 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NavBar from '../NavBar';
-import { orderTypeList } from '../../utils';
+import { orderTypeList, vibrateApp } from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 
 export const ProductOptionsUI = (props: any) => {
@@ -222,7 +221,7 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
-		Vibration.vibrate()
+		vibrateApp()
 		if (!productCart.quantity) {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
 			return

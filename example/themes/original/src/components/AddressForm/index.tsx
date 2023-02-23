@@ -114,8 +114,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 			width: 16
 		},
 		wrapperNavbar: Platform.OS === 'ios'
-			? { paddingVertical: 0, paddingHorizontal: 40 }
-			: { paddingVertical: 20, paddingHorizontal: 40 }
+			? { paddingVertical: 0, paddingLeft: 40, paddingRight: 20 }
+			: { paddingVertical: 20, paddingLeft: 40, paddingRight: 20 }
 	});
 
 	const [, t] = useLanguage();
@@ -344,6 +344,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 			map_data: { library: 'google', place_id: data.place_id },
 			zip_code: data?.zip_code || null,
 		};
+		if (googleInput?.current) {
+			googleInput?.current?.setAddressText(addressSelected.address);
+		}
 		updateChanges(addressSelected);
 	};
 
@@ -518,8 +521,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 					onActionLeft={goToBack}
 					showCall={false}
 					btnStyle={{ paddingLeft: 0 }}
-					style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
-					titleWrapStyle={{ paddingHorizontal: 0 }}
+					style={{ marginTop: Platform.OS === 'ios' ? 0 : 10 }}
+					titleWrapStyle={{ paddingHorizontal: 0, width: '100%' }}
 					titleStyle={{ marginRight: 0, marginLeft: 0 }}
 				/>
 			</View>

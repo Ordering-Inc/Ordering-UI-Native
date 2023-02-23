@@ -11,10 +11,10 @@ import {
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { Dimensions, StyleSheet, Vibration, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
-import { convertHoursToMinutes, lightenDarkenColor, shape } from '../../utils';
+import { convertHoursToMinutes, lightenDarkenColor, shape, vibrateApp } from '../../utils';
 
 import {
 	BusinessHero,
@@ -152,7 +152,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	};
 
 	const handleBusinessClick = (selectedBusiness: any) => {
-		Vibration.vibrate()
+		vibrateApp()
 		if (business?.open) handleClick && handleClick(selectedBusiness)
 		else {
 			if (configState?.configs?.preorder_status_enabled?.value === '1') {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration, Keyboard, KeyboardEvent } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -24,6 +24,7 @@ import { BusinessProductsListingParams } from '../../types'
 import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   TopHeader,
@@ -42,6 +43,7 @@ import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 import { PageBanner } from '../PageBanner'
+import { vibrateApp } from '../../utils';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -160,7 +162,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         code: isProductAddedToCart?.code,
         quantity: productQuantity + 1
       }
-      Vibration.vibrate()
+      vibrateApp()
       const cartData = currentCart?.business_id ? currentCart : { business_id: business.id }
       if (isProductAddedToCart) {
         await updateProduct(updateCurrentProduct, cartData, isQuickAddProduct)
@@ -345,7 +347,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <>
                 {!(businessSingleId && auth) && (
                   <TopActions onPress={() => handleBackNavigation()}>
-                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+                    <AntDesignIcon 
+                      name='arrowleft'
+                      size={26}
+                    />
                   </TopActions>
                 )}
                 {!errorQuantityProducts && (
@@ -624,6 +629,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={business.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
+          handleChangeProfessional={handleChangeProfessionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}

@@ -43,7 +43,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
   }
 
-  const geocodePosition = (pos: { latitude: number, longitude: number }) => {
+  const geocodePosition = (pos: { latitude: number, longitude: number }, isMovingRegion ?: boolean) => {
     Geocoder.from({
       latitude: pos.latitude,
       longitude: pos.longitude
@@ -68,7 +68,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         }
         handleChangeAddressMap && handleChangeAddressMap(address, details)
         setSaveLocation && setSaveLocation(false)
-        handleToggleMap && handleToggleMap()
+        if(!isMovingRegion){ 
+          handleToggleMap && handleToggleMap()
+        }
       } else {
         setMapErrors && setMapErrors('ERROR_NOT_FOUND_ADDRESS')
       }
@@ -92,12 +94,19 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     const _maxLimitLocation = typeof maxLimitLocation === 'string' ? parseInt(maxLimitLocation, 10) : maxLimitLocation
 
     if (distance <= _maxLimitLocation) {
+      if (!aproxEqual(curPos.latitude, center.lat) || !aproxEqual(curPos.longitude, center.lng)){
+        geocodePosition(curPos, true)
+      }
       setMarkerPosition(curPos)
       setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
     } else {
       setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION')
       setMarkerPosition({ latitude: center.lat, longitude: center.lng })
     }
+  }
+
+  const aproxEqual = (n1 : number, n2 : number, epsilon = 0.000001) => {
+    return Math.abs(n1 - n2) < epsilon
   }
 
   const calculateDistance = (pointA: { lat: number, lng: number }, pointB: { latitude: number, longitude: number }) => {
