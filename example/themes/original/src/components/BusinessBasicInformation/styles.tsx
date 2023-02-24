@@ -47,6 +47,7 @@ export const RibbonBox = styled.View`
   padding: 2px 8px;
   max-width: 180px;
   align-self: flex-start;
+  margin-bottom: 5px;
 
   ${(props: any) => props.bgColor && css`
     background-color: ${props.bgColor};
