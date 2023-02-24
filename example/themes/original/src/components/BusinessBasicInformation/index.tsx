@@ -21,7 +21,6 @@ import {
 	BusinessInfo,
 	BusinessInfoItem,
 	WrapReviews,
-	WrapBusinessInfo,
 	TitleWrapper,
 	RibbonBox,
 	SocialListWrapper
@@ -291,11 +290,6 @@ export const BusinessBasicInformation = (
 					})}
 					imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
 				>
-					{!isBusinessInfoShow && !hideInfoIcon && !isChewLayout && (
-						<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
-							<OIcon src={theme.images.general.info} width={24} />
-						</WrapBusinessInfo>
-					)}
 					{isChewLayout && !loading && (
 						<View style={styles.headerChewStyle}>
 							<OText size={24} weight={'600'} mBottom={-5}>
@@ -463,13 +457,28 @@ export const BusinessBasicInformation = (
 										</>
 									)}
 									{!hideReviewsPopup && (
-										<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+										<>
+											<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+												<OText
+													color={theme.colors.primary}
+													style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+													size={12}
+												>
+													{t('REVIEWS', 'Reviews')}
+												</OText>
+											</TouchableOpacity>
+											<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+										</>
+									)}
+
+									{!isBusinessInfoShow && !hideInfoIcon && !isChewLayout && (
+										<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
 											<OText
 												color={theme.colors.primary}
 												style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
 												size={12}
 											>
-												{t('REVIEWS', 'Reviews')}
+												{t('INFORMATION', 'Information')}
 											</OText>
 										</TouchableOpacity>
 									)}

@@ -36,11 +36,6 @@ export const WrapReviews = styled.View`
   align-items: center;
   justify-content: flex-start;
 `;
-export const WrapBusinessInfo = styled.TouchableOpacity`
-  position: absolute;
-  top: 16px;
-  end: 39px;
-`;
 
 export const TitleWrapper = styled.View`
   width: 100%;
