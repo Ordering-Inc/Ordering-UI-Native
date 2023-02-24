@@ -63,7 +63,11 @@ const PageBannerUI = (props: any) => {
 				businessSlug: slug,
 				businessId: action.business_id,
         categoryId: action.category_id,
-        productId: action.product_id
+        productId: action.product_id,
+        isRedirect: 'business',
+        business: {
+          store: slug
+        }
 			})
     }
     const clickedBanner = pageBannerState.result.find(banner => banner.id === item?.banner_id)
