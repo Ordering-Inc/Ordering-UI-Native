@@ -154,8 +154,8 @@ const PageBannerUI = (props: any) => {
                 loop={pageBannerState.banner?.items.length > 1}
                 data={pageBannerState.banner?.items}
                 renderItem={renderItem}
-                sliderWidth={windowWidth - 80}
-                itemWidth={windowWidth - 80}
+                sliderWidth={windowWidth}
+                itemWidth={windowWidth}
                 inactiveSlideScale={1}
                 pagingEnabled
                 removeClippedSubviews={false}
