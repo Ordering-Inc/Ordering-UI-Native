@@ -125,26 +125,30 @@ const PageBannerUI = (props: any) => {
         <>
           {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
             <PageBannerWrapper>
-              <TouchableOpacity
-                style={[styles.swiperButton, { left: 25 }]}
-                onPress={() => carouselRef.current.snapToPrev()}
-              >
-                <IconAntDesign
-                  name="caretleft"
-                  color={theme.colors.white}
-                  size={13}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.swiperButton, { right: 25 }]}
-                onPress={() => carouselRef.current.snapToNext()}
-              >
-                <IconAntDesign
-                  name="caretright"
-                  color={theme.colors.white}
-                  size={13}
-                />
-              </TouchableOpacity>
+              {pageBannerState.banner?.items.length > 1 && (
+                <>
+                  <TouchableOpacity
+                    style={[styles.swiperButton, { left: 25 }]}
+                    onPress={() => carouselRef.current.snapToPrev()}
+                  >
+                    <IconAntDesign
+                      name="caretleft"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.swiperButton, { right: 25 }]}
+                    onPress={() => carouselRef.current.snapToNext()}
+                  >
+                    <IconAntDesign
+                      name="caretright"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
               <Carousel
                 ref={carouselRef}
                 loop={pageBannerState.banner?.items.length > 1}
