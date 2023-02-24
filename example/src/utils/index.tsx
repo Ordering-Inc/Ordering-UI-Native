@@ -154,6 +154,11 @@ export const transformCountryCode = (countryCode : number) => {
   return code?.countryCode
 }
 
+export const verifyCountryCode = (countryCode : string) => {
+  const code = CODES.find((code : any) => code.countryCode === (countryCode || '').toUpperCase())
+  return code?.countryCode
+}
+
 /**
  * Function to check if a number is decimal or not
  * @param {*} value number to check if decimal or not
