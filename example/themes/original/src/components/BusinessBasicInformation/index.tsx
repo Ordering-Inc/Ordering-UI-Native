@@ -317,21 +317,31 @@ export const BusinessBasicInformation = (
 				{!hideLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							logo || businessState?.business?.logo || typeof theme.images.dummies.businessLogo === 'string' ?
-								<FastImage
-									style={styles.logoStyle}
-									source={{
-										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit') || theme.images.dummies.businessLogo,
-										priority: FastImage.priority.high,
-										cache: FastImage.cacheControl.web
-									}}
-									resizeMode={FastImage.resizeMode.contain}
-								/>
-								:
-								<OIcon
-									src={theme?.images?.dummies?.businessLogo}
-									style={styles.logoStyle}
-								/>
+							<>
+								{loading ? (
+									<View style={styles.logoStyle}>
+										<Placeholder Animation={Fade}>
+											<PlaceholderLine height={72} style={{ borderRadius: 8 }} />
+										</Placeholder>
+									</View>
+								) : (
+									logo || businessState?.business?.logo || typeof theme.images.dummies.businessLogo === 'string' ?
+										<FastImage
+											style={styles.logoStyle}
+											source={{
+												uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit') || theme.images.dummies.businessLogo,
+												priority: FastImage.priority.high,
+												cache: FastImage.cacheControl.web
+											}}
+											resizeMode={FastImage.resizeMode.contain}
+										/>
+										:
+										<OIcon
+											src={theme?.images?.dummies?.businessLogo}
+											style={styles.logoStyle}
+										/>
+								)}
+							</>
 						)}
 					</BusinessLogo>
 				)}
