@@ -100,11 +100,11 @@ export const BusinessBasicInformation = (
 			borderRadius: 3,
 			borderColor: theme.colors.border,
 			borderWidth: isChewLayout ? 0 : 1,
-			width: 20,
-			height: 20,
+			width: 30,
+			height: 30,
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginRight: 5,
+			marginRight: 10,
 			marginBottom: 7
 		},
 		tiktokIcon: {
@@ -165,7 +165,7 @@ export const BusinessBasicInformation = (
 				<MaterialComIcon
 					name={iconTitle}
 					color={isChewLayout ? theme.colors.black : theme.colors.textNormal}
-					size={isChewLayout ? 18 : 14}
+					size={isChewLayout ? 25 : 22}
 				/>
 			</TouchableOpacity>
 		)
