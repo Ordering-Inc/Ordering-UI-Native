@@ -181,6 +181,12 @@ const MultiCheckoutUI = (props: any) => {
     }
   }, [walletState.error])
 
+  useEffect(() => {
+    if (!cartUuid) {
+      onNavigationRedirectReplace('BottomTab', { screen: 'Cart' })
+    }
+  }, [cartUuid])
+
   return (
     <>
       <Container noPadding>
