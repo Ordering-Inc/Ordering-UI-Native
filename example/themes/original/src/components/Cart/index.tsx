@@ -343,10 +343,10 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && !hideDeliveryFee && (
+            {orderState?.options?.type === 1 && cart?.delivery_price_with_discount > 0 && !hideDeliveryFee && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount ?? cart?.delivery_price)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
               </OSTable>
             )}
             {
@@ -370,12 +370,6 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && cart?.delivery_price_with_discount >= 0 && !hideDeliveryFee && isChewLayout && (
-              <OSTable>
-                <OText size={12} lineHeight={18}>{t('DELIVERY_FEE_AFTER_DISCOUNT', 'Delivery Fee After Discount')}</OText>
-                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
-              </OSTable>
-            )}
             {cart?.driver_tip > 0 && !hideDriverTip && (
               <OSTable>
                 <OText size={12} lineHeight={18}>
