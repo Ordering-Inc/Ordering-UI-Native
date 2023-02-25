@@ -98,7 +98,7 @@ const MultiCheckoutUI = (props: any) => {
 
   const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
   const businessIds = openCarts.map((cart: any) => cart.business_id)
-  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id)
+  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id) ?? []
   const creditPointPlanOnBusiness = businessIds.every((bid: any) => loyalBusinessIds.includes(bid)) && creditPointPlan
 
   const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate

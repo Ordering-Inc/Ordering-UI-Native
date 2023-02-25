@@ -74,23 +74,6 @@ export const BusinessItemAccordion = (props: any) => {
 				<BIInfo>
 					<BIContentInfo>
 						<OText size={16} lineHeight={24} weight={'600'}>{cart?.business?.name}</OText>
-						{/* {orderState?.options?.type === 1 ? (
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialCommunityIcon
-                  name='clock-outline'
-                  size={24}
-                />
-                <OText>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
-              </View>
-            ) : (
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialCommunityIcon
-                  name='clock-outline'
-                  size={24}
-                />
-                <OText>{convertHoursToMinutes(cart?.business?.pickup_time)}</OText>
-              </View>
-            )} */}
 						<View style={{ flexDirection: 'row' }}>
 							{props.onNavigationRedirect && !isClosed && (
 								<>
@@ -99,7 +82,7 @@ export const BusinessItemAccordion = (props: any) => {
 									</TouchableOpacity>
 								</>
 							)}
-							{!isCartPending && !isClosed && (
+							{!isCartPending && (
 								<>
 									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 									<OAlert

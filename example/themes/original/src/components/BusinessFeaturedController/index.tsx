@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
 	BusinessController as BusinessSingleCard,
 	useUtils,
@@ -6,32 +7,28 @@ import {
 	useLanguage,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OText } from '../shared';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import FastImage from 'react-native-fast-image'
+
+import { OText } from '../shared';
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, lightenDarkenColor, shape } from '../../utils';
 import {
 	Card,
 	BusinessHero,
 	BusinessContent,
-	BusinessCategory,
 	BusinessInfo,
 	Metadata,
-	BusinessState,
 	BusinessLogo,
-	Reviews,
 	RibbonBox
 } from './styles';
 
 export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 	const { business, handleClick, isBusinessOpen } = props;
-	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
-		useUtils();
+
+	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
-
 	const theme = useTheme();
-
 
 	const styles = StyleSheet.create({
 		headerStyle: {
@@ -79,22 +76,13 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 			justifyContent: 'flex-start',
 			width: '100%',
 		},
+		productStyle: {
+			height: 40,
+			width: 40
+		}
 	});
 
-	const types = ['food', 'laundry', 'alcohol', 'groceries'];
-
 	const { width } = useWindowDimensions();
-
-	const getBusinessType = () => {
-		if (Object.keys(business).length <= 0) return t('GENERAL', 'General');
-		const _types: any = [];
-		types.forEach((type) => {
-			if (business[type]) {
-				_types.push(t(type.toUpperCase(), type));
-			}
-		});
-		return _types.join(', ');
-	};
 
 	return (
 		<Card activeOpacity={1} onPress={() => handleClick(business)}>
@@ -120,10 +108,13 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 			)}
 			<BusinessHero>
 				<BusinessLogo>
-					<OIcon
-						url={optimizeImage(business?.logo, 'h_100,c_limit')}
-						width={40}
-						height={40}
+					<FastImage
+						style={styles.productStyle}
+						source={{
+							uri: optimizeImage(business?.logo, 'h_100,c_limit'),
+							priority: FastImage.priority.normal,
+						}}
+						resizeMode={FastImage.resizeMode.cover}
 					/>
 				</BusinessLogo>
 				<BusinessContent style={{ width: width * 0.6 }}>
@@ -131,23 +122,7 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 						<OText size={12} ellipsizeMode={'tail'} numberOfLines={2}>
 							{business?.name}
 						</OText>
-						{/* {business?.reviews?.total > 0 && (
-              <Reviews>
-                <IconAntDesign
-                  name="star"
-                  color={theme.colors.primary}
-                  size={16}
-                  style={styles.starIcon}
-                />
-                <OText>
-                  {parseNumber(business?.reviews?.total, { separator: '.' })}
-                </OText>
-              </Reviews>
-            )} */}
 					</BusinessInfo>
-					{/* <BusinessCategory>
-            <OText>{getBusinessType()}</OText>
-          </BusinessCategory> */}
 					<Metadata>
 						{!isBusinessOpen ? (
 							<View style={styles.closed}>
@@ -157,7 +132,6 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 							</View>
 						) : (
 							<View style={styles.bullet}>
-								{/* <MaterialComIcon name="alarm" size={16} /> */}
 								<OText size={10} color={theme.colors.textSecondary}>
 									{t('DELIVERY_FEE', 'Delivery Fee')}
 								</OText>
@@ -186,15 +160,6 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
 						)}
 					</Metadata>
 				</BusinessContent>
-				{/* <BusinessState>
-          {!business?.open && (
-            <View style={styles.businessStateView}>
-              <OText color={theme.colors.white} size={20} style={styles.businessStateText}>
-                {t('PREORDER', 'PREORDER')}
-              </OText>
-            </View>
-          )}
-        </BusinessState> */}
 			</BusinessHero>
 		</Card>
 	);

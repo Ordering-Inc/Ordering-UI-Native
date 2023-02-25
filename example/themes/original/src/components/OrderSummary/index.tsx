@@ -46,6 +46,7 @@ const OrderSummaryUI = (props: any) => {
     preorderMaximumDays,
     preorderMinimumDays,
     cateringTypes,
+    hideDeliveryFee,
     loyaltyRewardRate,
     maxDate
   } = props;
@@ -243,10 +244,10 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 ))
               }
-              {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+              {orderState?.options?.type === 1 && cart?.delivery_price_with_discount > 0 && !hideDeliveryFee && (
                 <OSTable>
                   <OText size={12}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText size={12}>{parsePrice(cart?.delivery_price)}</OText>
+                  <OText size={12}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
                 </OSTable>
               )}
               {
