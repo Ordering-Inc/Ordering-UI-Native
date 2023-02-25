@@ -63,7 +63,11 @@ const PageBannerUI = (props: any) => {
 				businessSlug: slug,
 				businessId: action.business_id,
         categoryId: action.category_id,
-        productId: action.product_id
+        productId: action.product_id,
+        isRedirect: 'business',
+        business: {
+          store: slug
+        }
 			})
     }
     const clickedBanner = pageBannerState.result.find(banner => banner.id === item?.banner_id)
@@ -121,33 +125,37 @@ const PageBannerUI = (props: any) => {
         <>
           {pageBannerState.banner?.items && pageBannerState.banner?.items.length > 0 && (
             <PageBannerWrapper>
-              <TouchableOpacity
-                style={[styles.swiperButton, { left: 25 }]}
-                onPress={() => carouselRef.current.snapToPrev()}
-              >
-                <IconAntDesign
-                  name="caretleft"
-                  color={theme.colors.white}
-                  size={13}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.swiperButton, { right: 25 }]}
-                onPress={() => carouselRef.current.snapToNext()}
-              >
-                <IconAntDesign
-                  name="caretright"
-                  color={theme.colors.white}
-                  size={13}
-                />
-              </TouchableOpacity>
+              {pageBannerState.banner?.items.length > 1 && (
+                <>
+                  <TouchableOpacity
+                    style={[styles.swiperButton, { left: 25 }]}
+                    onPress={() => carouselRef.current.snapToPrev()}
+                  >
+                    <IconAntDesign
+                      name="caretleft"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.swiperButton, { right: 25 }]}
+                    onPress={() => carouselRef.current.snapToNext()}
+                  >
+                    <IconAntDesign
+                      name="caretright"
+                      color={theme.colors.white}
+                      size={13}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
               <Carousel
                 ref={carouselRef}
                 loop={pageBannerState.banner?.items.length > 1}
                 data={pageBannerState.banner?.items}
                 renderItem={renderItem}
-                sliderWidth={windowWidth - 80}
-                itemWidth={windowWidth - 80}
+                sliderWidth={windowWidth}
+                itemWidth={windowWidth}
                 inactiveSlideScale={1}
                 pagingEnabled
                 removeClippedSubviews={false}

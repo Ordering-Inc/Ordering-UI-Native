@@ -242,7 +242,7 @@ const ProfileListUI = (props: ProfileParams) => {
 						<ListItem onPress={() => navigation.navigate('Notifications', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<NotificationBadge style={{ borderRadius: 100 / 2 }} />
 							<Ionicons name='notifications-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('NOTIFICATIONS', 'Notifications')}
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MARKETING_NOTIFICATIONS', 'Marketing notifications')}
 							</OText>
 							<NotificationsWrapper>
 								<ToggleSwitch
