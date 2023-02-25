@@ -33,11 +33,6 @@ export const WrapReviews = styled.View`
   align-items: center;
   justify-content: flex-start;
 `;
-export const WrapBusinessInfo = styled.TouchableOpacity`
-  position: absolute;
-  top: 16px;
-  end: 39px;
-`;
 
 export const TitleWrapper = styled.View`
   width: 100%;
@@ -49,6 +44,7 @@ export const RibbonBox = styled.View`
   padding: 2px 8px;
   max-width: 180px;
   align-self: flex-start;
+  margin-bottom: 5px;
 
   ${(props: any) => props.bgColor && css`
     background-color: ${props.bgColor};
