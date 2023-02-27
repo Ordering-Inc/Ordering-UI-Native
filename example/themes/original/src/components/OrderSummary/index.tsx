@@ -62,7 +62,6 @@ const OrderSummaryUI = (props: any) => {
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
 
   const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
-  const loyaltyRewardValue = Math.round(cart?.subtotal / loyaltyRewardRate)
 
   const walletName: any = {
     cash: {
@@ -72,6 +71,18 @@ const OrderSummaryUI = (props: any) => {
       name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
     }
   }
+
+  const getIncludedTaxes = () => {
+    if (cart?.taxes === null || !cart?.taxes) {
+      return cart.business.tax_type === 1 ? cart?.tax : 0
+    } else {
+      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const loyaltyRewardValue = Math.round((cart?.subtotal + getIncludedTaxes()) / loyaltyRewardRate)
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -87,16 +98,6 @@ const OrderSummaryUI = (props: any) => {
       productId: product?.id,
       isFromCheckout: isFromCheckout,
     })
-  }
-
-  const getIncludedTaxes = () => {
-    if (cart?.taxes === null || !cart?.taxes) {
-      return cart.business.tax_type === 1 ? cart?.tax : 0
-    } else {
-      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
-        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
-      }, 0)
-    }
   }
 
   const getIncludedTaxesDiscounts = () => {
