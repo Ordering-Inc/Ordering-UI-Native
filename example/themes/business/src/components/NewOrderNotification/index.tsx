@@ -81,7 +81,7 @@ const NewOrderNotificationUI = (props: any) => {
       } catch { }
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
-      if (assignedSecondsDiff < 5 && !isBusinessApp) {
+      if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
         handlePlayNotificationSound({ evt: 2, orderId: value?.id })
       }
     }
