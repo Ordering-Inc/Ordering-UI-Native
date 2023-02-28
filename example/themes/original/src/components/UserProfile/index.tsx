@@ -48,9 +48,19 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const theme = useTheme();
 
-  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-  const showLanguages = theme?.profile?.components?.languages?.hidden
-
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const hideProfileImage = theme?.profile?.components?.picture?.hidden
+	const hideOrders = theme?.profile?.components?.orders?.hidden
+	const hideProfile = theme?.profile?.components?.profile?.hidden
+	const hideWallet = theme?.profile?.components?.wallet?.hidden
+	const hideMessages = theme?.bar_menu?.components?.messages?.hidden
+	const hideHelp = theme?.bar_menu?.components?.help?.hidden
+	const hideFavorites = theme?.bar_menu?.components?.favortes?.hidden
+	const hideSession = theme?.bar_menu?.components?.sessions?.hidden
+	const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
+	const hideAddressList = theme?.profile?.components?.address_list?.hidden
+	const showLanguages = theme?.profile?.components?.languages?.hidden
+	const showNotifications = !theme?.profile?.components?.notification_settings?.hidden
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {
 			color: theme.colors.textNormal,
@@ -153,7 +163,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	return (
 		<View style={{ flex: 1, height: '100%', paddingTop: 20 }}>
 			<CenterView style={styles.pagePadding}>
-				{user?.photo && (
+				{user?.photo && !hideProfileImage && (
 					<View style={styles.photo}>
 						<FastImage
 							style={{ height: 60, width: 60, borderRadius: 8 }}
@@ -167,75 +177,91 @@ const ProfileListUI = (props: ProfileParams) => {
 				)}
 				<View style={{ flexBasis: '70%' }}>
 					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{user?.name} {user?.lastname}</OText>
-					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
-						<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
-					</TouchableOpacity>
+					{!hideProfile && (
+						<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
+							<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
+						</TouchableOpacity>
+					)}
 				</View>
 			</CenterView>
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32 }} />
 			<Spinner visible={notificationsGroup?.loading} />
 			<ListWrap style={{ ...styles.pagePadding }}>
 				<Actions>
-					<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SAVED_PLACES', 'My saved places')}</OText>
-					</ListItem>
-					<ListItem onPress={() => onRedirect('Messages', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
-					</ListItem>
-					<ListItem onPress={() => onRedirect('MyOrders', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<FontAwesome name='list-alt' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_ORDERS', 'My Orders')}</OText>
-					</ListItem>
-					{isWalletEnabled && (
+					{!hideAddressList && (
+						<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SAVED_PLACES', 'My saved places')}</OText>
+						</ListItem>
+					)}
+					{!hideMessages && (
+						<ListItem onPress={() => onRedirect('Messages', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
+						</ListItem>
+					)}
+					{!hideOrders && (
+						<ListItem onPress={() => onRedirect('MyOrders', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<FontAwesome name='list-alt' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_ORDERS', 'My Orders')}</OText>
+						</ListItem>
+					)}
+					{isWalletEnabled && !hideWallet && (
 						<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
 						</ListItem>
 					)}
-					{IsPromotionsEnabled && (
+					{IsPromotionsEnabled && !hidePromotions && (
 						<ListItem onPress={() => onRedirect('Promotions', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<MaterialIcons name='local-offer' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('PROMOTIONS', 'Promotions')}</OText>
 						</ListItem>
 					)}
-					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
-						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
-					</ListItem>
-					<ListItem onPress={() => navigation.navigate('Notifications', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<NotificationBadge style={{ borderRadius: 100 / 2 }} />
-						<Ionicons name='notifications-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('NOTIFICATIONS', 'Notifications')}
-						</OText>
-						<NotificationsWrapper>
-							<ToggleSwitch
-								isOn={user && (!!user?.settings?.notification?.newsletter ||
-									!!user?.settings?.sms?.newsletter ||
-									!!user?.settings?.email?.newsletter)}
-								onColor={theme.colors.primary}
-								size="small"
-								disabled={notificationsGroup?.loading}
-								offColor={theme.colors.disabled}
-								animationSpeed={400}
-								onToggle={() => handleChangePromotions(!(user && (!!user?.settings?.notification?.newsletter ||
-									!!user?.settings?.sms?.newsletter ||
-									!!user?.settings?.email?.newsletter)))}
-							/>
-						</NotificationsWrapper>
-					</ListItem>
-					<ListItem onPress={() => navigation.navigate('Sessions')} activeOpacity={0.7}>
-						<Ionicons name='md-list-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SESSIONS', 'Sessions')}</OText>
-					</ListItem>
-					<ListItem onPress={() => navigation.navigate('Favorite')} activeOpacity={0.7}>
-						<Ionicons name='heart-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('FAVORITES', 'Favorites')}</OText>
-					</ListItem>
+					{!hideHelp && (
+						<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
+							<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
+						</ListItem>
+					)}
+					{showNotifications && (
+						<ListItem onPress={() => navigation.navigate('Notifications', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<NotificationBadge style={{ borderRadius: 100 / 2 }} />
+							<Ionicons name='notifications-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MARKETING_NOTIFICATIONS', 'Marketing notifications')}
+							</OText>
+							<NotificationsWrapper>
+								<ToggleSwitch
+									isOn={user && (!!user?.settings?.notification?.newsletter ||
+										!!user?.settings?.sms?.newsletter ||
+										!!user?.settings?.email?.newsletter)}
+									onColor={theme.colors.primary}
+									size="small"
+									disabled={notificationsGroup?.loading}
+									offColor={theme.colors.disabled}
+									animationSpeed={400}
+									onToggle={() => handleChangePromotions(!(user && (!!user?.settings?.notification?.newsletter ||
+										!!user?.settings?.sms?.newsletter ||
+										!!user?.settings?.email?.newsletter)))}
+								/>
+							</NotificationsWrapper>
+						</ListItem>
+					)}
+					{!hideSession && (
+						<ListItem onPress={() => navigation.navigate('Sessions')} activeOpacity={0.7}>
+							<Ionicons name='md-list-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SESSIONS', 'Sessions')}</OText>
+						</ListItem>
+					)}
+					{!hideFavorites && (
+						<ListItem onPress={() => navigation.navigate('Favorite')} activeOpacity={0.7}>
+							<Ionicons name='heart-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('FAVORITES', 'Favorites')}</OText>
+						</ListItem>
+					)}
 				</Actions>
 
-        <Actions style={{ paddingTop: height * .02 }}>
+				<Actions style={{ paddingTop: height * .02 }}>
 					{!showLanguages && (
 						<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
 					)}
