@@ -10,7 +10,7 @@ export const Container = styled.TouchableOpacity`
 export const IconControl = styled.TouchableOpacity`
   flex-direction: row;
   padding: 10px;
-  width: 45%;
+  width: 38%;
   align-items: center;
 `
 
@@ -18,7 +18,7 @@ export const QuantityControl = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin-horizontal: 5px;
+  margin-right: 5px;
   flex: 1;
   width: 60px;
 `

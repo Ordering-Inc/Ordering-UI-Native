@@ -99,7 +99,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			return false
 		})
 		setOrders(orders)
-	}, [_orders?.length])
+	}, [JSON.stringify(_orders)])
 
 	const onProductClick = (product: any) => {
 		if (product?.product_id && product?.category_id && product?.businessId &&
@@ -167,6 +167,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			setOrdersLength && setOrdersLength({ ...ordersLength, activeOrdersLength: updateOrders?.length })
 		} else if (!preOrders) {
 			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
+		} else {
+			setOrdersLength && setOrdersLength({ ...ordersLength, preordersLength: updateOrders?.length })
 		}
 	}, [_orders, activeOrders, preOrders])
 

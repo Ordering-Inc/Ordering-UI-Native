@@ -17,8 +17,10 @@ const TitleTopWrapper = styled.View`
 const btnBackArrow = {
 	borderWidth: 0,
 	backgroundColor: '#FFF',
-	borderColor: '#FFF',
-	shadowColor: '#FFF'
+	borderColor: '#fff',
+	shadowColor: '#FFF',
+	paddingLeft: 30,
+	paddingRight: 30
 }
 
 interface Props {
@@ -63,8 +65,11 @@ const NavBar = (props: Props) => {
 	return (
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			<OButton
-				imgLeftSrc={theme.images.general.arrow_left}
-				imgLeftStyle={{ width: 26 }}
+				iconProps={{
+					name: 'arrowleft',
+					size: 26
+				}}
+				icon={AntDesignIcon}
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}

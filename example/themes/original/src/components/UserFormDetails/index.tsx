@@ -7,11 +7,12 @@ import { SignupForm } from '../SignupForm'
 
 import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
-import { OText, OButton, OInput, OModal } from '../shared';
-import Alert from '../../providers/AlertProvider'
+import { OText, OButton, OInput, OModal, OIcon } from '../shared';
+import { OAlert } from '../../../../../src/components/shared'
 
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
+import { ListItem } from '../UserProfile/styles';
 
 export const UserFormDetailsUI = (props: any) => {
 	const {
@@ -31,7 +32,9 @@ export const UserFormDetailsUI = (props: any) => {
 		setWillVerifyOtpState,
 		handlePlaceOrderAsGuest,
 		isCheckout,
-		setIsOpen
+		setIsOpen,
+		handleRemoveAccount,
+		isProfile
 	} = props;
 
 	const theme = useTheme();
@@ -85,8 +88,9 @@ export const UserFormDetailsUI = (props: any) => {
 			cellphone: null,
 		},
 	});
-	const [alertState, setAlertState] = useState({ open: false, content: '' })
+	const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
+	const isAdmin = user?.level === 0
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
 	const handleSuccessSignup = (user: any) => {
@@ -200,6 +204,18 @@ export const UserFormDetailsUI = (props: any) => {
 			}
 		}
 		handleChangeInput(countryCode, true);
+	}
+
+	const onRemoveAccount = () => {
+		setConfirm({
+			open: true,
+			content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
+			title: t('ACCOUNT_ALERT', 'Account alert'),
+			handleOnAccept: () => {
+				setConfirm({ ...confirm, open: false })
+				handleRemoveAccount && handleRemoveAccount(user?.id)
+			}
+		})
 	}
 
 	useEffect(() => {
@@ -408,6 +424,12 @@ export const UserFormDetailsUI = (props: any) => {
 							)}
 						</UDWrapper>
 					)}
+				{isProfile && (
+					<ListItem disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
+						<OIcon src={theme.images.general.user} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+						<OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+					</ListItem>
+				)}
 				{validationFields?.loading && (
 					<UDLoader>
 						<OText size={12}>{t('LOADING', 'Loading')}</OText>
@@ -474,7 +496,14 @@ export const UserFormDetailsUI = (props: any) => {
 					/>
 				</ScrollView>
 			</OModal>
-			
+			<OAlert
+				open={confirm.open}
+				title={confirm.title}
+				content={confirm.content}
+				onAccept={confirm.handleOnAccept}
+				onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+				onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+			/>
 		</>
 	);
 };
