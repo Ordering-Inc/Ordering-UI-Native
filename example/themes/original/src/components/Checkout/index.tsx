@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -52,7 +52,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText } from '../../utils';
+import { getTypesText, vibrateApp } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
@@ -222,7 +222,7 @@ const CheckoutUI = (props: any) => {
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
-			Vibration.vibrate()
+			vibrateApp()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -351,6 +351,7 @@ const CheckoutUI = (props: any) => {
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
+						style={{ marginTop: 20 }}
 					/>
 				</View>
 				<ChContainer style={styles.pagePadding}>
@@ -755,7 +756,7 @@ const CheckoutUI = (props: any) => {
 
 					{!cartState.loading && cart && (
 						<View>
-							<ChErrors style={{ marginBottom: 30 }}>
+							<ChErrors style={{ marginBottom: Platform.OS === 'ios' ? 35 : 10 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										color={theme.colors.error}
@@ -882,7 +883,7 @@ const CheckoutUI = (props: any) => {
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
-					handleClick={isDisabledButtonPlace ? () => Vibration.vibrate() : () => handlePlaceOrder(null)}
+					handleClick={isDisabledButtonPlace ? () => vibrateApp() : () => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
 					btnText={subtotalWithTaxes >= cart?.minimum

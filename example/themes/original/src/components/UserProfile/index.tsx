@@ -35,7 +35,6 @@ import {
 } from './styles';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import styled from 'styled-components';
 import ToggleSwitch from 'toggle-switch-react-native';
 
 const ProfileListUI = (props: ProfileParams) => {
@@ -118,8 +117,6 @@ const ProfileListUI = (props: ProfileParams) => {
 	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
-	const isAdmin = user?.level === 0
-
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
@@ -153,19 +150,8 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const detailProps = {
 		goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
-		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
-	}
-
-	const onRemoveAccount = () => {
-		setConfirm({
-			open: true,
-			content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
-			title: t('ACCOUNT_ALERT', 'Account alert'),
-			handleOnAccept: () => {
-				setConfirm({ ...confirm, open: false })
-				handleRemoveAccount && handleRemoveAccount(user?.id)
-			}
-		})
+		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
+		handleRemoveAccount
 	}
 
 	useEffect(() => {
@@ -282,10 +268,6 @@ const ProfileListUI = (props: ProfileParams) => {
 					<View style={{ height: 17 }} />
 					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
 					<View style={{ height: 17 }} />
-					<ListItem disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
-						<OIcon src={theme.images.general.user} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
-					</ListItem>
 				</Actions>
 			</ListWrap>
 			<OAlert

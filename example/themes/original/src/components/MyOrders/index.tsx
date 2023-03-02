@@ -25,11 +25,12 @@ export const MyOrders = (props: any) => {
   const [ordersLength, setOrdersLength] = useState({
     activeOrdersLength: null,
     previousOrdersLength: 0,
+    preordersLength: 0
   });
   const [selectedOption, setSelectedOption] = useState(!hideOrders ? 'orders' : 'business')
 
   const notOrderOptions = ['business', 'products']
-  const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
+  const allEmpty = (ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0 && ordersLength?.preordersLength === 0) || ((isEmptyBusinesses || businessOrderIds?.length === 0) && hideOrders)
 
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const showNavbar = theme?.bar_menu?.components?.orders?.hidden
@@ -147,6 +148,18 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
+          {ordersLength?.preordersLength > 0 && (
+            <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+              <OrdersOption
+                {...props}
+                preOrders
+                ordersLength={ordersLength}
+                setOrdersLength={setOrdersLength}
+                setRefreshOrders={setRefreshOrders}
+                refreshOrders={refreshOrders}
+              />
+            </View>
+          )}
           <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
             <OrdersOption
               {...props}

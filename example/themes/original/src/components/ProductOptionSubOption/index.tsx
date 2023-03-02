@@ -41,8 +41,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const [showMessage, setShowMessage] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
 
-	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-	const iconsSize = isChewLayout ? 20 : 16
+	const iconsSize = 20
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
@@ -117,7 +116,8 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.half_l}
 									color={state.selected && state.position === 'left' ? theme.colors.primary : '#cbcbcb'}
-									width={16}
+									width={20}
+									height={20}
 									style={styles.inverse}
 								/>
 							</Circle>
@@ -125,14 +125,16 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.half_f}
 									color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
-									width={16}
+									width={20}
+									height={20}
 								/>
 							</Circle>
 							<Circle disabled={disabled} onPress={() => changePosition('right')}>
 								<OIcon
 									src={theme.images.general.half_r}
 									color={state.selected && state.position === 'right' ? theme.colors.primary : '#cbcbcb'}
-									width={16}
+									width={20}
+									height={20}
 								/>
 							</Circle>
 						</>
