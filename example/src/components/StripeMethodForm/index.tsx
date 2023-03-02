@@ -20,7 +20,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const [initialized, setInitialized] = useState(false);
   const [loadingGooglePayment, setLoadingGooglePayment] = useState(false)
   const [, t] = useLanguage()
-  const [configs] = useConfig()
+  const [{configs}] = useConfig()
 
   useEffect(() => {
     if (paymethod !== 'google_pay' || !initGooglePay) return
