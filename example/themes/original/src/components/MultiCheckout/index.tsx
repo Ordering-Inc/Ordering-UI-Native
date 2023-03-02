@@ -98,15 +98,29 @@ const MultiCheckoutUI = (props: any) => {
 
   const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
   const businessIds = openCarts.map((cart: any) => cart.business_id)
-  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id)
+  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id) ?? []
   const creditPointPlanOnBusiness = businessIds.every((bid: any) => loyalBusinessIds.includes(bid)) && creditPointPlan
-
-  const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate
-    ? Math.round(openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal, 0) / creditPointPlanOnBusiness?.accumulation_rate) : 0
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
+
+  const getIncludedTaxes = (cart: any) => {
+    if (cart?.taxes === null || !cart?.taxes) {
+      return cart.business.tax_type === 1 ? cart?.tax : 0
+    } else {
+      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate
+    ? Math.round(
+      openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal + getIncludedTaxes(cart), 0) /
+      creditPointPlanOnBusiness?.accumulation_rate
+    ) : 0
+
   const handleMomentClick = () => {
     if (isPreOrder) {
       navigation.navigate('MomentOption')
@@ -180,6 +194,12 @@ const MultiCheckoutUI = (props: any) => {
       showToast(ToastType.Error, t(walletState.error, walletState.error?.[0]?.replace(/_/g, ' ')))
     }
   }, [walletState.error])
+
+  useEffect(() => {
+    if (!cartUuid) {
+      onNavigationRedirectReplace('BottomTab', { screen: 'Cart' })
+    }
+  }, [cartUuid])
 
   return (
     <>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image'
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
 	AddressDetails as AddressDetailsController,
 	useOrder,
@@ -21,6 +22,14 @@ const AddressDetailsUI = (props: any) => {
 	const [, t] = useLanguage();
 	const { width } = useWindowDimensions();
 
+	const styles = StyleSheet.create({
+		productStyle: {
+			width: width,
+			height: 151,
+			marginVertical: 10
+		}
+	})
+
 	return (
 		<ADContainer>
 			<ADHeader>
@@ -34,10 +43,17 @@ const AddressDetailsUI = (props: any) => {
 					</OText>
 				)}
 			</ADHeader>
-			{!!apiKey && (
+			{!!apiKey && googleMapsUrl && (
 				<ADMap
 					style={{ marginStart: -40, marginEnd: -40, width: width, flex: 1 }}>
-					<OIcon url={googleMapsUrl} height={151} width={width} />
+					<FastImage
+						style={styles.productStyle}
+						source={{
+							uri: googleMapsUrl,
+							priority: FastImage.priority.normal,
+						}}
+						resizeMode={FastImage.resizeMode.cover}
+					/>
 				</ADMap>
 			)}
 			<ADAddress>

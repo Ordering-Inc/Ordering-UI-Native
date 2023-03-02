@@ -152,7 +152,7 @@ const CheckoutUI = (props: any) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 	const [openModal, setOpenModal] = useState({ login: false, signup: false })
-  const [allowedGuest, setAllowedGuest] = useState(false)
+  	const [allowedGuest, setAllowedGuest] = useState(false)
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
@@ -177,12 +177,16 @@ const CheckoutUI = (props: any) => {
 			return acc = acc + item?.summary?.tax
 		return acc = acc
 	}, cart?.subtotal)
+
+	const validateCommentsCartField = validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required && (cart?.comment === null || cart?.comment?.trim().length === 0)
+
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
-			(Number(cart?.driver_tip) <= 0))
+			(Number(cart?.driver_tip) <= 0)) ||
+		(validateCommentsCartField)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -589,7 +593,7 @@ const CheckoutUI = (props: any) => {
 								) : (
 									<AddressDetails
 										navigation={navigation}
-										location={businessDetails?.business?.location}
+										location={options?.address?.location}
 										businessLogo={businessDetails?.business?.logo}
 										isCartPending={cart?.status === 2}
 										uuid={cartUuid}
@@ -798,6 +802,15 @@ const CheckoutUI = (props: any) => {
 											{t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
 										</OText>
 									)}
+
+								{validateCommentsCartField && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('WARNING_INVALID_CART_COMMENTS', 'Cart comments is required.')}
+									</OText>
+								)}
 							</ChErrors>
 						</View>
 					)}

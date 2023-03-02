@@ -4,11 +4,6 @@ export const BContainer = styled.View`
   padding: 20px 40px;
 `
 
-export const WrapHeader = styled.View`
-  width: 100%;
-	padding-vertical: 20px;
-`
-
 export const SearchWrapper = styled.View`
 
 `
@@ -53,12 +48,6 @@ export const SingleBusinessContainer = styled.View`
   justify-content: space-between;
 `
 
-export const LoadMoreBusinessContainer = styled.View`
-  align-items: center;
-  justify-content: center;
-  margin-left: 20px;
-`
-
 export const TagsContainer = styled.View`
   padding-bottom: 10px;
 `
@@ -78,13 +67,6 @@ export const BrandItem = styled.TouchableOpacity`
 
 export const PriceFilterWrapper = styled.View`
   margin-bottom: 20px;
-`
-
-export const OptionTitle = styled.View`
-	margin-top: 24px;
-	${(props: any) => props.titleContent && css`
-		margin-left: ${() => props.isBusinessesSearchList ? '0' : '40px'};
-	`}
 `
 
 export const WrapperButtons = styled.View`

@@ -46,6 +46,7 @@ const OrderSummaryUI = (props: any) => {
     preorderMaximumDays,
     preorderMinimumDays,
     cateringTypes,
+    hideDeliveryFee,
     loyaltyRewardRate,
     maxDate
   } = props;
@@ -59,9 +60,9 @@ const OrderSummaryUI = (props: any) => {
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
+  const hideCartComments = !validationFields?.fields?.checkout?.comments?.enabled
 
   const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
-  const loyaltyRewardValue = Math.round(cart?.subtotal / loyaltyRewardRate)
 
   const walletName: any = {
     cash: {
@@ -71,6 +72,18 @@ const OrderSummaryUI = (props: any) => {
       name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
     }
   }
+
+  const getIncludedTaxes = () => {
+    if (cart?.taxes === null || !cart?.taxes) {
+      return cart.business.tax_type === 1 ? cart?.tax : 0
+    } else {
+      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const loyaltyRewardValue = Math.round((cart?.subtotal + getIncludedTaxes()) / loyaltyRewardRate)
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -86,16 +99,6 @@ const OrderSummaryUI = (props: any) => {
       productId: product?.id,
       isFromCheckout: isFromCheckout,
     })
-  }
-
-  const getIncludedTaxes = () => {
-    if (cart?.taxes === null || !cart?.taxes) {
-      return cart.business.tax_type === 1 ? cart?.tax : 0
-    } else {
-      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
-        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
-      }, 0)
-    }
   }
 
   const getIncludedTaxesDiscounts = () => {
@@ -243,10 +246,10 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 ))
               }
-              {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+              {orderState?.options?.type === 1 && cart?.delivery_price_with_discount > 0 && !hideDeliveryFee && (
                 <OSTable>
                   <OText size={12}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText size={12}>{parsePrice(cart?.delivery_price)}</OText>
+                  <OText size={12}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
                 </OSTable>
               )}
               {
@@ -321,7 +324,7 @@ const OrderSummaryUI = (props: any) => {
                   )}
                 </View>
               )}
-              {cart?.business_id && cart?.status !== 2 && (
+              {cart?.business_id && cart?.status !== 2 && !hideCartComments && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
                     <OText size={12}>{t('COMMENTS', 'Comments')}</OText>

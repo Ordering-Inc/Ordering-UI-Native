@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import { NewOrderNotification as NewOrderNotificationController, useApi, useEvent, useLanguage, useSession } from 'ordering-components/native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Sound from 'react-native-sound'
 import Icon from 'react-native-vector-icons/Feather'
 import { useTheme } from 'styled-components/native'
-import { useEvent, useLanguage, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
 
-import { OText, OIcon } from '../shared'
-import { NotificationContainer } from './styles'
 import { useLocation } from '../../hooks/useLocation'
+import { OIcon, OText } from '../shared'
+import { NotificationContainer } from './styles'
 
 Sound.setCategory('Playback', true)
 Sound.setMode('Default')
@@ -82,14 +82,14 @@ const NewOrderNotificationUI = (props: any) => {
       } catch { }
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
-      if (assignedSecondsDiff < 5 && !isBusinessApp) {
+      if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
         handlePlayNotificationSound({ evt: 2, orderId: value?.id })
       }
     }
     if (evtType === 3 || value.author_id === user.id) return
     handlePlayNotificationSound({
       evt: evtType,
-      orderId: value?.order_id
+      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.id
     })
   }
 

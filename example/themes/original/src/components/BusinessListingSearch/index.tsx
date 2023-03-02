@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, showToast, ToastType } from 'ordering-components/native'
-import { ScrollView, StyleSheet, TouchableOpacity, Platform, View, Dimensions } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
 import { HeaderTitle, OButton, OModal, OText } from '../shared'
 import { SearchBar } from '../SearchBar';
-import { BusinessController } from '../BusinessController'
 import { NotFoundSource } from '../NotFoundSource'
 import { SingleProductCard } from '../SingleProductCard'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import {
   SearchWrapper,
-  WrapHeader,
   ProductsList,
   SingleBusinessSearch,
   BusinessInfo,
   BusinessInfoItem,
   Metadata,
   SingleBusinessContainer,
-  LoadMoreBusinessContainer,
   TagsContainer,
   SortContainer,
   BrandContainer,
   BrandItem,
   PriceFilterWrapper,
-  OptionTitle,
   BContainer,
   WrapperButtons
 } from './styles'
@@ -32,10 +28,8 @@ import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessSearchParams } from '../../types'
-import { MyOrders } from '../MyOrders'
 import { useIsFocused } from '@react-navigation/native';
 import { MaxSectionItem } from './MaxSectionItem'
-import { BusinessControllerSkeletons } from './BusinessControllerSkeletons'
 import { IOScrollView } from 'react-native-intersection-observer'
 
 const PIXELS_TO_SCROLL = 1000
@@ -47,17 +41,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     onBusinessClick,
     handleChangeTermValue,
     termValue,
-    paginationProps,
     handleSearchbusinessAndProducts,
     handleChangeFilters,
     filters,
     businessTypes,
     setFilters,
     brandList,
-    onNavigationRedirect,
-    handleUpdateBusinessList,
-    handleUpdateProducts,
-    brandId
+    handleUpdateProducts
   } = props
 
   const screenHeight = Dimensions.get('window').height;
@@ -312,63 +302,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             </View>
           )
         }
-        {businessesSearchList.businesses?.length > 0 && termValue?.length === 0 && (
-          <MyOrders
-            hideOrders
-            businessesSearchList={businessesSearchList}
-            onNavigationRedirect={onNavigationRedirect}
-            BusinessControllerSkeletons={BusinessControllerSkeletons}
-            businessPaginationProps={paginationProps}
-            franchiseId={brandId}
-            hideBackBtn
-            titleStyle={{
-              paddingHorizontal: 0,
-              marginTop: 0,
-              marginLeft: 0
-            }}
-          />
-        )}
-        {businessesSearchList.businesses?.length > 0 && (
-          <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
-            <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
-              {t('BUSINESSES', 'Businesses')}
-            </OText>
-          </OptionTitle>
-        )}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
-            <View
-              key={business.id}
-              style={{
-                width: screenWidth - 120,
-                marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0
-              }}
-            >
-              <BusinessController
-                business={business}
-                isBusinessOpen={business.open}
-                enableIntersection={false}
-                handleCustomClick={() => onBusinessClick(business)}
-                handleUpdateBusinessList={handleUpdateBusinessList}
-                orderType={orderState?.options?.type}
-              />
-            </View>
-          ))}
-          {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
-            <LoadMoreBusinessContainer>
-              <OButton
-                bgColor='transparent'
-                borderColor={theme.colors.primary}
-                onClick={() => handleSearchbusinessAndProducts()}
-                text={t('LOAD_MORE_BUSINESS', 'Load more business')}
-                textStyle={{ color: theme.colors.primary }}
-              />
-            </LoadMoreBusinessContainer>
-          )}
-          {businessesSearchList.loading && (
-            <BusinessControllerSkeletons paginationProps={paginationProps} />
-          )}
-        </ScrollView>
         <ProductsList>
           {businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0).map((business: any) => (
             <SingleBusinessSearch key={`card-${business?.id}`}>
