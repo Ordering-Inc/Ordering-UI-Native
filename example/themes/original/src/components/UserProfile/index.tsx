@@ -35,7 +35,6 @@ import {
 } from './styles';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import styled from 'styled-components';
 import ToggleSwitch from 'toggle-switch-react-native';
 
 const ProfileListUI = (props: ProfileParams) => {
@@ -108,8 +107,6 @@ const ProfileListUI = (props: ProfileParams) => {
 	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
-	const isAdmin = user?.level === 0
-
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
@@ -143,19 +140,8 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const detailProps = {
 		goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
-		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
-	}
-
-	const onRemoveAccount = () => {
-		setConfirm({
-			open: true,
-			content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
-			title: t('ACCOUNT_ALERT', 'Account alert'),
-			handleOnAccept: () => {
-				setConfirm({ ...confirm, open: false })
-				handleRemoveAccount && handleRemoveAccount(user?.id)
-			}
-		})
+		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
+		handleRemoveAccount
 	}
 
 	useEffect(() => {

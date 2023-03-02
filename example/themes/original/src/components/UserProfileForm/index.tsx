@@ -297,7 +297,7 @@ const ProfileUI = (props: ProfileParams) => {
 						<View style={styles.photo}>
 							{user?.photo ? (
 								<FastImage
-									style={{ height: 60, width: 80, borderRadius: 8 }}
+									style={{ height: 80, width: 80, borderRadius: 8 }}
 									source={{
 										uri: user?.photo,
 										priority: FastImage.priority.normal,
@@ -320,6 +320,7 @@ const ProfileUI = (props: ProfileParams) => {
 					<Spinner visible={formState?.loading || verifyPhoneState?.loading} />
 					<UserFormDetailsUI
 						{...props}
+						isProfile
 						isEdit
 						setWillVerifyOtpState={setWillVerifyOtpState}
 					/>

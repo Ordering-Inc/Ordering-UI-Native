@@ -53,7 +53,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText } from '../../utils';
+import { getTypesText, vibrateApp } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 

@@ -68,6 +68,22 @@ const StripeElementsFormUI = (props: any) => {
 		},
 	})
 
+	const styles = StyleSheet.create({
+		container: {
+			width: '100%',
+			paddingHorizontal: 40,
+			justifyContent: 'space-between',
+			paddingBottom: 12
+		},
+		btnAddStyle: {
+			marginTop: 20,
+			borderRadius: 7.6,
+			shadowOpacity: 0,
+			height: 44,
+			marginBottom: isKeyboardShow && Platform.OS === 'ios' ? 40 : 0
+		},
+	})
+
 	let billingDetails: any = {}
 
 	if (user?.name || user?.lastname) {

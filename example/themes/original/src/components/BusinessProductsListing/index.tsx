@@ -45,6 +45,7 @@ import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 import { PageBanner } from '../PageBanner'
+import { vibrateApp } from '../../utils';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -321,7 +322,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       setIsOpenSearchBar(false)
     }
   }, [isFocused])
-
 
   useEffect(() => {
     function onKeyboardDidShow(e: KeyboardEvent) {

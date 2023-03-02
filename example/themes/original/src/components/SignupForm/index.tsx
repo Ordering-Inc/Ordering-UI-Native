@@ -38,7 +38,7 @@ import Alert from '../../../../../src/providers/AlertProvider'
 import { OText, OButton, OInput } from '../shared';
 import { OModal } from '../../../../../src/components/shared';
 import { SignupParams } from '../../types';
-import { sortInputFields } from '../../utils';
+import { sortInputFields, vibrateApp } from '../../utils';
 import { GoogleLogin } from '../GoogleLogin';
 import { AppleLogin } from '../AppleLogin';
 
