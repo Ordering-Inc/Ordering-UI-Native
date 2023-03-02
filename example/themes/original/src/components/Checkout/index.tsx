@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
@@ -53,9 +53,11 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText, vibrateApp } from '../../utils';
+import { getTypesText } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+const { useDeviceOrientation } = DeviceOrientationMethods
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -141,6 +143,10 @@ const CheckoutUI = (props: any) => {
 	const [{ options, carts, loading }, { confirmCart }] = useOrder();
 	const [validationFields] = useValidationFields();
 	const [events] = useEvent()
+	const [orientationState] = useDeviceOrientation();
+	const [isReadMore, setIsReadMore] = useState(false)
+	const [lengthMore, setLengthMore] = useState(false)
+	const WIDTH_SCREEN = orientationState?.dimensions?.width
 
 	const [errorCash, setErrorCash] = useState(false);
 	const [userErrors, setUserErrors] = useState<any>([]);
@@ -279,7 +285,7 @@ const CheckoutUI = (props: any) => {
 	const checkValidationFields = () => {
 		setUserErrors([])
 		const errors = []
-		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
@@ -327,7 +333,7 @@ const CheckoutUI = (props: any) => {
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
 			if (cart?.business?.slug) {
-				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
+				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null, fromMulti: props.fromMulti })
 			} else {
 				onNavigationRedirect('Wallets')
 			}
@@ -366,6 +372,10 @@ const CheckoutUI = (props: any) => {
 			}
 		}
 	}, [cart?.paymethod_data])
+
+	const onTextLayout = useCallback((e: any) => {
+		setLengthMore((e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[2].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3)
+	}, [])
 
 	return (
 		<>
@@ -457,6 +467,25 @@ const CheckoutUI = (props: any) => {
 													<OText size={12} lineHeight={18} weight={'400'}>
 														{businessDetails?.business?.address}
 													</OText>
+												)}
+												{businessDetails?.business?.address_notes && (
+													<>
+														<OText
+															size={12}
+															lineHeight={18}
+															numberOfLines={isReadMore ? 20 : 3}
+															onTextLayout={onTextLayout}
+														>
+															{businessDetails?.business?.address_notes}
+														</OText>
+														{lengthMore && (
+															<TouchableOpacity
+																onPress={() => setIsReadMore(!isReadMore)}
+															>
+																<OText size={12} color={theme.colors.primary}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+															</TouchableOpacity>
+														)}
+													</>
 												)}
 											</View>
 										</>

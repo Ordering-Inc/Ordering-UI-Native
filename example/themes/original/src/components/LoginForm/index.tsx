@@ -46,7 +46,6 @@ import { AppleLogin } from '../AppleLogin';
 import { Otp } from './Otp'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Alert from '../../../../../src/providers/AlertProvider'
-import { vibrateApp } from '../../utils';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {

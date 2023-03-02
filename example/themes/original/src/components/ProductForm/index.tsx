@@ -55,7 +55,7 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NavBar from '../NavBar';
-import { orderTypeList } from '../../utils';
+import { orderTypeList, vibrateApp } from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 
 export const ProductOptionsUI = (props: any) => {

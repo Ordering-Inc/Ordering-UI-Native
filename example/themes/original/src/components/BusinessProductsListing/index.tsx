@@ -45,7 +45,6 @@ import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 import { PageBanner } from '../PageBanner'
-import { vibrateApp } from '../../utils';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -164,9 +163,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     if (product.ingredients?.length === 0 && product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
       const isProductAddedToCart = currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)
       const productQuantity = isProductAddedToCart?.quantity
+      const minimumPerOrder = product?.minimum_per_order || 1
       const addCurrentProduct = {
         ...product,
-        quantity: 1
+        quantity: minimumPerOrder
       }
       const updateCurrentProduct = {
         name: product?.name,
@@ -285,7 +285,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }, []);
 
   const handleBackNavigation = () => {
-    navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
+    navigation?.canGoBack() && !props.fromMulti ? navigation.goBack() : navigation.navigate('BottomTab')
   }
 
   const adjustBusiness = async (adjustBusinessId: number) => {
@@ -322,6 +322,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       setIsOpenSearchBar(false)
     }
   }, [isFocused])
+
 
   useEffect(() => {
     function onKeyboardDidShow(e: KeyboardEvent) {
