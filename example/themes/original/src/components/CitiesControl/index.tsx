@@ -47,7 +47,7 @@ export const CitiesControl = (props: any) => {
   return (
     <Container height={height - top - bottom - 60 - (isKeyboardShow ? 250 : 0)}>
       <View>
-        {cities?.map((city: any) => (
+        {cities?.map((city: any) => city?.enabled && (
           <CityElement
             key={city?.id}
             activeOpacity={1}
