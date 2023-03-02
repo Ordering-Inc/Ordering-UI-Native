@@ -84,7 +84,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const appState = useRef(AppState.currentState)
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const [refreshing] = useState(false);
-	const hideCities = (theme?.business_listing_view?.components?.cities?.hidden || orderState?.options?.type !== 2) ?? true
+	const allCitiesDisabled = citiesState?.cities?.every((city: any) => !city.enabled)
+	const hideCities = (theme?.business_listing_view?.components?.cities?.hidden || orderState?.options?.type !== 2 || allCitiesDisabled) ?? true
 	const hideHero = theme?.business_listing_view?.components?.business_hero?.hidden
 	const hidePreviousOrders = theme?.business_listing_view?.components?.previous_orders_block?.hidden
 	const hideHighestBusiness = theme?.business_listing_view?.components?.highest_rated_business_block?.hidden
@@ -292,6 +293,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	useEffect(() => {
 		setIsOpenCities(false)
 	}, [orderState?.options?.city_id])
+
+	useEffect(() => {
+		if (!citiesState?.cities?.length || !orderState?.options?.city_id) return
+		const selectedCity = citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)
+		if (!selectedCity || !selectedCity?.enabled) changeCityFilter(null)
+	}, [citiesState, orderState?.options?.city_id])
 
 	if (logosLayout) {
 		return (
