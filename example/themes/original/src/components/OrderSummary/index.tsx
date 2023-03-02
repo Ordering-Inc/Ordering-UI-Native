@@ -58,6 +58,7 @@ const OrderSummaryUI = (props: any) => {
   const [validationFields] = useValidationFields();
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
+  const hideCartComments = !validationFields?.fields?.checkout?.comments?.enabled
 
   const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
 
@@ -322,7 +323,7 @@ const OrderSummaryUI = (props: any) => {
                   )}
                 </View>
               )}
-              {cart?.business_id && cart?.status !== 2 && (
+              {cart?.business_id && cart?.status !== 2 && !hideCartComments && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
                     <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
