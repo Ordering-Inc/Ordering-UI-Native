@@ -156,7 +156,7 @@ const WalletsUI = (props: any) => {
               size={20}
               style={{
                 marginTop: 30,
-                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 10 : 0,
+                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 40 : 0,
                 color: theme.colors.textNormal,
               }}
               weight={Platform.OS === 'ios' ? '600' : 'bold'}

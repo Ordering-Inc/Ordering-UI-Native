@@ -170,7 +170,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         if (date.getDate() !== dateSeleted.getDate() || i >= date.getHours()) {
           let hour = ''
           let meridian = ''
-          if (configs?.format_time?.value === '12') {
+          if (is12hours) {
             if (i === 0) {
               hour = '12'
               meridian = ' ' + t('AM', 'AM')

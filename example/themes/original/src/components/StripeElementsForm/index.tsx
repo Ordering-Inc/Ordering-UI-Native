@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, useWindowDimensions, Keyboard } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Keyboard, Platform } from 'react-native';
 import { useLanguage, useSession, useConfig } from 'ordering-components/native';
 import {
 	StripeProvider,
@@ -44,6 +44,22 @@ const StripeElementsFormUI = (props: any) => {
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
+
+	const styles = StyleSheet.create({
+		container: {
+			width: '100%',
+			paddingHorizontal: 40,
+			justifyContent: 'space-between',
+			paddingBottom: 12
+		},
+		btnAddStyle: {
+			marginTop: 20,
+			borderRadius: 7.6,
+			shadowOpacity: 0,
+			height: 44,
+			marginBottom: isKeyboardShow && Platform.OS === 'ios' ? 40 : 0
+		},
+	})
 
 	let billingDetails: any = {}
 
@@ -248,21 +264,6 @@ const StripeElementsFormUI = (props: any) => {
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		width: '100%',
-		paddingHorizontal: 40,
-		justifyContent: 'space-between',
-		paddingBottom: 12
-	},
-	btnAddStyle: {
-		marginTop: 20,
-		borderRadius: 7.6,
-		shadowOpacity: 0,
-		height: 44
-	},
-})
 
 export const StripeElementsForm = (props: any) => {
 	const stripeProps = {

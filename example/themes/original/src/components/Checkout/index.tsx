@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, Vibration, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -52,7 +52,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText } from '../../utils';
+import { getTypesText, vibrateApp } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
@@ -152,7 +152,7 @@ const CheckoutUI = (props: any) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 	const [openModal, setOpenModal] = useState({ login: false, signup: false })
-  const [allowedGuest, setAllowedGuest] = useState(false)
+  	const [allowedGuest, setAllowedGuest] = useState(false)
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
@@ -177,12 +177,16 @@ const CheckoutUI = (props: any) => {
 			return acc = acc + item?.summary?.tax
 		return acc = acc
 	}, cart?.subtotal)
+
+	const validateCommentsCartField = validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required && (cart?.comment === null || cart?.comment?.trim().length === 0)
+
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
-			(Number(cart?.driver_tip) <= 0))
+			(Number(cart?.driver_tip) <= 0)) ||
+		(validateCommentsCartField)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -218,7 +222,7 @@ const CheckoutUI = (props: any) => {
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
-			Vibration.vibrate()
+			vibrateApp()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
@@ -347,6 +351,7 @@ const CheckoutUI = (props: any) => {
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
 						titleStyle={{ marginRight: 0, marginLeft: 0 }}
+						style={{ marginTop: 20 }}
 					/>
 				</View>
 				<ChContainer style={styles.pagePadding}>
@@ -751,7 +756,7 @@ const CheckoutUI = (props: any) => {
 
 					{!cartState.loading && cart && (
 						<View>
-							<ChErrors style={{ marginBottom: 30 }}>
+							<ChErrors style={{ marginBottom: Platform.OS === 'ios' ? 35 : 10 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										color={theme.colors.error}
@@ -797,6 +802,15 @@ const CheckoutUI = (props: any) => {
 											{t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
 										</OText>
 									)}
+
+								{validateCommentsCartField && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('WARNING_INVALID_CART_COMMENTS', 'Cart comments is required.')}
+									</OText>
+								)}
 							</ChErrors>
 						</View>
 					)}
@@ -869,7 +883,7 @@ const CheckoutUI = (props: any) => {
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
-					handleClick={isDisabledButtonPlace ? () => Vibration.vibrate() : () => handlePlaceOrder(null)}
+					handleClick={isDisabledButtonPlace ? () => vibrateApp() : () => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
 					btnText={subtotalWithTaxes >= cart?.minimum

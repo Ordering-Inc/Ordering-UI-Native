@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		marginTop: 30,
-		marginBottom: 0,
+		marginBottom: 30,
 		borderRadius: 7.6,
 		borderWidth: 1,
 		shadowOpacity: 0,
