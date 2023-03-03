@@ -288,7 +288,11 @@ const ProfileUI = (props: ProfileParams) => {
 					showCall={false}
 					btnStyle={{ paddingLeft: 0 }}
 				/>
-				<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+				<KeyboardAvoidingView
+					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+					enabled={Platform.OS === 'ios' ? true : false}
+					style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+				>
 					<CenterView>
 						<View style={styles.photo}>
 							{user?.photo ? (

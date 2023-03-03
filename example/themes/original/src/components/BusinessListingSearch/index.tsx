@@ -90,6 +90,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     },
     searchInput: {
       fontSize: 12,
+      height: 44
     },
     productsContainer: {
       marginTop: 20
@@ -226,6 +227,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     <BContainer
       style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
     >
+      <AntDesignIcon name='filter' size={18} style={{ marginTop: -45, marginBottom: 15, marginLeft: 'auto' }} onPress={() => handleOpenfilters()} />
       <SearchWrapper>
         <SearchBar
           lazyLoad
@@ -234,7 +236,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
           onSearch={(val: string) => handleChangeTermValue(val)}
           value={termValue}
-          iconCustomRight={<AntDesignIcon name='filter' size={16} style={{ bottom: 2 }} onPress={() => handleOpenfilters()} />}
         />
       </SearchWrapper>
       <OText size={12} lineHeight={20} color={theme.colors.textThird} mLeft={5}>

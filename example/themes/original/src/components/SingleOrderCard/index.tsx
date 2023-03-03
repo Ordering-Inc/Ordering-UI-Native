@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SingleOrderCard as SingleOrderCardController,
   useUtils,
@@ -11,6 +11,7 @@ import { OIcon, OText, OButton } from '../shared';
 import { SingleOrderCardParams } from '../../types';
 import { OAlert } from '../../../../../src/components/shared'
 import { OrderEta } from '../OrderDetails/OrderEta'
+import { useIsFocused } from '@react-navigation/native';
 import {
   InnerContainer,
   Logo,
@@ -44,6 +45,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const [, t] = useLanguage();
   const [{ carts }] = useOrder()
   const theme = useTheme();
+  const isFocused = useIsFocused();
 
   const [reorderSelected, setReorderSelected] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
@@ -197,6 +199,10 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const hideReorderButton = theme?.orders?.components?.reorder_button?.hidden
   const hideFavorite = theme?.orders?.components?.favorite?.hidden
   const hideOrderStatus = theme?.orders?.components?.order_status?.hidden
+
+  useEffect(() => {
+    if (isFocused) setReorderSelected(null)
+  }, [isFocused])
 
   return (
     <>
