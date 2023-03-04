@@ -63,12 +63,12 @@ export const WalletTransactions = (props: any) => {
           (transactionsList?.error ||
             !transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]?.length) &&
         (
-          <NotFoundSource
-            content={transactionsList?.error
+          <OText color={theme.colors.disabled} size={16} style={{ textAlign: 'center' }}>
+            {transactionsList?.error
               ? t('ERROR_NOT_FOUND_TRANSACTIONS', 'Sorry, an error has occurred')
               : t('NOT_FOUND_TRANSACTIONS', 'No transactions to show at this time.')
             }
-          />
+          </OText>
         )}
       </View>
     </Container>

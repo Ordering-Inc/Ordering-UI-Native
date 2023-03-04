@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Linking, Pressable } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Linking, Pressable, Image } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -45,6 +45,7 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
+	const [imageRealSize, setImageRealSize] = useState({ width: 16, height: 9, loading: true })
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideLogo = theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
@@ -61,7 +62,7 @@ export const BusinessBasicInformation = (
 			height: 150,
 		},
 		headerStyle: {
-			height: isChewLayout ? 170 : 260,
+			aspectRatio: imageRealSize?.width / imageRealSize?.height
 		},
 		logoStyle: {
 			width: 72,
@@ -195,6 +196,20 @@ export const BusinessBasicInformation = (
 		}
 	}, [businessState?.business])
 
+	useEffect(() => {
+		const bannerImage = header || businessState?.business?.header
+		if (!bannerImage) {
+			setImageRealSize({ width: 16, height: 9, loading: false })
+			return
+		}
+		Image.getSize(bannerImage, (width: number, height: number) => {
+			setImageRealSize({ width: width, height: height, loading: false });
+		  }, (error: any) => {
+			setImageRealSize({ ...imageRealSize, loading: false });
+			console.log(error);
+		  });
+	}, [header, businessState?.business?.header])
+
 	const SocialIcons = () => {
 		return (
 			<>
@@ -283,7 +298,7 @@ export const BusinessBasicInformation = (
 							? styles.businesInfoheaderStyle
 							: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 					}
-					{...(!loading && {
+					{...(!loading && !imageRealSize?.loading && {
 						source: (header || businessState?.business?.header || typeof theme?.images?.dummies?.businessHeader === 'string') ? {
 							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header || theme?.images?.dummies?.businessHeader
 						} : theme?.images?.dummies?.businessHeader

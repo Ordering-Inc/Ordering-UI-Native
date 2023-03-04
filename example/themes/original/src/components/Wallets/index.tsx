@@ -213,9 +213,9 @@ const WalletsUI = (props: any) => {
                   <LoyaltyContent>
                     <LoyaltyWrapp>
                       <OText size={20}>
-                        {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
+                        {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}`}
                       </OText>
-                      {/* {loyaltyLevel.image ? (
+                      {loyaltyLevel.image ? (
                         <FastImage
                           style={styles.logoStyle}
                           source={{
@@ -230,7 +230,7 @@ const WalletsUI = (props: any) => {
                           source={theme.images.dummies.loyaltyLevel}
                           resizeMode='contain'
                         />
-                      )} */}
+                      )}
                       <OText
                         size={22}
                         weight='bold'
