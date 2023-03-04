@@ -8,9 +8,6 @@ export const BusinessContainer = styled.View`
 export const BusinessHeader = styled.ImageBackground`
   width: 100%;
   position: relative;
-  max-height: 258px;
-  height: 258px;
-  resize-mode: cover;
 `;
 export const BusinessLogo = styled.View`
   position: absolute;
