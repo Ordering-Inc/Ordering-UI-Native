@@ -7,6 +7,7 @@ import { CCContainer, CCNotCarts, CCList, CheckoutAction, ChCartsTotal } from '.
 import { Cart } from '../Cart';
 import { OButton, OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { NotFoundSource } from '../NotFoundSource';
 
 export const CartContent = (props: any) => {
 	const {
@@ -31,37 +32,37 @@ export const CartContent = (props: any) => {
 		?.reduce((total: any, cart: any) => { return total + (cart?.delivery_price_with_discount) }, 0)
 
 	const handleCheckoutRedirect = () => {
-    if (cartsAvailable.length === 1) {
-      onNavigationRedirect('CheckoutNavigator', {
-        screen: 'CheckoutPage',
-        cartUuid: cartsAvailable[0]?.uuid,
-        businessLogo: cartsAvailable[0]?.business?.logo,
-        businessName: cartsAvailable[0]?.business?.name,
-        cartTotal: cartsAvailable[0]?.total
-      })
-    } else {
-      const groupKeys: any = {}
-      cartsAvailable.forEach((_cart: any) => {
-        groupKeys[_cart?.group?.uuid]
-          ? groupKeys[_cart?.group?.uuid] += 1
-          : groupKeys[_cart?.group?.uuid ?? 'null'] = 1
-      })
+		if (cartsAvailable.length === 1) {
+			onNavigationRedirect('CheckoutNavigator', {
+				screen: 'CheckoutPage',
+				cartUuid: cartsAvailable[0]?.uuid,
+				businessLogo: cartsAvailable[0]?.business?.logo,
+				businessName: cartsAvailable[0]?.business?.name,
+				cartTotal: cartsAvailable[0]?.total
+			})
+		} else {
+			const groupKeys: any = {}
+			cartsAvailable.forEach((_cart: any) => {
+				groupKeys[_cart?.group?.uuid]
+					? groupKeys[_cart?.group?.uuid] += 1
+					: groupKeys[_cart?.group?.uuid ?? 'null'] = 1
+			})
 
-      if (
-        (Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
-        Object.keys(groupKeys).length > 1
-      ) {
-        onNavigationRedirect('CheckoutNavigator', {
+			if (
+				(Object.keys(groupKeys).length === 1 && Object.keys(groupKeys)[0] === 'null') ||
+				Object.keys(groupKeys).length > 1
+			) {
+				onNavigationRedirect('CheckoutNavigator', {
 					screen: 'MultiCheckout',
 					checkCarts: true
 				})
-      } else {
-        onNavigationRedirect('CheckoutNavigator', {
-          screen: 'MultiCheckout',
-          cartUuid: cartsAvailable[0]?.group?.uuid
-        })
-      }
-    }
+			} else {
+				onNavigationRedirect('CheckoutNavigator', {
+					screen: 'MultiCheckout',
+					cartUuid: cartsAvailable[0]?.group?.uuid
+				})
+			}
+		}
 	}
 
 	return (
@@ -71,7 +72,7 @@ export const CartContent = (props: any) => {
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
 					{carts.map((cart: any, i: number) => (
-						<CCList key={i} style={{ overflow: 'visible' }}>
+						<CCList nestedScrollEnabled={true} key={i} style={{ overflow: 'visible' }}>
 							{cart.products.length > 0 && (
 								<>
 									<Cart
@@ -145,21 +146,12 @@ export const CartContent = (props: any) => {
 			)}
 			{(!carts || carts?.length === 0) && (
 				<CCNotCarts>
-					<OText size={24} style={{ textAlign: 'center' }}>
-						{t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
-					</OText>
-					<OButton
-						text={t('START_SHOPPING', 'Start shopping')}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
-						textStyle={{
-							color: theme.colors.white,
-							fontSize: 14,
-							paddingRight: 0
-						}}
-						style={{ height: 35, marginVertical: 20, borderRadius: 8 }}
-						imgRightSrc={null}
-						onClick={() => onNavigationRedirect('BusinessList')}
+					<NotFoundSource
+						hideImage
+						btnStyle={{ borderRadius: 8 }}
+						content={t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
+						btnTitle={t('START_SHOPPING', 'Start shopping')}
+						onClickButton={() => onNavigationRedirect('BusinessList')}
 					/>
 				</CCNotCarts>
 			)}
