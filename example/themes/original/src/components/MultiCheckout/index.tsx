@@ -115,11 +115,12 @@ const MultiCheckoutUI = (props: any) => {
     }
   }
 
-  const loyaltyRewardValue = creditPointPlanOnBusiness?.accumulation_rate
-    ? Math.round(
-      openCarts.reduce((sum: any, cart: any) => sum + cart?.subtotal + getIncludedTaxes(cart), 0) /
-      creditPointPlanOnBusiness?.accumulation_rate
-    ) : 0
+  const subtotalAmount = openCarts.reduce((sum: any, cart: any) => sum + (cart?.subtotal + getIncludedTaxes(cart)), 0) *
+    creditPointPlanOnBusiness?.accumulation_rate
+
+  const loyaltyRewardValue = (creditPointPlanOnBusiness?.accumulation_rate
+    ? (Math.trunc(subtotalAmount * 100) / 100).toFixed(configs.format_number_decimal_length?.value ?? 2)
+    : 0)
 
   const handleMomentClick = () => {
     if (isPreOrder) {

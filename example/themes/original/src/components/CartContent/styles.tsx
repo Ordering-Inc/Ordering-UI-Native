@@ -27,3 +27,7 @@ export const CheckoutAction = styled.View`
   margin-top: 10px;
   margin-bottom: 10px;
 `
+
+export const ChCartsTotal = styled.View`
+  margin-bottom: 16px;
+`
