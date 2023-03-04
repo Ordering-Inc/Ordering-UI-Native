@@ -13,7 +13,7 @@ const UpsellingRedirectUI = (props: any) => {
     if (!upsellingProducts.loading) {
       if (upsellingProducts?.products?.length) {
         onRedirect &&
-          onRedirect('UpsellingPage', props)
+          onRedirect('UpsellingPage', {...props, products: upsellingProducts?.products })
       } else {
         handleUpsellingPage && handleUpsellingPage()
       }

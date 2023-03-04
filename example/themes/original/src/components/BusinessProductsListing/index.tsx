@@ -136,6 +136,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [currentProduct, setCurrentProduct] = useState(null)
   const [searchBarHeight, setSearchBarHeight] = useState(60)
   const [viewedCategory, setViewedCategory] = useState<any>(null)
+  const [showTitle, setShowTitle] = useState(false)
 
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
@@ -239,6 +240,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handlePageScroll = useCallback(({ nativeEvent }: any) => {
     const scrollOffset = nativeEvent.contentOffset.y
+    setShowTitle(scrollOffset > 30)
+
     if (businessState?.business?.lazy_load_products_recommended) {
       const height = nativeEvent.contentSize.height
       const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
@@ -371,6 +374,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   <TopActions onPress={() => handleBackNavigation()}>
                     <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
                   </TopActions>
+                )}
+                {showTitle && (
+                  <OText
+                    size={16}
+                    style={{ flex: 1, textAlign: 'center' }}
+                    weight={Platform.OS === 'ios' ? '600' : 'bold'}
+                    numberOfLines={2}
+                    ellipsizeMode='tail'
+                  >
+                    {business?.name}
+                  </OText>
                 )}
                 {!errorQuantityProducts && (
                   <View style={{ ...styles.headerItem }}>
