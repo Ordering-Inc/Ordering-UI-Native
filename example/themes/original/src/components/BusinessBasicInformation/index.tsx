@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Linking, Pressable } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Linking, Pressable, Image } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -21,7 +21,6 @@ import {
 	BusinessInfo,
 	BusinessInfoItem,
 	WrapReviews,
-	WrapBusinessInfo,
 	TitleWrapper,
 	RibbonBox,
 	SocialListWrapper
@@ -46,6 +45,7 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
+	const [imageRealSize, setImageRealSize] = useState({ width: 16, height: 9, loading: true })
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideLogo = theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 	const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
@@ -62,7 +62,7 @@ export const BusinessBasicInformation = (
 			height: 150,
 		},
 		headerStyle: {
-			height: isChewLayout ? 170 : 260,
+			aspectRatio: imageRealSize?.width / imageRealSize?.height
 		},
 		logoStyle: {
 			width: 72,
@@ -101,11 +101,11 @@ export const BusinessBasicInformation = (
 			borderRadius: 3,
 			borderColor: theme.colors.border,
 			borderWidth: isChewLayout ? 0 : 1,
-			width: 20,
-			height: 20,
+			width: 30,
+			height: 30,
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginRight: 5,
+			marginRight: 10,
 			marginBottom: 7
 		},
 		tiktokIcon: {
@@ -166,7 +166,7 @@ export const BusinessBasicInformation = (
 				<MaterialComIcon
 					name={iconTitle}
 					color={isChewLayout ? theme.colors.black : theme.colors.textNormal}
-					size={isChewLayout ? 18 : 14}
+					size={isChewLayout ? 25 : 22}
 				/>
 			</TouchableOpacity>
 		)
@@ -195,6 +195,20 @@ export const BusinessBasicInformation = (
 			timeout && clearTimeout(timeout)
 		}
 	}, [businessState?.business])
+
+	useEffect(() => {
+		const bannerImage = header || businessState?.business?.header
+		if (!bannerImage) {
+			setImageRealSize({ width: 16, height: 9, loading: false })
+			return
+		}
+		Image.getSize(bannerImage, (width: number, height: number) => {
+			setImageRealSize({ width: width, height: height, loading: false });
+		  }, (error: any) => {
+			setImageRealSize({ ...imageRealSize, loading: false });
+			console.log(error);
+		  });
+	}, [header, businessState?.business?.header])
 
 	const SocialIcons = () => {
 		return (
@@ -284,18 +298,13 @@ export const BusinessBasicInformation = (
 							? styles.businesInfoheaderStyle
 							: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 					}
-					{...(!loading && {
-						source: (header || businessState?.business?.header) ? {
-							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header
+					{...(!loading && !imageRealSize?.loading && {
+						source: (header || businessState?.business?.header || typeof theme?.images?.dummies?.businessHeader === 'string') ? {
+							uri: optimizeImage(businessState?.business?.header, 'h_250,c_limit') || header || theme?.images?.dummies?.businessHeader
 						} : theme?.images?.dummies?.businessHeader
 					})}
 					imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
 				>
-					{!isBusinessInfoShow && !hideInfoIcon && !isChewLayout && (
-						<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
-							<OIcon src={theme.images.general.info} width={24} />
-						</WrapBusinessInfo>
-					)}
 					{isChewLayout && !loading && (
 						<View style={styles.headerChewStyle}>
 							<OText size={24} weight={'600'} mBottom={-5}>
@@ -317,21 +326,31 @@ export const BusinessBasicInformation = (
 				{!hideLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							logo || businessState?.business?.logo ?
-								<FastImage
-									style={styles.logoStyle}
-									source={{
-										uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
-										priority: FastImage.priority.high,
-										cache: FastImage.cacheControl.web
-									}}
-									resizeMode={FastImage.resizeMode.contain}
-								/>
-								:
-								<OIcon
-									src={theme?.images?.dummies?.businessLogo}
-									style={styles.logoStyle}
-								/>
+							<>
+								{loading ? (
+									<View style={styles.logoStyle}>
+										<Placeholder Animation={Fade}>
+											<PlaceholderLine height={72} style={{ borderRadius: 8 }} />
+										</Placeholder>
+									</View>
+								) : (
+									logo || businessState?.business?.logo || typeof theme.images.dummies.businessLogo === 'string' ?
+										<FastImage
+											style={styles.logoStyle}
+											source={{
+												uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit') || theme.images.dummies.businessLogo,
+												priority: FastImage.priority.high,
+												cache: FastImage.cacheControl.web
+											}}
+											resizeMode={FastImage.resizeMode.contain}
+										/>
+										:
+										<OIcon
+											src={theme?.images?.dummies?.businessLogo}
+											style={styles.logoStyle}
+										/>
+								)}
+							</>
 						)}
 					</BusinessLogo>
 				)}
@@ -453,13 +472,28 @@ export const BusinessBasicInformation = (
 										</>
 									)}
 									{!hideReviewsPopup && (
-										<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+										<>
+											<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+												<OText
+													color={theme.colors.primary}
+													style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
+													size={12}
+												>
+													{t('REVIEWS', 'Reviews')}
+												</OText>
+											</TouchableOpacity>
+											<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+										</>
+									)}
+
+									{!isBusinessInfoShow && !hideInfoIcon && !isChewLayout && (
+										<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
 											<OText
 												color={theme.colors.primary}
 												style={{ textDecorationColor: theme.colors.primary, textDecorationLine: 'underline' }}
 												size={12}
 											>
-												{t('REVIEWS', 'Reviews')}
+												{t('INFORMATION', 'Information')}
 											</OText>
 										</TouchableOpacity>
 									)}
