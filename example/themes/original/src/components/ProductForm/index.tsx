@@ -205,6 +205,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
 	const [editionsLayoutY, setEditionsLayoutY] = useState(null)
 	const [viewedProduct, setViewedProduct] = useState<any>(null)
+	const [showTitle, setShowTitle] = useState(false)
 
 	const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
   const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
@@ -362,7 +363,7 @@ export const ProductOptionsUI = (props: any) => {
 	);
 
 	const handleScroll = ({ nativeEvent: { contentOffset, layoutMeasurement } }: any) => {
-
+		setShowTitle(contentOffset.y > 30)
 		const _topOption = Object.keys(optionLayout).find(((option: any) => Math.abs(contentOffset?.y - layoutMeasurement?.height - optionLayout[option]?.y) < 20))
 		if (_topOption) {
 			const _topOptionId = Number(_topOption.replace('id:', ''))
@@ -526,12 +527,24 @@ export const ProductOptionsUI = (props: any) => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<View style={styles.wrapperNavbar}>
-				<NavBar
-					onActionLeft={() => handleGoBack()}
-					showCall={false}
-					btnStyle={{ paddingLeft: 0 }}
-					paddingTop={4}
-				/>
+				<TopHeader>
+					<>
+						<TopActions onPress={() => handleGoBack()}>
+							<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+						</TopActions>
+						{showTitle && (
+							<OText
+								size={16}
+								style={{ flex: 1, textAlign: 'center' }}
+								weight={Platform.OS === 'ios' ? '600' : 'bold'}
+								numberOfLines={2}
+								ellipsizeMode='tail'
+							>
+								{product?.name}
+							</OText>
+						)}
+					</>
+				</TopHeader>
 			</View>
 			{!error && (
 				<ScrollView
