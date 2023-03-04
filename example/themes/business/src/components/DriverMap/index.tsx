@@ -453,7 +453,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 {order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
                   : parseDate(order?.delivery_datetime, { utc: false })}
-                {` - ${order?.paymethod?.name}`}
+                {` - ${t(order?.paymethod?.name?.replace(/\s+/g, '_')?.toUpperCase(), order?.paymethod?.name)}`}
               </OText>
               <OText weight="bold">
                 {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
