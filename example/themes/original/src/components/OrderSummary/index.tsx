@@ -75,7 +75,7 @@ const OrderSummaryUI = (props: any) => {
 
   const getIncludedTaxes = () => {
     if (cart?.taxes === null || !cart?.taxes) {
-      return cart.business.tax_type === 1 ? cart?.tax : 0
+      return cart?.business?.tax_type === 1 ? cart?.tax : 0
     } else {
       return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
         return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
@@ -83,7 +83,9 @@ const OrderSummaryUI = (props: any) => {
     }
   }
 
-  const loyaltyRewardValue = Math.round((cart?.subtotal + getIncludedTaxes()) / loyaltyRewardRate)
+  const loyaltyRewardValue = ((
+    Math.trunc(((cart?.subtotal + getIncludedTaxes()) * loyaltyRewardRate) * 100) / 100
+  ).toFixed(configs.format_number_decimal_length?.value ?? 2), 10)
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
