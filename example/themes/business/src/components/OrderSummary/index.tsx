@@ -23,7 +23,7 @@ import { useTheme } from 'styled-components/native';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 
-export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
+export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermission, getPermissions, isGrantedPermissions, checkBluetoothPermission }: any) => {
   const handleArrowBack: any = () => {
     navigation?.canGoBack() && navigation.goBack();
   };
@@ -48,10 +48,10 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const getSuboptions = (suboptions: any) => {
     const array: any = []
     suboptions?.length > 0 &&
-    suboptions?.map((suboption: any) => {
-      const string = `&nbsp;&nbsp;&nbsp;${getFormattedSubOptionName(suboption)}<br/>`
-      array.push(string)
-    })
+      suboptions?.map((suboption: any) => {
+        const string = `&nbsp;&nbsp;&nbsp;${getFormattedSubOptionName(suboption)}<br/>`
+        array.push(string)
+      })
 
     return array.join('')
   }
@@ -60,12 +60,12 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     const array: any = [];
 
     options?.length &&
-    options?.map((option: any) => {
-      const string =
-      `  ${option.name}<br/>${getSuboptions(option.suboptions)}`;
+      options?.map((option: any) => {
+        const string =
+          `  ${option.name}<br/>${getSuboptions(option.suboptions)}`;
 
-      array.push(string)
-    })
+        array.push(string)
+      })
 
     if (productComment) {
       array.push(`${t('COMMENT', 'Comment')}<br/>&nbsp;&nbsp;&nbsp;&nbsp;${productComment}`)
@@ -88,46 +88,38 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
           ${orderStatus} </br>
 
-          ${t('DELIVERY_TYPE', 'Delivery Type')}: ${
-      deliveryStatus[order?.delivery_type]
-    }
+          ${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]
+      }
           </br>
-          ${t('DELIVERY_DATE', 'Delivery Date')}: ${
-      order?.delivery_datetime_utc
+          ${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc
         ? parseDate(order?.delivery_datetime_utc)
         : parseDate(order?.delivery_datetime, { utc: false })
-    }
+      }
           </br>
           ${t('PAYMENT_METHOD')}: ${order?.paymethod?.name}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
-        <p style="font-size: 27px"> ${t('FULL_NAME', 'Full Name')}: ${
-      order?.customer?.name
-    } ${order?.customer?.middle_name} ${order?.customer?.lastname} ${
-      order?.customer?.second_lastname
-    }
+        <p style="font-size: 27px"> ${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name
+      } ${order?.customer?.middle_name} ${order?.customer?.lastname} ${order?.customer?.second_lastname
+      }
         </br>
         ${t('EMAIL', 'Email')}: ${order?.customer?.email}
         </br>
         ${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}
          </br>
-         ${
-           !!order?.customer?.phone
-             ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${
-                 order?.customer?.phone
-               } </br>`
-             : ''
-         }
+         ${!!order?.customer?.phone
+        ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone
+        } </br>`
+        : ''
+      }
          ${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address} 
          </br> 
-         ${
-           !!order?.customer?.internal_number
-             ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${
-                 order?.customer?.internal_number
-               } </br>`
-             : ''
-         }
+         ${!!order?.customer?.internal_number
+        ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number
+        } </br>`
+        : ''
+      }
          ${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}
          </p>  
 
@@ -139,30 +131,26 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         </br> 
         ${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}
         </br> 
-        ${
-          !!order?.business?.phone
-            ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${
-                order?.business?.phone
-              } </br>`
-            : ''
-        } 
+        ${!!order?.business?.phone
+        ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone
+        } </br>`
+        : ''
+      } 
 
         ${t('ADDRESS', 'Address')}: ${order?.business?.address} 
         </br>
-        ${
-          !!order?.business?.address_notes
-            ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${
-                order?.business?.address_notes
-              } `
-            : ''
-        }
+        ${!!order?.business?.address_notes
+        ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes
+        } `
+        : ''
+      }
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
 
         ${order?.products.length &&
-          order?.products.map(
-            (product: any, i: number) =>
-              `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
+      order?.products.map(
+        (product: any, i: number) =>
+          `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
                 <div style="display:flex;width:100%">
                   <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
                   ${product?.quantity}  ${product?.name}
@@ -179,8 +167,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   </div>
                 </div>
               </div>`
-          )
-        }
+      )
+      }
         <div style="display: flex;">
 
             <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
@@ -189,62 +177,58 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
               ${parsePrice(
-                order.tax_type === 1
-                  ? order?.summary?.subtotal + order?.summary?.tax ?? 0
-                  : order?.summary?.subtotal ?? 0,
-              )}
+        order.tax_type === 1
+          ? order?.summary?.subtotal + order?.summary?.tax ?? 0
+          : order?.summary?.subtotal ?? 0,
+      )}
             </div>
 
         </div>
 
         <div style="display: flex">
-        ${
-          order?.summary?.discount > 0
-            ? order?.offer_type === 1
-              ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+        ${order?.summary?.discount > 0
+        ? order?.offer_type === 1
+          ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
                   ${t('DISCOUNT', 'Discount')} (${verifyDecimals(
-                  order?.offer_rate,
-                  parsePrice,
-                )}%)
+            order?.offer_rate,
+            parsePrice,
+          )}%)
                 </div>`
-              : `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%"> ${t(
-                  'DISCOUNT',
-                  'Discount',
-                )}
+          : `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%"> ${t(
+            'DISCOUNT',
+            'Discount',
+          )}
                  </div>`
-            : ''
-        }
-        ${
-          order?.summary?.discount > 0
-            ? `<div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">- ${parsePrice(
-                order?.summary?.discount,
-              )}
+        : ''
+      }
+        ${order?.summary?.discount > 0
+        ? `<div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">- ${parsePrice(
+          order?.summary?.discount,
+        )}
               </div>`
-            : ''
-        }
+        : ''
+      }
         </div>
 
-        ${
-          order?.tax_type !== 1
-            ? `<div style="font-size: 25px">
+        ${order?.tax_type !== 1
+        ? `<div style="font-size: 25px">
                 ${t('TAX', 'Tax')}
                 ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
                 ${parsePrice(order?.summary?.tax ?? 0)}
                 ${t('TAX', 'Tax')}
                 ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
               </div>`
-            : ''
-        }
+        : ''
+      }
 
-        ${
-          order?.summary?.delivery_price > 0
-            ? `<div style="font-size: 25px;"> ${t(
-                'DELIVERY_FEE',
-                'Delivery Fee',
-              )}
+        ${order?.summary?.delivery_price > 0
+        ? `<div style="font-size: 25px;"> ${t(
+          'DELIVERY_FEE',
+          'Delivery Fee',
+        )}
               </div>`
-            : ''
-        }
+        : ''
+      }
 
         <div style="display: flex">
 
@@ -336,6 +320,25 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     },
   });
 
+  const handlePrint = async () => {
+    if (Platform.OS === 'ios') {
+      silentPrint()
+      return
+    }
+    const _permissions = await getPermissions()
+
+    if (!isGrantedPermissions) {
+      checkBluetoothPermission()
+    }
+    if (isGrantedPermissions) {
+      const response = await askBluetoothPermission();
+      const isGranted = _permissions.reduce((allPermissions: boolean, _permission: string) => allPermissions && response?.[_permission] === 'granted', true)
+      if (isGranted) {
+        printPDF()
+      }
+    }
+  };
+
   return (
     <>
       <Content>
@@ -364,17 +367,15 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText style={{ marginBottom: 5 }}>
-              {`${t('DELIVERY_TYPE', 'Delivery Type')}: ${
-                deliveryStatus[order?.delivery_type]
-              }`}
+              {`${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]
+                }`}
             </OText>
 
             <OText style={{ marginBottom: 5 }}>
-              {`${t('DELIVERY_DATE', 'Delivery Date')}: ${
-                order?.delivery_datetime_utc
+              {`${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
                   : parseDate(order?.delivery_datetime, { utc: false })
-              }`}
+                }`}
             </OText>
 
             <OText style={{ marginBottom: 5 }}>{`${t('PAYMENT_METHOD')}: ${t(
@@ -399,11 +400,9 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name} ${
-                order?.customer?.middle_name
-              } ${order?.customer?.lastname} ${
-                order?.customer?.second_lastname
-              }`}
+              {`${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name} ${order?.customer?.middle_name
+                } ${order?.customer?.lastname} ${order?.customer?.second_lastname
+                }`}
             </OText>
 
             <OText
@@ -423,9 +422,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${
-                order?.customer?.cellphone
-              }`}
+              {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
+                }`}
             </OText>
 
             {!!order?.customer?.phone && (
@@ -436,9 +434,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 adjustsFontSizeToFit
                 ellipsizeMode="tail"
                 color={theme.colors.textGray}>
-                {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${
-                  order?.customer?.phone
-                }`}
+                {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone
+                  }`}
               </OText>
             )}
 
@@ -508,9 +505,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 numberOfLines={2}
                 ellipsizeMode="tail"
                 color={theme.colors.textGray}>
-                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
-                  order?.business?.cellphone
-                }`}
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone
+                  }`}
               </OText>
             )}
 
@@ -521,9 +517,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 numberOfLines={2}
                 ellipsizeMode="tail"
                 color={theme.colors.textGray}>
-                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
-                  order?.business?.phone
-                }`}
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone
+                  }`}
               </OText>
             )}
 
@@ -545,9 +540,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 adjustsFontSizeToFit
                 ellipsizeMode="tail"
                 color={theme.colors.textGray}>
-                {`${t('SPECIAL_ADDRESS', 'Special Address')}: ${
-                  order?.business?.address_notes
-                }`}
+                {`${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes
+                  }`}
               </OText>
             )}
           </OrderBusiness>
@@ -686,9 +680,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
       <View style={{ marginBottom: 0 }}>
         <FloatingButton
-          firstButtonClick={() =>
-            Platform.OS === 'ios' ? silentPrint() : printPDF()
-          }
+          firstButtonClick={() => handlePrint()}
           btnText={t('PRINT', 'Print')}
           color={theme.colors.green}
           widthButton={'100%'}
