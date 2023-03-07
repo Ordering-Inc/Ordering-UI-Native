@@ -47,7 +47,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const theme = useTheme();
   const isFocused = useIsFocused();
 
-  const [reorderSelected, setReorderSelected] = useState<number | null>(null);
+  let [reorderSelected, setReorderSelected] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const [isPressed, setIsPressed] = useState(false)
 
@@ -130,19 +130,29 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   });
 
   const handleReorderClick = (order: any) => {
-    if (carts[`businessId:${order?.business_id}`] && carts[`businessId:${order?.business_id}`]?.products?.length > 0) {
+    setReorderSelected(null)
+    reorderSelected = null
+    const isMultiOrders = Array.isArray(order?.id)
+
+    const isRemoveCart = isMultiOrders
+      ? order?.business_id?.some((businessId: any) => !!carts[`businessId:${businessId}`]?.uuid)
+      : carts[`businessId:${order?.business_id}`] && !!carts[`businessId:${order?.business_id}`]?.uuid
+
+    if (isRemoveCart) {
       setConfirm({
         open: true,
         content: [t('QUESTION_DELETE_PRODUCTS_FROM_CART', 'Are you sure that you want to delete all products from cart?')],
         title: t('ORDER', 'Order'),
         handleOnAccept: async () => {
-          handleRemoveCart()
+          handleRemoveCart(order)
           setConfirm({ ...confirm, open: false })
         }
       })
     } else {
-      setReorderSelected(order?.id);
-      handleReorder && handleReorder(order?.id);
+      const orderId = Array.isArray(order?.id) ? order?.id[0] : order?.id
+      setReorderSelected(orderId)
+      reorderSelected = orderId
+      handleReorder && handleReorder(order?.id)
     }
   };
 
@@ -286,7 +296,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {order.cart && !hideReorderButton && (
+                  {!hideReorderButton && order?.id === 'number' && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}

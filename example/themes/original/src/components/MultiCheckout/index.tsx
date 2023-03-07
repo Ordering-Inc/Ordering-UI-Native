@@ -454,7 +454,7 @@ export const MultiCheckout = (props: any) => {
     handleOnRedirectCheckout: (cartUuid: string) => {
       props.navigation.navigate('CheckoutNavigator', {
         screen: 'CheckoutPage',
-        cartUuid: cartUuid
+        cartUuid
       })
     }
   }
