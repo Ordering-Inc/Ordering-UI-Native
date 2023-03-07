@@ -187,7 +187,7 @@ export const AnalyticsSegment = (props: any) => {
     segmentClient.track('Coupon Denied', {
       business_id: coupon.business_id,
       coupon: coupon.coupon,
-      user_id: coupon.user.id,
+      user_id: coupon?.user_id,
       reason: typeof coupon.reason === 'string' ? t(coupon.reason) : t(coupon.reason[0])
     })
   }
