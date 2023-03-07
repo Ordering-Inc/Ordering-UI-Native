@@ -739,7 +739,7 @@ export interface SingleOrderCardParams {
 	pastOrders: any,
 	isMessageView?: any,
 	handleClickOrder: (value: any) => {},
-	handleRemoveCart: () => {},
+	handleRemoveCart: (value: any) => {},
 	cartState: any
 }
 

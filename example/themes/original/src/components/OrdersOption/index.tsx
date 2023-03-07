@@ -17,7 +17,7 @@ import {
 } from "rn-placeholder";
 
 import { View, ScrollView } from 'react-native'
-import { getOrderStatus } from '../../utils'
+import { getOrderStatus, flatArray } from '../../utils'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
 	const {
@@ -120,6 +120,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	}
 
 	useEffect(() => {
+		if (reorderState?.loading) return
 		const _businessId = 'businessId:' + reorderState?.result?.business_id
 		if (reorderState?.error) {
 			if (reorderState?.result?.business_id) {
@@ -127,18 +128,36 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 				navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
 			}
 		}
-		if (!reorderState?.error && reorderState.loading === false && reorderState?.result?.business_id) {
+		if (!reorderState?.error && !reorderState.loading && reorderState?.result?.business_id) {
 			const cartProducts = carts?.[_businessId]?.products
-			const available = cartProducts.every((product: any) => product.valid === true)
-			const orderProducts = orders.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
 
-			if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
-				onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+			const available = cartProducts.every((product: any) => product.valid)
+			const orderProducts = orders.find(
+				(order: any) => Array.isArray(order?.id)
+					? order?.id?.includes(reorderState?.result?.orderId)
+					: order?.id === reorderState?.result?.orderId
+			)?.products
+
+			const productsFlatten = orderProducts?.length && flatArray(orderProducts)?.filter(product => product?.order_id === reorderState?.result?.orderId)
+
+			if (available && reorderState?.result?.uuid && (cartProducts?.length === productsFlatten?.length)) {
+				const multiOrders = flatArray(orderProducts)?.map(product => product.order_id)
+				const params = multiOrders?.length > 1
+					? { screen: 'MultiCheckout', checkCarts: true }
+					: { cartUuid: reorderState?.result.uuid }
+
+				onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', params)
 			} else {
 				_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
-				cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
+				cartProducts?.length !== productsFlatten?.length && _setStoreData('already-removed', JSON.stringify('removed'))
 				navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
 			}
+		}
+	}, [reorderState])
+
+	useEffect(() => {
+		if (reorderState?.error) {
+			showToast(ToastType.Error, reorderState?.result)
 		}
 	}, [reorderState])
 
