@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLanguage, BusinessSearchList, useOrder, useUtils, showToast, ToastType } from 'ordering-components/native'
+import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
 import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
@@ -54,6 +54,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const screenWidth = Dimensions.get('window').width;
   const theme = useTheme()
   const [orderState] = useOrder()
+  const [events] = useEvent()
   const { top } = useSafeAreaInsets();
   const [, t] = useLanguage()
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
@@ -225,6 +226,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     }
   };
 
+  const onChangeTermValue = (query: any) => {
+    handleChangeTermValue(query)
+    if (query) {
+      events.emit('products_searched', query)
+    }
+  }
+
   useEffect(() => {
     if (filters.business_types?.length === 0 && filters.orderBy === 'default' && Object.keys(filters)?.length === 2 && !openFilters) {
       handleSearchbusinessAndProducts(true)
@@ -287,7 +295,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             {...(isChewLayout && { height: 55 })}
             inputStyle={{ ...styles.searchInput }}
             placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
-            onSearch={(val: string) => handleChangeTermValue(val)}
+            onSearch={(val: string) => onChangeTermValue(val)}
             value={termValue}
           />
         </SearchWrapper>

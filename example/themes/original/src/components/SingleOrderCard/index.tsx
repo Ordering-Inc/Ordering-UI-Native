@@ -296,7 +296,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {order.cart && typeof order?.id === 'number' && !hideReorderButton && (
+                  {!hideReorderButton && order?.id === 'number' && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}
