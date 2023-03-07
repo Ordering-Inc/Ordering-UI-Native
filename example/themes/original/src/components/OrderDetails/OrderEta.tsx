@@ -36,10 +36,11 @@ export const OrderEta = (props: any) => {
       if (diffTimeAsMinutes <= 0) {
         totalEta += (Math.floor(Math.abs(diffTimeAsMinutes / order?.eta_current_status_time) + 1) * order?.eta_current_status_penalty_time)
       }
-      _estimatedTime = parseDate(moment(_delivery).add(totalEta, 'minutes'))
+      _estimatedTime = moment.utc(_delivery).add(totalEta, 'minutes')
     } else {
-      _estimatedTime = parseDate(moment(_delivery).add(order?.eta_time, 'minutes'))
+      _estimatedTime = moment.utc(_delivery).add(order?.eta_time, 'minutes')
     }
+    _estimatedTime = outputFormat ? moment(_estimatedTime).format(outputFormat) : parseDate(_estimatedTime, { utc: false })
     setEstimatedDeliveryTime(_estimatedTime)
   }
 
@@ -49,11 +50,11 @@ export const OrderEta = (props: any) => {
       getEstimatedDeliveryTime()
     }, 1000)
     return () => clearInterval(interval)
-  }, [order])
+  }, [order, outputFormat])
 
   return (
     <>
-      {!outputFormat ? estimatedDeliveryTime : moment(estimatedDeliveryTime).format(outputFormat)}
+      {estimatedDeliveryTime}
     </>
   )
 }
