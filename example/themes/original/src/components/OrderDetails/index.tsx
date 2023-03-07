@@ -121,7 +121,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const mapValidStatuses = [9, 19, 23]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
-  const activeStatus = [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
+  const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
   const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
