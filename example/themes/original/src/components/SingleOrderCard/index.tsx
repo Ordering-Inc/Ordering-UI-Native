@@ -280,7 +280,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {order.cart && !hideReorderButton && (
+                  {!hideReorderButton && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}
