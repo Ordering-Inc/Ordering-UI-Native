@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import { NewOrderNotification as NewOrderNotificationController, useApi, useEvent, useLanguage, useSession } from 'ordering-components/native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Sound from 'react-native-sound'
 import Icon from 'react-native-vector-icons/Feather'
 import { useTheme } from 'styled-components/native'
-import { useEvent, useLanguage, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
 
-import { OText, OIcon } from '../shared'
-import { NotificationContainer } from './styles'
 import { useLocation } from '../../hooks/useLocation'
+import { OIcon, OText } from '../shared'
+import { NotificationContainer } from './styles'
 
-Sound.setCategory('Playback')
+Sound.setCategory('Playback', true)
+Sound.setMode('Default')
 
 const windowWidth = Dimensions.get('screen').width
 
@@ -57,14 +58,16 @@ const NewOrderNotificationUI = (props: any) => {
   const handlePlayNotificationSound = (eventObj: any = null) => {
     setCurrentEvent(eventObj)
     let times = 1
-    if (times < SOUND_LOOP) {
-      _timeout = setInterval(() => {
-        notificationSound.setVolume(1).play(success => success && (times = times + 1))
-        if (times === SOUND_LOOP) {
-          clearInterval(_timeout)
-        }
-      }, 2500)
-    }
+    _timeout = setInterval(() => {
+      if (times <= SOUND_LOOP) {
+        notificationSound.play()
+        times++
+      } else {
+        clearInterval(_timeout)
+        times = 1
+        return
+      }
+    }, 2500)
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
@@ -88,7 +91,7 @@ const NewOrderNotificationUI = (props: any) => {
     if (evtType === 3 || value.author_id === user.id) return
     handlePlayNotificationSound({
       evt: evtType,
-      orderId: value?.order_id
+      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.id
     })
   }
 
