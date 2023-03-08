@@ -58,14 +58,16 @@ const NewOrderNotificationUI = (props: any) => {
   const handlePlayNotificationSound = (eventObj: any = null) => {
     setCurrentEvent(eventObj)
     let times = 1
-    if (times < SOUND_LOOP) {
-      _timeout = setInterval(() => {
-        notificationSound.play(success => success && (times = times + 1))
-        if (times === SOUND_LOOP) {
-          clearInterval(_timeout)
-        }
-      }, 2500)
-    }
+    _timeout = setInterval(() => {
+      if (times <= SOUND_LOOP) {
+        notificationSound.play()
+        times++
+      } else {
+        clearInterval(_timeout)
+        times = 1
+        return
+      }
+    }, 2500)
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
