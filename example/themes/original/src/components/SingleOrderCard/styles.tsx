@@ -19,7 +19,7 @@ export const CardInfoWrapper = styled.View`
 
 export const ContentHeader = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 `
 
 export const ButtonWrapper = styled.View`
