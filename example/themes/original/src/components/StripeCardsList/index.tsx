@@ -39,7 +39,7 @@ const StripeCardsListUI = (props: any) => {
 	}
 
 	useEffect(() => {
-		if (!cardsList?.loading && cardsList?.cards?.length === 0) {
+		if (!cardsList && !cardsList?.loading && cardsList?.cards?.length === 0) {
 			setAddCardOpen(true)
 		}
 	}, [cardsList?.loading])
