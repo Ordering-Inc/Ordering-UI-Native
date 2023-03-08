@@ -82,9 +82,8 @@ const OrderSummaryUI = (props: any) => {
     }
   }
 
-  const loyaltyRewardValue = ((
-    Math.trunc(((cart?.subtotal + getIncludedTaxes()) * loyaltyRewardRate) * 100) / 100
-  ).toFixed(configs.format_number_decimal_length?.value ?? 2), 10)
+  const clearAmount = (value: any) => parseFloat((Math.trunc(value * 100) / 100).toFixed(configs.format_number_decimal_length?.value ?? 2))
+  const loyaltyRewardValue = clearAmount((cart?.subtotal + getIncludedTaxes()) * loyaltyRewardRate)
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -316,7 +315,7 @@ const OrderSummaryUI = (props: any) => {
                       {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                     </OText>
                   </OSTable>
-                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                  {!!loyaltyRewardValue && (
                     <OSTable style={{ justifyContent: 'flex-end' }}>
                       <OText size={12} color={theme.colors.textNormal}>
                         {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}

@@ -96,14 +96,13 @@ const MultiCheckoutUI = (props: any) => {
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
 
-  const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
-  const businessIds = openCarts.map((cart: any) => cart.business_id)
-  const loyalBusinessIds = creditPointPlan?.businesses?.filter((b: any) => b.accumulates).map((item: any) => item.business_id) ?? []
-  const creditPointPlanOnBusiness = businessIds.every((bid: any) => loyalBusinessIds.includes(bid)) && creditPointPlan
+  const creditPointGeneralPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
+  const loyalBusinessAvailable = creditPointGeneralPlan?.businesses?.filter((b: any) => b.accumulates) ?? []
 
-  const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
-  const [phoneUpdate, setPhoneUpdate] = useState(false);
-  const [userErrors, setUserErrors] = useState<any>([]);
+  const accumulationRateBusiness = (businessId: number) => {
+    const value = loyalBusinessAvailable?.find((loyal: any) => loyal.business_id === businessId)?.accumulation_rate ?? 0
+    return value || (creditPointGeneralPlan?.accumulation_rate ?? 0)
+  }
 
   const getIncludedTaxes = (cart: any) => {
     if (cart?.taxes === null || !cart?.taxes) {
@@ -115,12 +114,13 @@ const MultiCheckoutUI = (props: any) => {
     }
   }
 
-  const subtotalAmount = openCarts.reduce((sum: any, cart: any) => sum + (cart?.subtotal + getIncludedTaxes(cart)), 0) *
-    creditPointPlanOnBusiness?.accumulation_rate
+  const clearAmount = (value: any) => parseFloat((Math.trunc(value * 100) / 100).toFixed(configs.format_number_decimal_length?.value ?? 2))
 
-  const loyaltyRewardValue = (creditPointPlanOnBusiness?.accumulation_rate
-    ? (Math.trunc(subtotalAmount * 100) / 100).toFixed(configs.format_number_decimal_length?.value ?? 2)
-    : 0)
+  const loyaltyRewardValue = openCarts.reduce((sum: any, cart: any) => sum + clearAmount((cart?.subtotal + getIncludedTaxes(cart)) * accumulationRateBusiness(cart?.business_id)), 0)
+
+  const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
+  const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [userErrors, setUserErrors] = useState<any>([]);
 
   const handleMomentClick = () => {
     if (isPreOrder) {
@@ -405,7 +405,7 @@ const MultiCheckoutUI = (props: any) => {
                     </OText>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
                   </View>
-                  {!!loyaltyRewardValue && isFinite(loyaltyRewardValue) && (
+                  {!!loyaltyRewardValue && (
                     <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'flex-end' }}>
                       <OText size={12} color={theme.colors.textNormal}>
                         {t('REWARD_LOYALTY_POINT', 'Reward :amount: on loyalty points').replace(':amount:', loyaltyRewardValue)}
