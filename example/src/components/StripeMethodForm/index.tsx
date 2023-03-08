@@ -6,6 +6,7 @@ import { Platform, View } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { android_app_id } from '../../config.json'
+
 export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const {
     cart,
@@ -96,21 +97,12 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     }
 
     const { error, paymentMethod } = await presentApplePay({
-      cartItems: cart?.products?.map((product: any) => ({ label: product?.name, amount: product?.price?.toString?.() })),
+      cartItems: [{
+        label: t('CART', 'Cart'),
+        amount: cart?.balance?.toString() ?? cart?.total?.toString?.()
+      }],
       country: 'US',
       currency: configs?.stripe_currency?.value ?? 'USD',
-      shippingMethods: [
-        {
-          amount: cart?.balance?.toString() ?? cart?.total?.toString?.(),
-          identifier: 'standard',
-          label: 'Courier',
-          detail: 'Delivery',
-          type: 'final',
-        },
-      ],
-
-      requiredShippingAddressFields: ['emailAddress', 'phoneNumber'],
-      requiredBillingContactFields: ['phoneNumber', 'name'],
     });
     if (error) {
       setErrors(error.code + ' - ' + error.message);
