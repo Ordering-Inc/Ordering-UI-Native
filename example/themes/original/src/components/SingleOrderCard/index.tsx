@@ -5,6 +5,7 @@ import {
   useOrder,
   useLanguage
 } from 'ordering-components/native';
+import FastImage from 'react-native-fast-image'
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OButton } from '../shared';
@@ -225,10 +226,13 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                       key={business?.id}
                       style={styles.logoWrapper}
                     >
-                      <OIcon
-                        url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                        src={optimizeImage(!business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                      <FastImage
                         style={styles.minilogo}
+                        source={business?.logo ? {
+                          uri: optimizeImage(business?.logo, 'h_300,c_limit'),
+                          priority: FastImage.priority.normal,
+                        } : theme?.images?.dummies?.businessLogo}
+                        resizeMode={FastImage.resizeMode.contain}
                       />
                     </Logo>
                   ))}
@@ -238,10 +242,13 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                 </MultiLogosContainer>
               ) : (
                 <Logo style={styles.logoWrapper}>
-                  <OIcon
-                    url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
-                    src={optimizeImage(!order.business?.logo && theme?.images?.dummies?.businessLogo, 'h_300,c_limit')}
+                  <FastImage
                     style={styles.logo}
+                    source={order.business?.logo ? {
+                      uri: optimizeImage(order.business?.logo, 'h_300,c_limit'),
+                      priority: FastImage.priority.normal,
+                    } : theme?.images?.dummies?.businessLogo}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
                 </Logo>
               )}
@@ -290,7 +297,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {!hideReorderButton && order?.id === 'number' && (
+                  {!hideReorderButton && typeof order?.id === 'number' && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}
