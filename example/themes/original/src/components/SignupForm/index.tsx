@@ -393,7 +393,7 @@ const SignupFormUI = (props: SignupParams) => {
 				vibrateApp()
 				return
 			}
-			formState.result?.result && showToast(ToastType.Error, formState.result?.result[0]);
+			formState.result?.result && showToast(ToastType.Error, t(`${formState.result?.result[0]}`, 'Phone number already used'));
 			formState.result?.result && vibrateApp()
 			setIsLoadingVerifyModal(false);
 		}
