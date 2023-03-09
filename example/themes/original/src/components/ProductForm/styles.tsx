@@ -8,8 +8,8 @@ export const WrapHeader = styled.View`
 export const TopActions = styled.TouchableOpacity`
 	height: 60px;
 	justify-content: center;
-  padding-horizontal: 30px;
-  width: 100px;
+  min-width: 30px;
+  padding-right: 15px;
 `;
 
 export const TopHeader = styled.View`
