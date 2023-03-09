@@ -531,10 +531,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 					titleAlign={'center'}
 					onActionLeft={goToBack}
 					showCall={false}
-					btnStyle={{ paddingLeft: 0 }}
-					style={{ marginTop: Platform.OS === 'ios' ? 0 : 30 }}
-					titleWrapStyle={{ paddingHorizontal: 0 }}
-					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+					btnStyle={{ paddingLeft: 0, paddingRight: 5 }}
+					style={{ marginTop: Platform.OS === 'ios' ? 0 : 10 }}
+					titleWrapStyle={{ paddingHorizontal: 0, width: '100%' }}
+					titleStyle={{ marginRight: 0, marginLeft: 0, paddingRight: 5 }}
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -649,7 +649,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									)}
 							</AutocompleteInput>
 
-							{(locationChange || formState.changes?.location) && (
+							{!isHideMap && (locationChange || formState.changes?.location) && (
 								<View
 									style={{
 										height: 189,
@@ -808,27 +808,29 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 							)}
 						</FormInput>
-						<IconsContainer>
-							{tagsName.map((tag) => (
-								<TouchableOpacity
-									key={tag.value}
-									onPress={() => handleAddressTag(tag.value)}>
-									<View
-										style={{
-											...styles.iconContainer,
-										}}>
-										<OIcon
-											src={tag.icon}
-											width={24}
-											color={
-												addressTag === tag.value ?
-													theme.colors.primary : theme.colors.disabled
-											}
-										/>
-									</View>
-								</TouchableOpacity>
-							))}
-						</IconsContainer>
+						{!isHideIcons && (
+							<IconsContainer>
+								{tagsName.map((tag) => (
+									<TouchableOpacity
+										key={tag.value}
+										onPress={() => handleAddressTag(tag.value)}>
+										<View
+											style={{
+												...styles.iconContainer,
+											}}>
+											<OIcon
+												src={tag.icon}
+												width={24}
+												color={
+													addressTag === tag.value ?
+														theme.colors.primary : theme.colors.disabled
+												}
+											/>
+										</View>
+									</TouchableOpacity>
+								))}
+							</IconsContainer>
+						)}
 					</View>
 
 					<View>
