@@ -528,10 +528,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 					titleAlign={'center'}
 					onActionLeft={goToBack}
 					showCall={false}
-					btnStyle={{ paddingLeft: 0 }}
+					btnStyle={{ paddingLeft: 0, paddingRight: 5 }}
 					style={{ marginTop: Platform.OS === 'ios' ? 0 : 10 }}
 					titleWrapStyle={{ paddingHorizontal: 0, width: '100%' }}
-					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+					titleStyle={{ marginRight: 0, marginLeft: 0, paddingRight: 5 }}
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
