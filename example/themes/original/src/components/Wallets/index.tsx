@@ -127,6 +127,9 @@ const WalletsUI = (props: any) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
+            marginTop: 30,
+            justifyContent: 'space-between',
+            alignContent: 'center'
           },
         }}>
             {(!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout && (
@@ -155,24 +158,25 @@ const WalletsUI = (props: any) => {
             <OText
               size={20}
               style={{
-                marginTop: 30,
                 marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 40 : 0,
                 color: theme.colors.textNormal,
               }}
               weight={Platform.OS === 'ios' ? '600' : 'bold'}
-            >{t('WALLETS', 'Wallets')}</OText>
-        </View>
-          {isChewLayout && (
-            <OButton
-              text={t('WALLET_HISTORY', 'Wallet history')}
-              bgColor={theme.colors.white}
-              borderColor={theme.colors.lightGray}
-              imgRightSrc={null}
-              textStyle={{ fontSize: 12, color: theme.colors.disabled }}
-              onClick={() => setOpenHistory(true)}
-              style={{ borderRadius: 8, height: 40 }}
-            />
-          )}
+            >
+              {t('WALLETS', 'Wallets')}
+            </OText>
+            {isChewLayout && (
+              <OButton
+                text={t('WALLET_HISTORY', 'Wallet history')}
+                bgColor={theme.colors.white}
+                borderColor={theme.colors.lightGray}
+                imgRightSrc={null}
+                textStyle={{ fontSize: 12, color: theme.colors.disabled }}
+                onClick={() => setOpenHistory(true)}
+                style={{ borderRadius: 8, height: 40 }}
+              />
+            )}
+          </View>
         </Header>
 
         {!walletList.loading &&
@@ -313,15 +317,18 @@ const WalletsUI = (props: any) => {
         <ScrollView>
           <WalletTransactionsWrapper>
             <OButton
+              imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
               style={{
                 borderWidth: 0,
-                backgroundColor: theme.colors.white,
-                padding: 0,
-                paddingHorizontal: 0,
-                width: 30,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
                 paddingLeft: 0,
-                paddingRight: 0
+                paddingRight: 0,
+                marginBottom: 10
               }}
               onClick={() => setOpenHistory(false)}
               icon={AntDesignIcon}
