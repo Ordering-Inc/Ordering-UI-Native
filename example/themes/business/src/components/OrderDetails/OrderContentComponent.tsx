@@ -203,9 +203,9 @@ export const OrderContentComponent = (props: OrderContent) => {
             />
           </View>
         )}
-        {!!order?.business?.location && (
+        {!!order?.business?.location && order?.customer?.location && (
           <OText>
-            {t('DISTANCE_TO_THE_BUSINESS', 'Distance to the business')}: {transformDistance(calculateDistance(order?.business?.location, user?.location), distanceUnit)} {t(distanceUnit.toUpperCase(), distanceUnit)}
+            {t('DISTANCE_TO_THE_BUSINESS', 'Distance to the business')}: {transformDistance(calculateDistance(order?.business?.location, { latitude: order?.customer?.location?.lat, longitude: order?.customer?.location?.lng }), distanceUnit)} {t(distanceUnit.toUpperCase(), distanceUnit)}
           </OText>
         )}
         {!!order?.business?.address_notes && (
