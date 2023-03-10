@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
@@ -121,18 +121,62 @@ const WalletsUI = (props: any) => {
     <>
       <Container>
         <Header>
-        <OText size={24} style={{ marginTop: 30 }}>{t('WALLETS', 'Wallets')}</OText>
-          {isChewLayout && (
-            <OButton
-              text={t('WALLET_HISTORY', 'Wallet history')}
-              bgColor={theme.colors.white}
-              borderColor={theme.colors.lightGray}
-              imgRightSrc={null}
-              textStyle={{ fontSize: 12, color: theme.colors.disabled }}
-              onClick={() => setOpenHistory(true)}
-              style={{ borderRadius: 8, height: 40 }}
-            />
-          )}
+        <View style={{
+          ...{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 30,
+            justifyContent: 'space-between',
+            alignContent: 'center'
+          },
+        }}>
+            {(!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout && (
+              <OButton
+                imgLeftStyle={{ width: 18 }}
+                imgRightSrc={null}
+                style={{
+                  borderWidth: 0,
+                  width: 26,
+                  height: 26,
+                  backgroundColor: '#FFF',
+                  borderColor: '#FFF',
+                  shadowColor: '#FFF',
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  marginTop: 30,
+                }}
+                onClick={goToBack}
+                icon={AntDesignIcon}
+                iconProps={{
+                  name: 'arrowleft',
+                  size: 26
+                }}
+              />
+            )}
+            <OText
+              size={20}
+              style={{
+                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 40 : 0,
+                color: theme.colors.textNormal,
+              }}
+              weight={Platform.OS === 'ios' ? '600' : 'bold'}
+            >
+              {t('WALLETS', 'Wallets')}
+            </OText>
+            {isChewLayout && (
+              <OButton
+                text={t('WALLET_HISTORY', 'Wallet history')}
+                bgColor={theme.colors.white}
+                borderColor={theme.colors.lightGray}
+                imgRightSrc={null}
+                textStyle={{ fontSize: 12, color: theme.colors.disabled }}
+                onClick={() => setOpenHistory(true)}
+                style={{ borderRadius: 8, height: 40 }}
+              />
+            )}
+          </View>
         </Header>
 
         {!walletList.loading &&
@@ -273,15 +317,18 @@ const WalletsUI = (props: any) => {
         <ScrollView>
           <WalletTransactionsWrapper>
             <OButton
+              imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
               style={{
                 borderWidth: 0,
-                backgroundColor: theme.colors.white,
-                padding: 0,
-                paddingHorizontal: 0,
-                width: 30,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
                 paddingLeft: 0,
-                paddingRight: 0
+                paddingRight: 0,
+                marginBottom: 10
               }}
               onClick={() => setOpenHistory(false)}
               icon={AntDesignIcon}
