@@ -49,7 +49,7 @@ export const WalletTransactionItem = (props: any) => {
             .replace(':order_id', item?.event?.order_id ? item?.event?.order_id + ' ' : '')}
         </OText>
       </MessageBlock>
-      {!!item?.description && (
+      {/* {!!item?.description && (
         <DescriptionBlock>
           <OText>{item?.description}</OText>
         </DescriptionBlock>
@@ -63,7 +63,7 @@ export const WalletTransactionItem = (props: any) => {
             </OText>
           </OText>
         </DescriptionBlock>
-      )}
+      )} */}
     </Container>
   )
 }
