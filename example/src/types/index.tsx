@@ -490,4 +490,9 @@ export interface StripeMethodFormParams {
   setErrors: (error: string) => void;
   paymethod: string;
   devMode?: boolean;
+  setMethodPaySupported?: any
+  placeByMethodPay?: any
+  methodPaySupported?: any,
+  setPlaceByMethodPay?: any,
+  cartTotal?: number
 }

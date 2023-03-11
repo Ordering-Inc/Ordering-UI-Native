@@ -64,7 +64,8 @@ const MultiCheckoutUI = (props: any) => {
     totalCartsFee,
     cartGroup,
     walletState,
-    onNavigationRedirectReplace
+    onNavigationRedirectReplace,
+    merchantId
   } = props
 
   const theme = useTheme();
@@ -88,9 +89,6 @@ const MultiCheckoutUI = (props: any) => {
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
-  const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
-    (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
-    walletCarts.length > 0
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -121,6 +119,13 @@ const MultiCheckoutUI = (props: any) => {
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
+  const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
+  const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
+  const methodsPay = ['global_google_pay', 'global_apple_pay']
+  const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
+    (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
+    walletCarts.length > 0
+    || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
 
   const handleMomentClick = () => {
     if (isPreOrder) {
@@ -284,6 +289,13 @@ const MultiCheckoutUI = (props: any) => {
               handleSelectWallet={handleSelectWallet}
               handlePaymethodDataChange={handlePaymethodDataChange}
               cartUuid={cartUuid}
+              merchantId={merchantId}
+              setMethodPaySupported={setMethodPaySupported}
+              methodPaySupported={methodPaySupported}
+              placeByMethodPay={placeByMethodPay}
+              setPlaceByMethodPay={setPlaceByMethodPay}
+              cartTotal={totalCartsPrice}
+              handlePlaceOrder={handlePlaceOrder}
             />
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
           </ChSection>
@@ -294,51 +306,51 @@ const MultiCheckoutUI = (props: any) => {
             validationFields?.fields?.checkout?.driver_tip?.enabled &&
             openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
             driverTipsOptions && driverTipsOptions?.length > 0 &&
-          (
-            <ChSection>
-              <DriverTipsContainer>
-                <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
-                  {t('DRIVER_TIPS', 'Driver Tips')}
-                </OText>
-                <DriverTips
-                  isMulti
-                  carts={openCarts}
-                  businessIds={openCarts.map((cart: any) => cart.business_id)}
-                  driverTipsOptions={driverTipsOptions}
-                  isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
-                  isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-                  driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
-                    ? openCarts[0]?.driver_tip
-                    : openCarts[0]?.driver_tip_rate}
-                  useOrderContext
-                />
-              </DriverTipsContainer>
-              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
-            </ChSection>
-          )}
+            (
+              <ChSection>
+                <DriverTipsContainer>
+                  <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+                    {t('DRIVER_TIPS', 'Driver Tips')}
+                  </OText>
+                  <DriverTips
+                    isMulti
+                    carts={openCarts}
+                    businessIds={openCarts.map((cart: any) => cart.business_id)}
+                    driverTipsOptions={driverTipsOptions}
+                    isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
+                    isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                    driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
+                      ? openCarts[0]?.driver_tip
+                      : openCarts[0]?.driver_tip_rate}
+                    useOrderContext
+                  />
+                </DriverTipsContainer>
+                <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+              </ChSection>
+            )}
 
           {
             validationFields?.fields?.checkout?.coupon?.enabled &&
             openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
             configs?.multi_business_checkout_coupon_input_style?.value === 'group' &&
-          (
-            <ChSection>
-              <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
-                {t('DISCOUNT_COUPON', 'Discount coupon')}
-              </OText>
-              <OSTable>
-                <OSCoupon>
-                  <CouponControl
-                    isMulti
-                    carts={openCarts}
-                    businessIds={openCarts.map((cart: any) => cart.business_id)}
-                    price={openCarts.reduce((total: any, cart: any) => total + cart.total, 0)}
-                  />
-                </OSCoupon>
-              </OSTable>
-              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
-            </ChSection>
-          )}
+            (
+              <ChSection>
+                <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+                  {t('DISCOUNT_COUPON', 'Discount coupon')}
+                </OText>
+                <OSTable>
+                  <OSCoupon>
+                    <CouponControl
+                      isMulti
+                      carts={openCarts}
+                      businessIds={openCarts.map((cart: any) => cart.business_id)}
+                      price={openCarts.reduce((total: any, cart: any) => total + cart.total, 0)}
+                    />
+                  </OSCoupon>
+                </OSTable>
+                <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+              </ChSection>
+            )}
 
           <ChSection>
             <ChCarts>
@@ -390,15 +402,15 @@ const MultiCheckoutUI = (props: any) => {
                   )}
                   {openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
                     configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {t('DRIVER_TIP', 'Driver tip')}
-                      </OText>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {parsePrice(openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
-                      </OText>
-                    </View>
-                  )}
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                          {t('DRIVER_TIP', 'Driver tip')}
+                        </OText>
+                        <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                          {parsePrice(openCarts.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
+                        </OText>
+                      </View>
+                    )}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
                       {t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
@@ -423,7 +435,9 @@ const MultiCheckoutUI = (props: any) => {
       </Container>
 
       <FloatingButton
-        handleClick={() => handlePlaceOrder()}
+        handleClick={methodsPay.includes(paymethodSelected?.gateway)
+          ? () => setPlaceByMethodPay(true)
+          : () => handlePlaceOrder()}
         isSecondaryBtn={isDisablePlaceOrderButton}
         disabled={isDisablePlaceOrderButton}
         btnText={placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')}

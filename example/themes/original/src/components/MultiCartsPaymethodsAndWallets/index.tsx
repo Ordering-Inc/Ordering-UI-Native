@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   useLanguage,
   useConfig,
@@ -29,7 +29,15 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
     paymethodSelected,
     handleSelectPaymethod,
     handleSelectWallet,
-    handlePaymethodDataChange
+    handlePaymethodDataChange,
+    setMethodPaySupported,
+    placeByMethodPay,
+    methodPaySupported,
+    setPlaceByMethodPay,
+    openCarts,
+    cartTotal,
+    handlePlaceOrder,
+    merchantId
   } = props
 
   const theme = useTheme()
@@ -54,6 +62,8 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   }
 
   const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate, { isTruncable: true })}`
+  const filterMethodsPay = (gateway: string) => Platform.OS === 'ios' ? gateway !== 'global_google_pay' : gateway !== 'global_apple_pay'
+  const methodsPay = ['global_google_pay', 'global_apple_pay']
 
   const getPayIcon = (method: string) => {
     switch (method) {
@@ -71,35 +81,61 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         return theme.images.general.stripes
       case 'stripe_redirect':
         return theme.images.general.stripesb
+      case 'global_apple_pay':
+        return theme.images.general.applePayMark
       default:
         return theme.images.general.creditCard
     }
   }
 
+  useEffect(() => {
+		if (methodsPay.includes(paymethodSelected?.gateway)) {
+      if (typeof paymethodSelected?.paymethod_data === 'string'){
+        const sourceId =  JSON.parse(paymethodSelected?.paymethod_data)?.source_id
+        sourceId && handlePlaceOrder()
+      }
+		}
+	}, [JSON.stringify(paymethodSelected)])
+
   const renderPaymethods = ({ item }: any) => {
     return (
-      <TouchableOpacity
-        onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
-      >
-        <PMItem
-          key={item.id}
-          isActive={paymethodSelected?.id === item.id}
-        >
-          <OIcon
-            src={getPayIcon(item?.gateway ?? item.paymethod?.gateway)}
-            width={20}
-            height={20}
-            color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
-          />
-          <OText
-            size={10}
-            style={{ margin: 0, marginTop: 4 }}
-            color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+      <>
+        {item?.gateway === 'apple_pay' ? (
+          <TouchableOpacity
+            onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
           >
-            {t(item?.gateway.toUpperCase(), item?.name)}
-          </OText>
-        </PMItem>
-      </TouchableOpacity>
+            <OIcon
+              src={getPayIcon(item.gateway)}
+              width={70}
+              height={70}
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
+          >
+            <PMItem
+              key={item.id}
+              isActive={paymethodSelected?.id === item.id}
+            >
+              <OIcon
+                src={getPayIcon(item?.gateway ?? item.paymethod?.gateway)}
+                width={20}
+                height={20}
+                color={item?.gateway === 'apple_pay' ? '' : paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
+              />
+              <OText
+                size={10}
+                style={{ margin: 0, marginTop: 4 }}
+                color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+              >
+                {t(item?.gateway.toUpperCase(), item?.name)}
+              </OText>
+            </PMItem>
+          </TouchableOpacity>
+        )}
+      </>
     )
   }
 
@@ -126,7 +162,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={paymethodsAndWallets.paymethods}
+          data={paymethodsAndWallets.paymethods.filter((p: any) => filterMethodsPay(p.gateway))}
           renderItem={renderPaymethods}
           keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
         />
@@ -159,6 +195,27 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         </View>
       )}
 
+      {/* Google pay, Apple pay */}
+      {methodsPay.includes(paymethodSelected?.paymethod?.gateway) && (
+        <StripeElementsForm
+          toSave
+          businessId={businessIds[0]}
+          businessIds={businessIds}
+          publicKey={paymethodSelected?.data?.publishable}
+          requirements={props.clientSecret}
+          handleSource={handlePaymethodDataChange}
+          onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+          setMethodPaySupported={setMethodPaySupported}
+					methodPaySupported={methodPaySupported}
+					placeByMethodPay={placeByMethodPay}
+					setPlaceByMethodPay={setPlaceByMethodPay}
+          methodsPay={methodsPay}
+          paymethod={paymethodSelected?.paymethod?.gateway}
+          cartTotal={cartTotal}
+          merchantId={merchantId}
+        />
+      )}
+
       {(paymethodsAndWallets.loading || walletsState.loading) ? (
         <>
           {[...Array(2).keys()].map(i => (
@@ -174,46 +231,46 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         <>
           {walletsState?.result?.filter((wallet: any) =>
             paymethodsAndWallets.wallets.find((item: any) => item.type === wallet.type))
-              .map((wallet: any, idx: any) => walletName[wallet.type]?.isActive &&
-          (
-            <WalletItem
-              key={wallet.type}
-              isBottomBorder={idx === paymethodsAndWallets.wallets?.length - 1}
-              onPress={() => handleSelectWallet(!!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id, wallet)}
-            >
-              {!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id ? (
-                <MaterialCommunityIcons
-                  name="checkbox-marked"
-                  size={25}
-                  color={theme.colors.primary}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name="checkbox-blank-outline"
-                  size={25}
-                  color={theme.colors.disabled}
-                />
-              )}
-              <OText size={12} style={{ flex: 1, marginLeft: 15 }}>{walletName[wallet.type]?.name}</OText>
-              {wallet.type === 'cash' && (
-                <OText>
-                  {parsePrice(wallet?.balance, { isTruncable: true })}
-                </OText>
-              )}
-              {wallet.type === 'credit_point' && (
-                <OText>
-                  <OText color={theme.colors.primary} weight='bold'>
-                    {`${wallet?.balance} ${t('POINTS', 'Points')}`}
-                  </OText>
-                  <OText>
-                    {wallet?.balance > 0
-                      ? creditBalance(wallet)
-                      : null}
-                  </OText>
-                </OText>
-              )}
-            </WalletItem>
-          ))}
+            .map((wallet: any, idx: any) => walletName[wallet.type]?.isActive &&
+              (
+                <WalletItem
+                  key={wallet.type}
+                  isBottomBorder={idx === paymethodsAndWallets.wallets?.length - 1}
+                  onPress={() => handleSelectWallet(!!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id, wallet)}
+                >
+                  {!!walletsPaymethod?.find((walletPay: any) => walletPay.wallet_id === wallet.id)?.id ? (
+                    <MaterialCommunityIcons
+                      name="checkbox-marked"
+                      size={25}
+                      color={theme.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="checkbox-blank-outline"
+                      size={25}
+                      color={theme.colors.disabled}
+                    />
+                  )}
+                  <OText size={12} style={{ flex: 1, marginLeft: 15 }}>{walletName[wallet.type]?.name}</OText>
+                  {wallet.type === 'cash' && (
+                    <OText>
+                      {parsePrice(wallet?.balance, { isTruncable: true })}
+                    </OText>
+                  )}
+                  {wallet.type === 'credit_point' && (
+                    <OText>
+                      <OText color={theme.colors.primary} weight='bold'>
+                        {`${wallet?.balance} ${t('POINTS', 'Points')}`}
+                      </OText>
+                      <OText>
+                        {wallet?.balance > 0
+                          ? creditBalance(wallet)
+                          : null}
+                      </OText>
+                    </OText>
+                  )}
+                </WalletItem>
+              ))}
         </>
       )}
 
@@ -230,6 +287,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
           enabled={Platform.OS === 'ios' ? true : false}
         >
           <StripeElementsForm
+            openCarts={openCarts}
             toSave
             businessId={businessIds[0]}
             businessIds={businessIds}
