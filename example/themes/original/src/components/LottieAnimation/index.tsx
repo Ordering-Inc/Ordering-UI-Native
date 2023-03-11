@@ -70,11 +70,17 @@ export const LottieAnimation = (props: Props) => {
       style={style}
     >
       {type === 'favorite' ? (
-        <Lottie
-          ref={favRef}
-          progress={initialValue}
-          style={{ width: 20, height: 20 }}
-          source={animationGif}
+        // <Lottie
+        //   ref={favRef}
+        //   progress={initialValue}
+        //   style={{ width: 20, height: 20 }}
+        //   source={animationGif}
+        // />
+        <IconAntDesign
+          name={isActive ? icon[0] : icon[1]}
+          color={iconProps?.color || theme.colors.danger5}
+          size={iconProps?.size || 16}
+          style={iconProps?.style}
         />
       ) : (
         <>
