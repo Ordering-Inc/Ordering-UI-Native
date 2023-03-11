@@ -34,7 +34,7 @@ import { useApplePay } from '@stripe/stripe-react-native';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 const methodsPay = ['google_pay', 'apple_pay']
-const stripeDirectMethods = ['stripe_direct', ...methodsPay]
+const stripeDirectMethods = ['stripe_direct']
 // const stripeRedirectOptions = [
 //   { name: 'Bancontact', value: 'bancontact' },
 //   { name: 'Alipay', value: 'alipay' },
@@ -43,6 +43,7 @@ const stripeDirectMethods = ['stripe_direct', ...methodsPay]
 // ]
 
 const webViewPaymentGateway: any = ['paypal', 'square']
+const multiCheckoutMethods = ['global_google_pay', 'global_apple_pay']
 
 const PaymentOptionsUI = (props: any) => {
 	const {
@@ -59,7 +60,11 @@ const PaymentOptionsUI = (props: any) => {
 		isOpenMethod,
 		handlePaymentMethodClickCustom,
 		handlePlaceOrder,
-		merchantId
+		merchantId,
+		setMethodPaySupported,
+		placeByMethodPay,
+		methodPaySupported,
+		setPlaceByMethodPay
 	} = props
 
 	const theme = useTheme();
@@ -187,6 +192,7 @@ const PaymentOptionsUI = (props: any) => {
 	}
 
 	const excludeIds: any = [32]; //exclude paypal & connect & redirect
+	const filterMethodsPay = (gateway : string) => Platform.OS === 'ios' ? gateway !== 'google_pay' : gateway !== 'apple_pay' 
 
 	return (
 		<PMContainer>
@@ -195,7 +201,11 @@ const PaymentOptionsUI = (props: any) => {
 					horizontal
 					showsHorizontalScrollIndicator={false}
 					// data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
-					data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
+					data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)
+						.filter((p: any) => 
+							!multiCheckoutMethods.includes(p.gateway) && 
+							filterMethodsPay(p.gateway) && 
+							!excludeIds.includes(p.id))}
 					renderItem={renderPaymethods}
 					keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
 				/>
@@ -296,6 +306,23 @@ const PaymentOptionsUI = (props: any) => {
 					/>
 				</View>
 			)}
+			{/* Google pay, Apple pay */}
+			{methodsPay.includes(isOpenMethod?.paymethod?.gateway) && (
+				<StripeElementsForm
+					cart={cart}
+					paymethod={isOpenMethod?.paymethod?.gateway}
+					methodsPay={methodsPay}
+					businessId={props.businessId}
+					publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
+					handleSource={handlePaymethodDataChange}
+					onCancel={() => handlePaymethodClick(null)}
+					merchantId={merchantId}
+					setMethodPaySupported={setMethodPaySupported}
+					methodPaySupported={methodPaySupported}
+					placeByMethodPay={placeByMethodPay}
+					setPlaceByMethodPay={setPlaceByMethodPay}
+				/>
+			)}
 
 			<OModal
 				entireModal
@@ -320,7 +347,7 @@ const PaymentOptionsUI = (props: any) => {
 				</KeyboardAvoidingView>
 			</OModal>
 
-			{/* Stripe direct, Google pay, Apple pay */}
+			{/* Stripe direct */}
 			<OModal
 				entireModal
 				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}

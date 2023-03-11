@@ -28,7 +28,12 @@ const StripeElementsFormUI = (props: any) => {
 		onCancel,
 		cart,
 		merchantId,
-		businessIds
+		businessIds,
+		setMethodPaySupported,
+		placeByMethodPay,
+		methodPaySupported,
+		setPlaceByMethodPay,
+		cartTotal
 	} = props;
 
 	const theme = useTheme();
@@ -78,24 +83,24 @@ const StripeElementsFormUI = (props: any) => {
 
 	if (user?.address) {
 		billingDetails.address = {
-      line1: user?.address
-    }
+			line1: user?.address
+		}
 	}
 
 	const createPayMethod = async () => {
 		const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
 		if (Object.keys(billingDetails).length > 0) {
-			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
+			params.paymentMethodData.billingDetails = { ...billingDetails, token: card?.last4 }
 		}
 		try {
 			setCreatePmLoading(true)
 			const { paymentMethod, error } = await createPaymentMethod(params);
 
-      if (error) {
-        setErrors(error?.message);
-        setCreatePmLoading(false)
-        return
-      }
+			if (error) {
+				setErrors(error?.message);
+				setCreatePmLoading(false)
+				return
+			}
 
 			setCreatePmLoading(false)
 			handleSource && handleSource({
@@ -118,7 +123,7 @@ const StripeElementsFormUI = (props: any) => {
 			setErrors(error?.message || error?.toString());
 		}
 	}
-	
+
 	const handleSaveCard = async () => {
 		setErrors('');
 		if (!requirements) {
@@ -127,7 +132,7 @@ const StripeElementsFormUI = (props: any) => {
 		}
 		const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
 		if (Object.keys(billingDetails).length > 0) {
-			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
+			params.paymentMethodData.billingDetails = { ...billingDetails, token: card?.last4 }
 		}
 		try {
 			const { setupIntent, error } = await confirmSetupIntent(requirements, params);
@@ -135,8 +140,8 @@ const StripeElementsFormUI = (props: any) => {
 			if (setupIntent?.status === 'Succeeded') {
 				if (businessIds) {
 					businessIds.forEach((_businessId: any, index: any) => {
-					  const _isNewCard = index === 0
-					  stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId, _isNewCard);
+						const _isNewCard = index === 0
+						stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId, _isNewCard);
 					})
 				} else {
 					stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
@@ -188,7 +193,7 @@ const StripeElementsFormUI = (props: any) => {
 	}, []);
 
 	return (
-		<View style={{ ...styles.container, height: height - top - bottom - 60 - (isKeyboardShow ? 250 : 0) }}>
+		<View style={{ ...styles.container, height: methodsPay?.includes(paymethod) ? 'auto' : height - top - bottom - 60 - (isKeyboardShow ? 250 : 0) }}>
 			{publicKey ? (
 				<View style={{ flex: 1 }}>
 					<StripeProvider
@@ -201,9 +206,14 @@ const StripeElementsFormUI = (props: any) => {
 								handleSource={handleSource}
 								onCancel={onCancel}
 								cart={cart}
+								cartTotal={cartTotal}
 								setErrors={setErrors}
 								paymethod={paymethod}
 								devMode={publicKey?.includes('test')}
+								setMethodPaySupported={setMethodPaySupported}
+								placeByMethodPay={placeByMethodPay}
+								methodPaySupported={methodPaySupported}
+								setPlaceByMethodPay={setPlaceByMethodPay}
 							/>
 						) : (
 							<CardField
