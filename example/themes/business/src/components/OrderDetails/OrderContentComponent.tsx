@@ -618,7 +618,9 @@ export const OrderContentComponent = (props: OrderContent) => {
                     )}
                   </View>
                   <OText>
-                    -{parsePrice(event.amount, { currency: order?.currency })}
+                    {(event?.paymethod?.gateway === 'cash' && order?.cash)
+                      ? parsePrice(order?.cash, { currency: order?.currency })
+                      : `-${parsePrice(event?.amount, { currency: order?.currency })}`}
                   </OText>
                 </View>
               ))}
