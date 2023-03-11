@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useLanguage, useConfig } from 'ordering-components/native'
-import { useGooglePay, ApplePayButton, useApplePay } from '@stripe/stripe-react-native'
-import { OButton, OText } from '../shared';
-import { Platform, View } from 'react-native';
+import { useGooglePay, useApplePay } from '@stripe/stripe-react-native'
+import { Platform } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { android_app_id } from '../../config.json'
 
 export const StripeMethodForm = (props: StripeMethodFormParams) => {
@@ -14,23 +12,35 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     onCancel,
     setErrors,
     paymethod,
-    devMode
+    devMode,
+    setMethodPaySupported,
+    placeByMethodPay,
+    methodPaySupported,
+    setPlaceByMethodPay,
+    cartTotal
   } = props
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
-  const [initialized, setInitialized] = useState(false);
-  const [loadingGooglePayment, setLoadingGooglePayment] = useState(false)
   const [, t] = useLanguage()
-  const [{configs}] = useConfig()
-
+  const [{ configs }] = useConfig()
+  const applePay = ['global_apple_pay', 'apple_pay']
+  const googlePay = ['global_google_pay', 'google_pay']
   useEffect(() => {
-    if (paymethod !== 'google_pay' || !initGooglePay) return
     if (Platform.OS === 'ios') {
       setErrors(t('GOOGLE_PAY_NOT_SUPPORTED', 'Google pay not supported'))
+      setMethodPaySupported({
+        enabled: false,
+        loading: false
+      })
+      setPlaceByMethodPay(false)
       return
     }
     const initialize = async () => {
       try {
+        setMethodPaySupported({
+          ...methodPaySupported,
+          loading: true
+        })
         const { error } = await initGooglePay({
           testEnv: devMode,
           merchantName: android_app_id,
@@ -46,36 +56,68 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
         if (error) {
           setErrors(error.code + ' - ' + error.message);
+          setMethodPaySupported({
+            enabled: false,
+            loading: false
+          })
+          setPlaceByMethodPay(false)
           return;
         }
-        setInitialized(true);
+        setMethodPaySupported({
+          enabled: true,
+          loading: false
+        })
+        setPlaceByMethodPay(false)
+        setErrors('')
       } catch (err: any) {
         setErrors('Catch ' + err?.message)
+        setMethodPaySupported({
+          enabled: false,
+          loading: false
+        })
+        setPlaceByMethodPay(false)
       }
     }
-    initialize();
-  }, [initGooglePay]);
+    if (googlePay.includes(paymethod)) {
+      initialize();
+    }
+  }, [initGooglePay, paymethod]);
 
   useEffect(() => {
-    if (paymethod !== 'apple_pay') return
+    if (applePay.includes(paymethod) && !paymethod) return
     if (Platform.OS === 'android') {
+      setPlaceByMethodPay(false)
       setErrors(t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported'))
+      setMethodPaySupported({
+        enabled: false,
+        loading: false
+      })
       return
     }
-  }, [])
+  }, [paymethod])
 
   const createPaymentMethod = async () => {
-    setLoadingGooglePayment(true)
+    setMethodPaySupported({
+      ...methodPaySupported,
+      loading: true
+    })
     const { error, paymentMethod } = await createGooglePayPaymentMethod({
-      amount: cart?.balance ?? cart?.total,
+      amount: cartTotal ?? cart?.balance ?? cart?.total,
       currencyCode: configs?.stripe_currency?.value ?? 'USD',
     });
     if (error) {
       setErrors(error.code + ' - ' + error.message);
-      setLoadingGooglePayment(false)
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
       return;
     } else if (paymentMethod) {
-      handleSource({
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
+      const source = {
         ...paymentMethod?.Card,
         id: paymentMethod.id,
         type: paymentMethod.type,
@@ -84,30 +126,48 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
           brand: paymentMethod.Card.brand,
           last4: paymentMethod.Card.last4
         }
-      })
+      }
+      handleSource(cartTotal ? JSON.stringify(source) : source)
       onCancel()
-      setLoadingGooglePayment(false)
     }
+    setPlaceByMethodPay(false)
   };
 
   const pay = async () => {
+    setMethodPaySupported({
+      ...methodPaySupported,
+      loading: true
+    })
     if (!isApplePaySupported) {
       setErrors(t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported'))
+      setMethodPaySupported({
+        enabled: false,
+        loading: false
+      })
+      setPlaceByMethodPay(false)
       return
     }
 
     const { error, paymentMethod } = await presentApplePay({
       cartItems: [{
         label: t('CART', 'Cart'),
-        amount: cart?.balance?.toString() ?? cart?.total?.toString?.()
+        amount: cartTotal?.toString?.() ?? cart?.balance?.toString() ?? cart?.total?.toString?.()
       }],
       country: 'US',
       currency: configs?.stripe_currency?.value ?? 'USD',
     });
     if (error) {
       setErrors(error.code + ' - ' + error.message);
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
     } else if (paymentMethod) {
-      handleSource({
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
+      const source = {
         ...paymentMethod?.Card,
         id: paymentMethod.id,
         type: paymentMethod.type,
@@ -116,50 +176,29 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
           brand: paymentMethod.Card.brand,
           last4: paymentMethod.Card.last4
         }
-      })
+      }
+      handleSource(cartTotal ? JSON.stringify(source) : source)
     }
+    setPlaceByMethodPay(false)
   }
 
+  useEffect(() => {
+    if (isApplePaySupported && applePay.includes(paymethod)) {
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
+      setErrors('')
+    }
+  }, [isApplePaySupported, paymethod])
+
+  useEffect(() => {
+    if (placeByMethodPay) {
+      applePay.includes(paymethod) ? pay() : createPaymentMethod()
+    }
+  }, [placeByMethodPay])
+
   return (
-    <>
-      {paymethod === 'google_pay' ? (
-        <View>
-          <OButton
-            textStyle={{
-              color: '#fff'
-            }}
-            imgRightSrc={null}
-            onClick={createPaymentMethod}
-            isDisabled={loading || !initialized}
-            text={t('PAY_WITH_GOOGLE_PAY', 'Pay with Google Pay')}
-            isLoading={loading || !initialized}
-            style={{ marginTop: 20 }}
-          />
-        </View>
-      ) : (
-        <View>
-          {isApplePaySupported ? (
-            <>
-              <OText>{t('APPLE_PAY_PAYMENT', 'Apple pay payment')}</OText>
-              <ApplePayButton
-                onPress={pay}
-                type="plain"
-                buttonStyle="black"
-                borderRadius={4}
-                style={{
-                  width: '100%',
-                  height: 50,
-                }}
-              />
-            </>
-          ) : (
-            <OText>{t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported')}</OText>
-          )}
-        </View>
-      )}
-      <Spinner
-        visible={loadingGooglePayment}
-      />
-    </>
+    <></>
   )
 }

@@ -152,8 +152,9 @@ const CheckoutUI = (props: any) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 	const [openModal, setOpenModal] = useState({ login: false, signup: false })
-  	const [allowedGuest, setAllowedGuest] = useState(false)
-
+	const [allowedGuest, setAllowedGuest] = useState(false)
+	const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
+	const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const isGiftCardCart = !cart?.business_id
@@ -170,6 +171,7 @@ const CheckoutUI = (props: any) => {
 
 	const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
 	const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find((b: any) => b.business_id === cart?.business_id && b.accumulates)
+	const methodsPay = ['google_pay', 'apple_pay']
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
@@ -187,6 +189,7 @@ const CheckoutUI = (props: any) => {
 			validationFields?.fields?.checkout?.driver_tip?.required &&
 			(Number(cart?.driver_tip) <= 0)) ||
 		(validateCommentsCartField)
+		|| (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -209,16 +212,16 @@ const CheckoutUI = (props: any) => {
 	}
 
 	const handleSuccessSignup = (user: any) => {
-    login({
-      user,
-      token: user?.session?.access_token
-    })
-    setOpenModal({ ...openModal, signup: false })
-  }
+		login({
+			user,
+			token: user?.session?.access_token
+		})
+		setOpenModal({ ...openModal, signup: false })
+	}
 
 	const handleSuccessLogin = (user: any) => {
-    if (user) setOpenModal({ ...openModal, login: false })
-  }
+		if (user) setOpenModal({ ...openModal, login: false })
+	}
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
@@ -239,9 +242,9 @@ const CheckoutUI = (props: any) => {
 	}
 
 	const handlePlaceOrderAsGuest = () => {
-    setIsOpen(false)
-    handlerClickPlaceOrder && handlerClickPlaceOrder()
-  }
+		setIsOpen(false)
+		handlerClickPlaceOrder && handlerClickPlaceOrder()
+	}
 
 	const handlePaymentMethodClick = (paymethod: any) => {
 		setShowGateway({ closedByUser: false, open: true })
@@ -261,7 +264,7 @@ const CheckoutUI = (props: any) => {
 	const checkValidationFields = () => {
 		setUserErrors([])
 		const errors = []
-		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
+		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
 		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
@@ -662,6 +665,10 @@ const CheckoutUI = (props: any) => {
 									handlePaymentMethodClickCustom={handlePaymentMethodClick}
 									handlePlaceOrder={handlePlaceOrder}
 									merchantId={merchantId}
+									setMethodPaySupported={setMethodPaySupported}
+									methodPaySupported={methodPaySupported}
+									placeByMethodPay={placeByMethodPay}
+									setPlaceByMethodPay={setPlaceByMethodPay}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -745,7 +752,7 @@ const CheckoutUI = (props: any) => {
 											maxDate={maxDate}
 											loyaltyRewardRate={
 												creditPointPlanOnBusiness?.accumulation_rate ??
-													(!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
+												(!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
 											}
 										/>
 									</>
@@ -856,7 +863,7 @@ const CheckoutUI = (props: any) => {
 						open={openModal.signup}
 						onClose={() => setOpenModal({ ...openModal, signup: false })}
 					>
-						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%' }}>
 							<SignupForm
 								handleSuccessSignup={handleSuccessSignup}
 								isGuest
@@ -870,7 +877,7 @@ const CheckoutUI = (props: any) => {
 						open={openModal.login}
 						onClose={() => setOpenModal({ ...openModal, login: false })}
 					>
-						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
+						<ScrollView style={{ paddingHorizontal: 20, width: '100%' }}>
 							<LoginForm
 								handleSuccessLogin={handleSuccessLogin}
 								isGuest
@@ -883,7 +890,12 @@ const CheckoutUI = (props: any) => {
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
-					handleClick={isDisabledButtonPlace ? () => vibrateApp() : () => handlePlaceOrder(null)}
+					handleClick={
+						isDisabledButtonPlace
+							? () => vibrateApp()
+							: methodsPay.includes(paymethodSelected?.gateway)
+								? () => setPlaceByMethodPay(true)
+								: () => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
 					btnText={subtotalWithTaxes >= cart?.minimum
