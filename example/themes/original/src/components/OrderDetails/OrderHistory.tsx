@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { OText, OButton } from '../shared'
+import { formatSeconds } from '../../utils'
 
 export const OrderHistory = (props: any) => {
   const {
@@ -61,7 +62,7 @@ export const OrderHistory = (props: any) => {
     20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
     21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
     22: 'ORDER_LOOKING_FOR_DRIVER',
-      23: 'ORDER_DRIVER_ON_WAY'
+    23: 'ORDER_DRIVER_ON_WAY'
   }
 
   const getLogisticTagStatus = (status: any) => {
@@ -128,12 +129,18 @@ export const OrderHistory = (props: any) => {
               <OText
                 size={14}
                 weight='bold'
-                numberOfLines={1}
+                numberOfLines={message.change?.attribute === 'delivered_in' ? 2 : 1}
                 ellipsizeMode='tail'
               >
                 {message.change?.attribute === 'logistic_status'
                   ? getLogisticTagStatus(parseInt(message.change.new, 10))
-                  : t(ORDER_STATUS[parseInt(message.change.new, 10)])
+                  : message.change?.attribute === 'delivered_in' ? (
+                    <>
+                      {t('TIME_ADDED_BY_DRIVER', 'Time added by driver')}{'\n'}
+                      {formatSeconds(parseInt(message.change.new, 10))}
+                    </>
+                  )
+                    : t(ORDER_STATUS[parseInt(message.change.new, 10)])
                 }
               </OText>
             ) : (
