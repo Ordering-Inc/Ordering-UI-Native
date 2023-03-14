@@ -495,7 +495,7 @@ export const getOrderStatus = (s: string) => {
         'Order picked up completed by customer',
       ),
       slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-      percentage: 100,
+      percentage: 1,
       image: theme.images.order.status1,
     },
     {
@@ -542,7 +542,7 @@ export const getOrderStatus = (s: string) => {
         'Customer almost arrived to business',
       ),
       slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-      percentage: 90,
+      percentage: 0.9,
       image: theme.images.order.status7,
     },
     {
@@ -552,21 +552,21 @@ export const getOrderStatus = (s: string) => {
         'Customer arrived to business',
       ),
       slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-      percentage: 95,
+      percentage: 0.95,
       image: theme.images.order.status7,
     },
     {
       key: 22,
       value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
       slug: 'ORDER_LOOKING_FOR_DRIVER',
-      percentage: 35,
+      percentage: 0.35,
       image: theme.images.order.status8
     },
     {
       key: 23,
       value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
       slug: 'ORDER_DRIVER_ON_WAY',
-      percentage: 45,
+      percentage: 0.45,
       image: theme.images.order.status8
     }
   ];
