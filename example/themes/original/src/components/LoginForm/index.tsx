@@ -170,6 +170,10 @@ const LoginFormUI = (props: LoginParams) => {
 				vibrateApp()
 				return
 			}
+			if(!values?.cellphone && otpType === 'cellphone'){
+				showToast(ToastType.Error, t('PHONE_NUMBER_REQUIRED', 'Phone number is required'));
+				return
+			}
 			if (loginTab === 'otp') {
 				generateOtpCode({
 					...values,
@@ -253,6 +257,7 @@ const LoginFormUI = (props: LoginParams) => {
 	}
 
 	const handleLoginOtp = (code: string) => {
+		if (!code) return
 		handleButtonLoginClick({ code })
 		setWillVerifyOtpState(false)
 	}
