@@ -74,13 +74,22 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
         />
-        {order?.products?.map((product: any) => !product?.deleted && (
-          <SingleProductReview
-            key={product.id}
-            product={product}
-            formState={formState}
-            handleChangeFormState={handleChangeFormState}
-          />
+        {order?.products && order.products.length > 0 && order?.products.map(productsOrder => (
+          productsOrder?.length ? productsOrder?.map((product: any, i: any) => !product?.deleted ?
+            <SingleProductReview
+              key={i}
+              product={product}
+              formState={formState}
+              handleChangeFormState={handleChangeFormState}
+            /> : null
+          ) : (!productsOrder?.deleted ? (
+            <SingleProductReview
+              product={productsOrder}
+              formState={formState}
+              handleChangeFormState={handleChangeFormState}
+            />
+          ) : null
+          )
         ))}
       </ReviewProductsContainer>
 
