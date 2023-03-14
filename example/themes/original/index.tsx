@@ -1,6 +1,6 @@
 import { AddressForm } from './src/components/AddressForm';
 import { AddressDetails } from './src/components/AddressDetails';
-import { AnalyticsSegment } from './src/components/AnalyticsSegment';
+// import { AnalyticsSegment } from './src/components/AnalyticsSegment';
 import { Home } from './src/components/Home';
 import { LoginForm } from './src/components/LoginForm';
 import { SignupForm } from './src/components/SignupForm';
@@ -167,7 +167,7 @@ import {
 export {
 	AddressForm,
 	AddressDetails,
-	AnalyticsSegment,
+	// AnalyticsSegment,
 	Home as HomeView,
 	SignupForm,
 	LoginForm,
