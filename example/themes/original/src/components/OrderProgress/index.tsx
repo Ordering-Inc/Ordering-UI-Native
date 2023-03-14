@@ -152,7 +152,7 @@ const OrderProgressUI = (props: any) => {
             </OrderInfoWrapper>
             <View style={{ flex: 1 }}>
               <ProgressContentWrapper>
-                <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${getOrderStatus(lastOrder.status)?.percentage}%` : '0%' }} />
+                <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${(getOrderStatus(lastOrder.status) as any).percentage * 100}%` : '0%' }} />
               </ProgressContentWrapper>
               <ProgressTextWrapper>
                 <OText size={12} style={{ width: '50%' }}>{getOrderStatus(lastOrder.status)?.value}</OText>
