@@ -82,12 +82,13 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
               formState={formState}
               handleChangeFormState={handleChangeFormState}
             />
-          )) : !productsOrder?.deleted && (
+          )) : (!productsOrder?.deleted ? (
             <SingleProductReview
               product={productsOrder}
               formState={formState}
               handleChangeFormState={handleChangeFormState}
             />
+          ) : null
           )
         ))}
       </ReviewProductsContainer>
