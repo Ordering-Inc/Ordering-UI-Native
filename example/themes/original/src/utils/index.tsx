@@ -273,7 +273,7 @@ export const transformCountryCode = (countryCode: number) => {
 }
 
 export const findExitingCode = (countryCode: string) => {
-  const code = CODES.find((code: any) => code.countryCode === countryCode)
+  const code = CODES.find((code: any) => code.countryCode === (countryCode || '').toUpperCase())
   return code?.countryCode
 }
 

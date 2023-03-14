@@ -112,7 +112,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 				defaultCode={defaultCode ?
 					!isNaN(defaultCode)
 						? transformCountryCode(defaultCode)
-						: defaultCode
+						: findExitingCode(defaultCode)
 					: findExitingCode(configs?.default_country_code?.value?.toUpperCase())}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
