@@ -129,7 +129,7 @@ export const OrderHistory = (props: any) => {
               <OText
                 size={14}
                 weight='bold'
-                numberOfLines={message.change?.attribute === 'delivered_in' ? 2 : 1}
+                numberOfLines={message.change?.attribute.includes(['delivered_in', 'prepared_in']) ? 2 : 1}
                 ellipsizeMode='tail'
               >
                 {message.change?.attribute === 'logistic_status'
@@ -140,7 +140,12 @@ export const OrderHistory = (props: any) => {
                       {formatSeconds(parseInt(message.change.new, 10))}
                     </>
                   )
-                    : t(ORDER_STATUS[parseInt(message.change.new, 10)])
+                    : message.change?.attribute === 'prepared_in' ? (
+                    <>
+                      {t('TIME_ADDED_BY_BUSINESS', 'Time added by business')}{'\n'}
+                      {formatSeconds(parseInt(message.change.new, 10))}
+                    </>
+                    ) : t(ORDER_STATUS[parseInt(message.change.new, 10)])
                 }
               </OText>
             ) : (
