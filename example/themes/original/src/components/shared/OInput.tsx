@@ -104,7 +104,9 @@ const OInput = (props: Props): React.ReactElement => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
 				style={{
-					color: theme?.general?.components?.inputs?.color,
+          ...(theme?.general?.components?.inputs?.color && {
+            color: theme?.general?.components?.inputs?.color
+          }),
 					...props?.inputStyle
 				}}
 				onFocus={() => setInputFocused(true)}

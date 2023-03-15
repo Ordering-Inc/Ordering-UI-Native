@@ -52,7 +52,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const [isPressed, setIsPressed] = useState(false)
 
-  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
+  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12, 15];
 
   const styles = StyleSheet.create({
     container: {
