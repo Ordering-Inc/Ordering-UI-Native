@@ -54,7 +54,7 @@ export const WalletTransactionItem = (props: any) => {
           <OText>{item?.description}</OText>
         </DescriptionBlock>
       )}
-      {!!item?.code && (
+      {/* {!!item?.code && (
         <DescriptionBlock>
           <OText weight={'bold'}>
             {t('CODE', 'Code')}

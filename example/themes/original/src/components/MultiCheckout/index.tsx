@@ -114,7 +114,9 @@ const MultiCheckoutUI = (props: any) => {
 
   const clearAmount = (value: any) => parseFloat((Math.trunc(value * 100) / 100).toFixed(configs.format_number_decimal_length?.value ?? 2))
 
-  const loyaltyRewardValue = openCarts.reduce((sum: any, cart: any) => sum + clearAmount((cart?.subtotal + getIncludedTaxes(cart)) * accumulationRateBusiness(cart?.business_id)), 0)
+  const loyaltyRewardValue = openCarts
+    ?.reduce((sum: any, cart: any) => sum + clearAmount((cart?.subtotal + getIncludedTaxes(cart)) * accumulationRateBusiness(cart?.business_id)), 0)
+    ?.toFixed(configs.format_number_decimal_length?.value ?? 2)
 
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -320,7 +322,7 @@ const MultiCheckoutUI = (props: any) => {
                     isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
                     isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
                     driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
-                      ? openCarts[0]?.driver_tip
+                      ? openCarts?.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0)
                       : openCarts[0]?.driver_tip_rate}
                     useOrderContext
                   />

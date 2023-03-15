@@ -100,7 +100,12 @@ const OInput = (props: Props): React.ReactElement => {
 				ref={(e: any) => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
-				style={props?.inputStyle}
+				style={{
+          ...(theme?.general?.components?.inputs?.color && {
+            color: theme?.general?.components?.inputs?.color
+          }),
+					...props?.inputStyle
+				}}
 				onFocus={() => setInputFocused(true)}
 				onBlur={() => setInputFocused(false)}
 			/>
