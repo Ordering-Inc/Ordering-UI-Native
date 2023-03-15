@@ -49,12 +49,12 @@ export const WalletTransactionItem = (props: any) => {
             .replace(':order_id', item?.event?.order_id ? item?.event?.order_id + ' ' : '')}
         </OText>
       </MessageBlock>
-      {/* {!!item?.description && (
+      {!!item?.description && (
         <DescriptionBlock>
           <OText>{item?.description}</OText>
         </DescriptionBlock>
       )}
-      {!!item?.code && (
+      {/* {!!item?.code && (
         <DescriptionBlock>
           <OText weight={'bold'}>
             {t('CODE', 'Code')}
