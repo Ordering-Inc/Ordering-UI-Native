@@ -273,7 +273,7 @@ export const transformCountryCode = (countryCode: number) => {
 }
 
 export const findExitingCode = (countryCode: string) => {
-  const code = CODES.find((code: any) => code.countryCode === countryCode)
+  const code = CODES.find((code: any) => code.countryCode === (countryCode || '').toUpperCase())
   return code?.countryCode
 }
 
@@ -384,7 +384,7 @@ export const getOrderStatus = (s: string) => {
       key: 0,
       value: t('PENDING', 'Pending'),
       slug: 'PENDING',
-      percentage: 0.25,
+      percentage: 0.1,
       image: theme.images.order.status0,
     },
     {
@@ -412,7 +412,7 @@ export const getOrderStatus = (s: string) => {
       key: 4,
       value: t('PREPARATION_COMPLETED', 'Preparation Completed'),
       slug: 'PREPARATION_COMPLETED',
-      percentage: 0.7,
+      percentage: 0.2,
       image: theme.images.order.status4,
     },
     {
@@ -433,21 +433,21 @@ export const getOrderStatus = (s: string) => {
       key: 7,
       value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'),
       slug: 'ACCEPTED_BY_BUSINESS',
-      percentage: 0.35,
+      percentage: 0.15,
       image: theme.images.order.status7,
     },
     {
       key: 8,
       value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'),
       slug: 'ACCEPTED_BY_DRIVER',
-      percentage: 0.45,
+      percentage: 0.4,
       image: theme.images.order.status8,
     },
     {
       key: 9,
       value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'),
       slug: 'PICK_UP_COMPLETED_BY_DRIVER',
-      percentage: 0.8,
+      percentage: 0.7,
       image: theme.images.order.status9,
     },
     {
@@ -485,7 +485,7 @@ export const getOrderStatus = (s: string) => {
       key: 14,
       value: t('ORDER_NOT_READY', 'Order not ready'),
       slug: 'ORDER_NOT_READY',
-      percentage: 0,
+      percentage: 0.15,
       image: theme.images.order.status13,
     },
     {
@@ -495,7 +495,7 @@ export const getOrderStatus = (s: string) => {
         'Order picked up completed by customer',
       ),
       slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-      percentage: 100,
+      percentage: 1,
       image: theme.images.order.status1,
     },
     {
@@ -522,7 +522,7 @@ export const getOrderStatus = (s: string) => {
         'Driver almost arrived to business',
       ),
       slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
-      percentage: 0.15,
+      percentage: 0.5,
       image: theme.images.order.status3,
     },
     {
@@ -542,7 +542,7 @@ export const getOrderStatus = (s: string) => {
         'Customer almost arrived to business',
       ),
       slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-      percentage: 90,
+      percentage: 0.9,
       image: theme.images.order.status7,
     },
     {
@@ -552,21 +552,21 @@ export const getOrderStatus = (s: string) => {
         'Customer arrived to business',
       ),
       slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-      percentage: 95,
+      percentage: 0.9,
       image: theme.images.order.status7,
     },
     {
       key: 22,
       value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
       slug: 'ORDER_LOOKING_FOR_DRIVER',
-      percentage: 35,
+      percentage: 0.3,
       image: theme.images.order.status8
     },
     {
       key: 23,
       value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
       slug: 'ORDER_DRIVER_ON_WAY',
-      percentage: 45,
+      percentage: 0.8,
       image: theme.images.order.status8
     }
   ];
@@ -614,7 +614,7 @@ export const lightenDarkenColor = (color: any) => {
   }
 }
 
-export const vibrateApp = (impact ?: string) => {
+export const vibrateApp = (impact?: string) => {
   const options = {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false
