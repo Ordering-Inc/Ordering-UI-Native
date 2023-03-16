@@ -281,7 +281,9 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    <OfferAlert offerId={offer?.id} />
+                    {!!offer?.id && (
+                      <OfferAlert offerId={offer?.id} />
+                    )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
                     - {parsePrice(offer?.summary?.discount)}
@@ -343,7 +345,7 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    {!offer?.type && (
+                    {!offer?.type && !!offer?.id && (
                       <OfferAlert offerId={offer?.id} />
                     )}
                   </OSRow>
@@ -370,7 +372,9 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    <OfferAlert offerId={offer?.id} />
+                    {!!offer?.id && (
+                      <OfferAlert offerId={offer?.id} />
+                    )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
                     - {parsePrice(offer?.summary?.discount)}
