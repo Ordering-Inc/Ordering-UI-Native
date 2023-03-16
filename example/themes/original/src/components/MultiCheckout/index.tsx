@@ -90,6 +90,15 @@ const MultiCheckoutUI = (props: any) => {
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
 
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
+
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -414,6 +423,16 @@ const MultiCheckoutUI = (props: any) => {
                         </OText>
                       </View>
                     )}
+                  {!cartGroup?.loading && cartGroup?.result?.payment_events?.length > 0 && cartGroup?.result?.payment_events?.map((event: any) => (
+                    <View key={event.id} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {walletName[cartGroup?.result?.wallets?.find((wallet: any) => wallet.wallet_id === event.wallet_id)?.type]?.name}
+                      </OText>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        -{parsePrice(event.amount, { isTruncable: true })}
+                      </OText>
+                    </View>
+                  ))}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
                       {t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
