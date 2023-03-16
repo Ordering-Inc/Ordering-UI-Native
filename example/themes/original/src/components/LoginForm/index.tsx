@@ -255,10 +255,18 @@ const LoginFormUI = (props: LoginParams) => {
 		setOtpType(type)
 	}
 
-	const handleLoginOtp = (code: string) => {
+	const handleLoginOtp = async (code: string) => {
 		if (!code) return
-		handleButtonLoginClick({ code })
-		setWillVerifyOtpState(false)
+		const logged = await handleButtonLoginClick({ code })
+		if (logged){
+			setWillVerifyOtpState(false)
+		} else {
+			setAlertState({
+				open: true,
+				title: '',
+				content: t('OTP_CODE_INCORRECT', 'Otp code incorrect')
+			})
+		}
 	}
 
 	const closeAlert = () => {
