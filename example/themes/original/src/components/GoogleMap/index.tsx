@@ -18,7 +18,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     saveLocation,
     setSaveLocation,
     handleToggleMap,
-    locations
+    locations,
+    isIntGeoCoder
   } = props
 
   const [, t] = useLanguage()
@@ -152,8 +153,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }
 
   useEffect(() => {
+    if (isIntGeoCoder) return
     Geocoder.init(googleMapsApiKey)
-  }, [])
+  }, [isIntGeoCoder])
 
   useEffect(() => {
     mapRef.current.animateToRegion({
