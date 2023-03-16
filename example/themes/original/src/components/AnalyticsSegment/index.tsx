@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   createClient,
-  // AnalyticsProvider
+  AnalyticsProvider
 } from '@segment/analytics-react-native';
 import { useEvent, useConfig, useLanguage } from 'ordering-components/native';
 
@@ -302,9 +302,9 @@ export const AnalyticsSegment = (props: any) => {
 
   return (
     <>
-      {/* <AnalyticsProvider client={segmentClient}>
+      <AnalyticsProvider client={segmentClient}>
         {children}
-      </AnalyticsProvider> */}
+      </AnalyticsProvider>
     </>
   )
 }
