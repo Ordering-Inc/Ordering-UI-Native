@@ -3,7 +3,7 @@ import Geocoder from 'react-native-geocoding'
 import { ActivityIndicator } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
-import { Platform } from 'react-native'
+import { Platform, PermissionsAndroid } from 'react-native'
 
 import {
 	PERMISSIONS,
@@ -73,7 +73,30 @@ export const GPSButton = (props: any) => {
 			setLoading(false);
     })
   }
-
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Geolocation Permission',
+          message: 'Can we access your location?',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      console.log('granted', granted);
+      if (granted === 'granted') {
+        console.log('You can use Geolocation');
+        return true;
+      } else {
+        console.log('You cannot use Geolocation');
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+  };
   const getCurrentPosition = async () => {
     let trackingStatus = await getTrackingStatus()
     if (trackingStatus === 'not-determined') {
@@ -103,15 +126,36 @@ export const GPSButton = (props: any) => {
       })
       return
     }
+
     let permissionStatus: PermissionStatus;
 		setLoading(true)
 		if (Platform.OS === 'ios') {
 		  permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
 		} else {
-		  permissionStatus = await request(
-			  PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-		  );
-		}
+		  // permissionStatus = await request(
+			//   PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+		  // );
+      const result = requestLocationPermission();
+      result.then(res => {
+        if (res) {
+          Geolocation.getCurrentPosition((pos) => {
+            setErrorState({
+              ...errorState,
+              getCurrentPositionNew2: pos
+            })
+            geoCodePosition(pos.coords)
+          }, (err) => {
+            setErrorState({
+              ...errorState,
+              fallbackGetCurrentPositionNew2: err
+            })
+            setLoading(false);
+            console.log(`ERROR(${err.code}): ${err.message}`)
+          }, {
+            enableHighAccuracy: true, timeout: 30000, maximumAge: 10000
+          })
+        }
+      });		}
     if (permissionStatus === 'denied') {
 		  openSettings();
 		}
