@@ -3,14 +3,6 @@ import Geocoder from 'react-native-geocoding'
 import { ActivityIndicator } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
-import { Platform, PermissionsAndroid } from 'react-native'
-
-import {
-	PERMISSIONS,
-	PermissionStatus,
-	request,
-	openSettings,
-} from 'react-native-permissions';
 
 import { OText } from '../shared'
 import { GpsButtonStyle } from './styles'
@@ -21,9 +13,7 @@ export const GPSButton = (props: any) => {
 		apiKey,
     IconButton,
     IconLoadingButton,
-    isIntGeoCoder,
-    errorState,
-    setErrorState
+    isIntGeoCoder
   } = props
 
 	const [isLoading, setLoading] = useState(false);
@@ -33,10 +23,6 @@ export const GPSButton = (props: any) => {
       latitude: pos.latitude,
       longitude: pos.longitude
     }).then(({ results }: any) => {
-      setErrorState({
-        ...errorState,
-        geoCodePosition: results
-      })
       let zipcode = null
       if (results && results.length > 0) {
         for (const component of results[0].address_components) {
@@ -66,10 +52,6 @@ export const GPSButton = (props: any) => {
 			setLoading(false);
     }).catch((err: any) => {
       console.log(err);
-      setErrorState({
-        ...errorState,
-        fallbackGeoCodePosition: err
-      })
 			setLoading(false);
     })
   }
@@ -82,71 +64,14 @@ export const GPSButton = (props: any) => {
     if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
       setLoading(true)
       Geolocation.getCurrentPosition((pos) => {
-        setErrorState({
-          ...errorState,
-          getCurrentPosition: pos
-        })
         geoCodePosition(pos.coords)
       }, (err) => {
-        setErrorState({
-          ...errorState,
-          fallbackGetCurrentPosition: err
-        })
         setLoading(false);
         console.log(`ERROR(${err.code}): ${err.message}`)
       }, {
         enableHighAccuracy: false, timeout: 30000, maximumAge: 1000
       })
     }
-
-    // let permissionStatus: PermissionStatus;
-		// setLoading(true)
-		// if (Platform.OS === 'ios') {
-		//   permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-		// } else {
-		//   // permissionStatus = await request(
-		// 	//   PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-		//   // );
-    //   const result = requestLocationPermission();
-    //   result.then(res => {
-    //     if (res) {
-    //       Geolocation.getCurrentPosition((pos) => {
-    //         setErrorState({
-    //           ...errorState,
-    //           getCurrentPositionNew2: pos
-    //         })
-    //         geoCodePosition(pos.coords)
-    //       }, (err) => {
-    //         setErrorState({
-    //           ...errorState,
-    //           fallbackGetCurrentPositionNew2: err
-    //         })
-    //         setLoading(false);
-    //         console.log(`ERROR(${err.code}): ${err.message}`)
-    //       }, {
-    //         enableHighAccuracy: true, timeout: 30000, maximumAge: 10000
-    //       })
-    //     }
-    //   });		}
-    // if (permissionStatus === 'denied') {
-		//   openSettings();
-		// }
-    // Geolocation.getCurrentPosition((pos) => {
-    //   setErrorState({
-    //     ...errorState,
-    //     getCurrentPositionNew: pos
-    //   })
-    //   geoCodePosition(pos.coords)
-    // }, (err) => {
-    //   setErrorState({
-    //     ...errorState,
-    //     fallbackGetCurrentPositionNew: err
-    //   })
-    //   setLoading(false);
-    //   console.log(`ERROR(${err.code}): ${err.message}`)
-    // }, {
-    //   enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
-    // })
   }
 
   useEffect(() => {
