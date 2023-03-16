@@ -629,7 +629,8 @@ export interface GoogleMapsParams {
 	isSetInputs?: boolean,
 	locations?: Array<any>,
 	setSaveLocation?: (val: boolean) => void,
-	handleToggleMap?: () => void
+	handleToggleMap?: () => void,
+	isIntGeoCoder: boolean
 }
 
 export interface HelpParams {

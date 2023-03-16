@@ -123,7 +123,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		},
 		wrapperNavbar: Platform.OS === 'ios'
 			? { paddingVertical: 0, paddingLeft: 40, paddingRight: 20 }
-			: { paddingVertical: 20, paddingLeft: 40, paddingRight: 20 }
+			: { paddingVertical: 10, paddingLeft: 40, paddingRight: 20 }
 	});
 
 	const [, t] = useLanguage();
@@ -176,7 +176,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 	const getAddressFormatted = (address: any) => {
 		const data: any = { address: null, error: null };
-		Geocoder.init(googleMapsApiKey);
 		Geocoder.from(address)
 			.then((json) => {
 				if (json.results && json.results?.length > 0) {
@@ -492,6 +491,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}, []);
 
 	useEffect(() => {
+		Geocoder.init(googleMapsApiKey);
+	}, [googleMapsApiKey]);
+
+	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener(
 			'keyboardDidShow',
 			() => {
@@ -535,7 +538,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<AddressFormContainer style={{ height: HEIGHT_SCREEN * .78, overflow: 'scroll' }}>
+				<AddressFormContainer style={{ overflow: 'scroll' }}>
 					<View>
 						<FormInput>
 							<AutocompleteInput>
@@ -640,6 +643,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													}
 												}}
 												IconButton={<OIcon src={theme.images.general.pin} width={16} />}
+												isIntGeoCoder
 											/>
 										</View>
 									)}
@@ -661,6 +665,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 											saveLocation={saveMapLocation}
 											setSaveLocation={setSaveMapLocation}
 											handleToggleMap={handleToggleMap}
+											isIntGeoCoder
 										/>
 									</GoogleMapContainer>
 								</View>
@@ -871,6 +876,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									saveLocation={saveMapLocation}
 									setSaveLocation={setSaveMapLocation}
 									handleToggleMap={handleToggleMap}
+									isIntGeoCoder
 								/>
 							</GoogleMapContainer>
 						)}
