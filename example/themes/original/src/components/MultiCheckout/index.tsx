@@ -316,6 +316,7 @@ const MultiCheckoutUI = (props: any) => {
                   </OText>
                   <DriverTips
                     isMulti
+                    isLoading={loading}
                     carts={openCarts}
                     businessIds={openCarts.map((cart: any) => cart.business_id)}
                     driverTipsOptions={driverTipsOptions}

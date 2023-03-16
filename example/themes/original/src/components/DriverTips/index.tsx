@@ -23,6 +23,7 @@ const DriverTipsUI = (props: any) => {
 		driverTip,
 		driverTipsOptions,
 		isMulti,
+		isLoading,
 		cart,
 		carts,
 		isDriverTipUseCustom,
@@ -79,8 +80,10 @@ const DriverTipsUI = (props: any) => {
 					<TouchableOpacity
 						key={i}
 						onPress={() => {
-							handlerChangeOption(option)
-							setCustomTip(false)
+							if (!isLoading) {
+								handlerChangeOption(option)
+								setCustomTip(false)
+							}
 						}}
 					>
 						<DTCard
@@ -95,7 +98,7 @@ const DriverTipsUI = (props: any) => {
 				))}
 				{isDriverTipUseCustom && (
 					<TouchableOpacity
-						onPress={() => setCustomTip(true)}
+						onPress={() => { !isLoading && setCustomTip(true) }}
 					>
 						<DTCard
 							style={style.semicircle}

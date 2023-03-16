@@ -330,7 +330,7 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    {!offer?.type && !!offer?.id && (
+                    {!!offer?.id && (
                       <OfferAlert offerId={offer?.id} />
                     )}
                   </OSRow>
