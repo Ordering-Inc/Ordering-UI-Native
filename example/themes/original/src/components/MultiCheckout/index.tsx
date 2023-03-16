@@ -166,9 +166,9 @@ const MultiCheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = (confirmPayment ?: any) => {
     if (!userErrors.length) {
-      handleGroupPlaceOrder && handleGroupPlaceOrder()
+      handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
     }
     let stringError = ''
