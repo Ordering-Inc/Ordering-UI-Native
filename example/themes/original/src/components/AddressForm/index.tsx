@@ -6,6 +6,7 @@ import {
 	Keyboard,
 	TouchableWithoutFeedback,
 	Platform,
+	Text,
 } from 'react-native';
 import {
 	AddressForm as AddressFormController,
@@ -145,6 +146,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		address: null,
 	});
 	const [isFirstTime, setIsFirstTime] = useState(true);
+	const [errorState, setErrorState] = useState({});
 	const [locationChange, setLocationChange] = useState(
 		isEditing
 			? addressState?.address?.location
@@ -344,6 +346,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 	};
 
 	const handleChangeAddress = (data: any, details: any) => {
+		setErrorState({
+			...errorState,
+			handleChangeAddress: {data: data, details: details}
+		})
 		const addressSelected = {
 			address: data?.description || data?.address,
 			location: details?.geometry?.location,
@@ -644,6 +650,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 												}}
 												IconButton={<OIcon src={theme.images.general.pin} width={16} />}
 												isIntGeoCoder
+												errorState={errorState}
+												setErrorState={setErrorState}
 											/>
 										</View>
 									)}
@@ -808,6 +816,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 							)}
 						</FormInput>
+						<Text>
+							{JSON.stringify(errorState)}
+						</Text>
 						{!isHideIcons && (
 							<IconsContainer>
 								{tagsName.map((tag) => (

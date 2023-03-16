@@ -13,7 +13,9 @@ export const GPSButton = (props: any) => {
 		apiKey,
     IconButton,
     IconLoadingButton,
-    isIntGeoCoder
+    isIntGeoCoder,
+    errorState,
+    setErrorState
   } = props
 
 	const [isLoading, setLoading] = useState(false);
@@ -23,6 +25,10 @@ export const GPSButton = (props: any) => {
       latitude: pos.latitude,
       longitude: pos.longitude
     }).then(({ results }: any) => {
+      setErrorState({
+        ...errorState,
+        geoCodePosition: results
+      })
       let zipcode = null
       if (results && results.length > 0) {
         for (const component of results[0].address_components) {
@@ -32,7 +38,7 @@ export const GPSButton = (props: any) => {
             break
           }
         }
-        let data = null
+        let data : any
         const details = {
           geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
         }
@@ -52,6 +58,10 @@ export const GPSButton = (props: any) => {
 			setLoading(false);
     }).catch((err: any) => {
       console.log(err);
+      setErrorState({
+        ...errorState,
+        fallbackGeoCodePosition: err
+      })
 			setLoading(false);
     })
   }
@@ -61,11 +71,23 @@ export const GPSButton = (props: any) => {
     if (trackingStatus === 'not-determined') {
       trackingStatus = await requestTrackingPermission()
     }
+    setErrorState({
+      ...errorState,
+      trackingStatus: trackingStatus
+    })
     if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
       setLoading(true)
       Geolocation.getCurrentPosition((pos) => {
+        setErrorState({
+          ...errorState,
+          getCurrentPosition: pos
+        })
         geoCodePosition(pos.coords)
       }, (err) => {
+        setErrorState({
+          ...errorState,
+          fallbackGetCurrentPosition: err
+        })
         setLoading(false);
         console.log(`ERROR(${err.code}): ${err.message}`)
       }, {
