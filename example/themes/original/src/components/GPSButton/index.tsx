@@ -3,6 +3,14 @@ import Geocoder from 'react-native-geocoding'
 import { ActivityIndicator } from 'react-native-paper'
 import Geolocation from '@react-native-community/geolocation'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
+import { Platform } from 'react-native'
+
+import {
+	PERMISSIONS,
+	PermissionStatus,
+	request,
+	openSettings,
+} from 'react-native-permissions';
 
 import { OText } from '../shared'
 import { GpsButtonStyle } from './styles'
@@ -93,7 +101,36 @@ export const GPSButton = (props: any) => {
       }, {
         enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
       })
+      return
     }
+    let permissionStatus: PermissionStatus;
+		setLoading(true)
+		if (Platform.OS === 'ios') {
+		  permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+		} else {
+		  permissionStatus = await request(
+			  PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+		  );
+		}
+    if (permissionStatus === 'denied') {
+		  openSettings();
+		}
+    Geolocation.getCurrentPosition((pos) => {
+      setErrorState({
+        ...errorState,
+        getCurrentPositionNew: pos
+      })
+      geoCodePosition(pos.coords)
+    }, (err) => {
+      setErrorState({
+        ...errorState,
+        fallbackGetCurrentPositionNew: err
+      })
+      setLoading(false);
+      console.log(`ERROR(${err.code}): ${err.message}`)
+    }, {
+      enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+    })
   }
 
   useEffect(() => {
