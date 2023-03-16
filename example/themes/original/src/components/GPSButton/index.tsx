@@ -83,7 +83,7 @@ export const GPSButton = (props: any) => {
       ...errorState,
       trackingStatus: trackingStatus
     })
-    if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
+    if (trackingStatus === 'authorized') {
       setLoading(true)
       Geolocation.getCurrentPosition((pos) => {
         setErrorState({
