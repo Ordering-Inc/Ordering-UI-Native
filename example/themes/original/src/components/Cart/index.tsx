@@ -23,7 +23,7 @@ import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { CartStoresListing } from '../CartStoresListing';
-import { OAlert } from '../../../../../src/components/shared'
+import { OAlert } from '../shared'
 import { PlaceSpot } from '../PlaceSpot'
 import { DriverTips } from '../DriverTips'
 import { MomentOption } from '../MomentOption'
@@ -67,7 +67,6 @@ const CartUI = (props: any) => {
   const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
-  const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const [openPlaceModal, setOpenPlaceModal] = useState(false)
   const [maxDate, setMaxDate] = useState<any>(null)
   const isCartPending = cart?.status === 2
@@ -75,7 +74,6 @@ const CartUI = (props: any) => {
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
-  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const hideCartComments = theme?.business_view?.components?.cart?.components?.comments?.hidden
   const hideCartDiscount = theme?.business_view?.components?.cart?.components?.discount?.hidden
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -167,16 +165,16 @@ const CartUI = (props: any) => {
     return cart?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
 
-  const onRemoveOffer = (id: number) => {
-    setConfirm({
-      open: true,
-      content: [t('QUESTION_DELETE_OFFER', 'Are you sure that you want to delete the offer?')],
-      title: t('OFFER', 'Offer'),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleRemoveOfferClick(id)
-      }
-    })
+  const OfferAlert = ({ offerId }: any) => {
+    return (
+      <OAlert
+        title={t('OFFER', 'Offer')}
+        message={t('QUESTION_DELETE_OFFER', 'Are you sure that you want to delete the offer?')}
+        onAccept={() => handleRemoveOfferClick(offerId)}
+      >
+        <AntIcon style={{ marginLeft: 3 }} name='closecircle' size={16} color={theme.colors.primary} />
+      </OAlert>
+    )
   }
 
   const walletName: any = {
@@ -283,9 +281,9 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                      <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
-                    </TouchableOpacity>
+                    {!!offer?.id && (
+                      <OfferAlert offerId={offer?.id} />
+                    )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
                     - {parsePrice(offer?.summary?.discount)}
@@ -347,10 +345,8 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    {!offer?.type && (
-                      <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                        <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
-                      </TouchableOpacity>
+                    {!offer?.type && !!offer?.id && (
+                      <OfferAlert offerId={offer?.id} />
                     )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
@@ -376,9 +372,9 @@ const CartUI = (props: any) => {
                     <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                      <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
-                    </TouchableOpacity>
+                    {!!offer?.id && (
+                      <OfferAlert offerId={offer?.id} />
+                    )}
                   </OSRow>
                   <OText size={12} lineHeight={18}>
                     - {parsePrice(offer?.summary?.discount)}
@@ -591,14 +587,6 @@ const CartUI = (props: any) => {
           setOpenPlaceModal={setOpenPlaceModal}
         />
       </OModal>
-      <OAlert
-        open={confirm.open}
-        title={confirm.title}
-        content={confirm.content}
-        onAccept={confirm.handleOnAccept}
-        onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
-        onClose={() => setConfirm({ ...confirm, open: false, title: null })}
-      />
     </CContainer>
   )
 }
