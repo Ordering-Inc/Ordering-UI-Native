@@ -6,7 +6,6 @@ import {
 	Keyboard,
 	TouchableWithoutFeedback,
 	Platform,
-	Text,
 } from 'react-native';
 import {
 	AddressForm as AddressFormController,
@@ -809,9 +808,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 							)}
 						</FormInput>
-						<Text>
-							{JSON.stringify(errorState)}
-						</Text>
 						{!isHideIcons && (
 							<IconsContainer>
 								{tagsName.map((tag) => (
