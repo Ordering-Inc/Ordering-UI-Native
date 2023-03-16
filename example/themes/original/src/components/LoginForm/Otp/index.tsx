@@ -82,7 +82,6 @@ export const Otp = (props: otpParams) => {
           {formatSeconds(otpLeftTime)}
         </OText>
         <OtpInputs
-          autofillFromClipboard
           numberOfInputs={pinCount || 6}
           style={loginStyle.container}
           inputStyles={loginStyle.underlineStyleBase}
