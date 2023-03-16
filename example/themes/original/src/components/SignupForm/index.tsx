@@ -8,6 +8,7 @@ import { PhoneInputNumber } from '../PhoneInputNumber';
 import { FacebookLogin } from '../FacebookLogin';
 import Recaptcha from 'react-native-recaptcha-that-works'
 import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
 	SignupForm as SignUpController,
@@ -37,7 +38,7 @@ import Alert from '../../../../../src/providers/AlertProvider'
 import { OText, OButton, OInput } from '../shared';
 import { OModal } from '../../../../../src/components/shared';
 import { SignupParams } from '../../types';
-import { sortInputFields, vibrateApp } from '../../utils';
+import { sortInputFields } from '../../utils';
 import { GoogleLogin } from '../GoogleLogin';
 import { AppleLogin } from '../AppleLogin';
 
@@ -162,6 +163,14 @@ const SignupFormUI = (props: SignupParams) => {
 			title: '',
 			content: []
 		})
+	}
+
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
 	}
 
 	const handleRefs = (ref: any, code: string) => {

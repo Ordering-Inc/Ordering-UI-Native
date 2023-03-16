@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView }
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import {
 	Checkout as CheckoutController,
 	useOrder,
@@ -52,7 +53,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText, vibrateApp } from '../../utils';
+import { getTypesText } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
@@ -209,6 +210,14 @@ const CheckoutUI = (props: any) => {
 		if (isPreOrder) {
 			navigation.navigate('MomentOption')
 		}
+	}
+
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
 	}
 
 	const handleSuccessSignup = (user: any) => {
