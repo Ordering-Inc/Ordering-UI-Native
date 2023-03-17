@@ -77,7 +77,7 @@ export const GPSButton = (props: any) => {
   useEffect(() => {
     if (isIntGeoCoder) return
     Geocoder.init(apiKey);
-  }, [])
+  }, [isIntGeoCoder])
 
   return (
     <GpsButtonStyle
