@@ -25,9 +25,9 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const [{ configs }] = useConfig()
   const applePay = ['global_apple_pay', 'apple_pay']
   const googlePay = ['global_google_pay', 'google_pay']
+
   useEffect(() => {
     if (Platform.OS === 'ios') {
-      setErrors(t('GOOGLE_PAY_NOT_SUPPORTED', 'Google pay not supported'))
       setMethodPaySupported({
         enabled: false,
         loading: false
@@ -78,7 +78,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
         setPlaceByMethodPay(false)
       }
     }
-    if (googlePay.includes(paymethod)) {
+    if (googlePay.includes(paymethod) && !methodPaySupported?.enabled) {
       initialize();
     }
   }, [initGooglePay, paymethod]);
@@ -87,9 +87,8 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     if (applePay.includes(paymethod) && !paymethod) return
     if (Platform.OS === 'android') {
       setPlaceByMethodPay(false)
-      setErrors(t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported'))
       setMethodPaySupported({
-        enabled: false,
+        ...methodPaySupported,
         loading: false
       })
       return
@@ -111,7 +110,6 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
         enabled: true,
         loading: false
       })
-      return;
     } else if (paymentMethod) {
       setMethodPaySupported({
         enabled: true,
