@@ -31,6 +31,7 @@ import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import YoutubePlayer from "react-native-youtube-iframe"
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
 	WrapHeader,
@@ -209,7 +210,15 @@ export const ProductOptionsUI = (props: any) => {
 	const [showTitle, setShowTitle] = useState(false)
 
 	const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
-  const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
+	const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
+
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
+	}
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;

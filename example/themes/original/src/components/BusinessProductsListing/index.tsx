@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Vibration, BackHandler } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent, BackHandler } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -25,6 +25,8 @@ import { BusinessProductsListingParams } from '../../types'
 import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
   TopHeader,
@@ -135,21 +137,30 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [openService, setOpenService] = useState(false)
   const [currentProduct, setCurrentProduct] = useState(null)
   const [searchBarHeight, setSearchBarHeight] = useState(60)
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [viewedCategory, setViewedCategory] = useState<any>(null)
   const [showTitle, setShowTitle] = useState(false)
 
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
   const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
-
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
   const isOpenFiltProducts = isOpenSearchBar && !!searchValue
   const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
+  const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0
+
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
+  const vibrateApp = (impact?: string) => {
+    const options = {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false
+    };
+    ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
+  }
   const onProductClick = async (product: any) => {
-    if (product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
+    if (product.ingredients?.length === 0 && product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
       const isProductAddedToCart = currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)
       const productQuantity = isProductAddedToCart?.quantity
       const addCurrentProduct = {
@@ -157,11 +168,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         quantity: 1
       }
       const updateCurrentProduct = {
+        name: product?.name,
         id: product.id,
         code: isProductAddedToCart?.code,
         quantity: productQuantity + 1
       }
-      Vibration.vibrate()
+      vibrateApp()
       const cartData = currentCart?.business_id ? currentCart : { business_id: business.id }
       if (isProductAddedToCart) {
         await updateProduct(updateCurrentProduct, cartData, isQuickAddProduct)
@@ -310,6 +322,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     }
   }, [isFocused])
 
+
+  useEffect(() => {
+    function onKeyboardDidShow(e: KeyboardEvent) {
+      setKeyboardHeight(e?.endCoordinates?.height);
+    }
+
+    function onKeyboardDidHide() {
+      setKeyboardHeight(0);
+    }
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', onKeyboardDidHide);
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   const subtotalWithTaxes = currentCart?.taxes?.reduce((acc: any, item: any) => {
     if (item?.type === 1)
       return acc = acc + item?.summary?.tax
@@ -372,7 +402,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <>
                 {!(businessSingleId && auth) && (
                   <TopActions onPress={() => handleBackNavigation()}>
-                    <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+                    <AntDesignIcon
+                      name='arrowleft'
+                      size={26}
+                    />
                   </TopActions>
                 )}
                 {showTitle && (
@@ -441,8 +474,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         {business?.categories?.length > 0 && isOpenFiltProducts && (
           <FiltProductsContainer
             style={{
-              height: Dimensions.get('window').height - filtProductsHeight,
-              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight
+              height: Dimensions.get('window').height - filtProductsHeight - keyboardHeight - (keyboardHeight > 0 && viewOrderButtonVisible ? 55 : 0),
+              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight,
             }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
@@ -607,7 +640,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </>
           )}
         </IOScrollView>
-        {!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+        {viewOrderButtonVisible && (
           <View style={{ marginBottom: 0 }}>
             <FloatingButton
               btnText={
@@ -662,6 +695,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={business.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
+          handleChangeProfessional={handleChangeProfessionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}
