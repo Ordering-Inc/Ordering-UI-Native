@@ -26,6 +26,7 @@ import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil'
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
   TopHeader,
@@ -44,7 +45,6 @@ import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 import { PageBanner } from '../PageBanner'
-import { vibrateApp } from '../../utils';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -147,10 +147,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
   const isOpenFiltProducts = isOpenSearchBar && !!searchValue
   const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
-  const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 
+  const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0
 
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
+  }
+  const vibrateApp = (impact?: string) => {
+    const options = {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false
+    };
+    ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
   }
   const onProductClick = async (product: any) => {
     if (product.ingredients?.length === 0 && product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
@@ -315,7 +322,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     }
   }, [isFocused])
 
-  
+
   useEffect(() => {
     function onKeyboardDidShow(e: KeyboardEvent) {
       setKeyboardHeight(e?.endCoordinates?.height);
@@ -395,7 +402,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <>
                 {!(businessSingleId && auth) && (
                   <TopActions onPress={() => handleBackNavigation()}>
-                    <AntDesignIcon 
+                    <AntDesignIcon
                       name='arrowleft'
                       size={26}
                     />
