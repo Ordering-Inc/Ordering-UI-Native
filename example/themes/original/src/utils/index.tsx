@@ -4,7 +4,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CODES } from 'ordering-components/native'
 import { ORDER_TYPES } from '../config/constants';
 import { useTheme } from 'styled-components/native';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 const [languageState, t] = useLanguage();
 const theme = useTheme()
@@ -612,14 +611,4 @@ export const lightenDarkenColor = (color: any) => {
   } else {
     return false
   }
-}
-
-export const vibrateApp = (impact?: string) => {
-  const options = {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false
-  };
-
-  ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
-
 }

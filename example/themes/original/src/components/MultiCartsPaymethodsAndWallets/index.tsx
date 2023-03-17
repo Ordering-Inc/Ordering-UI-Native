@@ -13,6 +13,7 @@ import { getIconCard, flatArray } from '../../utils'
 import { StripeElementsForm } from '../StripeElementsForm'
 import { StripeCardsList } from '../StripeCardsList'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useApplePay } from '@stripe/stripe-react-native';
 
 import {
   PMContainer,
@@ -44,6 +45,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
+	const { confirmApplePayPayment } = useApplePay()
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
 
@@ -92,7 +94,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
 		if (methodsPay.includes(paymethodSelected?.gateway)) {
       if (typeof paymethodSelected?.paymethod_data === 'string'){
         const sourceId =  JSON.parse(paymethodSelected?.paymethod_data)?.source_id
-        sourceId && handlePlaceOrder()
+        sourceId && handlePlaceOrder(confirmApplePayPayment)
       }
 		}
 	}, [JSON.stringify(paymethodSelected)])
@@ -100,7 +102,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const renderPaymethods = ({ item }: any) => {
     return (
       <>
-        {item?.gateway === 'apple_pay' ? (
+        {item?.gateway === 'global_apple_pay' ? (
           <TouchableOpacity
             onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
           >
@@ -123,7 +125,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
                 src={getPayIcon(item?.gateway ?? item.paymethod?.gateway)}
                 width={20}
                 height={20}
-                color={item?.gateway === 'apple_pay' ? '' : paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
+                color={item?.gateway === 'global_apple_pay' ? '' : paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
               />
               <OText
                 size={10}

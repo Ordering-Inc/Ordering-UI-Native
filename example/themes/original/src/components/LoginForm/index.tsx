@@ -6,6 +6,7 @@ import { PhoneInputNumber } from '../PhoneInputNumber';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Recaptcha from 'react-native-recaptcha-that-works'
 import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
 	LoginForm as LoginFormController,
@@ -45,7 +46,6 @@ import { AppleLogin } from '../AppleLogin';
 import { Otp } from './Otp'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Alert from '../../../../../src/providers/AlertProvider'
-import { vibrateApp } from '../../utils';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -162,6 +162,14 @@ const LoginFormUI = (props: LoginParams) => {
 		handleCategoryScroll(otpType ? `${val}_${otpType}` : val)
 	};
 
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
+	}
+
 	const onSubmit = (values?: any) => {
 		Keyboard.dismiss();
 		if (loginTab === 'otp') {
@@ -170,7 +178,7 @@ const LoginFormUI = (props: LoginParams) => {
 				vibrateApp()
 				return
 			}
-			if(!values?.cellphone && otpType === 'cellphone'){
+			if (!values?.cellphone && otpType === 'cellphone') {
 				showToast(ToastType.Error, t('PHONE_NUMBER_REQUIRED', 'Phone number is required'));
 				return
 			}
@@ -259,7 +267,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const handleLoginOtp = async (code: string) => {
 		if (!code) return
 		const logged = await handleButtonLoginClick({ code })
-		if (logged){
+		if (logged) {
 			setWillVerifyOtpState(false)
 		} else {
 			setAlertState({

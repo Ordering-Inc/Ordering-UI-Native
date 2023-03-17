@@ -14,7 +14,8 @@ import { OIcon, OText } from '../shared';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
-import { convertHoursToMinutes, lightenDarkenColor, shape, vibrateApp } from '../../utils';
+import { convertHoursToMinutes, lightenDarkenColor, shape } from '../../utils';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
 	BusinessHero,
@@ -150,6 +151,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		});
 		return _types.join(', ');
 	};
+
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
+	}
 
 	const handleBusinessClick = (selectedBusiness: any) => {
 		vibrateApp()
