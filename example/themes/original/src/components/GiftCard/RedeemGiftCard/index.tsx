@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   useLanguage, useUtils, RedeemGiftCard as RedeemGiftCardController
 } from 'ordering-components/native'
@@ -26,6 +26,8 @@ const RedeemGiftCardUI = (props: any) => {
   const { handleSubmit, control, errors } = useForm()
   const [{ parsePrice }] = useUtils()
 
+  const [codeValue, setCodeValue] = useState('')
+
   const style = StyleSheet.create({
     btnStyle: {
       borderRadius: 7.6,
@@ -41,6 +43,14 @@ const RedeemGiftCardUI = (props: any) => {
 
   const onSubmit = (values) => {
     handleApply(values)
+  }
+
+  const handleChangeCode = (string: any) => {
+    string = string.replace(/-/g, '')
+    if (!string) return
+    const codeSlices = string.match(/.{1,4}/g)
+    string = codeSlices.join('-')
+    setCodeValue(string)
   }
 
   useEffect(() => {
@@ -90,9 +100,12 @@ const RedeemGiftCardUI = (props: any) => {
               control={control}
               render={({ onChange, value }: any) => (
               <OInput
-                placeholder='0000 0000'
-                value={value}
-                onChange={(val: any) => onChange(val)}
+                placeholder='XXXX-XXXX-XXXX-XXXX'
+                value={codeValue}
+                onChange={(val: any) => {
+                  onChange(val)
+                  handleChangeCode(val)
+                }}
                 autoCapitalize='none'
                 autoCorrect={false}
                 blurOnSubmit={false}
