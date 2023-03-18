@@ -53,7 +53,6 @@ const MultiCheckoutUI = (props: any) => {
     navigation,
     placing,
     openCarts,
-    totalCartsPrice,
     handleGroupPlaceOrder,
     paymethodSelected,
     handleSelectPaymethod,
@@ -98,6 +97,8 @@ const MultiCheckoutUI = (props: any) => {
       name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
     }
   }
+
+  const totalCartsPrice = cartGroup?.result?.balance
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
