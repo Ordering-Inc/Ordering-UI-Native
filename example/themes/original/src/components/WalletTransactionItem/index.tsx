@@ -63,7 +63,7 @@ export const WalletTransactionItem = (props: any) => {
             </OText>
           </OText>
         </DescriptionBlock>
-      )}
+      )} */}
     </Container>
   )
 }
