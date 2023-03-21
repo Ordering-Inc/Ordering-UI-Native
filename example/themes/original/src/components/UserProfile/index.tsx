@@ -161,7 +161,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	}, [removeAccountState])
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom, paddingTop: 20 }}>
+		<View style={{ flex: 1, height: '100%', paddingTop: 20 }}>
 			<CenterView style={styles.pagePadding}>
 				{user?.photo && !hideProfileImage && (
 					<View style={styles.photo}>
@@ -261,7 +261,7 @@ const ProfileListUI = (props: ProfileParams) => {
 					)}
 				</Actions>
 
-				<Actions>
+				<Actions style={{ paddingTop: height * .02 }}>
 					{!showLanguages && (
 						<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
 					)}
