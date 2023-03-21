@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import { OText } from '../shared'
 import { useLanguage, useSession } from 'ordering-components/native'
@@ -10,6 +10,7 @@ export const DriverSchedule = (props: any) => {
     const theme = useTheme()
     const [, { refreshUserInfo }] = useSession()
     const [refreshing] = useState(false);
+    const [driverSchedule, setDriverSchedule] = useState([]);
 
     const daysOfWeek = [
         t('SUNDAY_ABBREVIATION', 'Sun'),
@@ -26,6 +27,32 @@ export const DriverSchedule = (props: any) => {
         return `${checkTime(hour)}:${checkTime(minute)}`
     }
 
+    useEffect(() => {
+        if (schedule) {
+            setDriverSchedule(schedule)
+        } else {
+            const _schedule: any = []
+            for (let i = 0; i < 7; i++) {
+                _schedule.push({
+                enabled: true,
+                lapses: [
+                  {
+                    open: {
+                      hour: 0,
+                      minute: 0
+                    },
+                    close: {
+                      hour: 23,
+                      minute: 59
+                    }
+                  }
+                ]
+              })
+            }
+            setDriverSchedule(_schedule)
+        }
+    }, [schedule])
+
     return (
         <ScrollView
             refreshControl={<RefreshControl
@@ -37,7 +64,7 @@ export const DriverSchedule = (props: any) => {
                 {t('SCHEDULE', 'Schedule')}
             </OText>
             <View style={{ padding: 30 }}>
-                {schedule.map((item: any, i: number) => (
+                {driverSchedule.map((item: any, i: number) => (
                     <DayContainer key={daysOfWeek[i]}>
                         <OText style={{ width: '20%' }} size={22} weight={700}>{daysOfWeek[i]}</OText>
                         <View style={{ width: '80%', alignItems: 'center' }}>
