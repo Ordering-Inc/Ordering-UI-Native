@@ -50,6 +50,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const theme = useTheme();
 
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const showLanguages = theme?.profile?.components?.languages?.hidden
 
 	const langPickerStyle = StyleSheet.create({
 		inputAndroid: {
@@ -164,7 +165,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	}, [removeAccountState])
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom, paddingTop: 20 }}>
+		<View style={{ flex: 1, height: '100%', paddingTop: 20 }}>
 			<CenterView style={styles.pagePadding}>
 				{user?.photo && (
 					<View style={styles.photo}>
@@ -248,15 +249,13 @@ const ProfileListUI = (props: ProfileParams) => {
 					</ListItem>
 				</Actions>
 
-				<Actions>
-					<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
+        <Actions style={{ paddingTop: height * .02 }}>
+					{!showLanguages && (
+						<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
+					)}
 					<View style={{ height: 17 }} />
 					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
 					<View style={{ height: 17 }} />
-					<ListItem disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
-						<OIcon src={theme.images.general.user} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
-					</ListItem>
 				</Actions>
 			</ListWrap>
 			<OAlert
