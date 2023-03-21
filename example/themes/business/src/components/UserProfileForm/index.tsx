@@ -478,19 +478,17 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </EditButton>
           )}
-          {!!user?.schedule && (
-            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
-                <AntDesignIcon size={18} name='right' />
-              </View>
-              <View style={{
-                borderBottomColor: theme.colors.tabBar,
-                borderBottomWidth: 1,
-                marginTop: 10
-              }} />
-            </Pressable>
-          )}
+          <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
+              <AntDesignIcon size={18} name='right' />
+            </View>
+            <View style={{
+              borderBottomColor: theme.colors.tabBar,
+              borderBottomWidth: 1,
+              marginTop: 10
+            }} />
+          </Pressable>
           <Actions>
             <LanguageSelector />
 
