@@ -132,32 +132,9 @@ const WalletsUI = (props: any) => {
               alignContent: 'center'
             },
           }}>
-            {(!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout && (
-              <OButton
-                imgLeftStyle={{ width: 18 }}
-                imgRightSrc={null}
-                style={{
-                  borderWidth: 0,
-                  width: 26,
-                  height: 26,
-                  backgroundColor: '#FFF',
-                  borderColor: '#FFF',
-                  shadowColor: '#FFF',
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                }}
-                onClick={goToBack}
-                icon={AntDesignIcon}
-                iconProps={{
-                  name: 'arrowleft',
-                  size: 26
-                }}
-              />
-            )}
             <OText
               size={20}
               style={{
-                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 40 : 0,
                 color: theme.colors.textNormal,
               }}
               weight={Platform.OS === 'ios' ? '600' : 'bold'}
