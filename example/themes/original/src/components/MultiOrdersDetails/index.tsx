@@ -166,7 +166,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
           <OText key={event.id} size={12} lineHeight={18} color={theme.colors.textNormal}>
             {event?.wallet_event
               ? walletName[event?.wallet_event?.wallet?.type]?.name
-              : event?.paymethod?.name}
+              : t(event?.paymethod?.name.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
           </OText>
         ))}
       </Section>
