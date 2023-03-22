@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View, ScrollView, TouchableOpacity, Platform } f
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
+import NavBar from '../NavBar'
 import {
   WalletList,
   useLanguage,
@@ -119,51 +120,29 @@ const WalletsUI = (props: any) => {
 
   return (
     <>
-      <Container>
+      <Container
+        pdng={Platform.OS === 'ios' ? '10px' : '0'}
+      >
         <Header>
           <View style={{
             ...{
               width: '100%',
               display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 30,
-              justifyContent: 'space-between',
-              alignContent: 'center'
+              flexDirection: hideWalletsTheme ? 'column' : 'row',
+              justifyContent: hideWalletsTheme ? 'flex-start' : 'space-between',
+              alignItems: hideWalletsTheme ? 'flex-start' : 'center',
+              marginTop: hideWalletsTheme ? 0 : 10,
             },
           }}>
-            {(!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout && (
-              <OButton
-                imgLeftStyle={{ width: 18 }}
-                imgRightSrc={null}
-                style={{
-                  borderWidth: 0,
-                  width: 26,
-                  height: 26,
-                  backgroundColor: '#FFF',
-                  borderColor: '#FFF',
-                  shadowColor: '#FFF',
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                }}
-                onClick={goToBack}
-                icon={AntDesignIcon}
-                iconProps={{
-                  name: 'arrowleft',
-                  size: 26
-                }}
-              />
-            )}
-            <OText
-              size={20}
-              style={{
-                marginLeft: (!props.hideBackBtn || !hideWalletsTheme) && !isChewLayout ? 40 : 0,
-                color: theme.colors.textNormal,
-              }}
-              weight={Platform.OS === 'ios' ? '600' : 'bold'}
-            >
-              {t('WALLETS', 'Wallets')}
-            </OText>
+            <NavBar
+              title={t('WALLETS', 'Wallets')}
+              titleAlign={'center'}
+              onActionLeft={goToBack}
+              showCall={false}
+              paddingTop={10}
+              btnStyle={{ paddingLeft: 0 }}
+              hideArrowLeft={!hideWalletsTheme}
+            />
             {isChewLayout && (
               <OButton
                 text={t('WALLET_HISTORY', 'Wallet history')}
@@ -172,7 +151,7 @@ const WalletsUI = (props: any) => {
                 imgRightSrc={null}
                 textStyle={{ fontSize: 12, color: theme.colors.disabled }}
                 onClick={() => setOpenHistory(true)}
-                style={{ borderRadius: 8, height: 40 }}
+                style={{ borderRadius: 8, height: 40, width: hideWalletsTheme ? '100%' : 150, marginTop: hideWalletsTheme ? 10 : 0 }}
               />
             )}
           </View>
