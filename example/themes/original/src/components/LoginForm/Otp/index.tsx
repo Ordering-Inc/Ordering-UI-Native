@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { formatSeconds } from '../../../utils'
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
@@ -25,8 +25,7 @@ export const Otp = (props: otpParams) => {
     600, willVerifyOtpState)
 
   const [code, setCode] = useState('')
-
-
+  const inputRef = useRef<any>()
   const handleOnSubmit = () => {
     setAlertState({
       open: true,
@@ -49,6 +48,7 @@ export const Otp = (props: otpParams) => {
   useEffect(() => {
     if (code?.length === (pinCount || 6)) {
       handleLoginOtp(code)
+      inputRef?.current?.reset()
     }
   }, [code])
 
@@ -82,6 +82,7 @@ export const Otp = (props: otpParams) => {
           {formatSeconds(otpLeftTime)}
         </OText>
         <OtpInputs
+          ref={inputRef}
           autofillFromClipboard
           numberOfInputs={pinCount || 6}
           style={loginStyle.container}
