@@ -126,6 +126,11 @@ export const CartContent = (props: any) => {
                     </OText>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
                   </View>
+									<View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 20 }}>
+										<OText size={14} color={theme.colors.textNormal} weight={'300'} style={{ textAlign: 'center' }}>
+											{t('CART_GROUP_MESSAGE_ALERT', 'Discounts may be applied at the time of payment for this group.')}
+										</OText>
+									</View>
 								</ChCartsTotal>
 							)}
 							<CheckoutAction style={{ marginTop: 0 }}>
