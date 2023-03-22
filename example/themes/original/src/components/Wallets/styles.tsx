@@ -1,13 +1,12 @@
 import styled from 'styled-components/native'
 
 export const Container = styled.View`
-  display: flex;
-  flex-direction: column;
+  padding-horizontal: 20px;
+  padding-bottom: 20px;
+  padding-top: ${(props: any) => props.pdng};
 `
 export const Header = styled.View`
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
 `
 export const SectionContent = styled.View`
   width: 100%;
