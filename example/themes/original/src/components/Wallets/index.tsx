@@ -125,22 +125,55 @@ const WalletsUI = (props: any) => {
             ...{
               width: '100%',
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: hideWalletsTheme ? 'column' : 'row',
               alignItems: 'center',
               marginTop: 30,
               justifyContent: 'space-between',
               alignContent: 'center'
             },
           }}>
-            <OText
-              size={20}
-              style={{
-                color: theme.colors.textNormal,
-              }}
-              weight={Platform.OS === 'ios' ? '600' : 'bold'}
-            >
-              {t('WALLETS', 'Wallets')}
-            </OText>
+            <View style={{
+              ...{
+                width: hideWalletsTheme && '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                alignContent: 'center'
+              },
+            }}>
+              {hideWalletsTheme && (
+                <OButton
+                  imgLeftStyle={{ width: 18 }}
+                  imgRightSrc={null}
+                  style={{
+                    borderWidth: 0,
+                    width: 26,
+                    height: 26,
+                    backgroundColor: '#FFF',
+                    borderColor: '#FFF',
+                    shadowColor: '#FFF',
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  }}
+                  onClick={goToBack}
+                  icon={AntDesignIcon}
+                  iconProps={{
+                    name: 'arrowleft',
+                    size: 26
+                  }}
+                />
+              )}
+              <OText
+                size={20}
+                style={{
+                  color: theme.colors.textNormal,
+                }}
+                weight={Platform.OS === 'ios' ? '600' : 'bold'}
+              >
+                {t('WALLETS', 'Wallets')}
+              </OText>
+            </View>
             {isChewLayout && (
               <OButton
                 text={t('WALLET_HISTORY', 'Wallet history')}
@@ -149,7 +182,7 @@ const WalletsUI = (props: any) => {
                 imgRightSrc={null}
                 textStyle={{ fontSize: 12, color: theme.colors.disabled }}
                 onClick={() => setOpenHistory(true)}
-                style={{ borderRadius: 8, height: 40 }}
+                style={{ borderRadius: 8, height: 40, width: hideWalletsTheme && '100%', marginTop: hideWalletsTheme && 10 }}
               />
             )}
           </View>
