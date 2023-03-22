@@ -134,7 +134,7 @@ const WalletsUI = (props: any) => {
           }}>
             <View style={{
               ...{
-                width: hideWalletsTheme && '100%',
+                width: hideWalletsTheme ? '100%' : 'auto',
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -182,7 +182,7 @@ const WalletsUI = (props: any) => {
                 imgRightSrc={null}
                 textStyle={{ fontSize: 12, color: theme.colors.disabled }}
                 onClick={() => setOpenHistory(true)}
-                style={{ borderRadius: 8, height: 40, width: hideWalletsTheme && '100%', marginTop: hideWalletsTheme && 10 }}
+                style={{ borderRadius: 8, height: 40, width: hideWalletsTheme ? '100%' : 150, marginTop: hideWalletsTheme ? 10 : 0 }}
               />
             )}
           </View>
