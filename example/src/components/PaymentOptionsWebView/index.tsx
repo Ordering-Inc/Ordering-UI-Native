@@ -9,7 +9,8 @@ import {
   useToast,
   useApi,
   useLanguage,
-  useConfig
+  useConfig,
+  useOrder
 } from 'ordering-components/native';
 
 import { OText } from '../shared';
@@ -24,7 +25,9 @@ interface PaymentOptionsWebViewParams {
   webviewPaymethod?: any,
   setShowGateway?: any,
   setOpenOrderCreating?: any,
-  locationId?: any
+  locationId?: any,
+  additionalParams?: any
+  title?: string
 }
 export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
   const {
@@ -37,7 +40,9 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
     webviewPaymethod,
     setShowGateway,
     setOpenOrderCreating,
-    locationId
+    locationId,
+    title,
+    additionalParams = {}
   } = props
 
   const webviewRef = useRef<any>(null)
@@ -45,7 +50,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
   const [ordering] = useApi()
   const [{ configs }] = useConfig();
   const [, t] = useLanguage();
-
+  const [, { confirmCart }] = useOrder()
 
   const [progClr, setProgClr] = useState('#424242');
   const [prog, setProg] = useState(true);
@@ -55,9 +60,23 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
     setShowGateway({ open: false, closedByUser: true })
   }
 
-  const onMessage = (e: any) => {
+  const onMessage = async (e: any) => {
     if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
       let payment = JSON.parse(e.nativeEvent.data);
+      if (payment?.response && payment?.responsetext && payment.orderid) {
+        const credomaticData = {
+          credomatic: {
+            ...payment
+          }
+        }
+        const confirmCartRes = await confirmCart(payment.orderid, credomaticData)
+        if (confirmCartRes.error) {
+          showToast(ToastType.Error, confirmCartRes.error.message)
+        }
+        if (confirmCartRes.result.order?.uuid) {
+          onNavigationRedirect?.('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+        }
+      }
 
       if (payment === 'api error' || payment === 'Cancelled by user') {
         setShowGateway({ closedByUser: true, open: false })
@@ -95,7 +114,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
           marginBottom: 5,
           marginTop: 10
         }}>
-        {webviewPaymethod?.gateway === 'paypal' ? (t('PAYPAL_GATEWAY', 'PayPal GateWay')) : (t('SQUARE_PAYMENT', 'Square payment'))}
+        {title || (webviewPaymethod?.gateway === 'paypal' ? (t('PAYPAL_GATEWAY', 'PayPal GateWay')) : (t('SQUARE_PAYMENT', 'Square payment')))}
       </OText>
       <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
         <ActivityIndicator size={24} color={progClr} />
@@ -110,6 +129,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
         cacheMode='LOAD_NO_CACHE'
         style={{ flex: 1 }}
         onShouldStartLoadWithRequest={() => true}
+        originWhitelist={["*"]}
         onLoadStart={() => {
           setProg(true);
           setProgClr('#424242');
@@ -139,7 +159,8 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
               currency: configs?.stripe_currency?.value || currency,
               userToken: token,
               clientId: webviewPaymethod?.credentials?.client_id,
-              ...messageParams
+              ...messageParams,
+              ...additionalParams
             }
           }
           setProg(false);
