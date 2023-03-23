@@ -88,6 +88,7 @@ const MultiCheckoutUI = (props: any) => {
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const walletName: any = {
     cash: {
@@ -235,8 +236,15 @@ const MultiCheckoutUI = (props: any) => {
         <ChContainer style={styles.pagePadding}>
           <ChSection style={{ paddingTop: 0 }}>
             <ChHeader>
-              <CHMomentWrapper onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-                <OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(options?.type || 1), 'Delivery')}</OText>
+              <CHMomentWrapper isCustomColor={isChewLayout} onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+                <OText
+                  size={12}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  color={theme.colors?.[isChewLayout ? 'white' : 'textSecondary']}
+                >
+                  {t(getTypesText(options?.type || 1), 'Delivery')}
+                </OText>
                 <OIcon
                   src={theme.images.general.arrow_down}
                   width={10}
