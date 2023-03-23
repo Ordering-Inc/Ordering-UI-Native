@@ -436,12 +436,12 @@ const AddressFormUI = (props: AddressFormParams) => {
 		if (isEditing) {
 			if (formState?.changes?.location) {
 				const prevLocation = {
-					lat: locationChange?.lat.toFixed(5),
-					lng: locationChange?.lng.toFixed(5),
+					lat: locationChange?.lat?.toFixed(5),
+					lng: locationChange?.lng?.toFixed(5),
 				};
 				const newLocation = {
-					lat: formState?.changes?.location?.lat.toFixed(5),
-					lng: formState?.changes?.location?.lng.toFixed(5),
+					lat: formState?.changes?.location?.lat?.toFixed(5),
+					lng: formState?.changes?.location?.lng?.toFixed(5),
 				};
 				if (
 					prevLocation?.lat !== newLocation?.lat &&
