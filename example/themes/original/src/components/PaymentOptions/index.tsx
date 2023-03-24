@@ -16,6 +16,8 @@ import { useTheme } from 'styled-components/native';
 import { PaymentOptionCash } from '../PaymentOptionCash';
 import { StripeElementsForm } from '../StripeElementsForm';
 import { StripeCardsList } from '../StripeCardsList';
+import { PaymentOptionCard } from '../PaymentOptionCard'
+
 // import { PaymentOptionStripe } from '../PaymentOptionStripe';
 // import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
@@ -44,6 +46,7 @@ const stripeDirectMethods = ['stripe_direct']
 
 const webViewPaymentGateway: any = ['paypal', 'square']
 const multiCheckoutMethods = ['global_google_pay', 'global_apple_pay']
+const cardsPaymethods = ['credomatic']
 
 const PaymentOptionsUI = (props: any) => {
 	const {
@@ -64,7 +67,9 @@ const PaymentOptionsUI = (props: any) => {
 		setMethodPaySupported,
 		placeByMethodPay,
 		methodPaySupported,
-		setPlaceByMethodPay
+		setPlaceByMethodPay,
+		setCardList,
+		onPaymentChange
 	} = props
 
 	const theme = useTheme();
@@ -96,7 +101,7 @@ const PaymentOptionsUI = (props: any) => {
 
 	const [, t] = useLanguage();
 
-	const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
+	const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false, card: false });
 	const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
 	// const [{ token }] = useSession()
 
@@ -192,7 +197,7 @@ const PaymentOptionsUI = (props: any) => {
 	}
 
 	const excludeIds: any = [32]; //exclude paypal & connect & redirect
-	const filterMethodsPay = (gateway : string) => Platform.OS === 'ios' ? gateway !== 'google_pay' : gateway !== 'apple_pay' 
+	const filterMethodsPay = (gateway: string) => Platform.OS === 'ios' ? gateway !== 'google_pay' : gateway !== 'apple_pay'
 
 	return (
 		<PMContainer>
@@ -202,9 +207,9 @@ const PaymentOptionsUI = (props: any) => {
 					showsHorizontalScrollIndicator={false}
 					// data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
 					data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)
-						.filter((p: any) => 
-							!multiCheckoutMethods.includes(p.gateway) && 
-							filterMethodsPay(p.gateway) && 
+						.filter((p: any) =>
+							!multiCheckoutMethods.includes(p.gateway) &&
+							filterMethodsPay(p.gateway) &&
 							!excludeIds.includes(p.id))}
 					renderItem={renderPaymethods}
 					keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
@@ -321,6 +326,24 @@ const PaymentOptionsUI = (props: any) => {
 					methodPaySupported={methodPaySupported}
 					placeByMethodPay={placeByMethodPay}
 					setPlaceByMethodPay={setPlaceByMethodPay}
+				/>
+			)}
+
+			{(cardsPaymethods.includes(isOpenMethod?.paymethod?.gateway) || cardsPaymethods.includes(paymethodSelected?.gateway)) && (
+				<PaymentOptionCard
+					setCardList={setCardList}
+					paymethod={isOpenMethod?.paymethod}
+					businessId={props.businessId}
+					publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
+					gateway={isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway}
+					onPaymentChange={onPaymentChange}
+					payType={isOpenMethod?.paymethod?.name}
+					onSelectCard={handlePaymethodDataChange}
+					addCardOpen={addCardOpen} 
+					setAddCardOpen={setAddCardOpen}
+					onCancel={() => handlePaymethodClick(null)}
+					paymethodSelected={paymethodSelected?.data?.id}
+					handlePaymentMethodClick={handlePaymentMethodClick}
 				/>
 			)}
 
