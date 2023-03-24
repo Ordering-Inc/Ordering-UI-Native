@@ -380,12 +380,14 @@ const LoginFormUI = (props: LoginParams) => {
   );
 
   const note = (
-    <OText size={24} mBottom={18}>
-      {t('IF_NOT_HAVE_ACCOUNT', 'If you don\'t have and account, please contact Ordering')}&nbsp;
-      <OText size={24} mBottom={18} color={theme.colors.skyBlue}>
-        {t('SUPPORT_DEPARTMENT', 'support department')}
+    useRootPoint && (
+      <OText size={24} mBottom={18}>
+        {t('IF_NOT_HAVE_ACCOUNT', 'If you don\'t have and account, please contact Ordering')}&nbsp;
+        <OText size={24} mBottom={18} color={theme.colors.skyBlue}>
+          {t('SUPPORT_DEPARTMENT', 'support department')}
+        </OText>
       </OText>
-    </OText>
+    )
   )
 
   return (
