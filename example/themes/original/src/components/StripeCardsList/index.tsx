@@ -18,14 +18,15 @@ import {
 	OSItemActions,
 } from '../PaymentOptionStripe/styles';
 
-const StripeCardsListUI = (props: any) => {
+export const StripeCardsListUI = (props: any) => {
 	const {
 		onSelectCard,
 		deleteCard,
 		cardSelected,
 		cardsList,
 		handleCardClick,
-		setAddCardOpen
+		setAddCardOpen,
+		gateway
 	} = props;
 
 	const theme = useTheme();
@@ -33,13 +34,15 @@ const StripeCardsListUI = (props: any) => {
 	const [{ token }] = useSession();
 	const [, t] = useLanguage();
 
+	const paymethodsWithoutSaveCards = ['credomatic']
+
 	const handleCardSelected = (card: any) => {
 		handleCardClick(card);
 		onSelectCard(card);
 	}
 
 	useEffect(() => {
-		if (!cardsList && !cardsList?.loading && cardsList?.cards?.length === 0) {
+		if (!cardsList && !cardsList?.loading && cardsList?.cards?.length === 0 && !paymethodsWithoutSaveCards.includes(gateway)) {
 			setAddCardOpen(true)
 		}
 	}, [cardsList?.loading])
