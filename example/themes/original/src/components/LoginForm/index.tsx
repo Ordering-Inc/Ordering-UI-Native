@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Keyboard } from 'react-native';
+import { StyleSheet, View, Keyboard, Modal } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
@@ -97,6 +97,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 	const [tabLayouts, setTabLayouts] = useState<any>({})
+	const [otpError, setOtpError] = useState(null)
 	const tabsRef = useRef<any>(null)
 	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 	const theme = useTheme();
@@ -270,11 +271,7 @@ const LoginFormUI = (props: LoginParams) => {
 		if (logged) {
 			setWillVerifyOtpState(false)
 		} else {
-			setAlertState({
-				open: true,
-				title: '',
-				content: t('OTP_CODE_INCORRECT', 'Otp code incorrect')
-			})
+			setOtpError(t('OTP_CODE_INCORRECT', 'Otp code incorrect'))
 		}
 	}
 
@@ -851,20 +848,21 @@ const LoginFormUI = (props: LoginParams) => {
 					onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
-			<OModal
-				open={willVerifyOtpState}
-				onClose={() => setWillVerifyOtpState(false)}
-				entireModal
-				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			<Modal
+				visible={willVerifyOtpState}
+				onDismiss={() => setWillVerifyOtpState(false)}
+				animationType='slide'
 			>
 				<Otp
 					willVerifyOtpState={willVerifyOtpState}
+					otpError={otpError}
+					setOtpError={setOtpError}
 					setWillVerifyOtpState={setWillVerifyOtpState}
 					handleLoginOtp={handleLoginOtp}
 					onSubmit={onSubmit}
 					setAlertState={setAlertState}
 				/>
-			</OModal>
+			</Modal>
 			<Alert
 				open={alertState.open}
 				content={alertState.content}
