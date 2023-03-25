@@ -714,6 +714,8 @@ export interface otpParams {
 	handleLoginOtp: (code: string) => void,
 	setAlertState: any;
 	pinCount: number;
+	otpError: any,
+	setOtpError: any
 }
 
 export interface FavoriteParams {

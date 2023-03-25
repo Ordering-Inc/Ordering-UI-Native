@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { formatSeconds } from '../../../utils'
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
-import { OText, OButton } from '../../shared';
+import { OText, OButton, OIcon } from '../../shared';
 import OtpInputs from 'react-native-otp-inputs';
 import { useTheme } from 'styled-components/native';
 import { otpParams } from '../../../types'
@@ -16,7 +16,9 @@ export const Otp = (props: otpParams) => {
     onSubmit,
     handleLoginOtp,
     setAlertState,
-    pinCount
+    pinCount,
+    otpError,
+    setOtpError
   } = props
 
   const theme = useTheme();
@@ -25,7 +27,7 @@ export const Otp = (props: otpParams) => {
     600, willVerifyOtpState)
 
   const [code, setCode] = useState('')
-
+  const inputRef = useRef<any>()
 
   const handleOnSubmit = () => {
     setAlertState({
@@ -34,6 +36,16 @@ export const Otp = (props: otpParams) => {
     })
     resetOtpLeftTime()
     onSubmit()
+  }
+
+  const handleChangeCode = (code : string) => {
+    setCode(code)
+    setOtpError(null)
+  }
+
+  const handleCloseOtp = () => {
+    setWillVerifyOtpState(false)
+    setOtpError(null)
   }
 
   useEffect(() => {
@@ -49,6 +61,7 @@ export const Otp = (props: otpParams) => {
   useEffect(() => {
     if (code?.length === (pinCount || 6)) {
       handleLoginOtp(code)
+      inputRef?.current?.reset()
     }
   }, [code])
 
@@ -73,28 +86,63 @@ export const Otp = (props: otpParams) => {
       color: theme.colors.primary,
       fontSize: 16
     },
+    wrapperIcon: {
+      marginTop: Platform.OS === 'ios' ? 40 : 12,
+      marginBottom: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingRight: 35
+    },
+    closeContainer: {
+      width: '100%',
+      flexDirection: 'row',
+    }
   });
 
   return (
     <>
       <OTPContainer>
+        <View
+          style={loginStyle.closeContainer}>
+          <TouchableOpacity onPress={() => handleCloseOtp()} style={loginStyle.wrapperIcon}>
+            <OIcon
+              src={theme.images.general.close}
+              width={22}
+            />
+          </TouchableOpacity>
+          <OText size={22} style={{
+            marginTop: 5
+          }}>
+            {t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+          </OText>
+        </View>
         <OText size={24}>
           {formatSeconds(otpLeftTime)}
         </OText>
         <OtpInputs
+          ref={inputRef}
           autofillFromClipboard
           numberOfInputs={pinCount || 6}
           style={loginStyle.container}
           inputStyles={loginStyle.underlineStyleBase}
-          handleChange={setCode}
+          handleChange={handleChangeCode}
         />
+        {!!otpError && (
+          <OText
+            color={theme?.colors?.error}
+            size={20}
+            mBottom={10}
+          >
+            {t(otpError, otpError)}
+          </OText>
+        )}
         <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
           <OText size={16} mBottom={30} color={otpLeftTime > 520 ? theme.colors.disabled : theme.colors.primary}>
             {t('RESEND_CODE', 'Resend code')}
           </OText>
         </TouchableOpacity>
         <OButton
-          onClick={() => setWillVerifyOtpState(false)}
+          onClick={() => handleCloseOtp()}
           bgColor={theme.colors.white}
           borderColor={theme.colors.primary}
           textStyle={{ color: theme.colors.primary }}
