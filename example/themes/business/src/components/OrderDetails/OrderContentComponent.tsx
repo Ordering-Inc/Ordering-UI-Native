@@ -523,7 +523,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           ))
         }
         {
-          order?.summary?.delivery_price > 0 && (
+          typeof order?.summary?.delivery_price === 'number' && (
             <Table>
               <OText mBottom={4}>
                 {t('DELIVERY_FEE', 'Delivery Fee')}
