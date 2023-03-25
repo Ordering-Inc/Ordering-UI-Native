@@ -169,7 +169,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: hideAddButton ? 125 : 190 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
+		<InView style={{ minHeight: hideAddButton ? 125 : 190, marginLeft: logoPosition === 'left' ? 12.5 : 0 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
 				<CardAnimation
 					onClick={() => handleClickproduct()}
@@ -182,7 +182,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					<View style={{ flexDirection: logoPosition === 'left' ? 'row-reverse' : 'row' }}>
 						{productAddedToCartLength > 0 && (
 							<QuantityContainer businessSingleId={businessSingleId} style={[styles.quantityContainer, {
-								transform: [{ translateX: 25 }, { translateY: -25 }],
+								transform: [{ translateX: logoPosition === 'right' ? 25 : -25 }, { translateY: -25 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
 							</QuantityContainer>

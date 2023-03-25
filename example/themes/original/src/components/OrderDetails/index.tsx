@@ -934,7 +934,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </Table>
                 ))
               }
-              {order?.summary?.delivery_price > 0 && (
+              {typeof order?.summary?.delivery_price === 'number' && (
                 <Table>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price)}</OText>
