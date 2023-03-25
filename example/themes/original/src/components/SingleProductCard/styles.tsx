@@ -18,7 +18,6 @@ export const QuantityContainer = styled.View`
   background: ${({ theme }: any) => theme.colors.primary};
   align-items: center;
   justify-content: center;
-  left: 0;
 `
 export const PricesContainer = styled.View`
   flex-direction: row;
