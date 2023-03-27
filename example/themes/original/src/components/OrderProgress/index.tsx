@@ -176,7 +176,6 @@ const OrderProgressUI = (props: any) => {
                       ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: configs?.general_hour_format?.value || 'HH:mm' })
                       : parseTime(lastOrder?.delivery_datetime, { utc: false })}
                     &nbsp;-&nbsp;
-                    <OrderEta order={lastOrder} outputFormat='hh:mm A' />
                     {statusToShow.includes(lastOrder?.status) ? (
                       <OrderEta order={lastOrder} outputFormat={configs?.general_hour_format?.value || 'HH:mm'} />
                     ) : (
