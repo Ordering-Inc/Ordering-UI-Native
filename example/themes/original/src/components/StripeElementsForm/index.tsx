@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, useWindowDimensions, Keyboard, Platform } from 'react-native';
-import { useLanguage, useSession, useConfig } from 'ordering-components/native';
+import { useLanguage, useSession, useConfig, useValidationFields } from 'ordering-components/native';
 import {
 	StripeProvider,
 	CardField,
@@ -41,6 +41,7 @@ const StripeElementsFormUI = (props: any) => {
 	const [, t] = useLanguage();
 	const [{ user }] = useSession();
 	const [{ configs }] = useConfig();
+	const [validationFields] = useValidationFields()
 	const [card, setCard] = useState<any>(null);
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [errors, setErrors] = useState('')
@@ -49,7 +50,8 @@ const StripeElementsFormUI = (props: any) => {
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-
+	const zipCodeEnabled = validationFields?.checkout?.zipcode?.enabled
+	const zipCodeRequired = validationFields?.checkout?.zipcode?.required
 	const styles = StyleSheet.create({
 		container: {
 			width: '100%',
@@ -166,7 +168,8 @@ const StripeElementsFormUI = (props: any) => {
 				!!card?.last4 &&
 				!!card?.expiryMonth &&
 				!!card?.expiryYear &&
-				!!card?.brand
+				!!card?.brand &&
+				((!zipCodeEnabled || !zipCodeRequired || !!card?.postalCode))
 			)
 		}
 	}, [card])
@@ -217,7 +220,7 @@ const StripeElementsFormUI = (props: any) => {
 							/>
 						) : (
 							<CardField
-								postalCodeEnabled={true}
+								postalCodeEnabled={zipCodeEnabled}
 								cardStyle={{
 									backgroundColor: '#FFFFFF',
 									textColor: '#000000',
