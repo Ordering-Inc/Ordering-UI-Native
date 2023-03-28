@@ -13,7 +13,8 @@ import {
   useToast,
   useSession,
   ToastType,
-  useUtils
+  useUtils,
+  useConfig
 } from 'ordering-components/native';
 
 //Components
@@ -59,7 +60,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   } = props;
   const [, { showToast }] = useToast();
   const [{ parsePrice, parseNumber }] = useUtils();
+  const [{ configs }] = useConfig();
   const { order } = props.order
+
+  const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -295,6 +299,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleViewActionOrder = (action: string) => {
+    if (action === 'reject' && !isAllowedDriverRejectOrder) {
+      setAlertState({
+        open: true,
+        content: [
+          t('DRIVER_NOT_ALLOWED_TO_REJECT_ORDER', 'The driver is not allowed to reject an order.'),
+        ],
+        key: null,
+      })
+      return
+    }
     if (!isGrantedPermissions) {
       navigation.navigate('RequestPermissions')
       return
@@ -311,6 +325,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleArrowBack: any = () => {
+    if (alertState?.open && !isAllowedDriverRejectOrder) {
+      setAlertState({
+        ...alertState,
+        open: false
+      })
+      return
+    }
     navigation?.canGoBack() && navigation.goBack();
   };
 
