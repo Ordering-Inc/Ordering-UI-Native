@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView }
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import {
 	Checkout as CheckoutController,
 	useOrder,
@@ -52,7 +53,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
-import { getTypesText, vibrateApp } from '../../utils';
+import { getTypesText } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
 import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
@@ -155,6 +156,8 @@ const CheckoutUI = (props: any) => {
 	const [allowedGuest, setAllowedGuest] = useState(false)
 	const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
 	const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
+	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
+	const cardsMethods = ['credomatic']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const isGiftCardCart = !cart?.business_id
@@ -184,6 +187,7 @@ const CheckoutUI = (props: any) => {
 
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
+		(cardsMethods.includes(paymethodSelected?.gateway) && cardList?.cards?.length === 0) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
@@ -199,6 +203,9 @@ const CheckoutUI = (props: any) => {
 
 	const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
 
+	const isSandboxCredomatic = configs?.credomatic_integration_sandbox?.value === '1'
+	const credomaticKeyId = isSandboxCredomatic ? configs?.credomatic_integration_public_sandbox_key?.value : configs?.credomatic_integration_public_production_key?.value
+	const credomaticUrl = `https://integrations.ordering.co/credomatic/front/auth_mobile.html?title=${t('CREDOMATIC_PAYMENT', 'Credomatic payment')}&body=${t('CREDOMATIC_PROCESSING', 'Processing transaction')}`
 	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
 		return {
 			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name)
@@ -209,6 +216,14 @@ const CheckoutUI = (props: any) => {
 		if (isPreOrder) {
 			navigation.navigate('MomentOption')
 		}
+	}
+
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
 	}
 
 	const handleSuccessSignup = (user: any) => {
@@ -226,7 +241,7 @@ const CheckoutUI = (props: any) => {
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
 			vibrateApp()
-			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
+			handlerClickPlaceOrder && handlerClickPlaceOrder(null, { isNative: true }, confirmPayment)
 			return
 		}
 		if (requiredFields?.length) {
@@ -341,6 +356,16 @@ const CheckoutUI = (props: any) => {
 	useEffect(() => {
 		cart && events.emit('checkout_started', cart)
 	}, [])
+
+	useEffect(() => {
+		if (cart?.paymethod_data?.gateway === 'credomatic') {
+			if (cart?.paymethod_data?.status === 2) {
+				setShowGateway({ ...showGateway, open: true })
+			} else if (cart?.paymethod_data?.gateway === 'credomatic' && cart?.paymethod_data?.status === 4) {
+				setShowGateway({ ...showGateway, open: false })
+			}
+		}
+	}, [cart?.paymethod_data])
 
 	return (
 		<>
@@ -669,6 +694,8 @@ const CheckoutUI = (props: any) => {
 									methodPaySupported={methodPaySupported}
 									placeByMethodPay={placeByMethodPay}
 									setPlaceByMethodPay={setPlaceByMethodPay}
+									cardList={cardList}
+									setCardList={setCardList}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -938,6 +965,29 @@ const CheckoutUI = (props: any) => {
 					locationId={'L1NGAY5M6KJRX'}
 				/>
 			)}
+			{cart?.paymethod_data?.gateway === 'credomatic' && cart?.paymethod_data?.status === 2 && showGateway.open && (
+				<PaymentOptionsWebView
+					title={t('CREDOMATIC_PAYMENT', 'Credomatic payment')}
+					onNavigationRedirect={onNavigationRedirect}
+					uri={credomaticUrl}
+					user={user}
+					cart={cart}
+					additionalParams={{
+						type: 'auth',
+						key_id: credomaticKeyId,
+						hash: cart?.paymethod_data?.result?.hash,
+						time: cart?.paymethod_data?.result?.time,
+						amount: cart?.total,
+						orderid: cart?.uuid,
+						ccnumber: cardList?.cards?.[0]?.number,
+						ccexp: cardList?.cards?.[0]?.expiryString,
+						cvv: cardList?.cards?.[0]?.cvc,
+						redirect: credomaticUrl
+					}}
+					webviewPaymethod={webviewPaymethod}
+					setShowGateway={setShowGateway}
+				/>
+			)}
 		</>
 	)
 }
@@ -964,7 +1014,8 @@ export const Checkout = (props: any) => {
 	const getOrder = async (cartId: any) => {
 		try {
 			let result: any = {}
-			const cart = orderState?.carts.find((cart: any) => cart.uuid === cartId)
+			const cartsWithProducts = orderState?.carts && (Object.values(orderState?.carts)?.filter(cart => cart?.products && cart?.products?.length) || null)
+			const cart = cartsWithProducts?.find((cart: any) => cart.uuid === cartId)
 			if (cart) {
 				result = { ...cart }
 			} else {

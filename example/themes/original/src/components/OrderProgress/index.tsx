@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import {
   OrderList,
   useLanguage,
-  useUtils
+  useUtils,
+  useConfig
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -34,10 +35,12 @@ const OrderProgressUI = (props: any) => {
   const theme = useTheme();
 
   const [, t] = useLanguage()
-  const [{ optimizeImage, parseTime }] = useUtils()
+  const [{ optimizeImage, parseTime, parseDate }] = useUtils()
+  const [{ configs }] = useConfig()
   const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
   const [initialLoaded, setInitialLoaded] = useState(false)
+  const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
 
   const styles = StyleSheet.create({
     main: {
@@ -84,7 +87,15 @@ const OrderProgressUI = (props: any) => {
   useEffect(() => {
     if (orderList?.orders.length > 0) {
       const sortedOrders = orderList.orders.sort((a: any, b: any) => a.id > b.id ? -1 : 1)
-      setLastOrder(sortedOrders[0])
+      const orderInProgress = sortedOrders.find((order: any) => (statusToShow.includes(order.status)))
+
+      let _lastOrder = null
+      if (orderInProgress) {
+        _lastOrder = orderInProgress
+      } else {
+        _lastOrder = sortedOrders[0]
+      }
+      setLastOrder(_lastOrder)
     }
   }, [orderList?.orders])
 
@@ -135,8 +146,10 @@ const OrderProgressUI = (props: any) => {
                     fontWeight: 'bold',
                     marginBottom: 3
                   }}
-                >{t('ORDER_IN_PROGRESS', 'Order in progress')}</OText>
-                <OText size={11} numberOfLines={1} ellipsizeMode='tail'>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</OText>
+                >{statusToShow.includes(lastOrder?.status) ? t('ORDER_IN_PROGRESS', 'Order in progress') : t('ORDER', 'Order')}</OText>
+                {statusToShow.includes(lastOrder?.status) && (
+                  <OText size={11} numberOfLines={1} ellipsizeMode='tail'>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</OText>
+                )}
                 <TouchableOpacity onPress={() => handleGoToOrder('MyOrders')}>
                   <View style={styles.navigationButton}>
                     <OText size={11} color={theme.colors.primary}>{t('GO_TO_MY_ORDERS', 'Go to my orders')}</OText>
@@ -157,13 +170,17 @@ const OrderProgressUI = (props: any) => {
               <ProgressTextWrapper>
                 <OText size={12} style={{ width: '50%' }}>{getOrderStatus(lastOrder.status)?.value}</OText>
                 <TimeWrapper>
-                  <OText size={11}>{t('ESTIMATED_DELIVERY', 'Estimated delivery')}</OText>
+                  <OText size={11}>{lastOrder?.delivery_type === 1 ? t('ESTIMATED_DELIVERY', 'Estimated delivery') : t('ESTIMATED_TIME', 'Estimated time')}</OText>
                   <OText size={11}>
                     {lastOrder?.delivery_datetime_utc
-                      ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
+                      ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: configs?.general_hour_format?.value || 'HH:mm' })
                       : parseTime(lastOrder?.delivery_datetime, { utc: false })}
                     &nbsp;-&nbsp;
-                    <OrderEta order={lastOrder} outputFormat='hh:mm A' />
+                    {statusToShow.includes(lastOrder?.status) ? (
+                      <OrderEta order={lastOrder} outputFormat={configs?.general_hour_format?.value || 'HH:mm'} />
+                    ) : (
+                      parseDate(lastOrder?.reporting_data?.at[`status:${lastOrder.status}`], { outputFormat: configs?.general_hour_format?.value })
+                    )}
                   </OText>
                 </TimeWrapper>
               </ProgressTextWrapper>

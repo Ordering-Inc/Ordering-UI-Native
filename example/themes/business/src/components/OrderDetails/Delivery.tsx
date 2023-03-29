@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 //OrderingComponent
 import {
@@ -12,6 +13,8 @@ import {
   useToast,
   useSession,
   ToastType,
+  useUtils,
+  useConfig
 } from 'ordering-components/native';
 
 //Components
@@ -26,7 +29,7 @@ import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
 import { NotFoundSource } from '../NotFoundSource';
-import { getOrderStatus } from '../../utils';
+import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
 //Styles
@@ -56,7 +59,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     isGrantedPermissions,
   } = props;
   const [, { showToast }] = useToast();
+  const [{ parsePrice, parseNumber }] = useUtils();
+  const [{ configs }] = useConfig();
   const { order } = props.order
+
+  const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -134,7 +141,174 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   };
 
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
+    if (name !== 'No') {
+      const pos = position && position !== 'whole' ? `(${t(position.toUpperCase(), position)})` : '';
+      return pos
+        ? `${quantity} x ${name} ${pos} +${parsePrice(price)}\n`
+        : `${quantity} x ${name} +${parsePrice(price)}\n`;
+    } else {
+      return 'No\n';
+    }
+  };
+
+  const handleCopyClipboard = () => {
+    const businessName = !!order?.business?.name
+      ? `${order?.business?.name} \n`
+      : '';
+
+    const businessEmail = !!order?.business?.email
+      ? `${order?.business?.email} \n`
+      : '';
+
+    const businessCellphone = !!order?.business?.cellphone
+      ? `${order?.business?.cellphone} \n`
+      : '';
+
+    const businessPhone = !!order?.business?.phone
+      ? `${order?.business?.phone} \n`
+      : '';
+
+    const businessAddress = !!order?.business?.address
+      ? `${order?.business?.address} \n`
+      : '';
+
+    const businessSpecialAddress = !!order?.business?.address_notes
+      ? `${order?.business?.address_notes} \n \n`
+      : '';
+
+    const customerName = !!order?.customer?.name
+      ? `${order?.customer?.name} ${order?.customer?.middle_name || ''} ${order?.customer?.lastname || ''
+      } ${order?.customer?.second_lastname || ''} \n`
+      : '';
+
+    const customerEmail = !!order?.customer.email
+      ? `${order?.customer.email} \n`
+      : '';
+
+    const customerCellPhone = !!order?.customer?.cellphone
+      ? `${order?.customer?.cellphone} \n`
+      : '';
+
+    const customerPhone = !!order?.customer?.phone
+      ? `${order?.customer?.phone} \n`
+      : '';
+
+    const customerAddress = !!order?.customer?.address
+      ? `${order?.customer?.address} \n`
+      : '';
+
+    const customerSpecialAddress = !!order?.customer?.address_notes
+      ? `${order?.customer?.address_notes} \n`
+      : '';
+
+    const payment = order?.paymethod?.name
+      ? `${order?.paymethod?.name} - ${order.delivery_type === 1
+        ? t('DELIVERY', 'Delivery')
+        : order.delivery_type === 2
+          ? t('PICKUP', 'Pickup')
+          : order.delivery_type === 3
+            ? t('EAT_IN', 'Eat in')
+            : order.delivery_type === 4
+              ? t('CURBSIDE', 'Curbside')
+              : t('DRIVER_THRU', 'Driver thru')
+      }\n`
+      : '';
+
+    const getSuboptions = (suboptions: any) => {
+      const array: any = []
+      suboptions?.length > 0 &&
+        suboptions?.map((suboption: any) => {
+          const string = `${getFormattedSubOptionName(suboption)}`
+          array.push(string)
+        })
+
+      return array.join('')
+    }
+
+    const getOptions = (options: any, productComment: string = '') => {
+      const array: any = [];
+
+      options?.length &&
+        options?.map((option: any) => {
+          const string =
+            `  ${option.name}\n    ${getSuboptions(option.suboptions)}`;
+
+          array.push(string)
+        })
+
+      if (productComment) {
+        array.push(`  ${t('COMMENT', 'Comment')}\n    ${productComment}\n`)
+      }
+
+      return array.join('')
+    }
+
+    const productsInArray =
+      order?.products.length &&
+      order?.products.map((product: any, i: number) => {
+        const string =
+          `${product?.quantity} X ${product?.name} ${parsePrice(product.total ?? getProductPrice(product))}\n${getOptions(product.options, product.comment)}`;
+
+        return i === 0 ? ` ${string}` : string
+      });
+
+    const productsInString = productsInArray.join(' ');
+    const orderDetails = `${t(
+      'ORDER_DETAILS',
+      'Order Details',
+    )}:\n${productsInString}\n`;
+
+    const subtotal = `${t('SUBTOTAL', 'Subtotal')}: ${parsePrice(
+      order?.subtotal,
+    )}\n`;
+
+    const drivertip = `${t('DRIVER_TIP', 'Driver tip')} ${parsePrice(
+      order?.summary?.driver_tip || order?.totalDriverTip,
+    )}\n`;
+
+    const deliveryFee = `${t('DELIVERY_FEE', 'Delivery fee')} ${verifyDecimals(
+      order?.service_fee,
+      parseNumber,
+    )}% ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}\n`;
+
+    const total = `${t('TOTAL', 'Total')} ${parsePrice(
+      order?.summary?.total || order?.total,
+    )}\n`;
+
+    const orderStatus = `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+      'IS',
+      'is',
+    )} ${getOrderStatus(order?.status, t)?.value}\n`;
+
+    Clipboard.setString(
+      `${orderStatus} ${payment} ${t(
+        'BUSINESS_DETAILS',
+        'Business Details',
+      )}\n ${businessName} ${businessEmail} ${businessCellphone} ${businessPhone} ${businessAddress} ${businessSpecialAddress}${t(
+        'CUSTOMER_DETAILS',
+        'Customer Details',
+      )}\n ${customerName} ${customerEmail} ${customerCellPhone} ${customerPhone} ${customerAddress} ${customerSpecialAddress}\n${orderDetails} ${subtotal} ${drivertip} ${deliveryFee} ${total}`,
+    );
+
+    showToast(
+      ToastType.Info,
+      t('COPY_TO_CLIPBOARD', 'Copy to clipboard.'),
+      1000,
+    );
+  };
+
   const handleViewActionOrder = (action: string) => {
+    if (action === 'reject' && !isAllowedDriverRejectOrder) {
+      setAlertState({
+        open: true,
+        content: [
+          t('DRIVER_NOT_ALLOWED_TO_REJECT_ORDER', 'The driver is not allowed to reject an order.'),
+        ],
+        key: null,
+      })
+      return
+    }
     if (!isGrantedPermissions) {
       navigation.navigate('RequestPermissions')
       return
@@ -151,6 +325,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleArrowBack: any = () => {
+    if (alertState?.open && !isAllowedDriverRejectOrder) {
+      setAlertState({
+        ...alertState,
+        open: false
+      })
+      return
+    }
     navigation?.canGoBack() && navigation.goBack();
   };
 
@@ -362,6 +543,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               order={order}
               handleOpenMapView={handleOpenMapView}
               handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
+              handleCopyClipboard={handleCopyClipboard}
               getOrderStatus={getOrderStatus}
               handleArrowBack={handleArrowBack}
               logisticOrderStatus={logisticOrderStatus}

@@ -9,7 +9,6 @@ const TitleWrapper = styled.View`
   padding-horizontal: 10px;
 `
 const TitleTopWrapper = styled.View`
-  flex: 1;
   flex-direction: row;
   align-items: center;
 `
@@ -44,6 +43,7 @@ interface Props {
 	paddingTop?: number,
 	isVertical?: boolean,
 	noMargin?: any
+	hideArrowLeft?: boolean
 }
 
 const NavBar = (props: Props) => {
@@ -54,8 +54,6 @@ const NavBar = (props: Props) => {
 		background-color: ${theme.colors.white};
 		padding: 10px 20px 20px 0px;
 		flex-direction: row;
-		justify-content: center;
-		align-items: center;
 		position: relative;
 	`
 
@@ -64,16 +62,18 @@ const NavBar = (props: Props) => {
 	}
 	return (
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
-			<OButton
-				iconProps={{
-					name: 'arrowleft',
-					size: 26
-				}}
-				icon={AntDesignIcon}
-				imgRightSrc={null}
-				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
-				onClick={props?.onActionLeft}
-			/>
+			{!props.hideArrowLeft && (
+				<OButton
+					iconProps={{
+						name: 'arrowleft',
+						size: 26
+					}}
+					icon={AntDesignIcon}
+					imgRightSrc={null}
+					style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
+					onClick={props?.onActionLeft}
+				/>
+			)}
 			<TitleTopWrapper>
 				{props.withIcon
 					? (

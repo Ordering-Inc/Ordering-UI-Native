@@ -77,6 +77,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	const [isServiceOpen, setIsServiceOpen] = useState(false)
 	// const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
 	// const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
+	const [productQuantity, setProductQuantity] = useState(product.quantity.toString())
 
 	const productInfo = () => {
 		if (isCartProduct) {
@@ -120,6 +121,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const handleChangeQuantity = (value: string) => {
 		if (!orderState.loading) {
+			setProductQuantity(value)
 			if (parseInt(value) === 0) {
 				onDeleteProduct && onDeleteProduct(product)
 			} else {
@@ -209,7 +211,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 											<RNPickerSelect
 												items={productOptions}
 												onValueChange={handleChangeQuantity}
-												value={product.quantity.toString()}
+												value={productQuantity}
 												style={pickerStyle}
 												useNativeAndroidPickerStyle={false}
 												placeholder={{}}

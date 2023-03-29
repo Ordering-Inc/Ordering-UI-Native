@@ -140,14 +140,16 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                         style={styles.icons}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
-                      <SimpleLineIcons
-                        name='printer'
-                        color={theme.colors.textGray}
-                        size={20}
-                        style={styles.icons}
-                      />
-                    </TouchableOpacity>
+                    {!!handleViewSummaryOrder && (
+                      <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
+                        <SimpleLineIcons
+                          name='printer'
+                          color={theme.colors.textGray}
+                          size={20}
+                          style={styles.icons}
+                        />
+                      </TouchableOpacity>
+                    )}
                   </>
                 )}
               <OIconButton
@@ -205,14 +207,16 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                           style={styles.icons}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
-                        <SimpleLineIcons
-                          name='printer'
-                          color={theme.colors.textGray}
-                          size={20}
-                          style={styles.icons}
-                        />
-                      </TouchableOpacity>
+                      {!!handleViewSummaryOrder && (
+                        <TouchableOpacity onPress={() => handleViewSummaryOrder?.()}>
+                          <SimpleLineIcons
+                            name='printer'
+                            color={theme.colors.textGray}
+                            size={20}
+                            style={styles.icons}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </>
                   )}
                 <OIconButton

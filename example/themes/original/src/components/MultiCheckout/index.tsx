@@ -53,7 +53,6 @@ const MultiCheckoutUI = (props: any) => {
     navigation,
     placing,
     openCarts,
-    totalCartsPrice,
     handleGroupPlaceOrder,
     paymethodSelected,
     handleSelectPaymethod,
@@ -89,6 +88,18 @@ const MultiCheckoutUI = (props: any) => {
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
+  const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
+
+  const totalCartsPrice = cartGroup?.result?.balance
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -168,9 +179,9 @@ const MultiCheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = (confirmPayment ?: any) => {
     if (!userErrors.length) {
-      handleGroupPlaceOrder && handleGroupPlaceOrder()
+      handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
     }
     let stringError = ''
@@ -225,8 +236,15 @@ const MultiCheckoutUI = (props: any) => {
         <ChContainer style={styles.pagePadding}>
           <ChSection style={{ paddingTop: 0 }}>
             <ChHeader>
-              <CHMomentWrapper onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-                <OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(options?.type || 1), 'Delivery')}</OText>
+              <CHMomentWrapper isCustomColor={isChewLayout} onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+                <OText
+                  size={12}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  color={theme.colors?.[isChewLayout ? 'white' : 'textSecondary']}
+                >
+                  {t(getTypesText(options?.type || 1), 'Delivery')}
+                </OText>
                 <OIcon
                   src={theme.images.general.arrow_down}
                   width={10}
@@ -316,6 +334,7 @@ const MultiCheckoutUI = (props: any) => {
                   </OText>
                   <DriverTips
                     isMulti
+                    isLoading={loading}
                     carts={openCarts}
                     businessIds={openCarts.map((cart: any) => cart.business_id)}
                     driverTipsOptions={driverTipsOptions}
@@ -413,6 +432,16 @@ const MultiCheckoutUI = (props: any) => {
                         </OText>
                       </View>
                     )}
+                  {!cartGroup?.loading && cartGroup?.result?.payment_events?.length > 0 && cartGroup?.result?.payment_events?.map((event: any) => (
+                    <View key={event.id} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        {walletName[cartGroup?.result?.wallets?.find((wallet: any) => wallet.wallet_id === event.wallet_id)?.type]?.name}
+                      </OText>
+                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+                        -{parsePrice(event.amount, { isTruncable: true })}
+                      </OText>
+                    </View>
+                  ))}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
                       {t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}

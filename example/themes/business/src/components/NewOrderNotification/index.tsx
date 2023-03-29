@@ -48,6 +48,7 @@ const NewOrderNotificationUI = (props: any) => {
   const notificationSound = new Sound(theme.sounds.notification, '', () => { });
 
   let _timeout: any = null
+  let times = 0
 
   const handleCloseEvents = () => {
     notificationSound.stop()
@@ -57,14 +58,19 @@ const NewOrderNotificationUI = (props: any) => {
 
   const handlePlayNotificationSound = (eventObj: any = null) => {
     setCurrentEvent(eventObj)
-    let times = 1
+    if (times > 0) {
+      if (times === 3) {
+        times = 0
+        return
+      }
+      return
+    }
     _timeout = setInterval(() => {
-      if (times <= SOUND_LOOP) {
+      if (times < SOUND_LOOP) {
         notificationSound.play()
         times++
       } else {
         clearInterval(_timeout)
-        times = 1
         return
       }
     }, 2500)
@@ -89,10 +95,10 @@ const NewOrderNotificationUI = (props: any) => {
       }
     }
     if (evtType === 3 || value.author_id === user.id) return
-    handlePlayNotificationSound({
+    setTimeout(() => handlePlayNotificationSound({
       evt: evtType,
       orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.id
-    })
+    }), 1000)
   }
 
   useEffect(() => {

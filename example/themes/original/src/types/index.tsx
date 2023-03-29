@@ -629,7 +629,8 @@ export interface GoogleMapsParams {
 	isSetInputs?: boolean,
 	locations?: Array<any>,
 	setSaveLocation?: (val: boolean) => void,
-	handleToggleMap?: () => void
+	handleToggleMap?: () => void,
+	isIntGeoCoder: boolean
 }
 
 export interface HelpParams {
@@ -725,6 +726,8 @@ export interface otpParams {
 	handleLoginOtp: (code: string) => void,
 	setAlertState: any;
 	pinCount: number;
+	otpError: any,
+	setOtpError: any
 }
 
 export interface FavoriteParams {

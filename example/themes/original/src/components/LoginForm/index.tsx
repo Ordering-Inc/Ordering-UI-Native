@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Keyboard } from 'react-native';
+import { StyleSheet, View, Keyboard, Modal } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Recaptcha from 'react-native-recaptcha-that-works'
 import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import {
 	LoginForm as LoginFormController,
@@ -45,7 +46,6 @@ import { AppleLogin } from '../AppleLogin';
 import { Otp } from './Otp'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Alert from '../../../../../src/providers/AlertProvider'
-import { vibrateApp } from '../../utils';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -97,6 +97,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 	const [tabLayouts, setTabLayouts] = useState<any>({})
+	const [otpError, setOtpError] = useState(null)
 	const tabsRef = useRef<any>(null)
 	const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
 	const theme = useTheme();
@@ -162,6 +163,14 @@ const LoginFormUI = (props: LoginParams) => {
 		handleCategoryScroll(otpType ? `${val}_${otpType}` : val)
 	};
 
+	const vibrateApp = (impact?: string) => {
+		const options = {
+			enableVibrateFallback: true,
+			ignoreAndroidSystemSettings: false
+		};
+		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
+	}
+
 	const onSubmit = (values?: any) => {
 		Keyboard.dismiss();
 		if (loginTab === 'otp') {
@@ -170,7 +179,7 @@ const LoginFormUI = (props: LoginParams) => {
 				vibrateApp()
 				return
 			}
-			if(!values?.cellphone && otpType === 'cellphone'){
+			if (!values?.cellphone && otpType === 'cellphone') {
 				showToast(ToastType.Error, t('PHONE_NUMBER_REQUIRED', 'Phone number is required'));
 				return
 			}
@@ -256,10 +265,14 @@ const LoginFormUI = (props: LoginParams) => {
 		setOtpType(type)
 	}
 
-	const handleLoginOtp = (code: string) => {
+	const handleLoginOtp = async (code: string) => {
 		if (!code) return
-		handleButtonLoginClick({ code })
-		setWillVerifyOtpState(false)
+		const logged = await handleButtonLoginClick({ code })
+		if (logged) {
+			setWillVerifyOtpState(false)
+		} else {
+			setOtpError(t('OTP_CODE_INCORRECT', 'Otp code incorrect'))
+		}
 	}
 
 	const closeAlert = () => {
@@ -835,20 +848,21 @@ const LoginFormUI = (props: LoginParams) => {
 					onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
-			<OModal
-				open={willVerifyOtpState}
-				onClose={() => setWillVerifyOtpState(false)}
-				entireModal
-				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			<Modal
+				visible={willVerifyOtpState}
+				onDismiss={() => setWillVerifyOtpState(false)}
+				animationType='slide'
 			>
 				<Otp
 					willVerifyOtpState={willVerifyOtpState}
+					otpError={otpError}
+					setOtpError={setOtpError}
 					setWillVerifyOtpState={setWillVerifyOtpState}
 					handleLoginOtp={handleLoginOtp}
 					onSubmit={onSubmit}
 					setAlertState={setAlertState}
 				/>
-			</OModal>
+			</Modal>
 			<Alert
 				open={alertState.open}
 				content={alertState.content}

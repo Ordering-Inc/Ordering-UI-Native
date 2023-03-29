@@ -523,7 +523,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           ))
         }
         {
-          order?.summary?.delivery_price > 0 && (
+          typeof order?.summary?.delivery_price === 'number' && (
             <Table>
               <OText mBottom={4}>
                 {t('DELIVERY_FEE', 'Delivery Fee')}
@@ -611,11 +611,11 @@ export const OrderContentComponent = (props: OrderContent) => {
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
                         : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                     </OText>
-                    {event?.data?.charge_id && (
+                    {/* {event?.data?.charge_id && (
                       <OText>
                         {`${t('CODE', 'Code')}: ${event?.data?.charge_id}`}
                       </OText>
-                    )}
+                    )} */}
                   </View>
                   <OText>
                     {(event?.paymethod?.gateway === 'cash' && order?.cash)

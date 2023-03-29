@@ -934,7 +934,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </Table>
                 ))
               }
-              {order?.summary?.delivery_price > 0 && (
+              {typeof order?.summary?.delivery_price === 'number' && (
                 <Table>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                   <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price)}</OText>
@@ -1011,11 +1011,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                               ? walletName[event?.wallet_event?.wallet?.type]?.name
                               : t(event?.paymethod?.name.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
                           </OText>
-                          {event?.data?.charge_id && (
+                          {/* {event?.data?.charge_id && (
                             <OText>
                               {`${t('CODE', 'Code')}: ${event?.data?.charge_id}`}
                             </OText>
-                          )}
+                          )} */}
                         </View>
                         <OText>
                           {configs.currency_position?.value === 'left'

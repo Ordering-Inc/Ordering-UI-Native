@@ -12,7 +12,8 @@ export const GPSButton = (props: any) => {
     handleGPS,
 		apiKey,
     IconButton,
-    IconLoadingButton
+    IconLoadingButton,
+    isIntGeoCoder
   } = props
 
 	const [isLoading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export const GPSButton = (props: any) => {
             break
           }
         }
-        let data = null
+        let data : any
         const details = {
           geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
         }
@@ -68,14 +69,15 @@ export const GPSButton = (props: any) => {
         setLoading(false);
         console.log(`ERROR(${err.code}): ${err.message}`)
       }, {
-        enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+        enableHighAccuracy: false, timeout: 30000, maximumAge: 1000
       })
     }
   }
 
   useEffect(() => {
+    if (isIntGeoCoder) return
     Geocoder.init(apiKey);
-  }, [])
+  }, [isIntGeoCoder])
 
   return (
     <GpsButtonStyle

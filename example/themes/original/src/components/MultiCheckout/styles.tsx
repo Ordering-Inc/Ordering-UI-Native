@@ -13,7 +13,9 @@ export const ChHeader = styled.View`
   margin: 0px;
 `
 export const CHMomentWrapper = styled.TouchableOpacity`
-	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
+	background-color: ${(props: any) => props.isCustomColor
+    ? props.theme.colors.primary
+    : props.theme.colors.backgroundGray100};
 	border-radius: 7.6px;
 	font-size: 12px;
 	max-width: 240px;
