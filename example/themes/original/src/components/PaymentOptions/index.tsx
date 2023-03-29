@@ -127,6 +127,12 @@ const PaymentOptionsUI = (props: any) => {
 	}
 
 	useEffect(() => {
+		if (cart?.balance === 0) {
+			handlePaymethodClick(null)
+		}
+	}, [cart?.balance])
+
+	useEffect(() => {
 		if (paymethodsList.paymethods.length === 1) {
 			handlePaymethodClick && handlePaymethodClick(paymethodsList.paymethods[0])
 		}
@@ -339,7 +345,7 @@ const PaymentOptionsUI = (props: any) => {
 					onPaymentChange={onPaymentChange}
 					payType={isOpenMethod?.paymethod?.name}
 					onSelectCard={handlePaymethodDataChange}
-					addCardOpen={addCardOpen} 
+					addCardOpen={addCardOpen}
 					setAddCardOpen={setAddCardOpen}
 					onCancel={() => handlePaymethodClick(null)}
 					paymethodSelected={paymethodSelected?.data?.id}

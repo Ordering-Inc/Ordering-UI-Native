@@ -3,6 +3,8 @@ import {
   useLanguage,
   useConfig,
   useUtils,
+  useToast,
+  ToastType,
   MultiCartsPaymethodsAndWallets as MultiCartsPaymethodsAndWalletsController
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
@@ -45,7 +47,8 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
-	const { confirmApplePayPayment } = useApplePay()
+	const [, { showToast }] = useToast();
+  const { confirmApplePayPayment } = useApplePay()
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
 
@@ -91,20 +94,38 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   }
 
   useEffect(() => {
-		if (methodsPay.includes(paymethodSelected?.gateway)) {
-      if (typeof paymethodSelected?.paymethod_data === 'string'){
-        const sourceId =  JSON.parse(paymethodSelected?.paymethod_data)?.source_id
+    if (methodsPay.includes(paymethodSelected?.gateway)) {
+      if (typeof paymethodSelected?.paymethod_data === 'string') {
+        const sourceId = JSON.parse(paymethodSelected?.paymethod_data)?.source_id
         sourceId && handlePlaceOrder(confirmApplePayPayment)
       }
-		}
-	}, [JSON.stringify(paymethodSelected)])
+    }
+  }, [JSON.stringify(paymethodSelected)])
+
+  useEffect(() => {
+    if (cartTotal === 0) {
+      handlePaymethodDataChange(null)
+      handleSelectPaymethod(null)
+    }
+  }, [cartTotal])
+
+  const handleChangePaymethod = (paymethod: any) => {
+    if (cartTotal > 0) {
+      handleSelectPaymethod(paymethod)
+      return
+    }
+    showToast(
+      ToastType.Error,
+      t('CART_BALANCE_ZERO', 'Sorry, the amount to pay is equal to zero and it is not necessary to select a payment method'))
+      ;
+  }
 
   const renderPaymethods = ({ item }: any) => {
     return (
       <>
         {item?.gateway === 'global_apple_pay' ? (
           <TouchableOpacity
-            onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
+            onPress={() => handleChangePaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
           >
             <OIcon
               src={getPayIcon(item.gateway)}
@@ -115,7 +136,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            onPress={() => handleSelectPaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
+            onPress={() => handleChangePaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
           >
             <PMItem
               key={item.id}
@@ -208,9 +229,9 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
           handleSource={handlePaymethodDataChange}
           onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
           setMethodPaySupported={setMethodPaySupported}
-					methodPaySupported={methodPaySupported}
-					placeByMethodPay={placeByMethodPay}
-					setPlaceByMethodPay={setPlaceByMethodPay}
+          methodPaySupported={methodPaySupported}
+          placeByMethodPay={placeByMethodPay}
+          setPlaceByMethodPay={setPlaceByMethodPay}
           methodsPay={methodsPay}
           paymethod={paymethodSelected?.paymethod?.gateway}
           cartTotal={cartTotal}
