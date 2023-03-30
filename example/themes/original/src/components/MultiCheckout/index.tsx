@@ -220,6 +220,16 @@ const MultiCheckoutUI = (props: any) => {
     }
   }, [cartUuid])
 
+  useEffect(() => {
+    if(paymethodSelected?.gateway === 'global_google_pay'){
+      setMethodPaySupported({
+        enabled: true,
+        loading: false,
+        message: null
+      })
+    }
+	}, [paymethodSelected])
+
   return (
     <>
       <Container noPadding>
