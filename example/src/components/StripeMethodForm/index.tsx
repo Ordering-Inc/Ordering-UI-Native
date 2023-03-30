@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLanguage, useConfig } from 'ordering-components/native'
+import { useLanguage, useConfig, useOrder } from 'ordering-components/native'
 import { useGooglePay, useApplePay } from '@stripe/stripe-react-native'
 import { Platform } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
@@ -21,6 +21,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   } = props
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
+  const [{ loading: loadingCart }] = useOrder()
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const applePay = ['global_apple_pay', 'apple_pay']
@@ -30,53 +31,15 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     if (Platform.OS === 'ios') {
       return
     }
-    const initialize = async () => {
-      try {
-        setMethodPaySupported({
-          ...methodPaySupported,
-          loading: true
-        })
-        const { error } = await initGooglePay({
-          testEnv: devMode,
-          merchantName: android_app_id,
-          countryCode: 'US',
-          billingAddressConfig: {
-            format: 'FULL',
-            isPhoneNumberRequired: true,
-            isRequired: false,
-          },
-          existingPaymentMethodRequired: false,
-          isEmailRequired: true,
-        });
-
-        if (error) {
-          setErrors(error.code + ' - ' + error.message);
-          setMethodPaySupported({
-            enabled: false,
-            loading: false
-          })
-          setPlaceByMethodPay(false)
-          return;
-        }
-        setMethodPaySupported({
-          enabled: true,
-          loading: false
-        })
-        setPlaceByMethodPay(false)
-        setErrors('')
-      } catch (err: any) {
-        setErrors('Catch ' + err?.message)
-        setMethodPaySupported({
-          enabled: false,
-          loading: false
-        })
-        setPlaceByMethodPay(false)
-      }
+    if (!loadingCart) {
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
+      setPlaceByMethodPay(false)
+      setErrors('')
     }
-    if (googlePay.includes(paymethod) && !methodPaySupported?.enabled) {
-      initialize();
-    }
-  }, [initGooglePay, paymethod]);
+  }, [paymethod, loadingCart]);
 
   useEffect(() => {
     if (applePay.includes(paymethod) && !paymethod) return
@@ -90,11 +53,57 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     }
   }, [paymethod])
 
+  const initialize = async () => {
+    try {
+      setMethodPaySupported({
+        ...methodPaySupported,
+        loading: true
+      })
+      const { error } = await initGooglePay({
+        testEnv: devMode,
+        merchantName: android_app_id,
+        countryCode: 'US',
+        billingAddressConfig: {
+          format: 'FULL',
+          isPhoneNumberRequired: true,
+          isRequired: false,
+        },
+        existingPaymentMethodRequired: false,
+        isEmailRequired: true,
+      });
+
+      if (error) {
+        setErrors(error.code + ' - ' + error.message);
+        setMethodPaySupported({
+          enabled: false,
+          loading: false
+        })
+        setPlaceByMethodPay(false)
+        return true;
+      }
+      setMethodPaySupported({
+        enabled: true,
+        loading: false
+      })
+      setPlaceByMethodPay(false)
+      setErrors('')
+    } catch (err: any) {
+      setErrors('Catch ' + err?.message)
+      setMethodPaySupported({
+        enabled: false,
+        loading: false
+      })
+      setPlaceByMethodPay(false)
+    }
+  }
+
   const createPaymentMethod = async () => {
     setMethodPaySupported({
       ...methodPaySupported,
       loading: true
     })
+    const initializeError = await initialize()
+    if (initializeError) return
     const { error, paymentMethod } = await createGooglePayPaymentMethod({
       amount: cartTotal ?? cart?.balance ?? cart?.total,
       currencyCode: configs?.stripe_currency?.value ?? 'USD',
