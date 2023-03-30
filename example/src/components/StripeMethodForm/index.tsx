@@ -28,11 +28,6 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
-      setMethodPaySupported({
-        enabled: false,
-        loading: false
-      })
-      setPlaceByMethodPay(false)
       return
     }
     const initialize = async () => {
