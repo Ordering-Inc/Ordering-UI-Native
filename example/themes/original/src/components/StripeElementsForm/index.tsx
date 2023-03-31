@@ -50,8 +50,8 @@ const StripeElementsFormUI = (props: any) => {
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-	const zipCodeEnabled = validationFields?.checkout?.zipcode?.enabled
-	const zipCodeRequired = validationFields?.checkout?.zipcode?.required
+	const zipCodeEnabled = validationFields?.fields?.card?.zipcode?.enabled
+	const zipCodeRequired = validationFields?.fields?.card?.zipcode?.required
 	const styles = StyleSheet.create({
 		container: {
 			width: '100%',
