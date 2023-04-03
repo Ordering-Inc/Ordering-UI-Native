@@ -20,7 +20,7 @@ export const UDLoader = styled.View`
   width: 100%;
   justify-content: center;
   height: auto;
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   padding: 0;
   margin-top: 0px;
