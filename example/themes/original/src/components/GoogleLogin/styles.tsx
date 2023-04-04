@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 
 export const Container = styled.View`
-	margin-vertical: 20px;
+	margin-bottom: 20px;
 `
 
 export const GoogleButton = styled.TouchableOpacity`
