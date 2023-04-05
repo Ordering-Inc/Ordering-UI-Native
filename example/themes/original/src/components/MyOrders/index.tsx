@@ -148,18 +148,16 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          {ordersLength?.preordersLength > 0 && (
-            <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
-              <OrdersOption
-                {...props}
-                preOrders
-                ordersLength={ordersLength}
-                setOrdersLength={setOrdersLength}
-                setRefreshOrders={setRefreshOrders}
-                refreshOrders={refreshOrders}
-              />
-            </View>
-          )}
+          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+            <OrdersOption
+              {...props}
+              preOrders
+              ordersLength={ordersLength}
+              setOrdersLength={setOrdersLength}
+              setRefreshOrders={setRefreshOrders}
+              refreshOrders={refreshOrders}
+            />
+          </View>
           <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
             <OrdersOption
               {...props}

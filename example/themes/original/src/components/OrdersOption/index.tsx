@@ -211,7 +211,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					/>
 				</NoOrdersWrapper>
 			)}
-			{((ordersLength?.activeOrdersLength > 0 && activeOrders) || (ordersLength?.previousOrdersLength > 0 && !activeOrders)) && (
+			{((ordersLength?.activeOrdersLength > 0 && activeOrders) ||
+				(ordersLength?.previousOrdersLength > 0 && !activeOrders && !preOrders) ||
+				(ordersLength?.preordersLength > 0 && preOrders)
+			) && (
 				<>
 					{((titleContent && ((isBusiness && businessOrderIds?.length > 0) || isProducts)) || !titleContent) && (
 						<OptionTitle titleContent={!!titleContent} isBusinessesSearchList={!!businessesSearchList}>
