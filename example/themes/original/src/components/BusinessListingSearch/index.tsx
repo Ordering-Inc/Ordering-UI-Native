@@ -47,6 +47,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     businessTypes,
     setFilters,
     brandList,
+    paginationProps,
     handleUpdateProducts
   } = props
 
