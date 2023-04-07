@@ -229,10 +229,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						)}
 						{(!isCustomLayout) && !hideBusinessOffer && (
 							getBusinessOffer((business?.offers)) &&
-							<OfferBox>
+							<OfferBox isClosed={!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1')}>
 								<OText
 									size={10}
 									weight={'400'}
+									color={theme.colors.textThird}
 									numberOfLines={2}
 									ellipsizeMode='tail'
 									lineHeight={13}
