@@ -198,7 +198,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	return (
 		<>
-			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && !activeOrders && (
+			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && ordersLength?.preordersLength === 0 && !activeOrders && !preOrders && (
 				<NoOrdersWrapper>
 					<NotFoundSource
 						hideImage
