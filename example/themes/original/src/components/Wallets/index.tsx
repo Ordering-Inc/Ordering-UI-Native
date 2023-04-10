@@ -143,7 +143,7 @@ const WalletsUI = (props: any) => {
               btnStyle={{ paddingLeft: 0 }}
               hideArrowLeft={!hideWalletsTheme}
             />
-            {isChewLayout && (
+            {isChewLayout && !openHistory && (
               <OButton
                 text={t('WALLET_HISTORY', 'Wallet history')}
                 bgColor={theme.colors.white}
