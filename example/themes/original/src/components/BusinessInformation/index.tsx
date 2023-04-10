@@ -1,7 +1,7 @@
 import React from 'react';
 import {
 	BusinessInformation as BusinessInformationController,
-	useLanguage, useUtils
+	useLanguage, useUtils, useConfig,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText } from '../shared';
@@ -22,31 +22,27 @@ import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
 import { formatUrlVideo } from '../../utils'
 import { ScheduleAccordion } from '../ScheduleAccordion';
+import moment from 'moment';
 const BusinessInformationUI = (props: BusinessInformationParams) => {
 	const { businessState, businessSchedule, businessLocation } = props;
 
 	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [{ optimizeImage }] = useUtils();
+	const [{ configs }] = useConfig()
 
 	const hideLocation = theme?.business_view?.components?.information?.components?.location?.hidden
 	const hideSchedule = theme?.business_view?.components?.information?.components?.schedule?.hidden
 	const hideVideos = theme?.business_view?.components?.information?.components?.videos?.hidden
 	const hideImages = theme?.business_view?.components?.information?.components?.images?.hidden
 	const hideAddress = theme?.business_view?.components?.information?.components?.address?.hidden
+	const formatTime = configs?.general_hour_format?.value
 
-	const scheduleFormatted = ({
-		hour,
-		minute,
-	}: {
-		hour: number | string;
-		minute: number | string;
-	}) => {
-		const checkTime = (val: number | string) => (val < 10 ? `0${val}` : val);
-		const zz = hour > 12 ? 'PM' : 'AM';
-		const h = parseInt(`${hour}`);
-		return `${h > 12 ? h - 12 : h}:${checkTime(minute)} ${zz}`;
-	};
+	const checkTime = (val: number) => (val < 10 ? `0${val}` : val);
+	const timeFormated = (time: any) => {
+		return moment(`1900-01-01 ${checkTime(time.hour)}:${checkTime(time.minute)}`).format(formatTime)
+	}
+
 	const businessCoordinate = {
 		lat: businessState?.business?.location?.lat,
 		lng: businessState?.business?.location?.lng,
@@ -121,7 +117,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										<ScheduleBlock key={i}>
 											<ScheduleAccordion
 												weekIndex={i}
-												scheduleFormatted={scheduleFormatted}
+												timeFormated={timeFormated}
 												schedule={schedule}
 											/>
 										</ScheduleBlock>

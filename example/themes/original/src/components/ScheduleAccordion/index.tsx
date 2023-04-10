@@ -13,7 +13,7 @@ import { OIcon, OText } from '../shared';
 export const ScheduleAccordion = (props: any) => {
 
 	const {
-		scheduleFormatted,
+		timeFormated,
 		schedule,
 		weekIndex
 	} = props
@@ -52,9 +52,9 @@ export const ScheduleAccordion = (props: any) => {
 					{schedule?.lapses?.map((lapse: any) => (
 						schedule?.enabled ?
 							<OText mBottom={16}>
-								{scheduleFormatted(lapse.open) +
+								{timeFormated(lapse.open) +
 									' - ' +
-									scheduleFormatted(lapse.close)}
+									timeFormated(lapse.close)}
 							</OText>
 							:
 							<OText color={theme.colors.red} mBottom={16}>
