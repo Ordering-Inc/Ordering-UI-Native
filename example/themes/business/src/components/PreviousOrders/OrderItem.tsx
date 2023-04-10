@@ -94,8 +94,7 @@ export const OrderItem = (props: any) => {
   });
 
   const getDelayMinutes = (order: any) => {
-    const offset = 300
-    const cdtToutc = moment(order?.delivery_datetime).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+    const cdtToutc = moment(order?.delivery_datetime).utc().format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
       ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
       : parseDate(cdtToutc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
