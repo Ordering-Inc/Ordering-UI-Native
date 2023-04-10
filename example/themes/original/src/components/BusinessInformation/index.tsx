@@ -43,9 +43,9 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 		minute: number | string;
 	}) => {
 		const checkTime = (val: number | string) => (val < 10 ? `0${val}` : val);
-		const zz = hour > 12 ? 'PM' : 'AM';
+		const zz = hour >= 12 ? 'PM' : 'AM';
 		const h = parseInt(`${hour}`);
-		return `${h > 12 ? h - 12 : h}:${checkTime(minute)} ${zz}`;
+		return `${h > 12 ? h - 12 : h === 0 ? 12 : h}:${checkTime(minute)} ${zz}`;
 	};
 	const businessCoordinate = {
 		lat: businessState?.business?.location?.lat,
