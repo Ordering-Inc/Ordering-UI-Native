@@ -572,7 +572,7 @@ const CheckoutUI = (props: any) => {
 												data: deliveryOptions || [],
 												renderItem: ({ item }: any) => (
 													<TouchableOpacity
-														onPress={() => changeDeliveryOption(item.value)}
+														onPress={() => !!cart?.uuid && changeDeliveryOption(item.value)}
 														disabled={
 															deliveryOptionSelected === item.value
 														}
