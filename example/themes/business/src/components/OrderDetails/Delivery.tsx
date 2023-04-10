@@ -83,6 +83,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const validStatusComplete = [9, 19, 23]
 
+  const pendingOrderStatus = [1, 4, 7, 13]
+
   const logisticOrderStatus = [4, 6, 7]
 
   const showFloatButtonsPickUp: any = {
@@ -325,7 +327,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleArrowBack: any = () => {
-    if (alertState?.open && !isAllowedDriverRejectOrder) {
+    if (alertState?.open && !isAllowedDriverRejectOrder && !pendingOrderStatus.includes(order?.status)) {
       setAlertState({
         ...alertState,
         open: false
@@ -525,7 +527,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
 
-      {(!!props.order?.error || props.order?.error) && (
+      {(!!props.order?.error || props.order?.error?.length > 0) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
           content={
