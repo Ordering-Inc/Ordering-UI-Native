@@ -108,7 +108,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 			)}
 			{!loading &&
 				categories &&
-				categories.length &&
+				categories.length > 0 &&
 				categories.map((category: any) => (
 					<Tab
 						key={category.id}
