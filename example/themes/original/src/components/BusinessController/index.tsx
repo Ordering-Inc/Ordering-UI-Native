@@ -229,7 +229,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						)}
 						{(!isCustomLayout) && !hideBusinessOffer && (
 							getBusinessOffer((business?.offers)) &&
-							<OfferBox isClosed={!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1')}>
+							<OfferBox
+								isClosed={!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1')}
+								isRibbon={business?.ribbon?.enabled && !!business?.ribbon?.text}
+							>
 								<OText
 									size={10}
 									weight={'400'}
@@ -240,7 +243,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								>{getBusinessOffer((business?.offers)) || parsePrice(0)}</OText>
 							</OfferBox>
 						)}
-						<BusinessState>
+						<BusinessState isRibbon={business?.ribbon?.enabled && !!business?.ribbon?.text}>
 							{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
 								<View style={styles.businessStateView}>
 									<OText
