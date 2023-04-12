@@ -34,7 +34,7 @@ export const Metadata = styled.View`
 
 export const BusinessState = styled.View`
   position: absolute;
-	top: 15px;
+  top: ${(props: any) => props.isRibbon ? '32px' : '15px'};
 	right: 15px;
 `
 
@@ -86,7 +86,7 @@ export const OfferBox = styled.View`
   position: absolute;
   z-index: 1;
   border-radius: 50px;
-  top: 15px;
+  top: ${(props: any) => props.isRibbon ? '32px' : '15px'};
   right: ${(props: any) => props.isClosed ? '110px' : '15px'};
   background: ${(props: any) => props.theme.colors.inputBorderColor};
   padding: 3px 8px;
