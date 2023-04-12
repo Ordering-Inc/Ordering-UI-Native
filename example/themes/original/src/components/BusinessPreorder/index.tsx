@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { TouchableOpacity, StyleSheet, View, Dimensions, Platform } from 'react-native'
 import { useLanguage, useUtils, useConfig, useOrder, MomentOption } from 'ordering-components/native'
 import { OButton, OIcon, OText } from '../shared'
@@ -310,9 +311,11 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     }
   }, [dateSelected])
 
-  useEffect(() => {
-    handleAsap && handleAsap()
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      handleAsap && handleAsap()
+    }, [])
+  )
 
   return (
     <>
