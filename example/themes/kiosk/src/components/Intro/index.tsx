@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, RefreshControl, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, TouchableOpacity } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 
@@ -9,6 +9,7 @@ import OButton from '../../components/shared/OButton';
 import { LanguageSelector } from '../../components/LanguageSelector';
 import { LogoutPopup } from '../../components/LogoutPopup';
 import { PORTRAIT, LANDSCAPE, useDeviceOrientation } from "../../../../../src/hooks/DeviceOrientation";
+import { OIcon } from '../../components/shared';
 
 const Intro = (props: any): React.ReactElement => {
   const { navigation } = props;
@@ -41,6 +42,19 @@ const Intro = (props: any): React.ReactElement => {
     //     />
     //   }
     // >
+    <>
+      <View style={{ position: 'absolute', top: 25, right: 20, zIndex: 1000 }}>
+        <TouchableOpacity
+          onPress={() => setShowLogoutPopup(true)}
+        >
+          <OIcon
+            src={theme.images.general.menulogout}
+            width={24}
+            height={24}
+            color={theme.colors.disabledContrast}
+          />
+        </TouchableOpacity>
+      </View>
       <Pressable onPress={goBusiness}>
         <View style={{ height: orientationState?.dimensions?.height }}>
           {orientationState.orientation === PORTRAIT ? (
@@ -134,6 +148,7 @@ const Intro = (props: any): React.ReactElement => {
           />
         </View>
       </Pressable>
+    </>
     // </ScrollView>
   );
 };
