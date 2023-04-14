@@ -605,7 +605,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<BusinessController
 							key={`${business.id}_` + i}
 							enableIntersection
-							isCustomLayout={isChewLayout}
 							business={business}
 							isBusinessOpen={business.open}
 							handleCustomClick={handleBusinessClick}
