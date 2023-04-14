@@ -97,7 +97,7 @@ const NewOrderNotificationUI = (props: any) => {
     if (evtType === 3 || value.author_id === user.id) return
     setTimeout(() => handlePlayNotificationSound({
       evt: evtType,
-      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.id
+      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.order_id
     }), 1000)
   }
 
