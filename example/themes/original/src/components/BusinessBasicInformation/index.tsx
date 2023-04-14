@@ -146,7 +146,7 @@ export const BusinessBasicInformation = (
 	}
 
 	const getBusinessType = () => {
-		if (Object.keys(business).length <= 0) return t('GENERAL', 'General');
+		if (Object.keys(business || {}).length <= 0) return t('GENERAL', 'General');
 		const _types: any = [];
 		types.forEach(
 			(type) =>

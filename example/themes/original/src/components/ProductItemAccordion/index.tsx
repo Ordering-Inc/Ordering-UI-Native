@@ -108,14 +108,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	/* const toggleAccordion = () => {
 		if ((!product?.valid_menu && isCartProduct)) return
 		if (isActive) {
-		  Animated.timing(setHeight.height, {
+			Animated.timing(setHeight.height, {
 			 toValue: 100,
 			 duration: 500,
 			 easing: Easing.linear,
 			 useNativeDriver: false,
-		  }).start()
+			}).start()
 		} else {
-		  setHeightState({height: new Animated.Value(0)})
+			setHeightState({height: new Animated.Value(0)})
 		}
 	 }*/
 
@@ -136,7 +136,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	}
 
 	/*useEffect(() => {
-	  toggleAccordion()
+		toggleAccordion()
 	}, [isActive])*/
 
 	const productOptions = getProductMax && [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
@@ -289,7 +289,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							)}
 							{productInfo().options.length > 0 && (
 								<ProductOptionsList>
-									{productInfo().options.map((option: any, i: number) => (
+									{productInfo().options.sort((a: any, b: any) => a.rank - b.rank).map((option: any, i: number) => (
 										<ProductOption key={option.id + i}>
 											<OText size={10} color={theme.colors.textSecondary}>{option.name}</OText>
 											{option.suboptions.map((suboption: any) => (
