@@ -691,8 +691,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         <ServiceForm
           navigation={navigation}
           product={currentProduct}
-          businessSlug={business.slug}
-          businessId={business.id}
+          businessSlug={business?.slug}
+          businessId={business?.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
