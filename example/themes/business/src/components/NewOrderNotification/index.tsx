@@ -76,11 +76,7 @@ const NewOrderNotificationUI = (props: any) => {
     }, 2500)
   }
 
-  console.log('currentEvent', currentEvent)
-
   const handleEventNotification = async (evtType: number, value: any) => {
-    console.log('evtType', evtType)
-    console.log('value', value)
     if (value?.driver) {
       try {
         const location = await getCurrentLocation()
