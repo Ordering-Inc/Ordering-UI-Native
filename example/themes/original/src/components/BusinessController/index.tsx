@@ -42,7 +42,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		navigation,
 		isBusinessOpen,
 		style,
-		isCustomLayout,
 		businessHeader,
 		businessFeatured,
 		businessLogo,
@@ -76,7 +75,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const hideBusinessHeader = theme?.business_listing_view?.components?.business?.components?.header?.hidden
 	const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
 
-	const textSize = isCustomLayout ? 12 : 10
+	const textSize = 12
 	const cardHeight = windowHeight * 0.3
 
 	const styles = StyleSheet.create({
@@ -214,7 +213,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					<BusinessHero>
 						{!hideBusinessHeader && (
 							<FastImage
-								style={{ height: isCustomLayout ? cardHeight * 0.66 : 120 }}
+								style={{ height: cardHeight * 0.66 }}
 								source={(businessHeader || business?.header || typeof theme.images.dummies.businessHeader === 'string') ? {
 									uri: optimizeImage(businessHeader || business?.header || theme.images.dummies.businessHeader, 'h_500,c_limit'),
 									priority: FastImage.priority.normal,
@@ -227,7 +226,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								<FontAwesomeIcon name="crown" size={26} color="gold" />
 							</View>
 						)}
-						{(!isCustomLayout) && !hideBusinessOffer && (
+						{!hideBusinessOffer && (
 							getBusinessOffer((business?.offers)) &&
 							<OfferBox
 								isClosed={!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1')}
@@ -257,7 +256,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</BusinessState>
 					</BusinessHero>
 					<BusinessContent>
-						<BusinessInfo style={isCustomLayout && { position: 'absolute', bottom: 85, left: 15 }}>
+						<BusinessInfo style={{ position: 'absolute', bottom: 85, left: 15 }}>
 							{!hideBusinessLogo && (
 								<BusinessLogo style={styles.businessLogo}>
 									<FastImage
@@ -270,38 +269,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 									/>
 								</BusinessLogo>
 							)}
-							{!isCustomLayout && (!hideBusinessFavorite || !hideBusinessReviews) && (
-								<ReviewAndFavorite>
-									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && !hideBusinessReviews && (
-										<Reviews>
-											<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
-											<OText size={10} style={{ lineHeight: 15 }}>
-												{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
-											</OText>
-										</Reviews>
-									)}
-									{!hideBusinessFavorite && (
-										<LottieAnimation
-											type='favorite'
-											onClick={handleChangeFavorite}
-											initialValue={business?.favorite ? 0.5 : 0}
-											toValue={business?.favorite ? 0 : 0.5}
-											disableAnimation={!auth}
-											iconProps={{ color: theme.colors.danger5, size: 18 }}
-											isActive={business?.favorite}
-										/>
-									)}
-								</ReviewAndFavorite>
-							)}
 						</BusinessInfo>
-						<View style={isCustomLayout && { width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+						<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
 							<OText
 								size={textSize + 2}
 								style={{ lineHeight: 18, marginBottom: 6 }}
 								weight={'500'}>
 								{business?.name}
 							</OText>
-							{isCustomLayout && (!hideBusinessFavorite || !hideBusinessReviews) && (
+							{(!hideBusinessFavorite || !hideBusinessReviews) && (
 								<ReviewAndFavorite>
 									{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && !hideBusinessReviews && (
 										<Reviews>
@@ -325,7 +301,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								</ReviewAndFavorite>
 							)}
 						</View>
-						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3 }} numberOfLines={isCustomLayout ? 1 : 2}>
+						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3 }} numberOfLines={1}>
 							{business?.address}
 						</OText>
 						<Metadata>
