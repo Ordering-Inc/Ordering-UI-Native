@@ -159,7 +159,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   useEffect(() => {
     if (scrollref?.current) {
       Keyboard.addListener('keyboardDidShow', () => {
-        scrollref?.current && scrollref.current.scrollToEnd()
+        scrollref?.current?.scrollToEnd && scrollref.current.scrollToEnd()
       })
     }
   }, [scrollref?.current])

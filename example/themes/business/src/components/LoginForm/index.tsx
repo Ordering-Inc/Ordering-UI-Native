@@ -209,11 +209,11 @@ const LoginFormUI = (props: LoginParams) => {
     props.handleChangeTab(val);
 
     if (loginTab === 'email') {
-      scrollRefTab.current?.scrollToEnd({ animated: true });
+      scrollRefTab?.current?.scrollToEnd && scrollRefTab.current?.scrollToEnd({ animated: true });
     }
 
     if (loginTab === 'cellphone') {
-      scrollRefTab.current?.scrollTo({ animated: true });
+      scrollRefTab?.current?.scrollTo && scrollRefTab.current?.scrollTo({ animated: true });
     }
   };
 
