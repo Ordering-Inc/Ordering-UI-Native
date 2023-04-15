@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Linking } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, StyleSheet, Dimensions, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NetInfo from '@react-native-community/netinfo';
 import { useTheme } from 'styled-components/native';
