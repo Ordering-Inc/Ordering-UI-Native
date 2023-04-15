@@ -309,10 +309,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   ? t('SEARCH_REDIRECT', 'Go to Businesses')
                   : t('CLEAR_FILTERS', 'Clear filters')
               }
-              onClickButton={() =>
+              onClickButton={!businessSingleId ? () =>
                 !searchValue
                   ? handleSearchRedirect && handleSearchRedirect()
                   : handleCancelSearch && handleCancelSearch()
+                : null
               }
             />
           </WrapperNotFound>
