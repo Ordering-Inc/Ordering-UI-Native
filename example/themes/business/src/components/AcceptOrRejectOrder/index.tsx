@@ -342,7 +342,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                         )}
                       </OText>
 
-                      {numberToShow ? (
+                      {!!numberToShow ? (
                         <OButton
                           bgColor="transparent"
                           borderColor={theme.colors.primary}

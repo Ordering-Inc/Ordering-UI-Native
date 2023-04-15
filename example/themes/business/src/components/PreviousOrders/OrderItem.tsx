@@ -144,7 +144,7 @@ export const OrderItem = (props: any) => {
       onPress={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
     >
       <Card key={order.id}>
-        {allowColumns?.slaBar && (
+        {!!allowColumns?.slaBar && (
           <Timestatus
             style={{
               backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time'
@@ -194,7 +194,7 @@ export const OrderItem = (props: any) => {
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              {(order?.order_group_id && order?.order_group && isLogisticOrder
+              {(!!order?.order_group_id && order?.order_group && isLogisticOrder
                   ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
                   : (t('NO', 'Order No.') + order.id)
                 ) + ' · '}

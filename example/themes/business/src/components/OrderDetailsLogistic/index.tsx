@@ -149,7 +149,7 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
                                     keyboardShouldPersistTaps="handled"
                                     showsVerticalScrollIndicator={false}
                                 >
-                                    {order?.order_group && order?.order_group_id && order?.isLogistic ? order?.order_group?.orders.map((order: any, i: number, hash: any) => (
+                                    {order?.order_group && !!order?.order_group_id && order?.isLogistic ? order?.order_group?.orders.map((order: any, i: number, hash: any) => (
                                         <OrderDetailsInformation key={order?.id} order={order} isOrderGroup lastOrder={hash?.length === i + 1} />
                                     )) : (
                                         <OrderDetailsInformation order={order} />

@@ -263,7 +263,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
           </>
         </OText>
-        {!order?.isLogistic && order?.delivery_type && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
+        {!order?.isLogistic && !!order?.delivery_type && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
           <>
             <OText size={13}>
               <OText size={13} weight='bold'>{`${t('ORDER_TYPE', 'Order Type')}: `}</OText>

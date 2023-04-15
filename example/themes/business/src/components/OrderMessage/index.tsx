@@ -276,7 +276,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
 
             <View style={styles.titleGroups}>
               <View style={styles.shadow}>
-                {order?.business?.logo ? (
+                {!!order?.business?.logo ? (
                   <OIcon
                     url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
                     style={styles.titleIcons}
