@@ -855,7 +855,7 @@ const ChatUI = (props: MessagesParams) => {
                       iconCover
                     />
 
-                    {image && !isShowSignaturePad && (
+                    {!!image && !isShowSignaturePad && (
                       <TouchableOpacity
                         style={{
                           position: 'absolute',

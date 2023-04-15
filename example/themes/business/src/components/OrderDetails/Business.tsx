@@ -410,7 +410,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
 
-      {(!!error || error) && (
+      {(!!error || error?.length > 0) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
           content={
