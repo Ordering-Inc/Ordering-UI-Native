@@ -18,7 +18,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
           <OIcon src={errorImage} width={260} height={220} />
         </NotFoundImage>
       )}
-      {content && conditioned && !errorImage && (
+      {!!content && conditioned && !errorImage && (
         <OText
           color={theme.colors.textSecondary}
           size={textSize ?? 18}
@@ -26,7 +26,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
           {content}
         </OText>
       )}
-      {content && !conditioned && (
+      {!!content && !conditioned && (
         <OText
           color={theme.colors.textSecondary}
           size={textSize ?? 18}
