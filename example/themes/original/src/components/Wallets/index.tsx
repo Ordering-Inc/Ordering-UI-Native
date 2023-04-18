@@ -238,13 +238,13 @@ const WalletsUI = (props: any) => {
                   </OText>
                 </BalanceElement>
 
-                {/* {currentWalletSelected?.type === 'cash' && (
+                {currentWalletSelected?.type === 'cash' && (
                   <>
                     <View style={styles.dividerStyle} />
-                    <GiftCardUI navigation={navigation} />
+                      <GiftCardUI navigation={navigation} />
                     <View style={styles.dividerStyle} />
                   </>
-                )} */}
+                )}
 
                 {!isChewLayout && (
                   <WalletTransactions
