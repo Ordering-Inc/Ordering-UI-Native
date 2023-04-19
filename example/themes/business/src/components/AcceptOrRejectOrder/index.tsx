@@ -215,7 +215,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 7,
       },
       rejectByBusiness: {
-        comment: comments,
+        reasons: comments,
         status: 5,
       },
       acceptByDriver: {
@@ -223,22 +223,22 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 8,
       },
       rejectByDriver: {
-        comment: comments,
+        reasons: comments,
         status: 6,
         reject_reason: rejectReason
       },
       pickupFailedByDriver: {
-        comment: comments,
+        reasons: comments,
         status: 10,
         reject_reason: rejectReason
       },
       deliveryFailedByDriver: {
-        comment: comments,
+        reasons: comments,
         status: 12,
         reject_reason: rejectReason
       },
       orderNotReady: {
-        comment: comments,
+        reasons: comments,
         status: 14,
         reject_reason: rejectReason
       },
