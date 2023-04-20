@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import { OText } from '../shared'
-import { useLanguage, useSession } from 'ordering-components/native'
+import { useLanguage, useSession, useUtils } from 'ordering-components/native'
 import { DayContainer } from './styles'
 import { useTheme } from 'styled-components/native'
 export const DriverSchedule = (props: any) => {
@@ -9,6 +9,7 @@ export const DriverSchedule = (props: any) => {
     const [, t] = useLanguage()
     const theme = useTheme()
     const [, { refreshUserInfo }] = useSession()
+    const [{ parseDate }] = useUtils()
     const [refreshing] = useState(false);
     const [driverSchedule, setDriverSchedule] = useState([]);
 
@@ -21,6 +22,12 @@ export const DriverSchedule = (props: any) => {
         t('FRIDAY_ABBREVIATION', 'Fri'),
         t('SATURDAY_ABBREVIATION', 'Sat')
     ]
+
+    const getNextDate = (day) => {
+        const now = new Date()
+        now.setDate(now.getDate() + (day + (7 - now.getDay())) % 7)
+        return now
+      }
 
     const scheduleFormatted = ({ hour, minute }: any) => {
         const checkTime = (val: number) => val < 10 ? `0${val}` : val
@@ -66,8 +73,11 @@ export const DriverSchedule = (props: any) => {
             <View style={{ padding: 30 }}>
                 {driverSchedule.map((item: any, i: number) => (
                     <DayContainer key={daysOfWeek[i]}>
-                        <OText style={{ width: '20%' }} size={22} weight={700}>{daysOfWeek[i]}</OText>
-                        <View style={{ width: '80%', alignItems: 'center' }}>
+                        <View style={{ width: '30%' }}>
+                            <OText size={22} weight={700}>{daysOfWeek[i]}</OText>
+                            <OText size={14}>{parseDate(getNextDate(i), { outputFormat: 'YYYY-MM-DD' })}</OText>
+                        </View>
+                        <View style={{ width: '70%', alignItems: 'center' }}>
                             <>
                                 {item?.enabled ? (
                                     <View>
