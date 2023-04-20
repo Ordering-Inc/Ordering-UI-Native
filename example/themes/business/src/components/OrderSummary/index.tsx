@@ -339,6 +339,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
     }
   };
 
+  const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''
+    }`?.replace('  ', ' ')?.trim() ?? ''
+
   return (
     <>
       <Content>
@@ -373,8 +376,8 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
             <OText style={{ marginBottom: 5 }}>
               {`${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc
-                  ? parseDate(order?.delivery_datetime_utc)
-                  : parseDate(order?.delivery_datetime, { utc: false })
+                ? parseDate(order?.delivery_datetime_utc)
+                : parseDate(order?.delivery_datetime, { utc: false })
                 }`}
             </OText>
 
@@ -400,9 +403,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name} ${order?.customer?.middle_name
-                } ${order?.customer?.lastname} ${order?.customer?.second_lastname
-                }`}
+              {`${t('FULL_NAME', 'Full Name')}: ${customerName}`}
             </OText>
 
             <OText
