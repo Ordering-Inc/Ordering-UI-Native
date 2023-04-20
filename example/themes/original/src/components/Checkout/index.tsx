@@ -279,7 +279,7 @@ const CheckoutUI = (props: any) => {
 	const checkValidationFields = () => {
 		setUserErrors([])
 		const errors = []
-		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
