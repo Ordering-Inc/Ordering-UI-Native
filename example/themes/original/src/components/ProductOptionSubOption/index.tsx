@@ -82,7 +82,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 							<OIcon src={theme.images.general.radio_nor} color={theme.colors.disabled} width={16} />
 						)
 					)}
-					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} mLeft={10} style={{ flex: 1 }}>
+					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} mLeft={5} style={{ flex: 1 }}>
 						{suboption?.name}
 					</OText>
 				</IconControl>
@@ -96,7 +96,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 									color={state.quantity === 0 || disabled ? theme.colors.disabled : theme.colors.primary}
 								/>
 							</Checkbox>
-							<OText size={12} mLeft={5} mRight={5}>
+							<OText size={12}>
 								{state.quantity}
 							</OText>
 							<Checkbox disabled={disabled || disableIncrement} onPress={increment}>

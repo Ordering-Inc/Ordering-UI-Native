@@ -284,7 +284,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }, []);
 
   const handleBackNavigation = () => {
-    navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
+    navigation?.canGoBack() && !props.fromMulti ? navigation.goBack() : navigation.navigate('BottomTab')
   }
 
   const adjustBusiness = async (adjustBusinessId: number) => {
