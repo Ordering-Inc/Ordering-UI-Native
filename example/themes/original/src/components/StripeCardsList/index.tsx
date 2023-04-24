@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import {
 	PaymentOptionStripe,
 	useSession,
@@ -8,7 +8,7 @@ import {
 import { PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import { getIconCard } from '../../utils';
-import { OAlert, OIcon, OText } from '../shared';
+import { OAlert, OIcon, OText, OModal } from '../shared';
 
 import { NotFoundSource } from '../NotFoundSource';
 
@@ -17,6 +17,9 @@ import {
 	OSItemContent,
 	OSItemActions,
 } from '../PaymentOptionStripe/styles';
+import { StripeElementsForm } from '../StripeElementsForm';
+
+import { KeyboardAvoidingView } from 'react-native';
 
 export const StripeCardsListUI = (props: any) => {
 	const {
@@ -26,7 +29,11 @@ export const StripeCardsListUI = (props: any) => {
 		cardsList,
 		handleCardClick,
 		setAddCardOpen,
-		gateway
+		gateway,
+		setCardsList,
+		addCardOpen,
+		isOpenMethod,
+		handlePaymethodDataChange
 	} = props;
 
 	const theme = useTheme();
@@ -42,8 +49,8 @@ export const StripeCardsListUI = (props: any) => {
 	}
 
 	useEffect(() => {
-		if (!cardsList && !cardsList?.loading && cardsList?.cards?.length === 0 && !paymethodsWithoutSaveCards.includes(gateway)) {
-			setAddCardOpen(true)
+		if (!cardsList?.loading && cardsList?.cards?.length === 0 && !paymethodsWithoutSaveCards.includes(gateway)) {
+			setAddCardOpen({ ...addCardOpen, stripe: true })
 		}
 	}, [cardsList?.loading])
 
@@ -128,6 +135,33 @@ export const StripeCardsListUI = (props: any) => {
 					))}
 				</ScrollView>
 			)}
+			<OModal
+				entireModal
+				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+				open={addCardOpen.stripe}
+				onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+				style={{ backgroundColor: 'red' }}
+			>
+				<KeyboardAvoidingView
+					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+					keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+					enabled={Platform.OS === 'ios' ? true : false}
+				>
+					<StripeElementsForm
+						openCarts={props.openCarts}
+						toSave
+						businessId={props.businessId}
+						businessIds={props.businessIds}
+						publicKey={props.publicKey || isOpenMethod?.paymethod?.credentials?.publishable}
+						setCardsList={setCardsList}
+						cardsList={cardsList}
+						requirements={props.clientSecret}
+						handleCardClick={handleCardClick}
+						onSelectCard={handlePaymethodDataChange}
+						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+					/>
+				</KeyboardAvoidingView>
+			</OModal>
 		</>
 	)
 }

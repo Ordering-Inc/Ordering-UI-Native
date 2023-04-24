@@ -4,7 +4,10 @@ import { useApi, useSession } from 'ordering-components/native';
 export const StripeElementsForm = (props: any) => {
   const {
     UIComponent,
-    toSave
+    toSave,
+    setCardsList,
+    cardsList,
+    handleCardClick
   } = props;
 
   const [ordering] = useApi();
@@ -61,6 +64,14 @@ export const StripeElementsForm = (props: any) => {
       })
       const response = await result.json();
       isNewCard && props.onSelectCard && props.onSelectCard(response.result);
+      setCardsList && setCardsList({
+        ...cardsList,
+        cards: [
+          ...cardsList.cards,
+          response.result
+        ]
+      })
+      handleCardClick(response.result)
       setState({
         ...state,
         loadingAdd: false

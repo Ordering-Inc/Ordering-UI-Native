@@ -47,7 +47,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
-	const [, { showToast }] = useToast();
+  const [, { showToast }] = useToast();
   const { confirmApplePayPayment } = useApplePay()
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
@@ -216,6 +216,13 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
             publicKey={paymethodSelected?.data?.publishable}
             payType={paymethodSelected?.paymethod?.name}
             onSelectCard={handlePaymethodDataChange}
+            addCardOpen={addCardOpen}
+            setAddCardOpen={setAddCardOpen}
+            openCarts={openCarts}
+            toSave
+            handlePaymethodDataChange={handlePaymethodDataChange}
+            clientSecret={props.clientSecret}
+            onPaymentChange={handlePaymethodDataChange}
           />
         </View>
       )}
@@ -299,7 +306,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         </>
       )}
 
-      <OModal
+      {/* <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={addCardOpen.stripe}
@@ -322,7 +329,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
             onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
           />
         </KeyboardAvoidingView>
-      </OModal>
+      </OModal> */}
     </PMContainer>
   )
 }
