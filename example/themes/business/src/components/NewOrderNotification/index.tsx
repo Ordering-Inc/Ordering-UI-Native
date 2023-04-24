@@ -45,7 +45,7 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const notificationSound = new Sound(theme.sounds.notification, '', () => { });
+  const notificationSound = new Sound('https://cdn.freesound.org/previews/81/81205_1274366-lq.mp3', '', () => {});
 
   let _timeout: any = null
   let times = 0
