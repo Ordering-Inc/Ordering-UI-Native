@@ -51,7 +51,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		businesses,
 		businessPaginationProps,
 		handleUpdateProducts,
-		handleUpdateBusinesses
+		handleUpdateBusinesses,
+		businessId
 	} = props
 
 	const theme = useTheme();
@@ -207,7 +208,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						btnStyle={{ borderRadius: 8 }}
 						content={t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
 						btnTitle={t('ORDER_NOW', 'Order now')}
-						onClickButton={() => onNavigationRedirect && onNavigationRedirect('BusinessList')}
+						onClickButton={() => onNavigationRedirect && (businessId ? onNavigationRedirect('Business') : onNavigationRedirect('BusinessList'))}
 					/>
 				</NoOrdersWrapper>
 			)}
