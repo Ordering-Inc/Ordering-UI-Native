@@ -256,6 +256,7 @@ export interface BusinessProductsListingParams {
 	onBusinessClick?: any;
 	onNavigationRedirect?: any;
 	businessSingleId?: number | string
+	fromMulti?: boolean
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -392,6 +393,7 @@ export interface OrdersOptionParams {
 	BusinessControllerSkeletons?: any,
 	businessPaginationProps?: any,
 	businesses?: any
+	businessId?: any;
 }
 export interface ActiveOrdersParams {
 	orders?: any,

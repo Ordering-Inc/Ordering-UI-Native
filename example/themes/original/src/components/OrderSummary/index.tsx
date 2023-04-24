@@ -209,8 +209,8 @@ const OrderSummaryUI = (props: any) => {
                 ))
               }
               {
-                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
-                  <OSTable key={fee?.id}>
+                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any, i: number) => (
+                  <OSTable key={fee?.id + i}>
                     <OSRow>
                       <OText size={12} numberOfLines={1}>
                         {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}

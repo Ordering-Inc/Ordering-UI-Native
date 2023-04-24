@@ -13,7 +13,8 @@ export const CartContent = (props: any) => {
 	const {
 		carts,
 		isOrderStateCarts,
-		onNavigationRedirect
+		onNavigationRedirect,
+		singleBusiness
 	} = props
 
 	const theme = useTheme();
@@ -156,7 +157,7 @@ export const CartContent = (props: any) => {
 						btnStyle={{ borderRadius: 8 }}
 						content={t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
 						btnTitle={t('START_SHOPPING', 'Start shopping')}
-						onClickButton={() => onNavigationRedirect('BusinessList')}
+						onClickButton={() => singleBusiness ? onNavigationRedirect('Business') : onNavigationRedirect('BusinessList')}
 					/>
 				</CCNotCarts>
 			)}

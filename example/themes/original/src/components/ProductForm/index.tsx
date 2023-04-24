@@ -539,7 +539,10 @@ export const ProductOptionsUI = (props: any) => {
 				<TopHeader>
 					<>
 						<TopActions onPress={() => handleGoBack()}>
-							<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+							<IconAntDesign
+								name='arrowleft'
+								size={26}
+							/>
 						</TopActions>
 						{showTitle && (
 							<OText
