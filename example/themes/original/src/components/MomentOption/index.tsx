@@ -155,7 +155,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	});
 	const { bottom } = useSafeAreaInsets();
 
-	const is12hours = configs?.dates_moment_format?.value?.includes('hh:mm')
+	const is12hours = configs?.general_hour_format?.value?.includes('hh:mm')
 
 	const [selectedTime, setSelectedTime] = useState(null);
 	const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])

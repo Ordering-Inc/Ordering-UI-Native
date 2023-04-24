@@ -30,7 +30,7 @@ const MomentSelectorUI = (props: any) => {
   const [customizedDateList, setCustomizedDateList] = useState([])
   const [customizedTimeList, setCustomizedTimeList] = useState([])
 
-  const is12hours = configs?.dates_moment_format?.value?.includes('hh:mm')
+  const is12hours = configs?.general_hour_format?.value?.includes('hh:mm')
 
   const styles = StyleSheet.create({
     selectOption: {
