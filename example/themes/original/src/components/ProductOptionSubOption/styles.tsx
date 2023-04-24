@@ -9,30 +9,28 @@ export const Container = styled.TouchableOpacity`
 
 export const IconControl = styled.TouchableOpacity`
   flex-direction: row;
-  padding: 10px;
-  width: 38%;
+  padding: 10px 0 10px 10px;
+  width: 35%;
   align-items: center;
 `
 
 export const QuantityControl = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-right: 5px;
-  flex: 1;
-  width: 60px;
+  width: 55px;
 `
 
 export const PositionControl = styled.View`
   flex-direction: row;
   align-items: center;
   margin-right: 5px;
-  flex: 1;
 `
 
 export const Checkbox = styled.TouchableOpacity`
 `
 
 export const Circle = styled.TouchableOpacity`
-  margin: 0 1px;
+  margin: 0 1.5px;
 `
