@@ -393,6 +393,7 @@ export interface OrdersOptionParams {
 	BusinessControllerSkeletons?: any,
 	businessPaginationProps?: any,
 	businesses?: any
+	businessId?: any;
 }
 export interface ActiveOrdersParams {
 	orders?: any,
