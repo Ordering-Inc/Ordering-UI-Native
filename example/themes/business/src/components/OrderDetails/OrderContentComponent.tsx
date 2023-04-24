@@ -37,14 +37,15 @@ interface OrderContent {
   order: any,
   logisticOrderStatus?: Array<number>,
   isOrderGroup?: boolean,
-  lastOrder?: boolean
+  lastOrder?: boolean,
+  isDelivery?: boolean
 }
 
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
   const [{ user }] = useSession()
-  const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
+  const { order, logisticOrderStatus, isOrderGroup, lastOrder, isDelivery } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [orientationState] = useDeviceOrientation();
@@ -218,6 +219,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               })}
               shorcut={order?.business?.address_notes}
               TextStyle={styles.textLink}
+              numberOfLines={isDelivery ? 0 : 1}
             />
           </View>
         )}
