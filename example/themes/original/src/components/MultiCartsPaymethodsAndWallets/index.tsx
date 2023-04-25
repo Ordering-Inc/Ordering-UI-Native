@@ -88,6 +88,8 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         return theme.images.general.stripesb
       case 'global_apple_pay':
         return theme.images.general.applePayMark
+      case 'global_google_pay':
+        return theme.images.general.googlePayMark
       default:
         return theme.images.general.creditCard
     }
@@ -123,7 +125,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
   const renderPaymethods = ({ item }: any) => {
     return (
       <>
-        {item?.gateway === 'global_apple_pay' ? (
+        {methodsPay.includes(item?.gateway) ? (
           <TouchableOpacity
             onPress={() => handleChangePaymethod({ ...item, paymethod: { gateway: item.gateway }, paymethod_id: item?.id })}
           >

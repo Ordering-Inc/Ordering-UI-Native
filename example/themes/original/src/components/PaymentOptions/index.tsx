@@ -94,6 +94,8 @@ const PaymentOptionsUI = (props: any) => {
 				return theme.images.general.stripesb
 			case 'apple_pay':
 				return theme.images.general.applePayMark
+			case 'google_pay':
+				return theme.images.general.googlePayMark
 			default:
 				return theme.images.general.creditCard
 		}
@@ -157,11 +159,11 @@ const PaymentOptionsUI = (props: any) => {
 			handlePlaceOrder(confirmApplePayPayment)
 		}
 	}, [paymethodData, paymethodSelected])
-
+	
 	const renderPaymethods = ({ item }: any) => {
 		return (
 			<>
-				{item?.gateway === 'apple_pay' ? (
+				{methodsPay.includes(item?.gateway) ? (
 					<TouchableOpacity
 						onPress={() => handlePaymentMethodClick(item)}
 					>
