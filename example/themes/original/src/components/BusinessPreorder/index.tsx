@@ -56,7 +56,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
   const [isEnabled, setIsEnabled] = useState(false)
   const { top } = useSafeAreaInsets()
-  const is12hours = configs?.dates_moment_format?.value?.includes('hh:mm')
+  const is12hours = configs?.general_hour_format?.value?.includes('hh:mm')
 
   const showOrderTime = (selectedPreorderType === 1 && Object.keys(menu)?.length > 0) || selectedPreorderType === 0
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
