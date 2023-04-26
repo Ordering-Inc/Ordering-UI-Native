@@ -464,7 +464,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     return (
       <>
         <OrderContentComponent
-          isDelivery
           order={order}
           logisticOrderStatus={logisticOrderStatus}
           isOrderGroup={isOrderGroup}
