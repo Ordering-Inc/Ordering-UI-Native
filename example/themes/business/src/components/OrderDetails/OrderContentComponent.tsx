@@ -120,7 +120,7 @@ export const OrderContentComponent = (props: OrderContent) => {
       setLengthMore(prev => ({ ...prev, customerAddress: customerAddressMore }))
     }
     if (item === 'businessAddressNotes') {
-      const businessAddressNotesMore = (e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3
+      const businessAddressNotesMore = (e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[2].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3
       setLengthMore(prev => ({ ...prev, businessAddressNotes: businessAddressNotesMore }))
     }
   }, []);
