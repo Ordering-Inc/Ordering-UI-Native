@@ -163,9 +163,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     if (product.ingredients?.length === 0 && product.extras.length === 0 && !product.inventoried && auth && isQuickAddProduct) {
       const isProductAddedToCart = currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)
       const productQuantity = isProductAddedToCart?.quantity
+      const minimumPerOrder = product?.minimum_per_order || 1
       const addCurrentProduct = {
         ...product,
-        quantity: 1
+        quantity: minimumPerOrder
       }
       const updateCurrentProduct = {
         name: product?.name,
