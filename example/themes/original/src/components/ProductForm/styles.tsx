@@ -70,7 +70,7 @@ export const ProductActions = styled.View`
   position: absolute;
   bottom: 0px;
   padding-top: ${(props: any) => props.ios ? '20px' : '0'};
-  padding-horizontal: 40px;
+  padding-horizontal: 30px;
   padding-vertical: 20px;
   width: 100%;
   flex-direction: ${(props: any) => props.isColumn ? 'column' : 'row'};

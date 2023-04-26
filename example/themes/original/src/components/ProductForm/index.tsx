@@ -176,7 +176,7 @@ export const ProductOptionsUI = (props: any) => {
 			marginTop: 10
 		},
 		wrapperNavbar: {
-			paddingHorizontal: 40,
+			paddingHorizontal: 30,
 			paddingTop: 0,
 		}
 	});
@@ -690,7 +690,7 @@ export const ProductOptionsUI = (props: any) => {
 						)}
 					</WrapHeader>
 					<ProductSummary
-						ph={isChewLayout ? 20 : 40}
+						ph={isChewLayout ? 20 : 30}
 						onLayout={(event: any) => setSummaryRefHeight(event.nativeEvent.layout?.height)}
 					>
 						<ProductTitle>
@@ -792,7 +792,7 @@ export const ProductOptionsUI = (props: any) => {
 								marginBottom: 20,
 								borderBottomWidth: 1,
 								borderBottomColor: theme.colors.border,
-								marginHorizontal: isChewLayout ? 20 : 30,
+								marginHorizontal: 20,
 								backgroundColor: theme.colors.backgroundPage,
 							}}
 						>
@@ -866,7 +866,7 @@ export const ProductOptionsUI = (props: any) => {
 						</>
 					) : (
 						<ProductEditions
-							style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+							style={{ paddingHorizontal: isChewLayout ? 20 : 30 }}
 							onLayout={(event: any) => {
 								setEditionsLayoutY(event.nativeEvent.layout?.y)
 							}}

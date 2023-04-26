@@ -86,8 +86,8 @@ export const ProductOptionSubOptionUI = (props: any) => {
 						{suboption?.name}
 					</OText>
 				</IconControl>
-				<QuantityControl>
-					{option?.allow_suboption_quantity && state?.selected && (
+				{option?.allow_suboption_quantity && state?.selected && (
+					<QuantityControl>
 						<>
 							<Checkbox disabled={disabled || state.quantity === 0} onPress={decrement}>
 								<IconAntDesign
@@ -107,10 +107,10 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								/>
 							</Checkbox>
 						</>
-					)}
-				</QuantityControl>
-				<PositionControl>
-					{option?.with_half_option && state?.selected && (
+					</QuantityControl>
+				)}
+				{option?.with_half_option && state?.selected && (
+					<PositionControl>
 						<>
 							<Circle disabled={disabled} onPress={() => changePosition('left')}>
 								<OIcon
@@ -138,10 +138,10 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								/>
 							</Circle>
 						</>
-					)}
-				</PositionControl>
+					</PositionControl>
+				)}
 				{price > 0 && (
-					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ paddingRight: 10 }}>
+					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{width: 70, maxWidth: 70}}>
 						+ {parsePrice(price)}
 					</OText>
 				)}
