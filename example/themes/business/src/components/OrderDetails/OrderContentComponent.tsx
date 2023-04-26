@@ -37,15 +37,14 @@ interface OrderContent {
   order: any,
   logisticOrderStatus?: Array<number>,
   isOrderGroup?: boolean,
-  lastOrder?: boolean,
-  isDelivery?: boolean
+  lastOrder?: boolean
 }
 
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
   const [{ user }] = useSession()
-  const { order, logisticOrderStatus, isOrderGroup, lastOrder, isDelivery } = props;
+  const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [orientationState] = useDeviceOrientation();
@@ -55,8 +54,14 @@ export const OrderContentComponent = (props: OrderContent) => {
 
   const [openReviewModal, setOpenReviewModal] = useState(false)
 
-  const [isReadMore, setIsReadMore] = useState(false)
-  const [lengthMore, setLengthMore] = useState(false)
+  const [isReadMore, setIsReadMore] = useState({
+    customerAddress: false,
+    businessAddressNotes: false
+  })
+  const [lengthMore, setLengthMore] = useState({
+    customerAddress: false,
+    businessAddressNotes: false
+  })
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
@@ -109,8 +114,15 @@ export const OrderContentComponent = (props: OrderContent) => {
     return /^\d+$/.test(str);
   }
 
-  const onTextLayout = useCallback((e: any) => {
-    setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
+  const onTextLayout = useCallback((e: any, item: string) => {
+    if (item === 'customerAddress') {
+      const customerAddressMore = (e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2
+      setLengthMore(prev => ({ ...prev, customerAddress: customerAddressMore }))
+    }
+    if (item === 'businessAddressNotes') {
+      const businessAddressNotesMore = (e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3
+      setLengthMore(prev => ({ ...prev, businessAddressNotes: businessAddressNotesMore }))
+    }
   }, []);
 
   return (
@@ -210,18 +222,28 @@ export const OrderContentComponent = (props: OrderContent) => {
           </OText>
         )}
         {!!order?.business?.address_notes && (
-          <View style={styles.linkWithIcons}>
-            <OLink
-              PressStyle={styles.linkWithIcons}
-              url={Platform.select({
-                ios: `maps:0,0?q=${order?.business?.address_notes}`,
-                android: `geo:0,0?q=${order?.business?.address_notes}`,
-              })}
-              shorcut={order?.business?.address_notes}
-              TextStyle={styles.textLink}
-              numberOfLines={isDelivery ? 0 : 1}
-            />
-          </View>
+          <>
+            <View style={styles.linkWithIcons}>
+              <OLink
+                PressStyle={styles.linkWithIcons}
+                url={Platform.select({
+                  ios: `maps:0,0?q=${order?.business?.address_notes}`,
+                  android: `geo:0,0?q=${order?.business?.address_notes}`,
+                })}
+                shorcut={order?.business?.address_notes}
+                TextStyle={styles.textLink}
+                onTextLayout={e => onTextLayout(e, 'businessAddressNotes')}
+                numberOfLines={isReadMore.businessAddressNotes ? 20 : 3}
+              />
+            </View>
+            {lengthMore.businessAddressNotes && (
+              <TouchableOpacity
+                onPress={() => setIsReadMore({ ...isReadMore, businessAddressNotes: !isReadMore.businessAddressNotes })}
+              >
+                <OText size={12} color={theme.colors.statusOrderBlue}>{isReadMore.businessAddressNotes ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </OrderBusiness>
 
@@ -329,15 +351,17 @@ export const OrderContentComponent = (props: OrderContent) => {
                   ios: `maps:0,0?q=${order?.customer?.address}`,
                   android: `geo:0,0?q=${order?.customer?.address}`,
                 })}
-                onTextLayout={onTextLayout}
-                numberOfLines={isReadMore ? 20 : 2}
+                onTextLayout={e => onTextLayout(e, 'customerAddress')}
+                numberOfLines={isReadMore.customerAddress ? 20 : 2}
                 shorcut={order?.customer?.address}
                 TextStyle={styles.textLink}
               />
             </View>
-            {lengthMore && (
-              <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
-                <OText size={12} color={theme.colors.statusOrderBlue}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+            {lengthMore.customerAddress && (
+              <TouchableOpacity
+                onPress={() => setIsReadMore({ ...isReadMore, customerAddress: !isReadMore.customerAddress })}
+              >
+                <OText size={12} color={theme.colors.statusOrderBlue}>{isReadMore.customerAddress ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
               </TouchableOpacity>
             )}
           </>
