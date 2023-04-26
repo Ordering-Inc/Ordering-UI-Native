@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
 	BusinessInformation as BusinessInformationController,
 	useLanguage, useUtils, useConfig,
@@ -16,13 +16,16 @@ import {
 	DivideView,
 	MediaWrapper,
 } from './styles';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
 import { formatUrlVideo } from '../../utils'
 import { ScheduleAccordion } from '../ScheduleAccordion';
 import moment from 'moment';
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+const { useDeviceOrientation } = DeviceOrientationMethods
+
 const BusinessInformationUI = (props: BusinessInformationParams) => {
 	const { businessState, businessSchedule, businessLocation } = props;
 
@@ -30,6 +33,11 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 	const [, t] = useLanguage();
 	const [{ optimizeImage }] = useUtils();
 	const [{ configs }] = useConfig()
+	const [orientationState] = useDeviceOrientation();
+
+	const [isReadMore, setIsReadMore] = useState(false)
+	const [lengthMore, setLengthMore] = useState(false)
+	const WIDTH_SCREEN = orientationState?.dimensions?.width
 
 	const hideLocation = theme?.business_view?.components?.information?.components?.location?.hidden
 	const hideSchedule = theme?.business_view?.components?.information?.components?.schedule?.hidden
@@ -73,6 +81,10 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 		return iAry;
 	};
 
+	const onTextLayout = useCallback((e: any) => {
+		setLengthMore((e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[2].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3)
+	}, [])
+
 	return (
 		<BusinessInformationContainer>
 			<WrapMainContent contentContainerStyle={{}}>
@@ -99,9 +111,28 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 						</>
 					)}
 					{!hideAddress && (
-						<OText size={12} mBottom={20}>
+						<OText size={12} mBottom={10}>
 							{businessState?.business?.address}
 						</OText>
+					)}
+					{businessState?.business?.address_notes && (
+						<>
+							<OText
+								size={12}
+								mBottom={10}
+								numberOfLines={isReadMore ? 20 : 3}
+								onTextLayout={onTextLayout}
+							>
+								{businessState?.business?.address_notes}
+							</OText>
+							{lengthMore && (
+								<TouchableOpacity
+									onPress={() => setIsReadMore(!isReadMore)}
+								>
+									<OText size={12} mBottom={20} color={theme.colors.primary}>{isReadMore ? t('SHOW_LESS', 'Show less') : t('READ_MORE', 'Read more')}</OText>
+								</TouchableOpacity>
+							)}
+						</>
 					)}
 					<DivideView />
 					{!hideSchedule && (
