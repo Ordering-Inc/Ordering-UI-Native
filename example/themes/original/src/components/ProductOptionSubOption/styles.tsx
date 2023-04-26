@@ -18,14 +18,12 @@ export const QuantityControl = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-right: 5px;
-  width: 55px;
+  width: 62px;
 `
 
 export const PositionControl = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-right: 5px;
 `
 
 export const Checkbox = styled.TouchableOpacity`
