@@ -55,7 +55,7 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NavBar from '../NavBar';
-import { orderTypeList, vibrateApp } from '../../utils';
+import { orderTypeList } from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 
 export const ProductOptionsUI = (props: any) => {
@@ -176,7 +176,7 @@ export const ProductOptionsUI = (props: any) => {
 			marginTop: 10
 		},
 		wrapperNavbar: {
-			paddingHorizontal: 40,
+			paddingHorizontal: 30,
 			paddingTop: 0,
 		}
 	});
@@ -493,9 +493,9 @@ export const ProductOptionsUI = (props: any) => {
 								: t('LOGIN_SIGNUP', 'Login / Sign Up')
 						}
 						imgRightSrc=""
-						textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+						textStyle={{ color: theme.colors.primary, fontSize: 13, textAlign: 'center' }}
 						style={{
-							height: 44,
+							height: 42,
 							borderColor: theme.colors.primary,
 							backgroundColor: theme.colors.white,
 							paddingLeft: 0,
@@ -510,7 +510,7 @@ export const ProductOptionsUI = (props: any) => {
 								<PlaceholderLine width={60} height={20} />
 							</Placeholder>
 						) : (
-							<OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+							<OText color={theme.colors.primary} size={13} style={{ textAlign: 'center' }}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
 						)}
 					</TouchableOpacity>
 				)}
@@ -539,7 +539,10 @@ export const ProductOptionsUI = (props: any) => {
 				<TopHeader>
 					<>
 						<TopActions onPress={() => handleGoBack()}>
-							<OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
+							<IconAntDesign
+								name='arrowleft'
+								size={26}
+							/>
 						</TopActions>
 						{showTitle && (
 							<OText
@@ -687,7 +690,7 @@ export const ProductOptionsUI = (props: any) => {
 						)}
 					</WrapHeader>
 					<ProductSummary
-						ph={isChewLayout ? 20 : 40}
+						ph={isChewLayout ? 20 : 30}
 						onLayout={(event: any) => setSummaryRefHeight(event.nativeEvent.layout?.height)}
 					>
 						<ProductTitle>
@@ -789,7 +792,7 @@ export const ProductOptionsUI = (props: any) => {
 								marginBottom: 20,
 								borderBottomWidth: 1,
 								borderBottomColor: theme.colors.border,
-								marginHorizontal: isChewLayout ? 20 : 30,
+								marginHorizontal: 20,
 								backgroundColor: theme.colors.backgroundPage,
 							}}
 						>
@@ -863,7 +866,7 @@ export const ProductOptionsUI = (props: any) => {
 						</>
 					) : (
 						<ProductEditions
-							style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+							style={{ paddingHorizontal: isChewLayout ? 20 : 30 }}
 							onLayout={(event: any) => {
 								setEditionsLayoutY(event.nativeEvent.layout?.y)
 							}}
