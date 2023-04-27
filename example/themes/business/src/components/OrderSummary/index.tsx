@@ -80,6 +80,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
     verifyDecimals(order?.summary?.driver_tip, parseNumber);
 
+  const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''
+    }`?.replace('  ', ' ')?.trim() ?? ''
+
   const orderSummary = () => {
     return `
     <div>
@@ -100,9 +103,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
-        <p style="font-size: 27px"> ${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name
-      } ${order?.customer?.middle_name} ${order?.customer?.lastname} ${order?.customer?.second_lastname
-      }
+        <p style="font-size: 27px"> ${t('FULL_NAME', 'Full Name')}: ${customerName}
         </br>
         ${t('EMAIL', 'Email')}: ${order?.customer?.email}
         </br>
@@ -338,9 +339,6 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
       }
     }
   };
-
-  const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''
-    }`?.replace('  ', ' ')?.trim() ?? ''
 
   return (
     <>
