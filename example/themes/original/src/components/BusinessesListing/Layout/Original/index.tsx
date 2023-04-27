@@ -569,6 +569,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					{
 						!businessId && !props.franchiseId && (
 							<HighestRatedBusinesses
+								propsToFetch={props.propsToFetch}
 								onBusinessClick={handleBusinessClick}
 								navigation={navigation}
 								favoriteIds={favoriteIds}

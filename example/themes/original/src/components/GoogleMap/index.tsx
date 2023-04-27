@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Dimensions, StyleSheet, View, Platform } from 'react-native';
-import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, Polygon, Circle } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
@@ -19,7 +19,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     setSaveLocation,
     handleToggleMap,
     locations,
-    isIntGeoCoder
+    isIntGeoCoder,
+    businessZones
   } = props
 
   const [, t] = useLanguage()
@@ -42,6 +43,19 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const mapErrors: any = {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
+  }
+
+  const units: any = {
+    mi: 1609,
+    km: 1000
+  }
+
+  const types: any = [1, 2, 5]
+
+  const fillStyles = {
+    fillColor: 'rgba(44, 123, 229, 0.3)',
+    strokeColor: 'rgba(44, 123, 229, 1)',
+    strokeWidth: 2
   }
 
   const geocodePosition = (pos: { latitude: number, longitude: number }, isMovingRegion ?: boolean) => {
@@ -230,6 +244,36 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
           />
         )}
+        {businessZones?.length > 0 && businessZones.filter((item: any) => types.includes(item?.type)).map((businessZone: any, i: number) => (
+          <React.Fragment key={i}>
+            {businessZone?.type === 2 && Array.isArray(businessZone?.data) && (
+              <Polygon
+                coordinates={businessZone?.data.map((item: any) => ({ latitude: item.lat, longitude: item.lng}))}
+                fillColor={fillStyles.fillColor}
+                strokeColor={fillStyles.strokeColor}
+                strokeWidth={fillStyles.strokeWidth}
+              />
+            )}
+            {(businessZone.type === 1 && businessZone?.data?.center && businessZone?.data?.radio) && (
+              <Circle
+                center={{ latitude: businessZone?.data?.center.lat, longitude: businessZone?.data?.center.lng}}
+                radius={businessZone?.data.radio * 1000}
+                fillColor={fillStyles.fillColor}
+                strokeColor={fillStyles.strokeColor}
+                strokeWidth={fillStyles.strokeWidth}
+              />
+            )}
+            {(businessZone.type === 5 && businessZone?.data?.distance) && (
+              <Circle
+                center={{ latitude: businessZone?.data?.center.lat, longitude: businessZone?.data?.center.lng}}
+                radius={businessZone?.data.distance * units[businessZone?.data?.unit]}
+                fillColor={fillStyles.fillColor}
+                strokeColor={fillStyles.strokeColor}
+                strokeWidth={fillStyles.strokeWidth}
+              />
+            )}
+          </React.Fragment>
+        ))}
       </MapView>
       <Alert
         open={alertState.open}
