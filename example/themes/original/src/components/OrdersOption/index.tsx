@@ -159,7 +159,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useEffect(() => {
 		if (reorderState?.error) {
-			showToast(ToastType.Error, reorderState?.result)
+			const errorMessage = (Array.isArray(reorderState?.result) || typeof reorderState?.result === 'string')
+				? reorderState?.result
+				: t('CANT_REORDER_FOR_THIS_BUSINESS', 'Can’t reorder for this store, please create order manually.')
+			showToast(ToastType.Error, errorMessage)
 		}
 	}, [reorderState])
 
