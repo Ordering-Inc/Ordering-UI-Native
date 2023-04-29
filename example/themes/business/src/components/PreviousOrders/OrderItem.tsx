@@ -96,8 +96,8 @@ export const OrderItem = (props: any) => {
   const getDelayMinutes = (order: any) => {
     const cdtToutc = moment(order?.delivery_datetime).utc().format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
-      : parseDate(cdtToutc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
+      ? parseDate(order?.delivery_datetime_utc)
+      : parseDate(cdtToutc)
     const _eta = order?.eta_time
     const diffTimeAsSeconds = moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'seconds')
     return Math.ceil(diffTimeAsSeconds / 60)
@@ -199,7 +199,7 @@ export const OrderItem = (props: any) => {
                   : (t('NO', 'Order No.') + order.id)
                 ) + ' · '}
               {order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
+                ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
             {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
