@@ -140,7 +140,7 @@ export const ProductOptionsUI = (props: any) => {
 			alignItems: 'center'
 		},
 		mainSwiper: {
-			height: 320,
+			height: 258,
 		},
 		swiperButton: {
 			marginHorizontal: 25,
@@ -613,7 +613,7 @@ export const ProductOptionsUI = (props: any) => {
 										>
 											{(String(img).includes('http') || typeof img === 'number') ? (
 												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 4 / 3 }}
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 16 / 9 }}
 													source={typeof img !== 'number' ? {
 														uri: optimizeImage(img, 'h_1024,c_limit'),
 														priority: FastImage.priority.normal,
