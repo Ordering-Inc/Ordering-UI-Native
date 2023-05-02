@@ -375,7 +375,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			)}
 			<View style={{
 				height: !isPreOrderSetting && isChewLayout ? 150 : isChewLayout ? 200 : isFarAway ? 150 : 100,
-				marginTop: Platform.OS == 'ios' ? 0 : 50,
+				marginTop: isChewLayout ? 0 : Platform.OS == 'ios' ? 0 : 50,
 				backgroundColor: isChewLayout ? theme?.colors?.chew : theme.colors?.white
 			}}
 			>

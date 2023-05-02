@@ -140,7 +140,7 @@ export const ProductOptionsUI = (props: any) => {
 			alignItems: 'center'
 		},
 		mainSwiper: {
-			height: 258,
+			height: 320,
 		},
 		swiperButton: {
 			marginHorizontal: 25,
