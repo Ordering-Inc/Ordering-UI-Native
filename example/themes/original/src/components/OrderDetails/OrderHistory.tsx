@@ -107,8 +107,12 @@ export const OrderHistory = (props: any) => {
               ellipsizeMode='tail'
             >
               {t('ORDER_PLACED', 'Order placed')} {' '}
-              {t('VIA', 'Via')}{' '}
-              {order.app_id ? t(order.app_id.toUpperCase(), order.app_id) : t('OTHER', 'Other')}
+              {!props.hideViaText && (
+                <>
+                  {t('VIA', 'Via')}{' '}
+                  {order.app_id ? t(order.app_id.toUpperCase(), order.app_id) : t('OTHER', 'Other')}
+                </>
+              )}
             </OText>
             <OText size={12}>{parseDate(order?.created_at, { outputFormat: 'MMM DD, hh:mm A' })}</OText>
           </View>
