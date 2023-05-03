@@ -147,9 +147,6 @@ const OrderProgressUI = (props: any) => {
                     marginBottom: 3
                   }}
                 >{statusToShow.includes(lastOrder?.status) ? t('ORDER_IN_PROGRESS', 'Order in progress') : t('ORDER', 'Order')}</OText>
-                {statusToShow.includes(lastOrder?.status) && (
-                  <OText size={11} numberOfLines={1} ellipsizeMode='tail'>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</OText>
-                )}
                 <TouchableOpacity onPress={() => handleGoToOrder('MyOrders')}>
                   <View style={styles.navigationButton}>
                     <OText size={11} color={theme.colors.primary}>{t('GO_TO_MY_ORDERS', 'Go to my orders')}</OText>
