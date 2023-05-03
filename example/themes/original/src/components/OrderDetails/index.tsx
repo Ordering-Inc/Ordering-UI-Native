@@ -1066,6 +1066,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       >
         <OrderHistory
           order={order}
+          hideViaText={props.hideViaText}
           messages={messages}
           enableReview={(
             parseInt(order?.status) === 1 ||
