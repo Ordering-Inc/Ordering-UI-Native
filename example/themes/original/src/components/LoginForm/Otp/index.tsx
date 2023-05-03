@@ -118,7 +118,7 @@ export const Otp = (props: otpParams) => {
         </OText>
         <OtpInputs
           ref={inputRef}
-          autofillFromClipboard
+          autofillFromClipboard={false}
           numberOfInputs={pinCount || 6}
           style={loginStyle.container}
           inputStyles={loginStyle.underlineStyleBase}
