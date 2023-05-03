@@ -576,15 +576,14 @@ export const OrderContentComponent = (props: OrderContent) => {
             </Table>
           ))
         }
-        {order?.summary?.driver_tip > 0 && (
+        {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && (
           <Table>
             <OText mBottom={4}>
               {t('DRIVER_TIP', 'Driver tip')}
-              {order?.summary?.driver_tip > 0 &&
-                parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+              {order?.driver_tip > 0 && parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                 !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                 (
-                  `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
+                  `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
                 )}
             </OText>
             <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: order?.currency })}</OText>
