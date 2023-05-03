@@ -195,38 +195,39 @@ const UserVerificationUI = (props: any) => {
   }
 
   useEffect(() => {
-    let _timer = TIME_COUNTDOWN - 1;
-    let minutes = 0;
-    let seconds = 0;
-    const interval = setInterval(() => {
-      minutes = _timer / 60;
-      seconds = _timer % 60;
+    if (verificationState.phone) {
+      let _timer = TIME_COUNTDOWN - 1;
+      let minutes = 0;
+      let seconds = 0;
+      const interval = setInterval(() => {
+        minutes = _timer / 60;
+        seconds = _timer % 60;
 
-      minutes = minutes < 10 ? 0 + minutes : minutes;
-      seconds = seconds < 10 ? 0 + seconds : seconds;
+        minutes = minutes < 10 ? 0 + minutes : minutes;
+        seconds = seconds < 10 ? 0 + seconds : seconds;
 
-      const formatMinutes = parseInt(minutes.toString()) < 10
-        ? `0${parseInt(minutes.toString())}`
-        : parseInt(minutes.toString());
+        const formatMinutes = parseInt(minutes.toString()) < 10
+          ? `0${parseInt(minutes.toString())}`
+          : parseInt(minutes.toString());
 
-      const formatseconds = parseInt(seconds.toString()) < 10
-        ? `0${parseInt(seconds.toString())}`
-        : parseInt(seconds.toString());
+        const formatseconds = parseInt(seconds.toString()) < 10
+          ? `0${parseInt(seconds.toString())}`
+          : parseInt(seconds.toString());
 
-      setTimer(`${formatMinutes}:${formatseconds}`);
+        setTimer(`${formatMinutes}:${formatseconds}`);
 
-      if (--_timer < 0) {
-        clearInterval(interval);
-      }
+        if (--_timer < 0) {
+          clearInterval(interval);
+        }
 
-      if (timer === `${TIME_COUNTDOWN / 60}:00` && isSendCodeAgain) {
-        setIsSendCodeAgain(false)
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval)
-  }, [isSendCodeAgain])
+        if (timer === `${TIME_COUNTDOWN / 60}:00` && isSendCodeAgain) {
+          setIsSendCodeAgain(false)
+          clearInterval(interval);
+        }
+      }, 1000);
+      return () => clearInterval(interval)
+    }
+  }, [isSendCodeAgain, verificationState.phone])
 
   useEffect(() => {
     if (otpState?.length === CODE_LENGTH) {
@@ -460,23 +461,25 @@ const UserVerificationUI = (props: any) => {
           )}
 
         </Container>
-        <ButtonsActions>
-          <View style={{ width: '100%' }}>
-            <OButton
-              onClick={(verificationState.email || verificationState.phone)
-                ? () => setVerificationState({ email: false, phone: false })
-                : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
-              }
-              text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
-              bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-              borderColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-              textStyle={{ color: (verificationState.email || verificationState.phone) ? 'black' : 'white' }}
-              imgRightSrc={null}
-              isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
-              style={(verificationState.email || verificationState.phone) ? style.btnStyle : { borderRadius: 7.6 }}
-            />
-          </View>
-        </ButtonsActions>
+        {!!phoneState?.cellphone && (
+          <ButtonsActions>
+            <View style={{ width: '100%' }}>
+              <OButton
+                onClick={(verificationState.email || verificationState.phone)
+                  ? () => setVerificationState({ email: false, phone: false })
+                  : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
+                }
+                text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
+                bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
+                borderColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
+                textStyle={{ color: (verificationState.email || verificationState.phone) ? 'black' : 'white' }}
+                imgRightSrc={null}
+                isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+                style={(verificationState.email || verificationState.phone) ? style.btnStyle : { borderRadius: 7.6 }}
+              />
+            </View>
+          </ButtonsActions>
+        )}
         <View style={{ paddingHorizontal: 20, paddingBottom: 80 }}>
           <UserDetails
             user={user}

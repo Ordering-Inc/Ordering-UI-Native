@@ -1,17 +1,18 @@
 import * as React from "react";
-import { Animated, StyleSheet, Text, View, Platform } from "react-native";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ToastType, useToast, useLanguage } from "ordering-components/native";
 import { useTheme } from 'styled-components/native';
 import { getTraduction } from '../../utils'
 
 const fadeDuration = 300;
-const topPosition = Platform.OS === 'ios' ? 40 : 20
 
 export const Toast = (props: any) => {
   const [toastConfig, { hideToast }] = useToast();
   const [, t] = useLanguage()
   const opacity = React.useRef(new Animated.Value(0)).current;
   const theme = useTheme();
+  const { top: topPosition } = useSafeAreaInsets();
 
   const fadeIn = React.useCallback(() => {
     Animated.timing(opacity, {
