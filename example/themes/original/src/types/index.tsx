@@ -437,6 +437,7 @@ export interface OrderDetailsParams {
 	onNavigationRedirect?: any,
 	reorderState?: any,
 	handleReorder?: any,
+	hideViaText?: boolean,
 }
 export interface ProductItemAccordionParams {
 	key?: any;
@@ -572,6 +573,9 @@ export interface BusinessPreorderParams {
 	goToBack: any;
 	business: any;
 	handleBusinessClick: (value: any) => {};
+	getActualSchedule?: any;
+	cateringPreorder?: boolean;
+	preorderLeadTime?: number
 }
 export interface BusinessMenuListParams {
 	menu: any;
