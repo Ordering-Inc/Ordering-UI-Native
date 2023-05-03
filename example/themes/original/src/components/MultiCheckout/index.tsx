@@ -365,6 +365,7 @@ const MultiCheckoutUI = (props: any) => {
             validationFields?.fields?.checkout?.coupon?.enabled &&
             openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
             configs?.multi_business_checkout_coupon_input_style?.value === 'group' &&
+            openCarts?.length > 0 &&
             (
               <ChSection>
                 <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
