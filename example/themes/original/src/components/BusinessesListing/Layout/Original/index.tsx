@@ -693,10 +693,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 };
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
+
 	const BusinessesListingProps = {
 		...props,
 		isForceSearch: Platform.OS === 'ios',
 		UIComponent: BusinessesListingUI,
+		paginationSettings: {
+			initialPage: 1,
+			pageSize: 50,
+			controlType: 'infinity'
+		}
 	};
 
 	return <BusinessesListingController {...BusinessesListingProps} />;
