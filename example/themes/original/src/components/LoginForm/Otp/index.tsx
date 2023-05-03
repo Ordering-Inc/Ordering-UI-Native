@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { formatSeconds } from '../../../utils'
-import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer';
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
@@ -87,20 +87,19 @@ export const Otp = (props: otpParams) => {
       fontSize: 16
     },
     wrapperIcon: {
-      marginTop: Platform.OS === 'ios' ? 40 : 12,
-      marginBottom: 20,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingRight: 35
+      paddingRight: 20
     },
     closeContainer: {
       width: '100%',
       flexDirection: 'row',
+      alignItems: 'center'
     }
   });
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.backgroundPage }}>
       <OTPContainer>
         <View
           style={loginStyle.closeContainer}>
@@ -110,9 +109,7 @@ export const Otp = (props: otpParams) => {
               width={22}
             />
           </TouchableOpacity>
-          <OText size={22} style={{
-            marginTop: 5
-          }}>
+          <OText size={22}>
             {t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
           </OText>
         </View>
@@ -150,6 +147,6 @@ export const Otp = (props: otpParams) => {
           text={t('CANCEL', 'Cancel')}
         />
       </OTPContainer>
-    </>
+    </SafeAreaView>
   )
 }

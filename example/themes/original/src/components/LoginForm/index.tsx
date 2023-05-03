@@ -179,7 +179,7 @@ const LoginFormUI = (props: LoginParams) => {
 				vibrateApp()
 				return
 			}
-			if (!values?.cellphone && otpType === 'cellphone') {
+			if (otpType === 'cellphone' && phoneInputData?.error && !phoneInputData?.phone?.cellphone) {
 				showToast(ToastType.Error, t('PHONE_NUMBER_REQUIRED', 'Phone number is required'));
 				return
 			}
