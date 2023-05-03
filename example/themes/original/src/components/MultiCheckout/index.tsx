@@ -64,7 +64,8 @@ const MultiCheckoutUI = (props: any) => {
     cartGroup,
     walletState,
     onNavigationRedirectReplace,
-    merchantId
+    merchantId,
+    cartsInvalid
   } = props
 
   const theme = useTheme();
@@ -89,7 +90,7 @@ const MultiCheckoutUI = (props: any) => {
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-
+  const cartsToShow = openCarts?.length > 0 ? openCarts : cartsInvalid
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -138,7 +139,7 @@ const MultiCheckoutUI = (props: any) => {
   const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
     (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
     walletCarts.length > 0
-    || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
+    || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading)) || openCarts?.length === 0
 
   const handleMomentClick = () => {
     if (isPreOrder) {
@@ -179,7 +180,7 @@ const MultiCheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
-  const handlePlaceOrder = (confirmPayment ?: any) => {
+  const handlePlaceOrder = (confirmPayment?: any) => {
     if (!userErrors.length) {
       handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
@@ -199,14 +200,14 @@ const MultiCheckoutUI = (props: any) => {
   }, [validationFields, user])
 
   useEffect(() => {
-    if (openCarts.length === 1) {
+    if (cartsToShow?.length === 1) {
       onNavigationRedirectReplace('CheckoutPage', {
-        cartUuid: openCarts[0]?.uuid,
+        cartUuid: cartsToShow[0]?.uuid,
         fromMulti: true
       })
       return
     }
-  }, [openCarts])
+  }, [cartsToShow])
 
   useEffect(() => {
     if (walletState.error) {
@@ -221,14 +222,14 @@ const MultiCheckoutUI = (props: any) => {
   }, [cartUuid])
 
   useEffect(() => {
-    if(paymethodSelected?.gateway === 'global_google_pay'){
+    if (paymethodSelected?.gateway === 'global_google_pay') {
       setMethodPaySupported({
         enabled: true,
         loading: false,
         message: null
       })
     }
-	}, [paymethodSelected])
+  }, [paymethodSelected])
 
   return (
     <>
@@ -309,27 +310,27 @@ const MultiCheckoutUI = (props: any) => {
             </ChAddress>
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
           </ChSection>
-
-          <ChSection>
-            <MultiCartsPaymethodsAndWallets
-              openCarts={openCarts}
-              paymethodSelected={paymethodSelected}
-              walletsPaymethod={cartGroup?.result?.wallets}
-              handleSelectPaymethod={handleSelectPaymethod}
-              handleSelectWallet={handleSelectWallet}
-              handlePaymethodDataChange={handlePaymethodDataChange}
-              cartUuid={cartUuid}
-              merchantId={merchantId}
-              setMethodPaySupported={setMethodPaySupported}
-              methodPaySupported={methodPaySupported}
-              placeByMethodPay={placeByMethodPay}
-              setPlaceByMethodPay={setPlaceByMethodPay}
-              cartTotal={totalCartsPrice}
-              handlePlaceOrder={handlePlaceOrder}
-            />
-            <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
-          </ChSection>
-
+          {openCarts?.length > 0 && (
+            <ChSection>
+              <MultiCartsPaymethodsAndWallets
+                openCarts={openCarts}
+                paymethodSelected={paymethodSelected}
+                walletsPaymethod={cartGroup?.result?.wallets}
+                handleSelectPaymethod={handleSelectPaymethod}
+                handleSelectWallet={handleSelectWallet}
+                handlePaymethodDataChange={handlePaymethodDataChange}
+                cartUuid={cartUuid}
+                merchantId={merchantId}
+                setMethodPaySupported={setMethodPaySupported}
+                methodPaySupported={methodPaySupported}
+                placeByMethodPay={placeByMethodPay}
+                setPlaceByMethodPay={setPlaceByMethodPay}
+                cartTotal={totalCartsPrice}
+                handlePlaceOrder={handlePlaceOrder}
+              />
+              <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+            </ChSection>
+          )}
           {
             isMultiDriverTips &&
             options?.type === 1 &&
@@ -390,7 +391,7 @@ const MultiCheckoutUI = (props: any) => {
                   {t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
                 </OText>
               </CartsHeader>
-              {openCarts.map((cart: any) => (
+              {cartsToShow.map((cart: any) => (
                 <React.Fragment key={cart.uuid}>
                   <Cart
                     cart={cart}
@@ -407,7 +408,7 @@ const MultiCheckoutUI = (props: any) => {
                   )}
                 </React.Fragment>
               ))}
-              {!cartGroup?.loading && openCarts.length === 0 && (
+              {!cartGroup?.loading && openCarts.length === 0 && cartsInvalid?.length === 0 && (
                 <CCNotCarts>
                   <OText size={24} style={{ textAlign: 'center' }}>
                     {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
@@ -465,6 +466,7 @@ const MultiCheckoutUI = (props: any) => {
                       </OText>
                     </View>
                   )}
+
                   <OText size={12} color={theme.colors.mediumGray} mRight={70} style={{ marginTop: 10 }}>
                     {t('MULTI_CHECKOUT_DESCRIPTION', 'You will receive a receipt for each business. The payment is not combined between multiple stores. Each payment is processed by the store')}
                   </OText>
@@ -472,6 +474,14 @@ const MultiCheckoutUI = (props: any) => {
               )}
             </ChCarts>
           </ChSection>
+          {cartsToShow?.some((cart: any) => !cart?.valid_products && cart?.status !== 2) && (
+            <OText
+              color={theme.colors.error}
+              size={12}
+            >
+              {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+            </OText>
+          )}
         </ChContainer>
       </Container>
 
