@@ -693,10 +693,18 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 };
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
+	const theme = useTheme();
+	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+
 	const BusinessesListingProps = {
 		...props,
 		isForceSearch: Platform.OS === 'ios',
 		UIComponent: BusinessesListingUI,
+		paginationSettings: {
+			initialPage: 1,
+			pageSize: isChewLayout ? 50 : 10,
+			controlType: 'infinity'
+		}
 	};
 
 	return <BusinessesListingController {...BusinessesListingProps} />;
