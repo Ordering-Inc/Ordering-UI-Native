@@ -693,8 +693,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 };
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
-	const theme = useTheme();
-	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
 	const BusinessesListingProps = {
 		...props,
@@ -702,7 +700,7 @@ export const BusinessesListing = (props: BusinessesListingParams) => {
 		UIComponent: BusinessesListingUI,
 		paginationSettings: {
 			initialPage: 1,
-			pageSize: isChewLayout ? 50 : 10,
+			pageSize: 50,
 			controlType: 'infinity'
 		}
 	};
