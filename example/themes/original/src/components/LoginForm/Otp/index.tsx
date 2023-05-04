@@ -5,20 +5,23 @@ import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
 import { OText, OButton, OIcon } from '../../shared';
-import OtpInputs from 'react-native-otp-inputs';
+import OtpInputs, { OtpInputsRef } from 'react-native-otp-inputs';
 import { useTheme } from 'styled-components/native';
 import { otpParams } from '../../../types'
+import { ActivityIndicator } from 'react-native';
 
 export const Otp = (props: otpParams) => {
   const {
-    willVerifyOtpState,
-    setWillVerifyOtpState,
-    onSubmit,
-    handleLoginOtp,
-    setAlertState,
     pinCount,
     otpError,
-    setOtpError
+    setOtpError,
+    setAlertState,
+    willVerifyOtpState,
+    isCheckingCode,
+    setCheckingCode,
+    setWillVerifyOtpState,
+    handleLoginOtp,
+    onSubmit,
   } = props
 
   const theme = useTheme();
@@ -26,8 +29,7 @@ export const Otp = (props: otpParams) => {
   const [otpLeftTime, _, resetOtpLeftTime]: any = useCountdownTimer(
     600, willVerifyOtpState)
 
-  const [code, setCode] = useState('')
-  const inputRef = useRef<any>()
+  const inputRef = useRef<OtpInputsRef | any>(null)
 
   const handleOnSubmit = () => {
     setAlertState({
@@ -39,7 +41,12 @@ export const Otp = (props: otpParams) => {
   }
 
   const handleChangeCode = (code : string) => {
-    setCode(code)
+    if (code?.length === pinCount) {
+      setCheckingCode(true)
+      handleLoginOtp(code)
+      inputRef.current?.reset && inputRef.current.reset()
+      setTimeout(() => inputRef.current?.focus && inputRef.current.focus(), 100)
+    }
     setOtpError(null)
   }
 
@@ -57,13 +64,6 @@ export const Otp = (props: otpParams) => {
       })
     }
   }, [otpLeftTime])
-
-  useEffect(() => {
-    if (code?.length === (pinCount || 6)) {
-      handleLoginOtp(code)
-      inputRef?.current?.reset()
-    }
-  }, [code])
 
   const loginStyle = StyleSheet.create({
     container: {
@@ -95,6 +95,13 @@ export const Otp = (props: otpParams) => {
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    checkingCode: {
+      height: 50,
+      width: '100%',
+      marginVertical: 30,
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   });
 
@@ -116,14 +123,24 @@ export const Otp = (props: otpParams) => {
         <OText size={24}>
           {formatSeconds(otpLeftTime)}
         </OText>
-        <OtpInputs
-          ref={inputRef}
-          autofillFromClipboard={false}
-          numberOfInputs={pinCount || 6}
-          style={loginStyle.container}
-          inputStyles={loginStyle.underlineStyleBase}
-          handleChange={handleChangeCode}
-        />
+        {isCheckingCode && (
+          <View style={loginStyle.checkingCode}>
+            <OText size={18}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+            </OText>
+          </View>
+        )}
+        {!isCheckingCode && (
+          <OtpInputs
+            ref={inputRef}
+            autofillFromClipboard={false}
+            numberOfInputs={pinCount}
+            style={loginStyle.container}
+            returnKeyType={'done'}
+            inputStyles={loginStyle.underlineStyleBase}
+            handleChange={handleChangeCode}
+          />
+        )}
         {!!otpError && (
           <OText
             color={theme?.colors?.error}
@@ -149,4 +166,8 @@ export const Otp = (props: otpParams) => {
       </OTPContainer>
     </SafeAreaView>
   )
+}
+
+Otp.defaultProps = {
+  pinCount: 6
 }
