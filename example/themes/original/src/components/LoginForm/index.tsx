@@ -104,6 +104,8 @@ const LoginFormUI = (props: LoginParams) => {
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
 	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
 
+	const [isCheckingCode, setCheckingCode] = useState(false)
+
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
 	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
@@ -268,6 +270,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const handleLoginOtp = async (code: string) => {
 		if (!code) return
 		const logged = await handleButtonLoginClick({ code })
+		setCheckingCode(false)
 		if (logged) {
 			setWillVerifyOtpState(false)
 		} else {
@@ -854,6 +857,8 @@ const LoginFormUI = (props: LoginParams) => {
 				animationType='slide'
 			>
 				<Otp
+					isCheckingCode={isCheckingCode}
+					setCheckingCode={setCheckingCode}
 					willVerifyOtpState={willVerifyOtpState}
 					otpError={otpError}
 					setOtpError={setOtpError}
