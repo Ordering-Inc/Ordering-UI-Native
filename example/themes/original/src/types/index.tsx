@@ -732,6 +732,8 @@ export interface otpParams {
 	pinCount: number;
 	otpError: any,
 	setOtpError: any
+	isCheckingCode: boolean
+	setCheckingCode: (value: boolean) => void
 }
 
 export interface FavoriteParams {
