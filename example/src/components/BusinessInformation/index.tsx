@@ -19,6 +19,8 @@ import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { BusinessInformationParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
 import { useTheme } from 'styled-components/native';
+import moment from 'moment';
+
 const BusinessInformationUI = (props: BusinessInformationParams) => {
   const {
     businessState,
@@ -38,14 +40,13 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     t('FRIDAY_ABBREVIATION', 'Fri'),
     t('SATURDAY_ABBREVIATION', 'Sat')
   ]
-  const is12hours = configs?.format_time?.value?.includes('12')
 
-  const scheduleFormatted = ({ hour, minute } : { hour : number | string, minute : number | string}) => {
-    const checkTime = (val: number | string) => (val < 10 ? `0${val}` : val);
-		const zz = hour === 0 ? t('AM', 'AM') : hour >= 12 ? t('PM', 'PM') : t('AM', 'AM');
-		const h = parseInt(`${hour}`);
-		return is12hours ? `${h === 0 ? 12 : h > 12 ? h - 12 : h}:${checkTime(minute)} ${zz}` : `${checkTime(hour)}:${checkTime(minute)}`;
-  }
+  const formatTime = configs?.general_hour_format?.value
+
+	const checkTime = (val: number) => (val < 10 ? `0${val}` : val);
+	const timeFormated = (time: any) => {
+		return moment(`1900-01-01 ${checkTime(time.hour)}:${checkTime(time.minute)}`).format(formatTime)
+	}
 
   return (
     <BusinessInformationContainer>
@@ -105,13 +106,13 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
                   {schedule.enabled ? (
                     schedule.lapses.map( (time: any, k: number) => (
                     <React.Fragment key={k}>
-                      <OText>{scheduleFormatted(time.open)}</OText>
+                      <OText>{timeFormated(time.open)}</OText>
                       <OText mBottom={10} style={{
                         padding: 3,
                         borderBottomColor: theme.colors.primary,
                         borderBottomWidth: 1
                       }}
-                      >{scheduleFormatted(time.close)}</OText>
+                      >{timeFormated(time.close)}</OText>
                     </React.Fragment>
                   ))) : ( <OText>{t('CLOSED', 'Closed')}</OText>)}
                 </ScheduleBlock>
