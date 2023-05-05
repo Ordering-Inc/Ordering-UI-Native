@@ -73,23 +73,23 @@ export const DriverSchedule = (props: any) => {
             <View style={{ padding: 30 }}>
                 {driverSchedule.map((item: any, i: number) => (
                     <DayContainer key={daysOfWeek[i]}>
-                        <View style={{ width: '30%' }}>
+                        <View style={{ flex: 1 }}>
                             <OText size={22} weight={700}>{daysOfWeek[i]}</OText>
                             <OText size={14}>{parseDate(getNextDate(i), { outputFormat: 'YYYY-MM-DD' })}</OText>
                         </View>
-                        <View style={{ width: '70%', alignItems: 'center' }}>
+                        <View style={{ flex: 1 }}>
                             <>
                                 {item?.enabled ? (
-                                    <View>
+                                    <View style={{ width: '100%' }}>
                                         {item?.lapses.map((lapse: any, i: number) => (
                                             <View key={`${daysOfWeek[i]}_${i}`} style={{ marginTop: 3, marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                <OText size={18} style={{ width: '30%' }}>
+                                                <OText size={18} style={{ flex: 1 }}>
                                                     {scheduleFormatted(lapse.open)}
                                                 </OText>
                                                 <OText size={18} style={{ width: 15 }}>
                                                     -
                                                 </OText>
-                                                <OText size={18} style={{ width: '30%' }}>
+                                                <OText size={18} style={{ flex: 1, textAlign: 'right' }}>
                                                     {scheduleFormatted(lapse.close)}
                                                 </OText>
                                             </View>
