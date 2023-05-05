@@ -44,11 +44,11 @@ const LoginFormUI = (props: LoginParams) => {
     useLoginByCellphone,
     useLoginByEmail,
     loginTab,
-		otpType,
-		setOtpType,
-		generateOtpCode,
-		useLoginOtpEmail,
-		useLoginOtpCellphone,
+    otpType,
+    setOtpType,
+    generateOtpCode,
+    useLoginOtpEmail,
+    useLoginOtpCellphone,
   } = props;
 
   const theme = useTheme()
@@ -82,31 +82,32 @@ const LoginFormUI = (props: LoginParams) => {
   });
 
   const isOtpEmail = loginTab === 'otp' && otpType === 'email'
-	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+  const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+  const isDeviceLoginEnabled = configs?.device_code_login_enabled?.value === '1'
 
   const mainLogin = (values) => {
     if (loginTab === 'otp') {
-			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
-				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
-				return
-			}
-			if (loginTab === 'otp') {
-				generateOtpCode({
-					...values,
-					...phoneInputData.phone
-				})
-			}
-			setWillVerifyOtpState(true)
-		} else {
-			if (phoneInputData.error) {
-				showToast(ToastType.Error, phoneInputData.error);
-				return;
-			}
-			handleButtonLoginClick({
-				...values,
-				...phoneInputData.phone,
-			});
-		}
+      if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
+        showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+        return
+      }
+      if (loginTab === 'otp') {
+        generateOtpCode({
+          ...values,
+          ...phoneInputData.phone
+        })
+      }
+      setWillVerifyOtpState(true)
+    } else {
+      if (phoneInputData.error) {
+        showToast(ToastType.Error, phoneInputData.error);
+        return;
+      }
+      handleButtonLoginClick({
+        ...values,
+        ...phoneInputData.phone,
+      });
+    }
   }
 
   const onSubmit = (values: any) => {
@@ -199,23 +200,23 @@ const LoginFormUI = (props: LoginParams) => {
       borderColor: theme.colors.inputSignup,
     },
     borderStyleBase: {
-			width: 30,
-			height: 45
-		},
-		borderStyleHighLighted: {
-			borderColor: "#03DAC6",
-		},
-		underlineStyleBase: {
-			width: 45,
-			height: 60,
-			borderWidth: 1,
-			fontSize: 16
-		},
-		underlineStyleHighLighted: {
-			borderColor: theme.colors.primary,
-			color: theme.colors.primary,
-			fontSize: 16
-		},
+      width: 30,
+      height: 45
+    },
+    borderStyleHighLighted: {
+      borderColor: "#03DAC6",
+    },
+    underlineStyleBase: {
+      width: 45,
+      height: 60,
+      borderWidth: 1,
+      fontSize: 16
+    },
+    underlineStyleHighLighted: {
+      borderColor: theme.colors.primary,
+      color: theme.colors.primary,
+      fontSize: 16
+    },
   });
 
   useEffect(() => {
@@ -311,32 +312,32 @@ const LoginFormUI = (props: LoginParams) => {
   };
 
   const handleChangeOtpType = (type: string) => {
-		handleChangeTab('otp', type)
-		setOtpType(type)
-	}
+    handleChangeTab('otp', type)
+    setOtpType(type)
+  }
 
-	const handleLoginOtp = (code: string) => {
-		handleButtonLoginClick({ code })
-		setWillVerifyOtpState(false)
-	}
+  const handleLoginOtp = (code: string) => {
+    handleButtonLoginClick({ code })
+    setWillVerifyOtpState(false)
+  }
 
-	const closeAlert = () => {
-		setAlertState({
-			open: false,
-			title: '',
-			content: []
-		})
-	}
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      title: '',
+      content: []
+    })
+  }
 
   useEffect(() => {
-		if (checkPhoneCodeState?.result?.error) {
-			setAlertState({
-				open: true,
-				content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
-				title: ''
-			})
-		}
-	}, [checkPhoneCodeState])
+    if (checkPhoneCodeState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
+        title: ''
+      })
+    }
+  }, [checkPhoneCodeState])
 
   useEffect(() => {
     const projectInputTimeout = setTimeout(() => {
@@ -346,9 +347,12 @@ const LoginFormUI = (props: LoginParams) => {
           project: projectName
         })
       }
+      if (isDeviceLoginEnabled) {
+        props.handleChangeTab('device_code')
+      }
     }, 1500)
     return () => clearTimeout(projectInputTimeout);
-  }, [projectName])
+  }, [projectName, isDeviceLoginEnabled])
 
   const logo = (
     <LogoWrapper>
@@ -442,7 +446,7 @@ const LoginFormUI = (props: LoginParams) => {
             </View>
           )}
 
-          {(Number(useLoginByEmail) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
+          {!isDeviceLoginEnabled && (Number(useLoginByEmail) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
             <LoginWith>
               <ScrollView
                 ref={scrollRefTab}
@@ -553,7 +557,7 @@ const LoginFormUI = (props: LoginParams) => {
                         style={{
                           width: '100%',
                           borderBottomColor:
-                          isOtpCellphone
+                            isOtpCellphone
                               ? theme.colors.black
                               : theme.colors.border,
                           borderBottomWidth: 2,
@@ -592,8 +596,29 @@ const LoginFormUI = (props: LoginParams) => {
               )}
             />
           )}
-
-          {((useLoginByEmail && loginTab === 'email') || (loginTab === 'otp' && otpType === 'email')) && (
+          {isDeviceLoginEnabled && (
+            <Controller
+              control={control}
+              render={({ onChange, value }: any) => (
+                <OInput
+                  placeholder={t('DEVICE_CODE', 'Device Code')}
+                  style={styles.inputStyle}
+                  value={value}
+                  inputStyle={{ textAlign: 'center' }}
+                  onChange={(val: any) => onChange(val)}
+                />
+              )}
+              name="device_code"
+              rules={{
+                required: t(
+                  'VALIDATION_ERROR_DEVICE_CODE_REQUIRED',
+                  'The field DEVICE_CODE is required',
+                ).replace('_attribute_', t('DEVICE_CODE', 'Device Code')),
+              }}
+              defaultValue=""
+            />
+          )}
+          {!isDeviceLoginEnabled && ((useLoginByEmail && loginTab === 'email') || (loginTab === 'otp' && otpType === 'email')) && (
             <Controller
               control={control}
               render={({ onChange, value }: any) => (
@@ -628,7 +653,7 @@ const LoginFormUI = (props: LoginParams) => {
             />
           )}
 
-          {((useLoginByCellphone && loginTab === 'cellphone') || (loginTab === 'otp' && otpType === 'cellphone')) && (
+          {!isDeviceLoginEnabled && ((useLoginByCellphone && loginTab === 'cellphone') || (loginTab === 'otp' && otpType === 'cellphone')) && (
             <View style={{ marginBottom: 20 }}>
               <PhoneInputNumber
                 data={phoneInputData}
@@ -642,7 +667,7 @@ const LoginFormUI = (props: LoginParams) => {
             </View>
           )}
 
-          {loginTab !== 'otp' && (
+          {!isDeviceLoginEnabled && loginTab !== 'otp' && (
             <Controller
               control={control}
               render={({ onChange, value }: any) => (
@@ -732,26 +757,26 @@ const LoginFormUI = (props: LoginParams) => {
         )}
       </View>
       <OModal
-				open={willVerifyOtpState}
-				onClose={() => setWillVerifyOtpState(false)}
-				entireModal
-				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
-			>
-				<Otp
-					willVerifyOtpState={willVerifyOtpState}
-					setWillVerifyOtpState={setWillVerifyOtpState}
-					handleLoginOtp={handleLoginOtp}
-					onSubmit={onSubmit}
-					setAlertState={setAlertState}
-				/>
-			</OModal>
-			<Alert
-				open={alertState.open}
-				content={alertState.content}
-				title={alertState.title || ''}
-				onAccept={closeAlert}
-				onClose={closeAlert}
-			/>
+        open={willVerifyOtpState}
+        onClose={() => setWillVerifyOtpState(false)}
+        entireModal
+        title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+      >
+        <Otp
+          willVerifyOtpState={willVerifyOtpState}
+          setWillVerifyOtpState={setWillVerifyOtpState}
+          handleLoginOtp={handleLoginOtp}
+          onSubmit={onSubmit}
+          setAlertState={setAlertState}
+        />
+      </OModal>
+      <Alert
+        open={alertState.open}
+        content={alertState.content}
+        title={alertState.title || ''}
+        onAccept={closeAlert}
+        onClose={closeAlert}
+      />
     </View>
   );
 };
