@@ -88,7 +88,7 @@ export const OrdersGroupedItem = (props: any) => {
                 adjustsFontSizeToFit
               >
                 {orders[0]?.delivery_datetime_utc
-                  ? parseDate(orders[0]?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
+                  ? parseDate(orders[0]?.delivery_datetime_utc)
                   : parseDate(orders[0]?.delivery_datetime, { utc: false })}
               </OText>
             </View>
