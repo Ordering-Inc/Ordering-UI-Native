@@ -24,7 +24,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		noDropIcon,
 		isDisabled,
 		isStartValidation,
-		changeCountry
+		changeCountry,
+		updateStateWithSubmit
 	} = props
 
 	const theme = useTheme();
@@ -94,6 +95,19 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 			}
 		}
 	}, [userphoneNumber])
+
+	useEffect(() => {
+		if (defaultValue && updateStateWithSubmit) {
+			phoneInput.current?.setState({
+				number: defaultValue,
+				countryCode: defaultCode ?
+					!isNaN(defaultCode)
+						? transformCountryCode(defaultCode)
+						: findExitingCode(defaultCode)
+					: findExitingCode(configs?.default_country_code?.value?.toUpperCase())
+			})
+		}
+	}, [defaultValue])
 
 	return (
 		<Wrapper onPress={() => forwardRef?.current?.focus?.()}>
