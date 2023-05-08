@@ -1,17 +1,31 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
 import { Card, Logo, Information, Header, Badge } from './styles';
 import { OIcon, OText } from '../shared';
 import { PreviousMessagesParams } from '../../types';
+import { FooterComponent } from './FooterMessageComponent';
 
 export const PreviousMessages = (props: PreviousMessagesParams) => {
-  const { orders, onNavigationRedirect, setOrders } = props;
+  const {
+    orders,
+    onNavigationRedirect,
+    setOrders,
+    getOrders,
+    pagination,
+    loading,
+    reload,
+    tabs,
+    loadMore,
+    tabsFilter,
+    error
+  } = props;
 
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parseDate, optimizeImage }] = useUtils();
+  const [refreshing] = useState(false);
 
   const handlePressOrder = (order: any) => {
     const uuid = order?.id;
@@ -253,63 +267,91 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       fontStyle: 'normal',
       fontWeight: 'normal',
       color: theme.colors.orderTypeColor,
-    },
+    }
   });
+
+  const MessageComponent = (props : any) => {
+    const order = props.item
+    return (
+      <>
+        {!reload &&
+          !error &&
+          JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
+            <TouchableOpacity
+              key={order?.id}
+              onPress={() => handlePressOrder(order)}
+              style={styles.cardButton}
+              activeOpacity={1}>
+              <Card key={order?.id}>
+                <Logo style={styles.logo}>
+                  <OIcon
+                    url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+                    src={!order?.business?.logo && theme?.images?.dummies?.businessLogo}
+                    style={styles.icon}
+                  />
+                </Logo>
+                <Information>
+                  <Header>
+                    <OText numberOfLines={1} style={styles.title}>
+                      {order?.business?.name}
+                    </OText>
+
+                    {order?.unread_count > 0 && (
+                      <Badge>
+                        <OText size={14} style={styles.badge}>
+                          {order?.unread_count}
+                        </OText>
+                      </Badge>
+                    )}
+                  </Header>
+
+                  <OText
+                    style={styles.date}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    size={20}>
+                    {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
+                    {order?.delivery_datetime_utc
+                      ? parseDate(order?.delivery_datetime_utc)
+                      : parseDate(order?.delivery_datetime, { utc: false })}
+                  </OText>
+
+                  <OText
+                    style={styles.orderType}
+                    mRight={5}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit>
+                    {getOrderStatus(order?.status)?.value}
+                  </OText>
+                </Information>
+              </Card>
+            </TouchableOpacity>
+          )}
+      </>
+    )
+  }
 
   return (
     <>
-      {orders?.length > 0 &&
-        orders?.map((order: any) => (
-          <TouchableOpacity
-            key={order?.id}
-            onPress={() => handlePressOrder(order)}
-            style={styles.cardButton}
-            activeOpacity={1}>
-            <Card key={order?.id}>
-              <Logo style={styles.logo}>
-                <OIcon
-                  url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
-                  src={!order?.business?.logo && theme?.images?.dummies?.businessLogo}
-                  style={styles.icon}
-                />
-              </Logo>
-              <Information>
-                <Header>
-                  <OText numberOfLines={1} style={styles.title}>
-                    {order?.business?.name}
-                  </OText>
-
-                  {order?.unread_count > 0 && (
-                    <Badge>
-                      <OText size={14} style={styles.badge}>
-                        {order?.unread_count}
-                      </OText>
-                    </Badge>
-                  )}
-                </Header>
-
-                <OText
-                  style={styles.date}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  size={20}>
-                  {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
-                  {order?.delivery_datetime_utc
-                    ? parseDate(order?.delivery_datetime_utc)
-                    : parseDate(order?.delivery_datetime, { utc: false })}
-                </OText>
-
-                <OText
-                  style={styles.orderType}
-                  mRight={5}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit>
-                  {getOrderStatus(order?.status)?.value}
-                </OText>
-              </Information>
-            </Card>
-          </TouchableOpacity>
-        ))}
+      <FlatList
+        data={orders}
+        renderItem={MessageComponent}
+        keyExtractor={(order) => order?.id}
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        refreshControl={<RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => getOrders?.()}
+        />}
+        ListFooterComponent={<FooterComponent
+          loading={loading}
+          reload={reload}
+          pagination={pagination}
+          tabsFilter={tabsFilter}
+          tabs={tabs}
+          loadMore={loadMore}
+        />}
+      />
     </>
   );
 };

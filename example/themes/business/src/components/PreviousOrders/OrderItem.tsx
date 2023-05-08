@@ -21,7 +21,13 @@ import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrienta
 
 const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
-export const OrderItem = (props: any) => {
+function OrderItemPropsAreEqual(prevProps: any, nextProps: any) {
+  return JSON.stringify(prevProps.order) === JSON.stringify(nextProps.order) &&
+    JSON.stringify(prevProps._order) === JSON.stringify(nextProps._order) &&
+    prevProps.currentTabSelected === nextProps.currentTabSelected
+}
+
+export const OrderItem = React.memo((props: any) => {
   const {
     order,
     _order,
@@ -195,9 +201,9 @@ export const OrderItem = (props: any) => {
               adjustsFontSizeToFit
             >
               {(!!order?.order_group_id && order?.order_group && isLogisticOrder
-                  ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
-                  : (t('NO', 'Order No.') + order.id)
-                ) + ' · '}
+                ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
+                : (t('NO', 'Order No.') + order.id)
+              ) + ' · '}
               {order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}
@@ -246,4 +252,4 @@ export const OrderItem = (props: any) => {
       </Card>
     </TouchableOpacity>
   )
-}
+}, OrderItemPropsAreEqual)
