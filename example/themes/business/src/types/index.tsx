@@ -365,6 +365,12 @@ export interface PreviousMessagesParams {
   loadMessages?: (id: any) => {};
   handleReorder?: (order: any) => {};
   onNavigationRedirect?: (route: string, params?: any) => {};
+  getOrders?: any;
+  loading?: boolean;
+  reload?: boolean;
+  tabs?: any;
+  loadMore: any
+  error?: boolean
 }
 export interface OrderDetailsParams {
   handleUpdateLocationDriver?: () => {};
