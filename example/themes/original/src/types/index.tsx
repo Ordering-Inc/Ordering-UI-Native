@@ -147,6 +147,7 @@ export interface PhoneInputParams {
 	isDisabled?: any;
 	isStartValidation?: any;
 	changeCountry?: any;
+	updateStateWithSubmit?: boolean
 }
 
 export interface LanguageSelectorParams {

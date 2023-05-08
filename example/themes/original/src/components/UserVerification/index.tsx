@@ -293,7 +293,7 @@ const UserVerificationUI = (props: any) => {
 
   useEffect(() => {
     setupUserPhoneNumber()
-  }, [user])
+  }, [user?.cellphone, user?.country_phone_code])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -402,6 +402,7 @@ const UserVerificationUI = (props: any) => {
                       textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
                       noDropIcon
                       isDisabled
+                      updateStateWithSubmit
                     />
                   </InputWrapper>
                 </>
@@ -485,6 +486,7 @@ const UserVerificationUI = (props: any) => {
             user={user}
             isEdit
             isVerifiedPhone
+            dontToggleEditMode
           />
         </View>
       </ScrollView>
