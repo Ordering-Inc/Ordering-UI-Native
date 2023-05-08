@@ -312,7 +312,8 @@ const ChatUI = (props: MessagesParams) => {
         quality: 1
       },
       (response: any) => {
-        const image = response.assets[0];
+        const image = response.assets?.[0];
+        if (!image) return
         if (image.didCancel) {
           console.log('User cancelled image picker');
         } else if (image.errorMessage) {

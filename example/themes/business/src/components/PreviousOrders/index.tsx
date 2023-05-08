@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage } from 'ordering-components/native';
 
-import {AcceptOrRejectOrder as AcceptOrRejectOrderStyle } from './styles';
+import { AcceptOrRejectOrder as AcceptOrRejectOrderStyle } from './styles';
 
 import { OButton, OModal } from '../shared';
-import { OrderItem } from './OrderItem'
 import { OrdersGroupedItem } from './OrdersGroupedItem'
+import { OrdersList } from './OrderList';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { ReviewCustomer } from '../ReviewCustomer';
 import { GoogleMap } from '../GoogleMap';
@@ -31,7 +31,7 @@ export const PreviousOrders = (props: any) => {
   const [, t] = useLanguage();
   const theme = useTheme();
 
-  const [, setCurrentTime] = useState()
+  // const [, setCurrentTime] = useState()
   const [openModal, setOpenModal] = useState(false)
   const [openReviewModal, setOpenReviewModal] = useState({ order: null, ids: [], customerId: null })
   const [openMapViewModal, setOpenMapViewModal] = useState<any>({ open: false, customerLocation: null, locations: [] })
@@ -48,9 +48,9 @@ export const PreviousOrders = (props: any) => {
     if (props.handleClickEvent) {
       props.handleClickEvent({ ...order, isLogistic: isLogisticOrder })
     } else {
-      if (isLogisticOrder){
+      if (isLogisticOrder) {
         onNavigationRedirect &&
-        onNavigationRedirect('OrderDetailsLogistic', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+          onNavigationRedirect('OrderDetailsLogistic', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
       } else {
         onNavigationRedirect &&
           onNavigationRedirect('OrderDetails', { order });
@@ -58,73 +58,13 @@ export const PreviousOrders = (props: any) => {
     }
   };
 
-  const OrdersList = (props: any) => {
-    const { order, _order, hideBtns } = props
-    return (
-      <View
-        style={{
-          backgroundColor: currentOrdenSelected === order?.id ? theme.colors.gray100 : order?.locked && isLogisticOrder ? '#ccc' : '#fff',
-          marginBottom: isLogisticOrder ? 10 : 0
-        }}
-      >
-        <OrderItem
-          order={order}
-          _order={_order}
-          isLogisticOrder={isLogisticOrder}
-          handlePressOrder={handlePressOrder}
-          currentTabSelected={currentTabSelected}
-          getOrderStatus={getOrderStatus}
-        />
-        {isLogisticOrder && !hideBtns && (
-          <AcceptOrRejectOrderStyle>
-            {!!order?.order_group_id && !!order?.order_group ? (
-              <OButton
-                text={t('VIEW_ORDER', 'View order')}
-                onClick={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
-                bgColor={theme.colors.blueLight}
-                borderColor={theme.colors.blueLight}
-                imgRightSrc={null}
-                style={{ borderRadius: 7, height: 40 }}
-                parentStyle={{ width: '100%' }}
-                textStyle={{ color: theme?.colors?.white }}
-              />
-            ) : (
-              <>
-                <OButton
-                  text={t('REJECT', 'Reject')}
-                  onClick={() => handleClickLogisticOrder(2, _order?.id)}
-                  bgColor={theme.colors.red}
-                  borderColor={theme.colors.red}
-                  imgRightSrc={null}
-                  style={{ borderRadius: 7, height: 40 }}
-                  parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.white }}
-                />
-                <OButton
-                  text={t('ACCEPT', 'Accept')}
-                  onClick={() => handleClickLogisticOrder(1, _order?.id)}
-                  bgColor={theme.colors.green}
-                  borderColor={theme.colors.green}
-                  imgRightSrc={null}
-                  style={{ borderRadius: 7, height: 40 }}
-                  parentStyle={{ width: '45%' }}
-                  textStyle={{ color: theme.colors.white }}
-                />
-              </>
-            )}
-          </AcceptOrRejectOrderStyle>
-        )}
-      </View>
-    )
-  }
-
   const ordersGroupAction = (param1 = '', param2 = '', { order, action, body, ids }: any = {}) => {
     setOrderUpdateStatus({ ...orderUpdateStatus, action, ids, body, order })
     if (!param1) setOpenModal(true)
     if (param1) {
       setOpenModal(false)
       handleChangeOrderStatus &&
-      handleChangeOrderStatus(param1, orderUpdateStatus.ids, param2)
+        handleChangeOrderStatus(param1, orderUpdateStatus.ids, param2)
     }
   }
 
@@ -159,7 +99,7 @@ export const PreviousOrders = (props: any) => {
       if (_order?.customer?.location) {
         locations.push({
           ..._order?.customer?.location,
-          title: _order?.customer?.name ??  t('CUSTOMER', 'Customer'),
+          title: _order?.customer?.name ?? t('CUSTOMER', 'Customer'),
           address: {
             addressName: _order?.customer?.address,
             zipcode: _order?.customer?.zipcode
@@ -180,14 +120,14 @@ export const PreviousOrders = (props: any) => {
     })
   }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const date: any = Date.now()
-      setCurrentTime(date)
-    }, slaSettingTime ?? 6000)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const date: any = Date.now()
+  //     setCurrentTime(date)
+  //   }, slaSettingTime ?? 6000)
 
-    return () => clearInterval(interval)
-  }, [])
+  //   return () => clearInterval(interval)
+  // }, [])
 
 
   return (
@@ -210,10 +150,21 @@ export const PreviousOrders = (props: any) => {
                       ?.map((_order: any) => {
                         const order_ = _order?.isLogistic && !_order?.order_group && isLogisticOrder ? _order?.order : _order
                         return (
-                          <OrdersList key={order_.id} order={order_} _order={_order} hideBtns />
+                          <OrdersList
+                            key={order_.id}
+                            order={order_}
+                            _order={_order}
+                            hideBtns
+                            currentOrdenSelected={currentOrdenSelected}
+                            isLogisticOrder={isLogisticOrder}
+                            handlePressOrder={handlePressOrder}
+                            currentTabSelected={currentTabSelected}
+                            getOrderStatus={getOrderStatus}
+                            handleClickLogisticOrder={handleClickLogisticOrder}
+                          />
                         )
                       }
-                    )
+                      )
                   }
                   {_ordersGrouped[k][0]?.status === 0 && (
                     <AcceptOrRejectOrderStyle>
@@ -268,109 +219,109 @@ export const PreviousOrders = (props: any) => {
                   )}
                   {(_ordersGrouped[k][0]?.status === 8 || _ordersGrouped[k][0]?.status === 18) &&
                     _ordersGrouped[k][0]?.delivery_type === 1 &&
-                  (
-                    <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
-                        bgColor={theme.colors.btnBGWhite}
-                        borderColor={theme.colors.btnBGWhite}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '100%' }}
-                        textStyle={{ color: theme.colors.primary, fontSize: 12 }}
-                        onClick={() => handleChangeOrderStatus(
-                          3,
-                          _ordersGrouped[k].map((o: any) => o.id),
-                        )}
-                      />
-                    </AcceptOrRejectOrderStyle>
-                  )}
+                    (
+                      <AcceptOrRejectOrderStyle>
+                        <OButton
+                          text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
+                          bgColor={theme.colors.btnBGWhite}
+                          borderColor={theme.colors.btnBGWhite}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '100%' }}
+                          textStyle={{ color: theme.colors.primary, fontSize: 12 }}
+                          onClick={() => handleChangeOrderStatus(
+                            3,
+                            _ordersGrouped[k].map((o: any) => o.id),
+                          )}
+                        />
+                      </AcceptOrRejectOrderStyle>
+                    )}
                   {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 &&
-                  (
-                    <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('ORDER_NOT_READY', 'Order not ready')}
-                        bgColor={theme.colors.red}
-                        borderColor={theme.colors.red}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '100%' }}
-                        textStyle={{ color: theme.colors.white, fontSize: 12 }}
-                        onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
-                          action: 'notReady',
-                          order: _ordersGrouped[k][0],
-                          ids: _ordersGrouped[k].map((o: any) => o.id),
-                          handleChangeOrderStatus
-                        })}
-                      />
-                    </AcceptOrRejectOrderStyle>
-                  )}
+                    (
+                      <AcceptOrRejectOrderStyle>
+                        <OButton
+                          text={t('ORDER_NOT_READY', 'Order not ready')}
+                          bgColor={theme.colors.red}
+                          borderColor={theme.colors.red}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '100%' }}
+                          textStyle={{ color: theme.colors.white, fontSize: 12 }}
+                          onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
+                            action: 'notReady',
+                            order: _ordersGrouped[k][0],
+                            ids: _ordersGrouped[k].map((o: any) => o.id),
+                            handleChangeOrderStatus
+                          })}
+                        />
+                      </AcceptOrRejectOrderStyle>
+                    )}
                   {viewMapStatus.includes(_ordersGrouped[k][0]?.status) &&
                     props.appTitle?.text?.includes('Business') &&
-                  (
-                    <View>
-                      <OButton
-                        text={t('TRACK_REAL_TIME_POSITION', 'Track real time position')}
-                        bgColor={theme.colors.primaryLight}
-                        borderColor={theme.colors.primaryLight}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '100%' }}
-                        textStyle={{ color: theme.colors.primary, fontSize: 12 }}
-                        onClick={() => handleOpenMapView({ orders: _ordersGrouped[k] })}
-                      />
-                    </View>
-                  )}
+                    (
+                      <View>
+                        <OButton
+                          text={t('TRACK_REAL_TIME_POSITION', 'Track real time position')}
+                          bgColor={theme.colors.primaryLight}
+                          borderColor={theme.colors.primaryLight}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '100%' }}
+                          textStyle={{ color: theme.colors.primary, fontSize: 12 }}
+                          onClick={() => handleOpenMapView({ orders: _ordersGrouped[k] })}
+                        />
+                      </View>
+                    )}
                   {_ordersGrouped[k][0]?.status === 4 &&
                     ![1].includes(_ordersGrouped[k][0]?.delivery_type) &&
-                  (
-                    <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')}
-                        bgColor={theme.colors.danger100}
-                        borderColor={theme.colors.danger100}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
-                        onClick={() => handleChangeOrderStatus(
-                          17,
-                          _ordersGrouped[k].map((o: any) => o.id),
-                        )}
-                      />
-                      <OButton
-                        text={t('PICKUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer')}
-                        bgColor={theme.colors.success100}
-                        borderColor={theme.colors.success100}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.success500, fontSize: 12, textAlign: 'center' }}
-                        onClick={() => handleChangeOrderStatus(
-                          15,
-                          _ordersGrouped[k].map((o: any) => o.id),
-                        )}
-                      />
-                    </AcceptOrRejectOrderStyle>
-                  )}
+                    (
+                      <AcceptOrRejectOrderStyle>
+                        <OButton
+                          text={t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')}
+                          bgColor={theme.colors.danger100}
+                          borderColor={theme.colors.danger100}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
+                          onClick={() => handleChangeOrderStatus(
+                            17,
+                            _ordersGrouped[k].map((o: any) => o.id),
+                          )}
+                        />
+                        <OButton
+                          text={t('PICKUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer')}
+                          bgColor={theme.colors.success100}
+                          borderColor={theme.colors.success100}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.success500, fontSize: 12, textAlign: 'center' }}
+                          onClick={() => handleChangeOrderStatus(
+                            15,
+                            _ordersGrouped[k].map((o: any) => o.id),
+                          )}
+                        />
+                      </AcceptOrRejectOrderStyle>
+                    )}
                   {!_ordersGrouped[k][0]?.user_review &&
                     pastOrderStatuses.includes(_ordersGrouped[k][0]?.status) &&
-                  (
-                    <OButton
-                      text={t('REVIEW_CUSTOMER', 'Review customer')}
-                      bgColor={theme.colors.primary}
-                      borderColor={theme.colors.primary}
-                      imgRightSrc={null}
-                      style={{ borderRadius: 8, height: 40 }}
-                      parentStyle={{ width: '100%' }}
-                      textStyle={{ color: theme.colors.white }}
-                      onClick={() => setOpenReviewModal({
-                        order: _ordersGrouped[k][0],
-                        customerId: _ordersGrouped[k][0]?.customer_id,
-                        ids: _ordersGrouped[k].map((o: any) => o.id)
-                      })}
-                    />
-                  )}
+                    (
+                      <OButton
+                        text={t('REVIEW_CUSTOMER', 'Review customer')}
+                        bgColor={theme.colors.primary}
+                        borderColor={theme.colors.primary}
+                        imgRightSrc={null}
+                        style={{ borderRadius: 8, height: 40 }}
+                        parentStyle={{ width: '100%' }}
+                        textStyle={{ color: theme.colors.white }}
+                        onClick={() => setOpenReviewModal({
+                          order: _ordersGrouped[k][0],
+                          customerId: _ordersGrouped[k][0]?.customer_id,
+                          ids: _ordersGrouped[k].map((o: any) => o.id)
+                        })}
+                      />
+                    )}
                   {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && (
                     <AcceptOrRejectOrderStyle>
                       <OButton
@@ -440,7 +391,16 @@ export const PreviousOrders = (props: any) => {
             </View>
           ) : (
             <View key={order.id}>
-              <OrdersList order={order} _order={_order} />
+              <OrdersList
+                order={order}
+                _order={_order}
+                currentOrdenSelected={currentOrdenSelected}
+                isLogisticOrder={isLogisticOrder}
+                handlePressOrder={handlePressOrder}
+                currentTabSelected={currentTabSelected}
+                getOrderStatus={getOrderStatus}
+                handleClickLogisticOrder={handleClickLogisticOrder}
+              />
             </View>
           )
         )
