@@ -294,7 +294,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                 <ButtonWrapper>
                   {!hideReviewOrderButton &&
                     allowedOrderStatus.includes(parseInt(order?.status)) &&
-                    !order.review && (
+                    !order.review && order?.cart && (
                       <TouchableOpacity
                         onPress={() => handleClickOrderReview(order)}
                         style={styles.reviewButton}>
@@ -303,7 +303,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         </OText>
                       </TouchableOpacity>
                     )}
-                  {!hideReorderButton && typeof order?.id === 'number' && (
+                  {!hideReorderButton && typeof order?.id === 'number' && order?.cart && (
                     <OButton
                       text={t('REORDER', 'Reorder')}
                       imgRightSrc={''}
