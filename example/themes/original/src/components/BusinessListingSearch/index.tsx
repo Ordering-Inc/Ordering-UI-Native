@@ -351,9 +351,15 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   onClick={() => onBusinessClick(business)}
                   textStyle={{ color: theme.colors.primary, fontSize: 10 }}
                   text={t('GO_TO_STORE', 'Go to store')}
-                  bgColor='#F5F9FF'
-                  borderColor='#fff'
-                  style={{ borderRadius: 50, paddingLeft: 5, paddingRight: 5, height: 20 }}
+                  style={{
+                    borderRadius: 23,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    height: 23,
+                    shadowOpacity: 0,
+                    backgroundColor: theme.colors.primaryContrast,
+                    borderWidth: 0
+                  }}
                 />
               </SingleBusinessContainer>
               <ScrollView horizontal style={styles.productsContainer} contentContainerStyle={{ flexGrow: 1 }}>

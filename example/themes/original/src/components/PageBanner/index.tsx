@@ -77,6 +77,7 @@ const PageBannerUI = (props: any) => {
   const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        activeOpacity={1}
         onPress={() => handleGoToPage(item)}
       >
         <View style={styles.sliderWrapper}>
@@ -128,6 +129,7 @@ const PageBannerUI = (props: any) => {
               {pageBannerState.banner?.items.length > 1 && (
                 <>
                   <TouchableOpacity
+                    activeOpacity={1}
                     style={[styles.swiperButton, { left: 25 }]}
                     onPress={() => carouselRef.current.snapToPrev()}
                   >
@@ -138,6 +140,7 @@ const PageBannerUI = (props: any) => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
+                    activeOpacity={1}
                     style={[styles.swiperButton, { right: 25 }]}
                     onPress={() => carouselRef.current.snapToNext()}
                   >
