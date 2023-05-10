@@ -99,6 +99,17 @@ const ChatUI = (props: MessagesParams) => {
     23: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
   }
 
+  const getLogisticTag = (status: any) => {
+    const keyList: any = {
+      0: t('PENDING', 'Pending'),
+      1: t('IN_PROGRESS', 'In progress'),
+      2: t('IN_QUEUE', 'In queue'),
+      3: t('EXPIRED', 'Expired'),
+      4: t('RESOLVED', 'Resolved'),
+    }
+    return keyList[status] ? keyList[status] : t('UNKNOWN', 'Unknown')
+  }
+
   const storeMessageList: any = [
     { key: 'store_message_1', text: t('STORE_MESSAGE_1', 'store_message_1') },
     { key: 'store_message_2', text: t('STORE_MESSAGE_2', 'store_message_2') },
@@ -372,18 +383,25 @@ const ChatUI = (props: MessagesParams) => {
         }}>
         <OText
           numberOfLines={3}
-          style={{ ...styles.firstMessageText, textAlign: 'center' }}>
-          {message.change?.attribute !== 'driver_id'
+          style={{ ...styles.firstMessageText, textAlign: 'center' }}
+        >
+          {
+            message.change?.attribute !== 'driver_id'
             ?
-            `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
-              `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
-              `${message.change.old !== null && ORDER_STATUS[parseInt(message.change.old, 10)]} ${t('TO', 'to')} ${ORDER_STATUS[parseInt(message.change.new, 10)]}`
+            `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute)
+              ? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
+              : `${message.change?.attribute !== 'logistic_status'
+                ? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
+                : message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
+                  ? t(ORDER_STATUS[parseInt(message.change.new, 10)])
+                  : getLogisticTag(message.change.new)}`
             }`
             : message.change.new
               ?
               `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
               :
-              `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
+              `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`
+          }
         </OText>
         <OText size={10} color={'#aaa'} style={{ alignSelf: 'flex-start' }}>
           {parseTime(message?.created_at, { outputFormat: 'hh:mma' })}
@@ -1063,7 +1081,7 @@ const ChatUI = (props: MessagesParams) => {
     .m-signature-pad {
       box-shadow: none;
       border: none;
-    } 
+    }
     .m-signature-pad--body {
       border: none;
     }
