@@ -57,6 +57,7 @@ export interface ProfileParams {
   showField?: any;
   isRequiredField?: any;
   isAlsea?: boolean;
+  isHideDriverStatus?: boolean;
 }
 
 export interface AddressListParams {
