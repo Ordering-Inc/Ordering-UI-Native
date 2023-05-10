@@ -7,6 +7,7 @@ import {
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View } from 'react-native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import FastImage from 'react-native-fast-image';
 
 import {
 	Container,
@@ -14,7 +15,8 @@ import {
 	QuantityControl,
 	Checkbox,
 	PositionControl,
-	Circle
+	Circle,
+	Logo
 } from './styles'
 import { OIcon, OText } from '../shared'
 
@@ -29,7 +31,8 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		toggleSelect,
 		changePosition,
 		disabled,
-		setIsScrollAvailable
+		setIsScrollAvailable,
+		image
 	} = props
 
 	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max || state.quantity === suboption?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
@@ -37,11 +40,23 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	const theme = useTheme();
 	const [, t] = useLanguage()
-	const [{ parsePrice }] = useUtils()
+	const [{ parsePrice, optimizeImage }] = useUtils()
 	const [showMessage, setShowMessage] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
 
 	const iconsSize = 20
+
+	const styles = StyleSheet.create({
+		icon: {
+			borderRadius: 7.6,
+			width: 60,
+			height: 60
+		},
+		logo: {
+			borderRadius: 10,
+			marginLeft: 3,
+		},
+	});
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
@@ -81,6 +96,18 @@ export const ProductOptionSubOptionUI = (props: any) => {
 						) : (
 							<OIcon src={theme.images.general.radio_nor} color={theme.colors.disabled} width={16} />
 						)
+					)}
+					{image && (
+						<Logo style={styles.logo}>
+							<FastImage
+								style={styles.icon}
+								source={{
+									uri: optimizeImage(image, 'h_100,c_limit'),
+									priority: FastImage.priority.normal,
+								}}
+								resizeMode={FastImage.resizeMode.cover}
+							/>
+						</Logo>
 					)}
 					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} mLeft={5} style={{ flex: 1 }}>
 						{suboption?.name}
@@ -141,7 +168,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					</PositionControl>
 				)}
 				{price > 0 && (
-					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{width: 70, maxWidth: 70}}>
+					<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ width: 70, maxWidth: 70 }}>
 						+ {parsePrice(price)}
 					</OText>
 				)}
