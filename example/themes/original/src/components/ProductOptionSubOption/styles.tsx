@@ -10,7 +10,7 @@ export const Container = styled.TouchableOpacity`
 export const IconControl = styled.TouchableOpacity`
   flex-direction: row;
   padding: 10px 0 10px 10px;
-  width: 35%;
+  width: 50%;
   align-items: center;
 `
 
@@ -32,3 +32,8 @@ export const Checkbox = styled.TouchableOpacity`
 export const Circle = styled.TouchableOpacity`
   margin: 0 1.5px;
 `
+
+export const Logo = styled.View`
+  height: 65px;
+  width: 65px;
+`;
