@@ -270,10 +270,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								</BusinessLogo>
 							)}
 						</BusinessInfo>
-						<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+						<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, alignItems: 'flex-start' }}>
 							<OText
 								size={textSize + 2}
-								style={{ lineHeight: 18, marginBottom: 6 }}
+								style={{ lineHeight: 18, marginBottom: 6, width: '90%' }}
 								weight={'500'}>
 								{business?.name}
 							</OText>

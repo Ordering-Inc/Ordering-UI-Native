@@ -217,7 +217,7 @@ export const BusinessBasicInformation = (
 					<Placeholder Animation={Fade}>
 						<View style={{ flexDirection: 'row' }}>
 							{[...Array(5).keys()].map(i => (
-								<View style={styles.socialIcon} key={i}>
+								<View style={{ ...styles.socialIcon, borderWidth: 0 }} key={i}>
 									<PlaceholderLine width={100} height={20} style={{ marginBottom: 0 }} />
 								</View>
 							))}

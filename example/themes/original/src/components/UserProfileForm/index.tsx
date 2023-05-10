@@ -288,43 +288,37 @@ const ProfileUI = (props: ProfileParams) => {
 					showCall={false}
 					btnStyle={{ paddingLeft: 0 }}
 				/>
-				<KeyboardAvoidingView
-					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-					enabled={Platform.OS === 'ios' ? true : false}
-					style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
-				>
-					<CenterView>
-						<View style={styles.photo}>
-							{user?.photo ? (
-								<FastImage
-									style={{ height: 80, width: 80, borderRadius: 8 }}
-									source={{
-										uri: user?.photo,
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
-							) : (
-								<Ionicons name='person-outline' size={50} />
-							)}
-						</View>
-						<OIconButton
-							icon={theme.images.general.camera}
-							borderColor={theme.colors.clear}
-							iconStyle={{ width: 20, height: 20 }}
-							style={{ maxWidth: 40, position: 'absolute', alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
-							onClick={() => handleImagePicker()}
-						/>
-					</CenterView>
-					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
-					<Spinner visible={formState?.loading || verifyPhoneState?.loading} />
-					<UserFormDetailsUI
-						{...props}
-						isProfile
-						isEdit
-						setWillVerifyOtpState={setWillVerifyOtpState}
+				<CenterView>
+					<View style={styles.photo}>
+						{user?.photo ? (
+							<FastImage
+								style={{ height: 80, width: 80, borderRadius: 8 }}
+								source={{
+									uri: user?.photo,
+									priority: FastImage.priority.normal,
+								}}
+								resizeMode={FastImage.resizeMode.cover}
+							/>
+						) : (
+							<Ionicons name='person-outline' size={50} />
+						)}
+					</View>
+					<OIconButton
+						icon={theme.images.general.camera}
+						borderColor={theme.colors.clear}
+						iconStyle={{ width: 20, height: 20 }}
+						style={{ maxWidth: 40, position: 'absolute', alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
+						onClick={() => handleImagePicker()}
 					/>
-				</KeyboardAvoidingView>
+				</CenterView>
+				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
+				<Spinner visible={formState?.loading || verifyPhoneState?.loading} />
+				<UserFormDetailsUI
+					{...props}
+					isProfile
+					isEdit
+					setWillVerifyOtpState={setWillVerifyOtpState}
+				/>
 			</Container>
 			<OModal
 				open={isModalVisible}
