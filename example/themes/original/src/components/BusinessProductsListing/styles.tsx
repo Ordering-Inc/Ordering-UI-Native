@@ -42,10 +42,9 @@ export const FiltProductsContainer = styled.ScrollView`
 
 export const BackgroundGray = styled.View`
   flex: 1;
-  height: ${(props: any) => props.isIos ? '80%' : '100%'};
+  height: 100%;
   background-color: rgba(0,0,0,0.5);
   position: absolute;
-  margin-top: 100px;
   z-index: 10000;
   width: 100%;
 `

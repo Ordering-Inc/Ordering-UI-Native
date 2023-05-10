@@ -137,7 +137,9 @@ export const ProductOptionsUI = (props: any) => {
 		},
 		slide1: {
 			flex: 1,
-			alignItems: 'center'
+			alignItems: 'center',
+			width: '100%',
+			marginLeft: 32
 		},
 		mainSwiper: {
 			height: 258,
@@ -371,12 +373,8 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	);
 
-	const handleScroll = ({ nativeEvent: { contentOffset, layoutMeasurement } }: any) => {
+	const handleScroll = ({ nativeEvent: { contentOffset } }: any) => {
 		setShowTitle(contentOffset.y > 30)
-		const _topOption = Object.keys(optionLayout).find(((option: any) => Math.abs(contentOffset?.y - layoutMeasurement?.height - optionLayout[option]?.y) < 20))
-		if (_topOption) {
-			const _topOptionId = Number(_topOption.replace('id:', ''))
-		}
 	}
 
 	const handleGoBack = navigation?.canGoBack()
@@ -563,6 +561,7 @@ export const ProductOptionsUI = (props: any) => {
 					ref={scrollViewRef}
 					contentContainerStyle={{ paddingBottom: 80 }}
 					stickyHeaderIndices={[2]}
+					scrollEventThrottle={100}
 					onScroll={handleScroll}
 				>
 					<WrapHeader onLayout={(event: any) => setHeaderRefHeight(event.nativeEvent.layout?.height)}>
@@ -760,6 +759,7 @@ export const ProductOptionsUI = (props: any) => {
 						</ProductDescription>
 						<ScrollView
 							horizontal
+							scrollEventThrottle={100}
 							showsHorizontalScrollIndicator={false}
 							contentContainerStyle={{ paddingBottom: 30 }}
 						>
@@ -787,6 +787,7 @@ export const ProductOptionsUI = (props: any) => {
 					{(!loading && product) && (
 						<ExtraOptionWrap
 							horizontal
+							scrollEventThrottle={100}
 							showsHorizontalScrollIndicator={false}
 							style={{
 								marginBottom: 20,

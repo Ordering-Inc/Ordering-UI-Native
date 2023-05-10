@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
+import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
 import { AddressItem, Container } from './styles'
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native'
-import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
+import { OButton, OText, OAlert, OIcon } from '../shared'
 import { AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
@@ -18,12 +18,10 @@ const AddressListUI = (props: AddressListParams) => {
 		route,
 		addressList,
 		isFromProfile,
-		nopadding,
 		handleSetDefault,
 		handleDelete,
 		setAddressList,
 		isGoBack,
-		actionStatus,
 		isFromBusinesses,
 		isFromProductsList,
 		afterSignup,
@@ -34,7 +32,6 @@ const AddressListUI = (props: AddressListParams) => {
 
 	const [orderState] = useOrder()
 	const [, t] = useLanguage()
-	const [{ auth }] = useSession()
 	const [refreshing] = useState(false);
 
 	const [isProfile, setIsProfile] = useState(isFromProfile || route?.params?.isFromProfile);
@@ -296,8 +293,8 @@ const AddressListUI = (props: AddressListParams) => {
 							<OButton
 								text={t('ADD_NEW_ADDRESS', 'Add new Address')}
 								imgRightSrc=''
-								bgColor={theme.colors.white}
-								textStyle={{ color: theme.colors.primary }}
+								bgColor={theme.colors.primary}
+								textStyle={{ color: theme.colors.white }}
 								style={styles.button}
 								borderColor={theme.colors.primary}
 								onClick={() => !afterSignup ? onNavigationRedirect(
