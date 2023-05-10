@@ -533,8 +533,6 @@ export const ProductOptionsUI = (props: any) => {
 		events.emit('product_viewed', product)
 	}, [product?.id, viewedProduct])
 
-	// console.log(product)
-
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<View style={styles.wrapperNavbar}>
@@ -913,7 +911,6 @@ export const ProductOptionsUI = (props: any) => {
 																	backgroundColor: isError(option.id),
 																	borderRadius: 7.6
 																}}>
-																{console.log('option', option)}
 																{option?.suboptions?.sort((a: any, b: any) => a.rank - b.rank).map(
 																	(suboption: any) => {
 																		const currentState = productCart.options[`id:${option.id}`]?.suboptions[`id:${suboption.id}`] || {};
