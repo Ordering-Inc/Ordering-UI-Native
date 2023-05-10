@@ -49,7 +49,8 @@ const ProfileUI = (props: ProfileParams) => {
     handleToggleAvalaibleStatusDriver,
     userState,
     isAvailableLoading,
-    isAlsea
+    isAlsea,
+    isHideDriverStatus
   } = props;
 
   const [{ user }] = useSession();
@@ -345,7 +346,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
           </CenterView>
 
-          {user?.level === 4 && (
+          {user?.level === 4 && !isHideDriverStatus && (
             <EnabledStatusDriver>
               <View style={{ flex: 1 }}>
                 <OText
