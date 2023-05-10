@@ -73,7 +73,7 @@ const WalletsUI = (props: any) => {
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
   const [openHistory, setOpenHistory] = useState(false)
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-  const hideWalletsTheme = theme?.bar_menu?.components?.wallets?.hidden
+  const hideWalletsTheme = theme?.bar_menu?.components?.wallet?.hidden === true
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
@@ -128,10 +128,10 @@ const WalletsUI = (props: any) => {
             ...{
               width: '100%',
               display: 'flex',
-              flexDirection: hideWalletsTheme ? 'column' : 'row',
-              justifyContent: hideWalletsTheme ? 'flex-start' : 'space-between',
-              alignItems: hideWalletsTheme ? 'flex-start' : 'center',
-              marginTop: hideWalletsTheme ? 0 : 10,
+              flexDirection: !hideWalletsTheme ? 'column' : 'row',
+              justifyContent: !hideWalletsTheme ? 'flex-start' : 'space-between',
+              alignItems: !hideWalletsTheme ? 'flex-start' : 'center',
+              marginTop: !hideWalletsTheme ? 0 : 10,
             },
           }}>
             <NavBar
@@ -151,7 +151,7 @@ const WalletsUI = (props: any) => {
                 imgRightSrc={null}
                 textStyle={{ fontSize: 12, color: theme.colors.disabled }}
                 onClick={() => setOpenHistory(true)}
-                style={{ borderRadius: 8, height: 40, width: hideWalletsTheme ? '100%' : 150, marginTop: hideWalletsTheme ? 10 : 0 }}
+                style={{ borderRadius: 8, height: 40, width: !hideWalletsTheme ? '100%' : 150, marginTop: !hideWalletsTheme ? 10 : 0 }}
               />
             )}
           </View>
