@@ -7,7 +7,9 @@ import {
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
   useOrder,
-  useConfig
+  useConfig,
+  useToast,
+  ToastType
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { showLocation } from 'react-native-map-link';
@@ -65,7 +67,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   } = props;
 
   const theme = useTheme();
-
+  const [, { showToast }] = useToast()
   const styles = StyleSheet.create({
     rowDirection: {
       flexDirection: 'row',
@@ -335,6 +337,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     }
   }, [driverLocation]);
+
+  useEffect(() => {
+    if (props?.order?.error && !props?.order?.loading) {
+      showToast(ToastType.Error, props?.order?.error)
+      navigation.navigate('BusinessList')
+    }
+  }, [props?.order?.error, props?.order?.loading])
 
   return (
     <OrderDetailsContainer

@@ -377,6 +377,16 @@ const CheckoutUI = (props: any) => {
 		setLengthMore((e.nativeEvent.lines.length == 3 && e.nativeEvent.lines[2].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 3)
 	}, [])
 
+	useEffect(() => {
+		if (!cartState?.loading && (cartState?.error || typeof cartState?.cart === 'string')) {
+			const error = cartState?.error || typeof cartState.cart === 'string' && cartState.cart
+			if (error) {
+				showToast(ToastType.Error, cartState?.error || cartState.cart)
+				navigation.navigate('BusinessList')
+			}
+		}
+	}, [cartState?.error, cartState?.cart, cartState?.loading])
+
 	return (
 		<>
 			<Container noPadding>

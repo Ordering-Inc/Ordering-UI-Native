@@ -386,6 +386,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!business && !loading && !error){
+      showToast(ToastType.Error, t('BUSINESS_NOT_FOUND', 'Business not found'))
+      navigation.navigate('BusinessList')
+    }
+  }, [business, error, loading])
+
   return (
     <>
       <View style={{ flex: 1, backgroundColor: backgroundColor }}>
