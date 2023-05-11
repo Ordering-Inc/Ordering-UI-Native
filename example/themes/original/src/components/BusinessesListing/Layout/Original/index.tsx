@@ -10,7 +10,8 @@ import {
 	Platform,
 	TouchableOpacity,
 	RefreshControl,
-	AppState
+	AppState,
+	FlatList
 } from 'react-native';
 import {
 	BusinessList as BusinessesListingController,
@@ -601,29 +602,35 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				{businessesList.businesses?.map(
-					(business: any, i: number) => (
-						<BusinessController
-							key={`${business.id}_` + i}
-							enableIntersection
-							business={business}
-							isBusinessOpen={business.open}
-							handleCustomClick={handleBusinessClick}
-							orderType={orderState?.options?.type}
-							navigation={navigation}
-							businessHeader={business?.header}
-							businessFeatured={business?.featured}
-							businessLogo={business?.logo}
-							businessReviews={business?.reviews}
-							businessDeliveryPrice={business?.delivery_price}
-							businessDeliveryTime={business?.delivery_time}
-							businessPickupTime={business?.pickup_time}
-							businessDistance={business?.distance}
-							handleUpdateBusinessList={handleUpdateBusinessList}
-							favoriteIds={favoriteIds}
-							setFavoriteIds={setFavoriteIds}
-						/>
-					)
+				{!!businessesList.businesses?.length && (
+					<FlatList
+						data={businessesList.businesses}
+						showsVerticalScrollIndicator={false}
+						keyExtractor={(business, index) => (`${business.id}_` + index)}
+						renderItem={({ item }: any) => (
+							<>
+								<BusinessController
+									enableIntersection
+									business={item}
+									isBusinessOpen={item?.open}
+									handleCustomClick={handleBusinessClick}
+									orderType={orderState?.options?.type}
+									navigation={navigation}
+									businessHeader={item?.header}
+									businessFeatured={item?.featured}
+									businessLogo={item?.logo}
+									businessReviews={item?.reviews}
+									businessDeliveryPrice={item?.delivery_price}
+									businessDeliveryTime={item?.delivery_time}
+									businessPickupTime={item?.pickup_time}
+									businessDistance={item?.distance}
+									handleUpdateBusinessList={handleUpdateBusinessList}
+									favoriteIds={favoriteIds}
+									setFavoriteIds={setFavoriteIds}
+								/>
+							</>
+						)}
+					/>
 				)}
 				{(businessesList.loading || !businessesList?.fetched) && (
 					<>
