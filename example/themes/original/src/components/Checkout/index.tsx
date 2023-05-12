@@ -147,13 +147,14 @@ const CheckoutUI = (props: any) => {
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
 	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
-	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
+	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false, isGuest: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 	const [openModal, setOpenModal] = useState({ login: false, signup: false })
   	const [allowedGuest, setAllowedGuest] = useState(false)
 
+	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const isGiftCardCart = !cart?.business_id
@@ -213,7 +214,8 @@ const CheckoutUI = (props: any) => {
       user,
       token: user?.session?.access_token
     })
-    setOpenModal({ ...openModal, signup: false })
+	openModal?.isGuest && handlePlaceOrderAsGuest()
+    setOpenModal({ ...openModal, signup: false, isGuest: false })
   }
 
 	const handleSuccessLogin = (user: any) => {
@@ -221,6 +223,11 @@ const CheckoutUI = (props: any) => {
   }
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
+		if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
+			setOpenModal({ ...openModal, signup: true, isGuest: true })
+			return
+		}
+
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
 			vibrateApp()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
@@ -854,7 +861,7 @@ const CheckoutUI = (props: any) => {
 					</OModal>
 					<OModal
 						open={openModal.signup}
-						onClose={() => setOpenModal({ ...openModal, signup: false })}
+						onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
 					>
 						<ScrollView style={{ paddingHorizontal: 20, width: '100%'}}>
 							<SignupForm
