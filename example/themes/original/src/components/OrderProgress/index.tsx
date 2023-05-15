@@ -22,7 +22,7 @@ import {
   OrderInfoWrapper,
   OrderProgressWrapper
 } from './styles'
-import { getOrderStatus } from '../../utils'
+import { getOrderStatuPickUp, getOrderStatus } from '../../utils'
 
 const OrderProgressUI = (props: any) => {
   const {
@@ -110,6 +110,8 @@ const OrderProgressUI = (props: any) => {
     setInitialLoaded(true)
   }, [orderList.loading, initialLoaded])
 
+  const progressBarObjt = lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+
   return (
     <>
       {(orderList?.loading && !initialLoaded) && (
@@ -162,10 +164,10 @@ const OrderProgressUI = (props: any) => {
             </OrderInfoWrapper>
             <View style={{ flex: 1 }}>
               <ProgressContentWrapper>
-                <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${(getOrderStatus(lastOrder.status) as any).percentage * 100}%` : '0%' }} />
+                <ProgressBar style={{ width: progressBarObjt(lastOrder.status)?.percentage ? `${(progressBarObjt(lastOrder.status) as any).percentage * 100}%` : '0%' }} />
               </ProgressContentWrapper>
               <ProgressTextWrapper>
-                <OText size={12} style={{ width: '50%' }}>{getOrderStatus(lastOrder.status)?.value}</OText>
+                <OText size={12} style={{ width: '50%' }}>{progressBarObjt(lastOrder.status)?.value}</OText>
                 <TimeWrapper>
                   <OText size={11}>{lastOrder?.delivery_type === 1 ? t('ESTIMATED_DELIVERY', 'Estimated delivery') : t('ESTIMATED_TIME', 'Estimated time')}</OText>
                   <OText size={11}>
