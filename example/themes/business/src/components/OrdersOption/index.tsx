@@ -6,6 +6,12 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import TrackPlayer, {
+  RepeatMode,
+  Capability,
+  AppKilledPlaybackBehavior
+} from 'react-native-track-player';
+
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
@@ -105,6 +111,79 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const WIDTH_SCREEN = orientationState?.dimensions?.width
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+
+  const URL_SOUND = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
+
+  const setupPlayer = async (options: any) => {
+    const setup = async () => {
+      try {
+        await TrackPlayer.setupPlayer(options);
+      } catch (error) {
+        return (error as Error & { code?: string }).code;
+      }
+    }
+    while ((await setup()) === 'android_cannot_setup_player_in_background') {
+      await new Promise<void>((resolve) => setTimeout(resolve, 1));
+    }
+  };
+
+  const SetupService = async () => {
+    await setupPlayer({ autoHandleInterruptions: true });
+    await TrackPlayer.updateOptions({
+      android: {
+        appKilledPlaybackBehavior:
+          AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+      },
+      capabilities: [
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
+        Capability.SeekTo,
+      ],
+      compactCapabilities: [
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+      ],
+      progressUpdateEventInterval: 2,
+    });
+    await TrackPlayer.setRepeatMode(RepeatMode.Track);
+  };
+
+  const QueueInitialTracksService = async () => {
+    await TrackPlayer.add([
+      {
+        id: 'notification',
+        url: URL_SOUND,
+        title: 'notification'
+      },
+    ]);
+  }
+
+  function useSetupPlayer() {
+    const [playerReady, setPlayerReady] = useState<boolean>(false)
+
+    useEffect(() => {
+      let unmounted = false;
+      (async () => {
+        await SetupService()
+        if (unmounted) return
+        setPlayerReady(true)
+        const queue = await TrackPlayer.getQueue()
+        if (unmounted) return
+        if (queue.length <= 0) {
+          await QueueInitialTracksService()
+        }
+      })();
+      return () => {
+        unmounted = true;
+      };
+    }, []);
+    return playerReady;
+  }
+
+  const isPlayerReady = useSetupPlayer()
 
   const preorderTypeList = [
     { key: null, name: t('SLA', 'SLA\'s') },
@@ -701,7 +780,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
 
       {isBusinessApp && (
-        <NewOrderNotification isBusinessApp={isBusinessApp} />
+        <NewOrderNotification
+          isBusinessApp={isBusinessApp}
+          isPlayerReady={isPlayerReady}
+        />
       )}
 
       {(openSearchModal || openSLASettingModal) && (
