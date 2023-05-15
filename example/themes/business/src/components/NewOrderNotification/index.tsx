@@ -53,7 +53,6 @@ const NewOrderNotificationUI = (props: any) => {
   let times = 0
 
   const handleCloseEvents = () => {
-    notificationSound.stop()
     setCurrentEvent(null)
     clearInterval(_timeout)
   }
@@ -120,7 +119,11 @@ const NewOrderNotificationUI = (props: any) => {
   }, [])
 
   useEffect(() => {
-    return () => handleCloseEvents()
+    return () => {
+      handleCloseEvents()
+      notificationSound.stop()
+      notificationSound.release()
+    }
   }, [])
 
   return (
