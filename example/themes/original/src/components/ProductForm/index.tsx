@@ -929,7 +929,7 @@ export const ProductOptionsUI = (props: any) => {
 																				balance={balance}
 																				option={option}
 																				suboption={suboption}
-																				image={option.image}
+																				image={suboption.image}
 																				state={currentState}
 																				disabled={
 																					isSoldOut ||
