@@ -72,6 +72,8 @@ const NewOrderNotificationUI = (props: any) => {
         times++
       } else {
         clearInterval(_timeout)
+        notificationSound.stop()
+        notificationSound.release()
         return
       }
     }, 2500)
