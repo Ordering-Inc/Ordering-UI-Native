@@ -275,12 +275,12 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
             )}
-            {order?.payment_events?.length > 0 && (
-              <View>
+            <OText>
+              <OText size={13} weight='bold'>
+                {`${t('PAYMENT_METHODS', 'Payment methods')}: `}
+              </OText>
+              {order?.payment_events?.length > 0 ? (
                 <OText size={13}>
-                  <OText size={13} weight='bold'>
-                    {`${t('PAYMENT_METHODS', 'Payment methods')}: `}
-                  </OText>
                   {order?.payment_events?.map((event: any, idx: number) => {
                     return event?.wallet_event
                       ? idx < order?.payment_events?.length - 1
@@ -291,8 +291,10 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                         : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)
                   })}
                 </OText>
-              </View>
-            )}
+              ) : (
+                <OText size={13}>{t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}</OText>
+              )}
+            </OText>
           </>
         )}
       </OrderHeader>
