@@ -42,7 +42,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { OrderDetailsParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
-import { verifyDecimals, getOrderStatus } from '../../utils';
+import { verifyDecimals, getOrderStatus, getOrderStatuPickUp } from '../../utils';
 import { OSRow } from '../OrderSummary/styles';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
@@ -346,6 +346,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [props?.order?.error, props?.order?.loading])
 
+  const progressBarObjt = order?.delivery_type && props.order?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+
   return (
     <OrderDetailsContainer
       keyboardShouldPersistTaps="handled"
@@ -481,7 +483,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         <LinearGradient
                           start={{ x: 0.0, y: 0.0 }}
                           end={{
-                            x: getOrderStatus(order?.status)?.percentage || 0,
+                            x: progressBarObjt(order?.status)?.percentage || 0,
                             y: 0,
                           }}
                           locations={[0.9999, 0.9999]}
@@ -494,7 +496,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         lineHeight={24}
                         weight={'600'}
                         color={theme.colors.textNormal}>
-                        {getOrderStatus(order?.status)?.value}
+                        {progressBarObjt(order?.status)?.value}
                       </OText>
                     </>
                   )}
