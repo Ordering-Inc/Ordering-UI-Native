@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
+import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
@@ -48,7 +49,6 @@ import {
 	CartHeader
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
@@ -165,7 +165,7 @@ const CheckoutUI = (props: any) => {
 	const [paymethodClicked, setPaymethodClicked] = useState<any>(null)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
 	const cardsMethods = ['credomatic']
-  	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const isGiftCardCart = !cart?.business_id
@@ -246,7 +246,7 @@ const CheckoutUI = (props: any) => {
 			token: user?.session?.access_token
 		})
 		openModal?.isGuest && handlePlaceOrderAsGuest()
-    	setOpenModal({ ...openModal, signup: false, isGuest: false })
+		setOpenModal({ ...openModal, signup: false, isGuest: false })
 	}
 
 	const handleSuccessLogin = (user: any) => {
@@ -261,7 +261,7 @@ const CheckoutUI = (props: any) => {
 
 		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
 			vibrateApp()
-			handlerClickPlaceOrder && handlerClickPlaceOrder(null, { isNative: true }, confirmPayment)
+			handlerClickPlaceOrder && handlerClickPlaceOrder(null, { isNative: true }, confirmPayment, NativeStripeSdk?.dismissPlatformPay)
 			return
 		}
 		if (requiredFields?.length) {
