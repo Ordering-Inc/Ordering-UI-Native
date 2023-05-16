@@ -576,6 +576,119 @@ export const getOrderStatus = (s: string) => {
   return objectStatus && objectStatus;
 }
 
+export const getOrderStatuPickUp = (s: any) => {
+  const status = parseInt(s);
+  const orderStatus = [
+    {
+      key: 0,
+      value: t('PENDING', 'Pending'),
+      slug: 'PENDING',
+      percentage: 0.1,
+      image: theme.images.order.status0,
+    },
+    {
+      key: 1,
+      value: t('COMPLETED', 'Completed'),
+      slug: 'COMPLETED',
+      percentage: 1,
+      image: theme.images.order.status1,
+    },
+    {
+      key: 2,
+      value: t('REJECTED', 'Rejected'),
+      slug: 'REJECTED',
+      percentage: 0,
+      image: theme.images.order.status2,
+    },
+    {
+      key: 4,
+      value: t('PREPARATION_COMPLETED', 'Preparation Completed'),
+      slug: 'PREPARATION_COMPLETED',
+      percentage: 0.5,
+      image: theme.images.order.status4,
+    },
+    {
+      key: 5,
+      value: t('REJECTED_BY_BUSINESS', 'Rejected by business'),
+      slug: 'REJECTED_BY_BUSINESS',
+      percentage: 0,
+      image: theme.images.order.status5,
+    },
+    {
+      key: 7,
+      value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'),
+      slug: 'ACCEPTED_BY_BUSINESS',
+      percentage: 0.3,
+      image: theme.images.order.status7,
+    },
+    {
+      key: 13,
+      value: t('PREORDER', 'PreOrder'),
+      slug: 'PREORDER',
+      percentage: 0,
+      image: theme.images.order.status13,
+    },
+    {
+      key: 14,
+      value: t('ORDER_NOT_READY', 'Order not ready'),
+      slug: 'ORDER_NOT_READY',
+      percentage: 0.3,
+      image: theme.images.order.status13,
+    },
+    {
+      key: 15,
+      value: t(
+        'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+        'Order picked up completed by customer',
+      ),
+      slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+      percentage: 1,
+      image: theme.images.order.status1,
+    },
+    {
+      key: 16,
+      value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'),
+      slug: 'CANCELLED_BY_CUSTOMER',
+      percentage: 0,
+      image: theme.images.order.status2,
+    },
+    {
+      key: 17,
+      value: t(
+        'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+        'Order not picked up by customer',
+      ),
+      slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+      percentage: 0,
+      image: theme.images.order.status2,
+    },
+    {
+      key: 20,
+      value: t(
+        'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+        'Customer almost arrived to business',
+      ),
+      slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+      percentage: 0.7,
+      image: theme.images.order.status7,
+    },
+    {
+      key: 21,
+      value: t(
+        'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+        'Customer arrived to business',
+      ),
+      slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+      percentage: 0.9,
+      image: theme.images.order.status7,
+    }
+  ];
+
+  const objectStatus = orderStatus.find((o) => o.key === status);
+
+  return objectStatus && objectStatus;
+}
+
 /**
  * Function to get brightness of color.
  */
