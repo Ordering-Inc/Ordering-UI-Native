@@ -124,6 +124,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
+  const reorderStatus = [1, 2, 5, 6, 10, 11, 12]
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
   const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
@@ -791,25 +792,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   parentStyle={{ marginTop: 29, marginEnd: 15 }}
                   onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
                 />
-                {(
-                  parseInt(order?.status) === 1 ||
-                  parseInt(order?.status) === 2 ||
-                  parseInt(order?.status) === 5 ||
-                  parseInt(order?.status) === 6 ||
-                  parseInt(order?.status) === 10 ||
-                  parseInt(order?.status) === 11 ||
-                  parseInt(order?.status) === 12
-                ) && (
-                    <OButton
-                      text={order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
-                      textStyle={{ fontSize: 14, color: theme.colors.primary }}
-                      imgRightSrc={null}
-                      borderColor='transparent'
-                      bgColor={theme.colors.primary + 10}
-                      style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginTop: 29 }}
-                      onClick={() => handleReorder && handleReorder(order.id)}
-                    />
-                  )}
+                {(reorderStatus?.includes(parseInt(order?.status)) && order?.cart) && (
+                  <OButton
+                    text={order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
+                    textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                    imgRightSrc={null}
+                    borderColor='transparent'
+                    bgColor={theme.colors.primary + 10}
+                    style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginTop: 29 }}
+                    onClick={() => handleReorder && handleReorder(order.id)}
+                  />
+                )}
               </OrderAction>
             </HeaderInfo>
             <OrderProducts>
