@@ -69,7 +69,11 @@ const PaymentOptionsUI = (props: any) => {
 		methodPaySupported,
 		setPlaceByMethodPay,
 		setCardList,
-		onPaymentChange
+		onPaymentChange,
+		requiredFields,
+		openUserModal,
+		paymethodClicked,
+		setPaymethodClicked
 	} = props
 
 	const theme = useTheme();
@@ -115,6 +119,14 @@ const PaymentOptionsUI = (props: any) => {
 
 	const handlePaymentMethodClick = (paymethod: any) => {
 		if (cart?.balance > 0) {
+			if (paymethod?.gateway === 'paypal' && requiredFields.length > 0) {
+				openUserModal && openUserModal(true)
+				setPaymethodClicked({
+					confirmed: false,
+					paymethod
+				})
+				return
+			}
 			const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
 			if (webViewPaymentGateway.includes(paymethod?.gateway)) {
 				handlePaymentMethodClickCustom(paymethod)
@@ -159,7 +171,14 @@ const PaymentOptionsUI = (props: any) => {
 			handlePlaceOrder(confirmApplePayPayment)
 		}
 	}, [paymethodData, paymethodSelected])
-	
+
+	useEffect(() => {
+		if (paymethodClicked?.confirmed) {
+			handlePaymentMethodClickCustom(paymethodClicked?.paymethod)
+		}
+	}, [paymethodClicked?.confirmed])
+
+
 	const renderPaymethods = ({ item }: any) => {
 		return (
 			<>
