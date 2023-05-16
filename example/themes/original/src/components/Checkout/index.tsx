@@ -162,6 +162,7 @@ const CheckoutUI = (props: any) => {
 	const [allowedGuest, setAllowedGuest] = useState(false)
 	const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
 	const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
+	const [paymethodClicked, setPaymethodClicked] = useState<any>(null)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
 	const cardsMethods = ['credomatic']
   	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
@@ -732,6 +733,10 @@ const CheckoutUI = (props: any) => {
 									setPlaceByMethodPay={setPlaceByMethodPay}
 									cardList={cardList}
 									setCardList={setCardList}
+									requiredFields={requiredFields}
+									openUserModal={setIsOpen}
+									paymethodClicked={paymethodClicked}
+									setPaymethodClicked={setPaymethodClicked}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -916,7 +921,14 @@ const CheckoutUI = (props: any) => {
 								handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
 								onClose={() => {
 									setIsOpen(false)
-									handlePlaceOrder(null, true)
+									if (paymethodClicked) {
+										setPaymethodClicked({
+											...paymethodClicked,
+											confirmed: true
+										})
+									} else {
+										handlePlaceOrder(null, true)
+									}
 								}}
 								setIsOpen={setIsOpen}
 							/>
