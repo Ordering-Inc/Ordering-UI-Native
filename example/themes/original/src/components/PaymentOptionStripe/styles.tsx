@@ -40,6 +40,9 @@ export const OSItem = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 10px 0px;
+  ${({ isInvalid } : any) => isInvalid && css`
+    opacity: 0.7;
+  `}
 `;
 
 export const OSItemContent = styled.TouchableOpacity`
