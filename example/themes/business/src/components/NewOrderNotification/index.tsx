@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Modal,
-  View,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
-import { useTheme } from 'styled-components/native'
 import moment from 'moment'
+import { NewOrderNotification as NewOrderNotificationController, useApi, useEvent, useLanguage, useSession } from 'ordering-components/native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
+import Sound from 'react-native-sound'
 import Icon from 'react-native-vector-icons/Feather'
+import { useTheme } from 'styled-components/native'
 
-import {
-  NewOrderNotification as NewOrderNotificationController,
-  useApi,
-  useEvent,
-  useLanguage,
-  useSession
-} from 'ordering-components/native'
-
-import TrackPlayer from 'react-native-track-player';
-
+import { useLocation } from '../../hooks/useLocation'
 import { OIcon, OText } from '../shared'
 import { NotificationContainer } from './styles'
-import { useLocation } from '../../hooks/useLocation'
 
-const SOUND_LOOP_AMOUNT = 3
-const DURATION_BETWEEN_LOOP = 2000 // ms
+Sound.setCategory('Playback', true)
+Sound.setMode('Default')
+
 const windowWidth = Dimensions.get('screen').width
+
+const SOUND_LOOP = 3
 
 const NewOrderNotificationUI = (props: any) => {
   const { isBusinessApp } = props
@@ -35,7 +24,7 @@ const NewOrderNotificationUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
-  const { getCurrentLocation } = useLocation()
+  const { getCurrentLocation } = useLocation();
   const [currentEvent, setCurrentEvent] = useState<any>(null)
 
   const evtList: any = {
@@ -56,28 +45,37 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const handleCloseEvents = () => {
-    setCurrentEvent(null)
-  }
+  const soundSrc = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
 
-  const playSoundNotification = () => {
-    let count = 0;
-    const intervalId = setInterval(() => {
-      TrackPlayer.seekTo(0)
-      TrackPlayer.play()
-      setTimeout(() => {
-        TrackPlayer.pause()
-        count++
-        if (count === SOUND_LOOP_AMOUNT) {
-          clearInterval(intervalId);
-        }
-      }, 500) // sound duration divide by 2
-    }, DURATION_BETWEEN_LOOP) // notification duration
+  const notificationSound = new Sound(soundSrc, '', () => { });
+
+  let _timeout: any = null
+  let times = 0
+
+  const handleCloseEvents = () => {
+    notificationSound.stop()
+    setCurrentEvent(null)
+    clearInterval(_timeout)
   }
 
   const handlePlayNotificationSound = (eventObj: any = null) => {
     setCurrentEvent(eventObj)
-    playSoundNotification()
+    if (times > 0) {
+      if (times === 3) {
+        times = 0
+        return
+      }
+      return
+    }
+    _timeout = setInterval(() => {
+      if (times < SOUND_LOOP) {
+        notificationSound.play()
+        times++
+      } else {
+        clearInterval(_timeout)
+        return
+      }
+    }, 2500)
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
@@ -98,15 +96,11 @@ const NewOrderNotificationUI = (props: any) => {
         handlePlayNotificationSound({ evt: 2, orderId: value?.id })
       }
     }
-    if (evtType === 3 || value?.author_id === user.id) return
-    handlePlayNotificationSound({
+    if (evtType === 3 || value.author_id === user.id) return
+    setTimeout(() => handlePlayNotificationSound({
       evt: evtType,
-      orderId: value?.driver
-        ? value?.order_id
-        : evtList[evtType].event === 'messages'
-          ? value?.order?.id
-          : value?.order_id ?? value?.id
-    })
+      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.order_id
+    }), 1000)
   }
 
   useEffect(() => {
@@ -126,46 +120,46 @@ const NewOrderNotificationUI = (props: any) => {
   }, [])
 
   useEffect(() => {
-    return () => {
-      handleCloseEvents()
-    }
+    return () => handleCloseEvents()
   }, [])
 
   return (
-    <Modal
-      animationType='slide'
-      transparent={true}
-      visible={!!currentEvent?.orderId}
-    >
-      <NotificationContainer>
-        <View style={styles.modalView}>
-          <TouchableOpacity
-            style={styles.wrapperIcon}
-            onPress={() => handleCloseEvents()}
-          >
-            <Icon name="x" size={30} />
-          </TouchableOpacity>
-          <OText
-            size={18}
-            color={theme.colors.textGray}
-            weight={600}
-          >
-            {evtList[currentEvent?.evt]?.message}
-          </OText>
-          <OIcon
-            src={theme.images.general.newOrder}
-            width={250}
-            height={200}
-          />
-          <OText
-            color={theme.colors.textGray}
-            mBottom={15}
-          >
-            {evtList[currentEvent?.evt]?.message2}
-          </OText>
-        </View>
-      </NotificationContainer>
-    </Modal>
+    <>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={!!currentEvent?.orderId}
+      >
+        <NotificationContainer>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.wrapperIcon}
+              onPress={() => handleCloseEvents()}
+            >
+              <Icon name="x" size={30} />
+            </TouchableOpacity>
+            <OText
+              size={18}
+              color={theme.colors.textGray}
+              weight={600}
+            >
+              {evtList[currentEvent?.evt]?.message}
+            </OText>
+            <OIcon
+              src={theme.images.general.newOrder}
+              width={250}
+              height={200}
+            />
+            <OText
+              color={theme.colors.textGray}
+              mBottom={15}
+            >
+              {evtList[currentEvent?.evt]?.message2}
+            </OText>
+          </View>
+        </NotificationContainer>
+      </Modal>
+    </>
   )
 }
 
