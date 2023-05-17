@@ -636,6 +636,7 @@ export interface GoogleMapsParams {
 	handleToggleMap?: () => void,
 	isIntGeoCoder: boolean,
 	businessZones?: any
+	delta?: number
 }
 
 export interface HelpParams {
