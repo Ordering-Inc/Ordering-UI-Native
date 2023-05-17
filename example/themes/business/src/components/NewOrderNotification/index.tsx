@@ -9,6 +9,7 @@ import {
 import { useTheme } from 'styled-components/native'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/Feather'
+import SoundPlayer from 'react-native-sound-player'
 
 import {
   NewOrderNotification as NewOrderNotificationController,
@@ -18,67 +19,84 @@ import {
   useSession
 } from 'ordering-components/native'
 
-import TrackPlayer from 'react-native-track-player';
-
 import { OIcon, OText } from '../shared'
 import { NotificationContainer } from './styles'
 import { useLocation } from '../../hooks/useLocation'
 
-const SOUND_LOOP_AMOUNT = 3
-const DURATION_BETWEEN_LOOP = 2000 // ms
+const DELAY_SOUND = 2500 // 2 sec
 const windowWidth = Dimensions.get('screen').width
 
-const NewOrderNotificationUI = (props: any) => {
-  const { isBusinessApp } = props
-  const [events] = useEvent()
+const SoundPlayerComponent = (props: any) => {
+  const { evtList, currentEvent, handleCloseEvents } = props
+
   const theme = useTheme()
-  const [, t] = useLanguage()
+  const [count, setCount] = useState(0);
+
+  const URL_SOUND = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
+
+  useEffect(() => {
+    const id = setInterval(() => setCount(count + 1), 2500)
+
+    const playSound = async () => {
+      SoundPlayer.playUrl(URL_SOUND)
+      await new Promise(resolve => setTimeout(resolve, DELAY_SOUND))
+      SoundPlayer.stop()
+    }
+
+    playSound()
+
+    return () => {
+      SoundPlayer.stop()
+      clearInterval(id);
+    }
+  }, [count])
+
+  return (
+    <Modal
+      animationType='slide'
+      transparent={true}
+      visible={!!currentEvent?.orderId}
+    >
+      <NotificationContainer>
+        <View style={styles.modalView}>
+          <TouchableOpacity
+            style={styles.wrapperIcon}
+            onPress={() => handleCloseEvents()}
+          >
+            <Icon name="x" size={30} />
+          </TouchableOpacity>
+          <OText
+            size={18}
+            color={theme.colors.textGray}
+            weight={600}
+          >
+            {evtList(currentEvent)[currentEvent?.evt]?.message}
+          </OText>
+          <OIcon
+            src={theme.images.general.newOrder}
+            width={250}
+            height={200}
+          />
+          <OText
+            color={theme.colors.textGray}
+            mBottom={15}
+          >
+            {evtList(currentEvent)[currentEvent?.evt]?.message2}
+          </OText>
+        </View>
+      </NotificationContainer>
+    </Modal>
+  )
+}
+
+const NewOrderNotificationUI = (props: any) => {
+  const { isBusinessApp, evtList } = props
+
+  const [events] = useEvent()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
   const { getCurrentLocation } = useLocation()
   const [currentEvent, setCurrentEvent] = useState<any>(null)
-
-  const evtList: any = {
-    1: {
-      event: 'messages',
-      message: t('NEW_MESSAGES_RECEIVED', 'New messages have been received!'),
-      message2: t('ORDER_N_UNREAD_MESSAGES', 'Order #_order_id_ has unread messages.').replace('_order_id_', currentEvent?.orderId),
-    },
-    2: {
-      event: 'order_added',
-      message: t('NEW_ORDERS_RECEIVED', 'New orders have been received!'),
-      message2: t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', currentEvent?.orderId),
-    },
-    3: {
-      event: 'order_updated',
-      message: t('NEW_ORDERS_UPDATED', 'New orders have been updated!'),
-      message2: t('ORDER_N_UPDATED', 'Order #_order_id_ has been updated.').replace('_order_id_', currentEvent?.orderId),
-    },
-  }
-
-  const handleCloseEvents = () => {
-    setCurrentEvent(null)
-  }
-
-  const playSoundNotification = () => {
-    let count = 0;
-    const intervalId = setInterval(() => {
-      TrackPlayer.seekTo(0)
-      TrackPlayer.play()
-      setTimeout(() => {
-        TrackPlayer.pause()
-        count++
-        if (count === SOUND_LOOP_AMOUNT) {
-          clearInterval(intervalId);
-        }
-      }, 600) // sound duration divide by 2
-    }, DURATION_BETWEEN_LOOP) // notification duration
-  }
-
-  const handlePlayNotificationSound = (eventObj: any = null) => {
-    setCurrentEvent(eventObj)
-    playSoundNotification()
-  }
 
   const handleEventNotification = async (evtType: number, value: any) => {
     if (value?.driver) {
@@ -95,15 +113,15 @@ const NewOrderNotificationUI = (props: any) => {
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
       if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
-        handlePlayNotificationSound({ evt: 2, orderId: value?.id })
+        setCurrentEvent({ evt: 2, orderId: value?.id })
       }
     }
     if (evtType === 3 || value?.author_id === user.id) return
-    handlePlayNotificationSound({
+    setCurrentEvent({
       evt: evtType,
       orderId: value?.driver
         ? value?.order_id
-        : evtList[evtType].event === 'messages'
+        : evtList(currentEvent)[evtType].event === 'messages'
           ? value?.order?.id
           : value?.order_id ?? value?.id
     })
@@ -126,48 +144,21 @@ const NewOrderNotificationUI = (props: any) => {
   }, [])
 
   useEffect(() => {
-    return () => handleCloseEvents()
+    return () => setCurrentEvent(null)
   }, [])
 
   return (
     <>
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={!!currentEvent?.orderId}
-      >
-        <NotificationContainer>
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              style={styles.wrapperIcon}
-              onPress={() => handleCloseEvents()}
-            >
-              <Icon name="x" size={30} />
-            </TouchableOpacity>
-            <OText
-              size={18}
-              color={theme.colors.textGray}
-              weight={600}
-            >
-              {evtList[currentEvent?.evt]?.message}
-            </OText>
-            <OIcon
-              src={theme.images.general.newOrder}
-              width={250}
-              height={200}
-            />
-            <OText
-              color={theme.colors.textGray}
-              mBottom={15}
-            >
-              {evtList[currentEvent?.evt]?.message2}
-            </OText>
-          </View>
-        </NotificationContainer>
-      </Modal>
+      {!!currentEvent ? (
+        <SoundPlayerComponent
+          evtList={evtList}
+          currentEvent={currentEvent}
+          handleCloseEvents={() => setCurrentEvent(null)}
+        />
+      ) : null}
     </>
   )
-}
+};
 
 const styles = StyleSheet.create({
   modalView: {
@@ -187,9 +178,28 @@ const styles = StyleSheet.create({
 })
 
 export const NewOrderNotification = (props: any) => {
+  const [, t] = useLanguage()
+
   const newOrderNotificationProps = {
     ...props,
-    UIComponent: NewOrderNotificationUI
+    UIComponent: NewOrderNotificationUI,
+    evtList: (currentEvent: any) => ({
+      1: {
+        event: 'messages',
+        message: t('NEW_MESSAGES_RECEIVED', 'New messages have been received!'),
+        message2: t('ORDER_N_UNREAD_MESSAGES', 'Order #_order_id_ has unread messages.').replace('_order_id_', currentEvent?.orderId),
+      },
+      2: {
+        event: 'order_added',
+        message: t('NEW_ORDERS_RECEIVED', 'New orders have been received!'),
+        message2: t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', currentEvent?.orderId),
+      },
+      3: {
+        event: 'order_updated',
+        message: t('NEW_ORDERS_UPDATED', 'New orders have been updated!'),
+        message2: t('ORDER_N_UPDATED', 'Order #_order_id_ has been updated.').replace('_order_id_', currentEvent?.orderId),
+      },
+    })
   };
 
   return <NewOrderNotificationController {...newOrderNotificationProps} />;
