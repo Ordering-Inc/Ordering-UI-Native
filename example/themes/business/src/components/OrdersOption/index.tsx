@@ -130,10 +130,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const SetupService = async () => {
     await setupPlayer({ autoHandleInterruptions: true });
     await TrackPlayer.updateOptions({
-      android: {
-        appKilledPlaybackBehavior:
-          AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-      },
+      // android: {
+      //   appKilledPlaybackBehavior:
+      //     AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+      // },
+      stopWithApp: true,
       capabilities: [
         Capability.Play,
         Capability.Pause,
@@ -146,7 +147,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         Capability.Pause,
         Capability.SkipToNext,
       ],
-      progressUpdateEventInterval: 2,
+      // progressUpdateEventInterval: 2,
     });
     await TrackPlayer.setRepeatMode(RepeatMode.Track);
   };
@@ -156,7 +157,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {
         id: 'notification',
         url: URL_SOUND,
-        title: 'notification'
+        title: 'notification',
+        artist: 'notification'
       },
     ]);
   }

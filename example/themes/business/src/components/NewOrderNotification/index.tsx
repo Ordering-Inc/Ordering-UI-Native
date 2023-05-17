@@ -1,21 +1,32 @@
-import moment from 'moment'
-import { NewOrderNotification as NewOrderNotificationController, useApi, useEvent, useLanguage, useSession } from 'ordering-components/native'
-import React, { useEffect, useState } from 'react'
-import { Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
-import Sound from 'react-native-sound'
-import Icon from 'react-native-vector-icons/Feather'
+import React, { useEffect, useState } from 'react';
+import {
+  Modal,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native';
 import { useTheme } from 'styled-components/native'
+import moment from 'moment'
+import Icon from 'react-native-vector-icons/Feather'
 
-import { useLocation } from '../../hooks/useLocation'
+import {
+  NewOrderNotification as NewOrderNotificationController,
+  useApi,
+  useEvent,
+  useLanguage,
+  useSession
+} from 'ordering-components/native'
+
+import TrackPlayer from 'react-native-track-player';
+
 import { OIcon, OText } from '../shared'
 import { NotificationContainer } from './styles'
+import { useLocation } from '../../hooks/useLocation'
 
-Sound.setCategory('Playback', true)
-Sound.setMode('Default')
-
+const SOUND_LOOP_AMOUNT = 3
+const DURATION_BETWEEN_LOOP = 2000 // ms
 const windowWidth = Dimensions.get('screen').width
-
-const SOUND_LOOP = 3
 
 const NewOrderNotificationUI = (props: any) => {
   const { isBusinessApp } = props
@@ -24,7 +35,7 @@ const NewOrderNotificationUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
-  const { getCurrentLocation } = useLocation();
+  const { getCurrentLocation } = useLocation()
   const [currentEvent, setCurrentEvent] = useState<any>(null)
 
   const evtList: any = {
@@ -45,37 +56,28 @@ const NewOrderNotificationUI = (props: any) => {
     },
   }
 
-  const soundSrc = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
-
-  const notificationSound = new Sound(soundSrc, '', () => { });
-
-  let _timeout: any = null
-  let times = 0
-
   const handleCloseEvents = () => {
-    notificationSound.stop()
     setCurrentEvent(null)
-    clearInterval(_timeout)
+  }
+
+  const playSoundNotification = () => {
+    let count = 0;
+    const intervalId = setInterval(() => {
+      TrackPlayer.seekTo(0)
+      TrackPlayer.play()
+      setTimeout(() => {
+        TrackPlayer.pause()
+        count++
+        if (count === SOUND_LOOP_AMOUNT) {
+          clearInterval(intervalId);
+        }
+      }, 600) // sound duration divide by 2
+    }, DURATION_BETWEEN_LOOP) // notification duration
   }
 
   const handlePlayNotificationSound = (eventObj: any = null) => {
     setCurrentEvent(eventObj)
-    if (times > 0) {
-      if (times === 3) {
-        times = 0
-        return
-      }
-      return
-    }
-    _timeout = setInterval(() => {
-      if (times < SOUND_LOOP) {
-        notificationSound.play()
-        times++
-      } else {
-        clearInterval(_timeout)
-        return
-      }
-    }, 2500)
+    playSoundNotification()
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
@@ -96,11 +98,15 @@ const NewOrderNotificationUI = (props: any) => {
         handlePlayNotificationSound({ evt: 2, orderId: value?.id })
       }
     }
-    if (evtType === 3 || value.author_id === user.id) return
-    setTimeout(() => handlePlayNotificationSound({
+    if (evtType === 3 || value?.author_id === user.id) return
+    handlePlayNotificationSound({
       evt: evtType,
-      orderId: value?.driver ? value?.order_id : evtList[evtType].event === 'messages' ? value?.order?.id : value?.order_id
-    }), 1000)
+      orderId: value?.driver
+        ? value?.order_id
+        : evtList[evtType].event === 'messages'
+          ? value?.order?.id
+          : value?.order_id ?? value?.id
+    })
   }
 
   useEffect(() => {
