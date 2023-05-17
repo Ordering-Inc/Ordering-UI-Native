@@ -6,12 +6,13 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
 
-import { OText, OButton, OModal, OIconButton, OInput, OIcon } from '../shared';
+import { OText, OButton, OModal, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import {
   FiltersTab,
@@ -92,17 +93,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [{ parseDate }] = useUtils()
   const [configState] = useConfig()
   const [orientationState] = useDeviceOrientation();
-  const [, { showToast }] = useToast();
   const [openSearchModal, setOpenSearchModal] = useState(false)
   const [openSLASettingModal, setOpenSLASettingModal] = useState(false)
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
   const [selectedTabStatus, setSelectedTabStatus] = useState<any>([])
-  const [hour, setHour] = useState(0)
-  const [minute, setMinute] = useState(0)
   const [openedSelect, setOpenedSelect] = useState('')
-  const WIDTH_SCREEN = orientationState?.dimensions?.width
+
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
 
@@ -926,8 +924,6 @@ export const Timer = () => {
 
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
-  const [configState] = useConfig()
-  const theme = useTheme()
   const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
   const ordersProps = {
     ...props,
