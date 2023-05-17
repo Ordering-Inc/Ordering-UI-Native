@@ -152,6 +152,7 @@ const MessagesUI = (props: MessagesParams) => {
 		}
 		const newMessage: any = [];
 		messages.messages.map((message: any) => {
+			if (message.change?.attribute === 'driver_group_id') return
 			if (business && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
 				newMessage.push({
 					_id: message?.id,

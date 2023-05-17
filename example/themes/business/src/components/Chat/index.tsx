@@ -386,21 +386,30 @@ const ChatUI = (props: MessagesParams) => {
           style={{ ...styles.firstMessageText, textAlign: 'center' }}
         >
           {
-            message.change?.attribute !== 'driver_id'
-            ?
-            `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute)
-              ? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
-              : `${message.change?.attribute !== 'logistic_status'
-                ? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
-                : message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
-                  ? t(ORDER_STATUS[parseInt(message.change.new, 10)])
-                  : getLogisticTag(message.change.new)}`
-            }`
-            : message.change.new
+            message.change?.attribute === 'driver_group_id'
+            ? message.change.old
+              ? t('ORDER_ATTRIBUTE_CHANGED_FROM_TO')
+                  .replace('_attribute_', t(message.change?.attribute.toUpperCase()).toLowerCase())
+                  .replace('_from_', message.change.old)
+                  .replace('_to_', message.change.new)
+              : t('ORDER_ATTRIBUTE_CHANGED_TO')
+                  .replace('_attribute_', t(message.change?.attribute.toUpperCase()).toLowerCase())
+                  .replace('_to_', message.change.new)
+            : message.change?.attribute !== 'driver_id'
               ?
-              `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
-              :
-              `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`
+              `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute)
+                ? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
+                : `${message.change?.attribute !== 'logistic_status'
+                  ? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
+                  : message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
+                    ? t(ORDER_STATUS[parseInt(message.change.new, 10)])
+                    : getLogisticTag(message.change.new)}`
+              }`
+              : message.change.new
+                ?
+                `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
+                :
+                `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`
           }
         </OText>
         <OText size={10} color={'#aaa'} style={{ alignSelf: 'flex-start' }}>
