@@ -20,7 +20,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     handleToggleMap,
     locations,
     isIntGeoCoder,
-    businessZones
+    businessZones,
+    delta
   } = props
 
   const [, t] = useLanguage()
@@ -31,8 +32,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [region, setRegion] = useState({
     latitude: location.lat,
     longitude: location.lng,
-    latitudeDelta: 0.0010,
-    longitudeDelta: 0.0010 * ASPECT_RATIO
+    latitudeDelta: delta ?? 0.0010,
+    longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
   })
   const [MARKERS, SETMARKERS] = useState(locations)
   let mapRef = useRef<any>(null)
@@ -265,7 +266,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             )}
             {(businessZone.type === 5 && businessZone?.data?.distance) && (
               <Circle
-                center={{ latitude: businessZone?.data?.center.lat, longitude: businessZone?.data?.center.lng}}
+                center={{ latitude: center.lat, longitude: center.lng}}
                 radius={businessZone?.data.distance * units[businessZone?.data?.unit]}
                 fillColor={fillStyles.fillColor}
                 strokeColor={fillStyles.strokeColor}
