@@ -192,6 +192,7 @@ const CheckoutUI = (props: any) => {
 	}, cart?.subtotal)
 
 	const validateCommentsCartField = validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required && (cart?.comment === null || cart?.comment?.trim().length === 0)
+	const validateZipcodeCard = validationFields?.fields?.card?.zipcode?.enabled && validationFields?.fields?.card?.zipcode?.required && !paymethodSelected?.data?.card?.zipcode
 
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
@@ -200,7 +201,8 @@ const CheckoutUI = (props: any) => {
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
 			(Number(cart?.driver_tip) <= 0)) ||
-		(validateCommentsCartField)
+		(validateCommentsCartField) ||
+		(validateZipcodeCard)
 		|| (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -894,6 +896,15 @@ const CheckoutUI = (props: any) => {
 										size={12}
 									>
 										{t('WARNING_INVALID_CART_COMMENTS', 'Cart comments is required.')}
+									</OText>
+								)}
+
+								{validateZipcodeCard && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('WARNING_CARD_ZIPCODE_REQUIRED', 'Your card selected has not zipcode')}
 									</OText>
 								)}
 							</ChErrors>

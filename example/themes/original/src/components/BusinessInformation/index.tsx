@@ -106,6 +106,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										location={businessLocation.location}
 										markerTitle={businessState?.business?.name}
 										businessZones={businessState?.business?.zones}
+										delta={30}
 									/>
 								</WrapBusinessMap>
 							)}
