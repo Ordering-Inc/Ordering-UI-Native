@@ -117,9 +117,11 @@ const PaymentOptionsUI = (props: any) => {
 	//   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
 	// ]
 
+	const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
+
 	const handlePaymentMethodClick = (paymethod: any) => {
 		if (cart?.balance > 0) {
-			if (paymethod?.gateway === 'paypal' && requiredFields.length > 0) {
+			if (paymethodsFieldRequired.includes(paymethod?.gateway) && requiredFields.length > 0) {
 				openUserModal && openUserModal(true)
 				setPaymethodClicked({
 					confirmed: false,
