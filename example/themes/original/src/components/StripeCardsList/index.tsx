@@ -4,6 +4,7 @@ import {
 	PaymentOptionStripe,
 	useSession,
 	useLanguage,
+	useValidationFields
 } from 'ordering-components/native';
 import { PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
@@ -40,10 +41,13 @@ export const StripeCardsListUI = (props: any) => {
 
 	const [{ token }] = useSession();
 	const [, t] = useLanguage();
-
+	const [validationFields] = useValidationFields()
+	const validateZipcodeCard =
+		validationFields?.fields?.card?.zipcode?.enabled && validationFields?.fields?.card?.zipcode?.required
 	const paymethodsWithoutSaveCards = ['credomatic']
 
 	const handleCardSelected = (card: any) => {
+		if (!card?.zipcode && validateZipcodeCard) return
 		handleCardClick(card);
 		onSelectCard(card);
 	}
@@ -92,7 +96,8 @@ export const StripeCardsListUI = (props: any) => {
 					style={styles.cardsList}
 				>
 					{cardsList.cards.map((card: any) => (
-						<OSItem key={card.id} isUnique={cardsList.cards.length}>
+						<OSItem key={card.id} isUnique={cardsList.cards.length} isInvalid={!card?.zipcode && validateZipcodeCard}>
+							{console.log(card?.zipcode && validateZipcodeCard)}
 							<OSItemContent onPress={() => handleCardSelected(card)}>
 								<View style={styles.viewStyle}>
 									{card.id === cardSelected?.id ? (
@@ -117,6 +122,13 @@ export const StripeCardsListUI = (props: any) => {
 										XXXX-XXXX-XXXX-{card.last4}
 									</OText>
 								</View>
+								{!card?.zipcode && validateZipcodeCard && (
+									<View style={styles.viewStyle}>
+										<OText size={10} color={theme?.colors?.danger5}>
+											({t('MISSING_ZIPCODE', 'Missing zipcode')})
+										</OText>
+									</View>
+								)}
 							</OSItemContent>
 							<OSItemActions>
 								<OAlert
