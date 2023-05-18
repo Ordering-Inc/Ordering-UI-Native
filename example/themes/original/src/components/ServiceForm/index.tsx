@@ -602,7 +602,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                       <PlaceholderLine width={60} height={20} />
                     </Placeholder>
                   ) : (
-                    <OText color={theme.colors.primary} size={13}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+                    <OText color={theme.colors.primary} size={13}>{t('AS_GUEST_USER', 'As guest user')}</OText>
                   )}
                 </TouchableOpacity>
               )}
