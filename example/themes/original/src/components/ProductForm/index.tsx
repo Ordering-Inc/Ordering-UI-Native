@@ -508,7 +508,7 @@ export const ProductOptionsUI = (props: any) => {
 								<PlaceholderLine width={60} height={20} />
 							</Placeholder>
 						) : (
-							<OText color={theme.colors.primary} size={13} style={{ textAlign: 'center' }}>{t('WITH_GUEST_USER', 'With Guest user')}</OText>
+							<OText color={theme.colors.primary} size={13} style={{ textAlign: 'center' }}>{t('AS_GUEST_USER', 'As guest user')}</OText>
 						)}
 					</TouchableOpacity>
 				)}
