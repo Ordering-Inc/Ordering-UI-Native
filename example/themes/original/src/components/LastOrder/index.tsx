@@ -129,7 +129,8 @@ export const LastOrder = (props: OrdersOptionParams) => {
 			initialPage: 1,
 			pageSize: 3,
 			controlType: 'infinity'
-		}
+		},
+		noGiftCardOrders: true
 	}
 
 	return <OrderList {...MyOrdersProps} />
