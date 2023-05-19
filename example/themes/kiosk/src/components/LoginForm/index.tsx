@@ -52,7 +52,7 @@ const LoginFormUI = (props: LoginParams) => {
   } = props;
 
   const theme = useTheme()
-  const [{ configs }] = useConfig()
+  const [{ configs }, { refreshConfigs }] = useConfig()
   const [ordering, { setOrdering }] = useApi();
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
@@ -353,6 +353,12 @@ const LoginFormUI = (props: LoginParams) => {
     }, 1500)
     return () => clearTimeout(projectInputTimeout);
   }, [projectName, isDeviceLoginEnabled])
+
+  useEffect(() => {
+    if (ordering?.project) {
+      refreshConfigs()
+    }
+  }, [ordering?.project])
 
   const logo = (
     <LogoWrapper>
