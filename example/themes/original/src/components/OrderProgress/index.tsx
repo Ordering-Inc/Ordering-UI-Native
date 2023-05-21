@@ -208,7 +208,8 @@ export const OrderProgress = (props: any) => {
       initialPage: 1,
       pageSize: 10,
       controlType: 'infinity'
-    }
+    },
+    noGiftCardOrders: true
   }
 
   return <OrderList {...orderProgressProps} />

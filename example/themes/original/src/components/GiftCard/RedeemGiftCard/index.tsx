@@ -106,7 +106,7 @@ const RedeemGiftCardUI = (props: any) => {
                   onChange(val)
                   handleChangeCode(val)
                 }}
-                autoCapitalize='none'
+                autoCapitalize='characters'
                 autoCorrect={false}
                 blurOnSubmit={false}
                 style={style.inputStyle}
