@@ -347,9 +347,6 @@ const LoginFormUI = (props: LoginParams) => {
           project: projectName
         })
       }
-      if (isDeviceLoginEnabled) {
-        props.handleChangeTab('device_code')
-      }
     }, 1500)
     return () => clearTimeout(projectInputTimeout);
   }, [projectName, isDeviceLoginEnabled])
