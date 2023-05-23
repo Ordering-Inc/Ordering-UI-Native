@@ -505,7 +505,7 @@ export const ProductOptionsUI = (props: any) => {
 					<TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
 						{actionStatus?.loading ? (
 							<Placeholder Animation={Fade}>
-								<PlaceholderLine width={60} height={20} />
+								<PlaceholderLine height={20} />
 							</Placeholder>
 						) : (
 							<OText color={theme.colors.primary} size={13} style={{ textAlign: 'center' }}>{t('AS_GUEST_USER', 'As guest user')}</OText>
