@@ -11,6 +11,7 @@ import {
 	useLanguage,
 	ToastType,
 	useToast,
+	useSession
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { PaymentOptionCash } from '../PaymentOptionCash';
@@ -78,6 +79,7 @@ const PaymentOptionsUI = (props: any) => {
 
 	const theme = useTheme();
 	const [, { showToast }] = useToast();
+	const [{ user }] = useSession()
 	const { confirmApplePayPayment } = useApplePay()
 
 	const getPayIcon = (method: string) => {
@@ -120,7 +122,7 @@ const PaymentOptionsUI = (props: any) => {
 	const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
 
 	const handlePaymentMethodClick = (paymethod: any) => {
-		if (cart?.balance > 0) {
+		if (cart?.balance > 0 || !!user?.guest_id) {
 			if (paymethodsFieldRequired.includes(paymethod?.gateway) && requiredFields.length > 0) {
 				openUserModal && openUserModal(true)
 				setPaymethodClicked({
