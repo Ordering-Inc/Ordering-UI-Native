@@ -192,7 +192,11 @@ const CheckoutUI = (props: any) => {
 	}, cart?.subtotal)
 
 	const validateCommentsCartField = validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required && (cart?.comment === null || cart?.comment?.trim().length === 0)
-	const validateZipcodeCard = validationFields?.fields?.card?.zipcode?.enabled && validationFields?.fields?.card?.zipcode?.required && !paymethodSelected?.data?.card?.zipcode
+	const validateZipcodeCard = validationFields?.fields?.card?.zipcode?.enabled &&
+		validationFields?.fields?.card?.zipcode?.required &&
+		paymethodSelected?.data?.card &&
+		!paymethodSelected?.data?.card?.zipcode &&
+		paymethodSelected?.gateway === 'stripe'
 
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
