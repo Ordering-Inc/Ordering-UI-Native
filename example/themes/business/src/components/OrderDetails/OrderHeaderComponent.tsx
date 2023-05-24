@@ -295,6 +295,18 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 <OText size={13}>{t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}</OText>
               )}
             </OText>
+            {order?.spot_number && (
+              <OText size={13}>
+                <OText size={13} weight='bold'>
+                  {`${order?.delivery_type === 3
+                    ? t('EATIN_SPOT_NUMBER', 'Table number')
+                    : order?.delivery_type === 5
+                      ? t('DRIVE_THRU_SPOT_NUMBER', 'Drive thru lane')
+                      : t('CURBSIDE_SPOT_NUMBER', 'Spot number')}: `}
+                </OText>
+                {order.spot_number}
+              </OText>
+            )}
           </>
         )}
       </OrderHeader>
