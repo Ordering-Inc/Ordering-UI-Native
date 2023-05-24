@@ -10,11 +10,11 @@ import {
   ToastType,
   MultiCheckout as MultiCheckoutController
 } from 'ordering-components/native'
-import { View, StyleSheet, Platform } from 'react-native'
+import { View, StyleSheet, Platform, ScrollView } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
-import { OText, OIcon, OModal } from '../shared';
+import { OText, OIcon, OModal, OButton } from '../shared';
 import { getTypesText } from '../../utils';
 import { UserDetails } from '../UserDetails'
 import { AddressDetails } from '../AddressDetails'
@@ -26,6 +26,8 @@ import { DriverTips } from '../DriverTips'
 import { CouponControl } from '../CouponControl';
 import { DriverTipsContainer } from '../Cart/styles'
 import { OSTable, OSCoupon } from '../OrderSummary/styles';
+import { SignupForm } from '../SignupForm'
+import { LoginForm } from '../LoginForm'
 
 import {
   ChContainer,
@@ -74,7 +76,11 @@ const MultiCheckoutUI = (props: any) => {
       paddingLeft: 40,
       paddingRight: 40
     },
-    wrapperNavbar: { paddingHorizontal: 40 }
+    wrapperNavbar: { paddingHorizontal: 40 },
+    detailWrapper: {
+			paddingHorizontal: 40,
+			width: '100%'
+		},
   })
 
   const [, { showToast }] = useToast();
@@ -83,7 +89,7 @@ const MultiCheckoutUI = (props: any) => {
   const [{ parsePrice, parseDate }] = useUtils();
   const [{ options, carts, loading }, { confirmCart }] = useOrder();
   const [validationFields] = useValidationFields();
-  const [{ user }] = useSession()
+  const [{ user }, { login }] = useSession()
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
@@ -134,6 +140,11 @@ const MultiCheckoutUI = (props: any) => {
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
+	const [allowedGuest, setAllowedGuest] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
+	const [requiredFields, setRequiredFields] = useState<any>([])
+	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+	const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
   const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
   const methodsPay = ['global_google_pay', 'global_apple_pay']
   const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
@@ -151,11 +162,12 @@ const MultiCheckoutUI = (props: any) => {
     setUserErrors([])
     const errors = []
     const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+		const _requiredFields: any = []
 
     Object.values(validationFields?.fields?.checkout).map((field: any) => {
       if (field?.required && !notFields.includes(field.code)) {
         if (!user[field?.code]) {
-          errors.push(t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `The field ${field?.name} is required`))
+          _requiredFields.push(field?.code)
         }
       }
     })
@@ -166,8 +178,9 @@ const MultiCheckoutUI = (props: any) => {
         validationFields?.fields?.checkout?.cellphone?.required) ||
         configs?.verification_phone_required?.value === '1')
     ) {
-      errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
+      _requiredFields.push('cellphone')
     }
+		setRequiredFields(_requiredFields)
 
     if (phoneUpdate) {
       errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
@@ -181,10 +194,19 @@ const MultiCheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrder = (confirmPayment?: any) => {
-    if (!userErrors.length) {
+    if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
+			setOpenModal({ ...openModal, signup: true, isGuest: true })
+			return
+		}
+
+    if (!userErrors.length && (!requiredFields?.length || allowedGuest)) {
       handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
     }
+    if (requiredFields?.length) {
+			setIsOpen(true)
+			return
+		}
     let stringError = ''
     Object.values(userErrors).map((item: any, i: number) => {
       stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
@@ -192,6 +214,24 @@ const MultiCheckoutUI = (props: any) => {
     showToast(ToastType.Error, stringError)
     setIsUserDetailsEdit(true)
   }
+
+  const handlePlaceOrderAsGuest = () => {
+		setIsOpen(false)
+		handleGroupPlaceOrder && handleGroupPlaceOrder()
+	}
+
+  const handleSuccessSignup = (user: any) => {
+		login({
+			user,
+			token: user?.session?.access_token
+		})
+		openModal?.isGuest && handlePlaceOrderAsGuest()
+		setOpenModal({ ...openModal, signup: false, isGuest: false })
+	}
+
+	const handleSuccessLogin = (user: any) => {
+		if (user) setOpenModal({ ...openModal, login: false })
+	}
 
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
@@ -285,15 +325,45 @@ const MultiCheckoutUI = (props: any) => {
 
           <ChSection>
             <ChUserDetails>
-              <UserDetails
-                isUserDetailsEdit={isUserDetailsEdit}
-                useValidationFields
-                useDefualtSessionManager
-                useSessionUser
-                isCheckout
-                phoneUpdate={phoneUpdate}
-                togglePhoneUpdate={togglePhoneUpdate}
-              />
+              {(user?.guest_id && !allowedGuest) ? (
+                <View>
+                  <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textNormal}>
+                    {t('CUSTOMER_DETAILS', 'Customer details')}
+                  </OText>
+                  <OButton
+                    text={t('SIGN_UP', 'Sign up')}
+                    textStyle={{ color: theme.colors.white }}
+                    style={{ borderRadius: 7.6, marginTop: 20 }}
+                    onClick={() => setOpenModal({ ...openModal, signup: true })}
+                  />
+                  <OButton
+                    text={t('LOGIN', 'Login')}
+                    textStyle={{ color: theme.colors.primary }}
+                    bgColor={theme.colors.white}
+                    borderColor={theme.colors.primary}
+                    style={{ borderRadius: 7.6, marginTop: 20 }}
+                    onClick={() => setOpenModal({ ...openModal, login: true })}
+                  />
+                  <OButton
+                    text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                    textStyle={{ color: theme.colors.black }}
+                    bgColor={theme.colors.white}
+                    borderColor={theme.colors.black}
+                    style={{ borderRadius: 7.6, marginTop: 20 }}
+                    onClick={() => setAllowedGuest(true)}
+                  />
+                </View>
+              ) : (
+                <UserDetails
+                  isUserDetailsEdit={isUserDetailsEdit}
+                  useValidationFields
+                  useDefualtSessionManager
+                  useSessionUser
+                  isCheckout
+                  phoneUpdate={phoneUpdate}
+                  togglePhoneUpdate={togglePhoneUpdate}
+                />
+              )}
             </ChUserDetails>
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
           </ChSection>
@@ -484,6 +554,58 @@ const MultiCheckoutUI = (props: any) => {
             </OText>
           )}
         </ChContainer>
+        <OModal
+          open={openModal.signup}
+          onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
+        >
+          <ScrollView style={{ paddingHorizontal: 20, width: '100%' }}>
+            <SignupForm
+              handleSuccessSignup={handleSuccessSignup}
+              isGuest
+              signupButtonText={t('SIGNUP', 'Signup')}
+              useSignupByEmail
+              useChekoutFileds
+            />
+          </ScrollView>
+        </OModal>
+        <OModal
+          open={openModal.login}
+          onClose={() => setOpenModal({ ...openModal, login: false })}
+        >
+          <ScrollView style={{ paddingHorizontal: 20, width: '100%' }}>
+            <LoginForm
+              handleSuccessLogin={handleSuccessLogin}
+              isGuest
+              loginButtonText={t('LOGIN', 'Login')}
+              loginButtonBackground={theme.colors.primary}
+            />
+          </ScrollView>
+        </OModal>
+        <OModal
+						open={isOpen}
+						onClose={() => setIsOpen(false)}
+					>
+						<View style={styles.detailWrapper}>
+							<UserDetails
+								isUserDetailsEdit
+								useValidationFields
+								useDefualtSessionManager
+								useSessionUser
+								isCheckout
+								isEdit
+								phoneUpdate={phoneUpdate}
+								togglePhoneUpdate={togglePhoneUpdate}
+								requiredFields={requiredFields}
+								hideUpdateButton
+								handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+								onClose={() => {
+									setIsOpen(false)
+									handlePlaceOrder()
+								}}
+								setIsOpen={setIsOpen}
+							/>
+						</View>
+					</OModal>
       </Container>
 
       <FloatingButton
