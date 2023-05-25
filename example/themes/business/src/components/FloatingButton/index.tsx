@@ -25,6 +25,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     secondButton,
     widthButton,
     isPadding,
+    isHideRejectButtons
   } = props;
 
   const theme = useTheme();
@@ -61,39 +62,41 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
           width: '100%',
           justifyContent: 'space-between',
         }}>
-        <Button
-          secondButton={secondButton}
-          style={[
-            {
-              borderWidth: colorTxt1 ? 1 : 0,
-              borderColor: colorTxt1 ? colorTxt1 : null,
-            },
-            secondButton
-              ? { backgroundColor: firstColorCustom || styles.primaryBtn }
-              : color
-              ? { backgroundColor: color }
-              : styles.primaryBtn,
-            ,
-            { width: widthButton },
-          ]}
-          onPress={firstButtonClick}
-          disabled={disabled}>
-          <OText color={theme.colors.white} size={16} mLeft={20}>
-            {btnLeftValueShow ? btnLeftValue : ''}
-          </OText>
+        {!isHideRejectButtons && (
+          <Button
+            secondButton={secondButton}
+            style={[
+              {
+                borderWidth: colorTxt1 ? 1 : 0,
+                borderColor: colorTxt1 ? colorTxt1 : null,
+              },
+              secondButton
+                ? { backgroundColor: firstColorCustom || styles.primaryBtn }
+                : color
+                ? { backgroundColor: color }
+                : styles.primaryBtn,
+              ,
+              { width: widthButton },
+            ]}
+            onPress={firstButtonClick}
+            disabled={disabled}>
+            <OText color={theme.colors.white} size={16} mLeft={20}>
+              {btnLeftValueShow ? btnLeftValue : ''}
+            </OText>
 
-          <OText
-            style={styles.btnTextStyle}
-            color={colorTxt1 ? colorTxt1 : theme.colors.white}
-            numberOfLines={2}
-            adjustsFontSizeToFit>
-            {btnText}
-          </OText>
+            <OText
+              style={styles.btnTextStyle}
+              color={colorTxt1 ? colorTxt1 : theme.colors.white}
+              numberOfLines={2}
+              adjustsFontSizeToFit>
+              {btnText}
+            </OText>
 
-          <OText color={theme.colors.white} size={16} mRight={20}>
-            {btnRightValueShow ? btnRightValue : ''}
-          </OText>
-        </Button>
+            <OText color={theme.colors.white} size={16} mRight={20}>
+              {btnRightValueShow ? btnRightValue : ''}
+            </OText>
+          </Button>
+        )}
 
         {secondButton && (
           <Button

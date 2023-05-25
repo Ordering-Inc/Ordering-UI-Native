@@ -61,9 +61,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, { showToast }] = useToast();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
+
   const { order } = props.order
 
   const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
+  const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1'
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -88,9 +90,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const logisticOrderStatus = [4, 6, 7]
 
   const showFloatButtonsPickUp: any = {
-    8: true,
+    8: !isHideRejectButtons,
     3: true,
-    18: true,
+    18: !isHideRejectButtons,
   };
 
   const showFloatButtonsAcceptOrReject: any = {
@@ -482,7 +484,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           </Pickup>
         )}
-        {order?.status === 3 && order?.delivery_type === 1 && (
+        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -577,7 +579,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     secondButton={true}
                     firstColorCustom={theme.colors.red}
                     secondColorCustom={theme.colors.green}
-                    widthButton={'45%'}
+                    widthButton={isHideRejectButtons ? '100%': '45%'}
+                    isHideRejectButtons={isHideRejectButtons}
                   />
                 )}
                 {(validStatusComplete.includes(order?.status)) && (
@@ -596,7 +599,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       secondButton={true}
                       firstColorCustom={theme.colors.red}
                       secondColorCustom={theme.colors.green}
-                      widthButton={'45%'}
+                      widthButton={isHideRejectButtons ? '100%': '45%'}
+                      isHideRejectButtons={isHideRejectButtons}
                     />
                   </>
                 )}
@@ -610,7 +614,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     secondButton={true}
                     firstColorCustom={theme.colors.red}
                     secondColorCustom={theme.colors.green}
-                    widthButton={'45%'}
+                    widthButton={isHideRejectButtons ? '100%': '45%'}
+                    isHideRejectButtons={isHideRejectButtons}
                   />
                 )}
               </>

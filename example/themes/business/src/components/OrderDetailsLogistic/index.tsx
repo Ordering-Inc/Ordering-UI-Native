@@ -10,6 +10,7 @@ import {
     useLanguage,
     OrderDetails as OrderDetailsConTableoller,
     useSession,
+    useConfig
 } from 'ordering-components/native';
 
 //Components
@@ -34,6 +35,8 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
     const theme = useTheme();
     const [, t] = useLanguage();
     const [session] = useSession();
+    const [{ configs }] = useConfig();
+
     const [alertState, setAlertState] = useState<{
         open: boolean;
         content: Array<string>;
@@ -41,6 +44,7 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
     }>({ open: false, content: [], key: null });
 
     const logisticOrderStatus = [4, 6, 7]
+    const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1'
 
     const showFloatButtonsAcceptOrReject: any = {
         0: true,
@@ -166,7 +170,8 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
                                         secondButton={true}
                                         firstColorCustom={theme.colors.red}
                                         secondColorCustom={theme.colors.green}
-                                        widthButton={'45%'}
+                                        widthButton={isHideRejectButtons ? '100%': '45%'}
+                                        isHideRejectButtons={isHideRejectButtons}
                                     />
                                 )}
                             </>
