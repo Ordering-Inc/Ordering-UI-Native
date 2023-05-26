@@ -79,13 +79,18 @@ export const GiftCardUI =  React.memo((props: any) => {
 				open={openModal === 'purchase'}
 				onClose={() => setOpenModal(null)}
 				entireModal
+        customClose
 			>
-				<PurchaseGiftCard handleCustomGoToCheckout={handleCustomGoToCheckout} />
+				<PurchaseGiftCard
+          handleCustomGoToCheckout={handleCustomGoToCheckout}
+          onClose={() => setOpenModal(null)}
+        />
 			</OModal>
       <OModal
 				open={openModal === 'redeem'}
 				onClose={() => setOpenModal(null)}
 				entireModal
+        customClose
 			>
 				<RedeemGiftCard
           onClose={() => setOpenModal(null)}
