@@ -56,7 +56,7 @@ export const GiftCardUI =  React.memo((props: any) => {
       <View style={style.actionWrapper}>
         <OButton
           onClick={() => setOpenModal('purchase')}
-          text={t('PURCHASE_GIFT_CARD', 'Purchase gift card')}
+          text={t('PURCHASE', 'Purchase')}
           bgColor={theme.colors.primary}
           borderColor={theme.colors.primary}
           textStyle={{ color: 'white', fontSize: 13 }}
@@ -66,7 +66,7 @@ export const GiftCardUI =  React.memo((props: any) => {
 
         <OButton
           onClick={() => setOpenModal('redeem')}
-          text={t('REDEEM_GIFT_CARD', 'Redeem gift card')}
+          text={t('REDEEM', 'Redeem')}
           bgColor={theme.colors.lightPrimary}
           borderColor={theme.colors.lightPrimary}
           textStyle={{ color: theme.colors.primary, fontSize: 13 }}
