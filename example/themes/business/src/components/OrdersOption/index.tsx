@@ -608,6 +608,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 orderTitle={props.orderDetailsProps?.orderTitle}
                 handleChangeOrderStatus={handleChangeOrderStatus}
                 handleSendCustomerReview={handleSendCustomerReview}
+                isBusinessApp={isBusinessApp}
               />
             )}
           {!logisticOrders?.error?.length &&
@@ -618,6 +619,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickLogisticOrder={handleClickLogisticOrder}
+                isBusinessApp={isBusinessApp}
                 isLogisticOrder
               />
             )
