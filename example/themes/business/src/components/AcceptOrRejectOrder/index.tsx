@@ -307,7 +307,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   }, [])
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
       <View style={styles.parent}>
         <View style={styles.upper}>
           <TopActions>
