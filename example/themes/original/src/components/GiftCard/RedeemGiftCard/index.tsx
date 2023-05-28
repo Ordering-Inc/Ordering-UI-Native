@@ -3,9 +3,10 @@ import {
   useLanguage, useUtils, RedeemGiftCard as RedeemGiftCardController
 } from 'ordering-components/native'
 import { useForm, Controller } from 'react-hook-form'
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { OText, OButton, OInput } from '../../shared';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Container,
@@ -93,7 +94,38 @@ const RedeemGiftCardUI = (props: any) => {
     <Container>
       {!redeemedGiftCard ? (
         <View>
-          <OText color={theme.colors.textNormal} weight='bold' size={20} mBottom={40}>{t('REDEEM_GIFT_CARD', 'Redeem a gift card')}</OText>
+          <View style={{
+            marginBottom: 40,
+            marginTop: Platform.OS === 'ios' ? 30 : 50,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+            <OButton
+              imgLeftStyle={{ width: 18 }}
+              imgRightSrc={null}
+              style={{
+                borderWidth: 0,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              onClick={onClose}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26,
+                style: {
+                  color: theme.colors.textNormal
+                }
+              }}
+            />
+              <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('REDEEM_GIFT_CARD', 'Redeem a gift card')}</OText>
+          </View>
           <FormController>
             <OText color={theme.colors.textNormal} size={14} mBottom={10}>{t('GIFT_CARD_CODE', 'Gift card code')}</OText>
             <Controller
@@ -156,7 +188,38 @@ const RedeemGiftCardUI = (props: any) => {
         </View>
       ) : (
         <>
-          <OText color={theme.colors.textNormal} weight='bold' size={20} mBottom={40}>{t('GIFT_CARD', 'Gift card')}</OText>
+          <View style={{
+            marginBottom: 40,
+            marginTop: Platform.OS === 'ios' ? 30 : 50,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+            <OButton
+              imgLeftStyle={{ width: 18 }}
+              imgRightSrc={null}
+              style={{
+                borderWidth: 0,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              onClick={onClose}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26,
+                style: {
+                  color: theme.colors.textNormal
+                }
+              }}
+            />
+              <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('GIFT_CARD', 'Gift card')}</OText>
+          </View>
           <View>
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('TYPE', 'Type')}: {redeemedGiftCard?.type}</OText>
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('AMOUNT', 'Amount')}: {parsePrice(redeemedGiftCard?.amount)}</OText>

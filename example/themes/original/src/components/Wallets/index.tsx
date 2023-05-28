@@ -141,6 +141,7 @@ const WalletsUI = (props: any) => {
               showCall={false}
               paddingTop={10}
               btnStyle={{ paddingLeft: 0 }}
+              isVertical={!hideWalletsTheme}
               hideArrowLeft={!hideWalletsTheme}
             />
             {isChewLayout && !openHistory && (
