@@ -106,7 +106,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <SingleProductCard
               key={'prod_' + product.id + `_${i}`}
               isSoldOut={product.inventoried && !product.quantity}
-              enableIntersection={!isFiltMode}
+              // enableIntersection={!isFiltMode}
               product={product}
               businessId={businessId}
               categoryState={categoryState}
@@ -135,7 +135,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       key={'feat_' + product.id + `_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
-                      enableIntersection={!isFiltMode}
+                      // enableIntersection={!isFiltMode}meme
                       businessId={businessId}
                       categoryState={categoryState}
                       onProductClick={onProductClick}
