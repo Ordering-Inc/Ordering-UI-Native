@@ -135,7 +135,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       key={'feat_' + product.id + `_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
-                      // enableIntersection={!isFiltMode}meme
+                      // enableIntersection={!isFiltMode}
                       businessId={businessId}
                       categoryState={categoryState}
                       onProductClick={onProductClick}
