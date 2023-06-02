@@ -1022,9 +1022,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           )} */}
                         </View>
                         <OText>
-                          {configs.currency_position?.value === 'left'
-                            ? `${configs.format_number_currency?.value} -${parseNumber(event.amount, { isTruncable: true })}`
-                            : `-${parsePrice(event.amount, { isTruncable: true })}`}
+                          -{parsePrice(event.amount, { isTruncable: true })}
                         </OText>
                       </View>
                     ))}
