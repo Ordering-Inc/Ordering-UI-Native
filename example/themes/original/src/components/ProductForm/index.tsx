@@ -139,7 +139,6 @@ export const ProductOptionsUI = (props: any) => {
 			flex: 1,
 			alignItems: 'center',
 			width: '100%',
-			marginLeft: 32
 		},
 		mainSwiper: {
 			height: 258,
