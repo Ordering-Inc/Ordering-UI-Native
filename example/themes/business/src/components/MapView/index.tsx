@@ -132,6 +132,10 @@ const MapViewComponent = (props: MapViewParams) => {
 
   const RenderMarker = ({ marker, customer, orderIds }: { marker: any, customer?: boolean, orderIds?: Array<number> }) => {
     const markerRef = useRef<any>()
+
+    let coordinateLat = (customer ? marker?.customer?.location?.lat : marker?.business?.location?.lat) ?? initialPosition?.latitude
+    let coordinateLng = (customer ? marker?.customer?.location?.lng : marker?.business?.location?.lng) ?? initialPosition?.longitude
+
     useEffect(() => {
       if (
         markerRef?.current?.props?.coordinate?.latitude === locationSelected?.latitude &&
@@ -145,8 +149,8 @@ const MapViewComponent = (props: MapViewParams) => {
       <Marker
         key={customer ? marker?.customer?.id : marker?.business?.id}
         coordinate={{
-          latitude: customer ? marker?.customer?.location?.lat : marker?.business?.location?.lat,
-          longitude: customer ? marker?.customer?.location?.lng : marker?.business?.location?.lng
+          latitude: coordinateLat,
+          longitude: coordinateLng
         }}
         onPress={() =>
           setLocationSelected({
