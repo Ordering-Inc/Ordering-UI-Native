@@ -125,6 +125,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const directionTypes = [2, 3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
   const reorderStatus = [1, 2, 5, 6, 10, 11, 12]
+  const [isPickup, setIsPickup] = useState(order?.delivery_type === 2)
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
   const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
@@ -138,6 +139,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const hideDriverMessages = theme?.confirmation?.components?.driver?.components?.messages?.hidden
   const hideCustomerPhone = theme?.confirmation?.components?.customer?.components?.phone?.hidden
   const hideCustomerAddress = theme?.confirmation?.components?.customer?.components?.address?.hidden
+  const progressBarObjt = isPickup ? getOrderStatuPickUp : getOrderStatus
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -346,7 +348,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [props?.order?.error, props?.order?.loading])
 
-  const progressBarObjt = order?.delivery_type && props.order?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+
+  useEffect(() => {
+    if (!order?.delivery_type) return
+    setIsPickup(order?.delivery_type === 2)
+  }, [order?.delivery_type])
 
   return (
     <OrderDetailsContainer
