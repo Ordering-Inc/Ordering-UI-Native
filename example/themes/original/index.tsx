@@ -99,6 +99,7 @@ import { Promotions } from './src/components/Promotions'
 import { MultiCart } from './src/components/MultiCart'
 import { PageBanner } from './src/components/PageBanner'
 import { USER_TYPE, ORDER_TYPES } from './src/config/constants'
+import { DatePickerUI } from './src/components/DatePicker'
 
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/OrderSummary/styles';
 
@@ -263,7 +264,7 @@ export {
 	Promotions,
 	PageBanner,
 	MyOrders,
-  MultiCart,
+	MultiCart,
 	ORDER_TYPES,
 	USER_TYPE,
 
@@ -340,5 +341,8 @@ export {
 	_retrieveStoreData,
 	_setStoreData,
 	_removeStoreData,
-	_clearStoreData
+	_clearStoreData,
+
+	// Date Picker
+	DatePickerUI
 }
