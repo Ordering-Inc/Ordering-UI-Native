@@ -13,6 +13,8 @@ import { OAlert } from '../../../../../src/components/shared'
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
 import { ListItem } from '../UserProfile/styles';
+import moment from 'moment';
+import { DatePickerUI } from '../DatePicker';
 
 export const UserFormDetailsUI = (props: any) => {
 	const {
@@ -81,6 +83,8 @@ export const UserFormDetailsUI = (props: any) => {
 	const [isValid, setIsValid] = useState(false)
 	const [isChanged, setIsChanged] = useState(false)
 	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [birthdate, setBirthdate] = useState(user?.birthdate ?? null)
+	const [showDatePicker, setShowDatePicker] = useState(false)
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
@@ -92,6 +96,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 	const isAdmin = user?.level === 0
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
+	const showInputBirthday = validationFields?.fields?.checkout?.birthdate?.enabled ?? false
 
 	const handleSuccessSignup = (user: any) => {
 		login({
@@ -206,6 +211,13 @@ export const UserFormDetailsUI = (props: any) => {
 		handleChangeInput(countryCode, true);
 	}
 
+	const _handleChangeDate = (date: any) => {
+		setBirthdate(date)
+		const _birthdate = moment(date).format('YYYY-MM-DD')
+		handleChangeInput({ target: { name: 'birthdate', value: _birthdate } })
+		setShowDatePicker(false)
+	}
+
 	const onRemoveAccount = () => {
 		setConfirm({
 			open: true,
@@ -267,6 +279,14 @@ export const UserFormDetailsUI = (props: any) => {
 			setWillVerifyOtpState?.(true)
 		}
 	}, [phoneInputData, configs?.verification_phone_required?.value, isChanged])
+
+	useEffect(() => {
+		if (!validationFields.loading && birthdate) {
+			setValue('birthdate', formState?.result?.result
+				? formState?.result?.result?.birthdate
+				: formState?.changes?.birthdate ?? (user && user?.birthdate) ?? '')
+		}
+	}, [validationFields, birthdate])
 
 	useEffect(() => {
 		if (!requiredFields || formState?.changes?.length === 0) return
@@ -359,7 +379,21 @@ export const UserFormDetailsUI = (props: any) => {
 										</React.Fragment>
 									),
 							)}
-
+							{showInputBirthday && (
+								<WrapperPhone>
+									<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+										{t('BIRTHDATE', 'Birthdate')}
+									</OText>
+									<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
+										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ alignSelf: 'flex-start' }}>
+											{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
+										</OText>
+									</TouchableOpacity>
+									{showDatePicker && (
+										<DatePickerUI birthdate={birthdate} handleChangeDate={_handleChangeDate} />
+									)}
+								</WrapperPhone>
+							)}
 							{!!showInputPhoneNumber && ((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
 									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
