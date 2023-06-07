@@ -570,7 +570,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               />
             </ProfessionalFilterWrapper>
           )}
-          <PageBanner position='app_business_page' navigation={navigation} />
+          {businessState?.business?.id && (
+            <PageBanner position='app_business_page' businessId={businessState?.business?.id} navigation={navigation} />
+          )}
           <View
             style={{
               height: 8,
