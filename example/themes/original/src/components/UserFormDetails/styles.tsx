@@ -32,3 +32,22 @@ export const WrapperPhone = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
+
+export const DateContainer = styled.View`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  input {
+    border-radius: 20px;
+    width: 140px;
+    outline: none;
+    padding: 10px 15px;
+    border: 1px solid #E9ECEF;
+  }
+
+  .react-datepicker__triangle {
+    transform: translate(40px, 0px) !important;
+  }
+
+`
