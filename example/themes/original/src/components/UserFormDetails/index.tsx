@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
 import { SignupForm } from '../SignupForm'
 
-import { UDForm, UDLoader, UDWrapper, WrapperPhone, DateContainer } from './styles';
+import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { OAlert } from '../../../../../src/components/shared'
@@ -14,7 +14,7 @@ import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
 import { ListItem } from '../UserProfile/styles';
 import moment from 'moment';
-import DatePicker from 'react-native-date-picker'
+import { DatePickerUI } from '../DatePicker';
 
 export const UserFormDetailsUI = (props: any) => {
 	const {
@@ -390,9 +390,7 @@ export const UserFormDetailsUI = (props: any) => {
 										</OText>
 									</TouchableOpacity>
 									{showDatePicker && (
-										<DateContainer>
-											<DatePicker mode="date" date={birthdate ? new Date(birthdate) : new Date()} onDateChange={_handleChangeDate} />
-										</DateContainer>
+										<DatePickerUI birthdate={birthdate} handleChangeDate={_handleChangeDate} />
 									)}
 								</WrapperPhone>
 							)}
