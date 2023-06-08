@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLanguage, useConfig, useOrder } from 'ordering-components/native'
+import { useLanguage, useConfig, useOrder, useToast, ToastType } from 'ordering-components/native'
 import { useGooglePay, useApplePay } from '@stripe/stripe-react-native'
 import { Platform } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
@@ -26,7 +26,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const [{ configs }] = useConfig()
   const applePay = ['global_apple_pay', 'apple_pay']
   const googlePay = ['global_google_pay', 'google_pay']
-
+  const [, { showToast }] = useToast()
   useEffect(() => {
     if (Platform.OS === 'ios') {
       return
@@ -187,6 +187,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
   useEffect(() => {
     if (isApplePaySupported && applePay.includes(paymethod)) {
+      showToast(ToastType.Success, 'ENABLED TEST PRO')
       setMethodPaySupported({
         enabled: true,
         loading: false

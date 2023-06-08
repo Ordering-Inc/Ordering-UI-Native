@@ -404,6 +404,10 @@ const CheckoutUI = (props: any) => {
 	return (
 		<>
 			<Container noPadding>
+				<OText>
+					si esta viendo esto uste ha instalado correctamente mi rama :)
+					gateway: {JSON.stringify(paymethodSelected)}
+				</OText>
 				<View style={styles.wrapperNavbar}>
 					<NavBar
 						title={t('CHECKOUT', 'Checkout')}
