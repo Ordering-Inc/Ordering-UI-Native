@@ -710,6 +710,7 @@ export const BusinessProductsListing = (props: BusinessProductsListingParams) =>
     ...props,
     isForceSearch: Platform.OS === 'ios',
     isApp: true,
+    isFetchAllProducts: true,
     UIComponent: BusinessProductsListingUI
   }
   return (
