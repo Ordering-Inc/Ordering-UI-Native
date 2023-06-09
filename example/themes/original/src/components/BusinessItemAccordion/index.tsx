@@ -23,7 +23,8 @@ export const BusinessItemAccordion = (props: any) => {
 		handleClickCheckout,
 		checkoutButtonDisabled,
 		isMultiCheckout,
-		isFromUpselling
+		isFromUpselling,
+		isGiftCart
 	} = props
 
 	const [orderState] = useOrder();
@@ -75,7 +76,7 @@ export const BusinessItemAccordion = (props: any) => {
 					<BIContentInfo>
 						<OText size={16} lineHeight={24} weight={'600'}>{cart?.business?.name}</OText>
 						<View style={{ flexDirection: 'row' }}>
-							{props.onNavigationRedirect && !isClosed && (
+							{props.onNavigationRedirect && !isClosed && !isGiftCart && (
 								<>
 									<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}>
 										<OText color={theme.colors.primary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
@@ -84,7 +85,9 @@ export const BusinessItemAccordion = (props: any) => {
 							)}
 							{!isCartPending && (
 								<>
-									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+									{!isGiftCart && (
+										<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+									)}
 									<OAlert
 										title={t('DELETE_CART', 'Delete Cart')}
 										message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
@@ -94,7 +97,7 @@ export const BusinessItemAccordion = (props: any) => {
 									</OAlert>
 								</>
 							)}
-							{isBusinessChangeEnabled && props.handleChangeStore && (
+							{isBusinessChangeEnabled && props.handleChangeStore && !isGiftCart && (
 								<>
 									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 									<TouchableOpacity

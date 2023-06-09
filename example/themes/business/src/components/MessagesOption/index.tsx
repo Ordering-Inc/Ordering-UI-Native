@@ -12,6 +12,7 @@ import { PreviousMessages } from '../PreviousMessages';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
+import { WebsocketStatus } from '../WebsocketStatus'
 
 const MessagesOptionUI = (props: MessagesOptionParams) => {
   const {
@@ -163,7 +164,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       <View style={styles.header}>
         <OText style={styles.title}>{t('MESSAGES', 'Messages')}</OText>
       </View>
-
+      <WebsocketStatus />
       <FiltersTab>
         <TabsContainer width={dimensions.width - 42}>
           {tabs.map((tab: any) => (
