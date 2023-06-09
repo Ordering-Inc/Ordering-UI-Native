@@ -315,7 +315,9 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
       </View>
       {configState?.configs?.order_deadlines_enabled?.value === '1' && (
         <View style={styles.SLAwrapper}>
-          <WebsocketStatus />
+          <View style={{ flex: 1 }}>
+            <WebsocketStatus />
+          </View>
           <View style={{ width: 10, height: '100%' }} />
           <View style={{ flex: 1 }}>
             <OButton
