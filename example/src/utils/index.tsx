@@ -47,7 +47,7 @@ export const getTraduction = (key: string, t: any) => {
  */
 export const convertHoursToMinutes = (time: any) => {
   const [, t] = useLanguage()
-  if (!time) return '0min'
+  if (!time) return `0 ${t('TIME_MINUTES', 'min')}`
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
   return `${result}${t('TIME_MINUTES', 'min')}`
