@@ -218,6 +218,7 @@ const CartUI = (props: any) => {
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
         isFromUpselling={isFromUpselling}
+        isGiftCart={!cart?.business_id}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
@@ -408,6 +409,7 @@ const CartUI = (props: any) => {
               cart?.status !== 2 &&
               validationFields?.fields?.checkout?.driver_tip?.enabled &&
               driverTipsOptions && driverTipsOptions?.length > 0 &&
+              cart?.business_id &&
               (
                 <DriverTipsContainer>
                   <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
