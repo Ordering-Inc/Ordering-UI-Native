@@ -186,8 +186,9 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   }
 
   useEffect(() => {
+    showToast(ToastType.Error, `Supported: ${isApplePaySupported}, ${paymethod}`, 10000)
     if (isApplePaySupported && applePay.includes(paymethod)) {
-      showToast(ToastType.Success, 'ENABLED TEST PRO')
+      showToast(ToastType.Success, 'ENABLED TEST PRO', 12000)
       setMethodPaySupported({
         enabled: true,
         loading: false

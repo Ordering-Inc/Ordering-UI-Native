@@ -198,7 +198,9 @@ const StripeElementsFormUI = (props: any) => {
 	return (
 		<View style={{ ...styles.container, height: methodsPay?.includes(paymethod) ? 'auto' : height - top - bottom - 60 - (isKeyboardShow ? 250 : 0) }}>
 			<OText>
-				paymethod: {paymethod}
+				paymethod: {paymethod} -
+				public key: {publicKey} - 
+				merchantId: {merchantId}
 			</OText>
 			{publicKey ? (
 				<View style={{ flex: 1 }}>

@@ -233,7 +233,7 @@ const PaymentOptionsUI = (props: any) => {
 	return (
 		<PMContainer>
 			<OText>
-				isOpenPaymethod: {isOpenMethod?.paymethod?.gateway}
+				isOpenPaymethod: {JSON.stringify(isOpenMethod)}
 			</OText>
 			{paymethodsList.paymethods.length > 0 && (
 				<FlatList
