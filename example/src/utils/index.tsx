@@ -47,10 +47,10 @@ export const getTraduction = (key: string, t: any) => {
  */
 export const convertHoursToMinutes = (time: any) => {
   const [, t] = useLanguage()
-  if (!time) return `0 ${t('TIME_MINUTES', 'min')}`
+  if (!time) return `0 ${t('TIME_MIN', 'min')}`
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
-  return `${result}${t('TIME_MINUTES', 'min')}`
+  return `${result}${t('TIME_MIN', 'min')}`
 }
 
 export const getIconCard = (brand: string, size: number) => {
