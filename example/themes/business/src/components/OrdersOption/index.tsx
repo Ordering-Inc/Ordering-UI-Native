@@ -11,6 +11,7 @@ import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
+import { WebsocketStatus } from '../WebsocketStatus'
 
 import { OText, OButton, OModal, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -402,6 +403,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
+      <WebsocketStatus />
       {configState?.configs?.order_deadlines_enabled?.value === '1' && (
         <View style={styles.SLAwrapper}>
           <View style={{ flex: 0.5 }}>
