@@ -399,7 +399,7 @@ const PaymentOptionsUI = (props: any) => {
 				>
 					<StripeElementsForm
 						cart={cart}
-						paymethod={isOpenMethod?.paymethod?.gateway}
+						paymethod={isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway}
 						methodsPay={methodsPay}
 						businessId={props.businessId}
 						publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
