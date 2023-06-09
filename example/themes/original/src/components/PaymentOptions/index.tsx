@@ -232,6 +232,9 @@ const PaymentOptionsUI = (props: any) => {
 
 	return (
 		<PMContainer>
+			<OText>
+				isOpenPaymethod: {isOpenMethod?.paymethod?.gateway}
+			</OText>
 			{paymethodsList.paymethods.length > 0 && (
 				<FlatList
 					horizontal
@@ -350,10 +353,10 @@ const PaymentOptionsUI = (props: any) => {
 				</View>
 			)}
 			{/* Google pay, Apple pay */}
-			{methodsPay.includes(isOpenMethod?.paymethod?.gateway) && (
+			{methodsPay.includes(isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway) && (
 				<StripeElementsForm
 					cart={cart}
-					paymethod={isOpenMethod?.paymethod?.gateway}
+					paymethod={isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway}
 					methodsPay={methodsPay}
 					businessId={props.businessId}
 					publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
