@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { AcceptOrRejectOrder as AcceptOrRejectOrderStyle } from './styles';
 
@@ -24,12 +24,15 @@ export const PreviousOrders = (props: any) => {
     currentTabSelected,
     currentOrdenSelected,
     handleChangeOrderStatus,
-    handleSendCustomerReview
+    handleSendCustomerReview,
+    isBusinessApp
   } = props;
 
   let hash: any = {};
   const [, t] = useLanguage();
   const theme = useTheme();
+  const [{ configs }] = useConfig();
+
 
   // const [, setCurrentTime] = useState()
   const [openModal, setOpenModal] = useState(false)
@@ -41,6 +44,7 @@ export const PreviousOrders = (props: any) => {
   const viewMapStatus = [9, 18, 19, 23]
   const deliveryPickupBtn = props.appTitle?.text?.includes('Delivery') && [3, 8, 18]
   const deliveryStatusCompleteBtn = props.appTitle?.text?.includes('Delivery') && [9, 19, 23]
+  const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1' && !isBusinessApp
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
@@ -168,28 +172,30 @@ export const PreviousOrders = (props: any) => {
                   }
                   {_ordersGrouped[k][0]?.status === 0 && (
                     <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('REJECT_ALL', 'Reject all')}
-                        bgColor={theme.colors.danger100}
-                        borderColor={theme.colors.danger100}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.danger500, fontSize: 12 }}
-                        onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
-                          action: 'reject',
-                          order: _ordersGrouped[k][0],
-                          ids: _ordersGrouped[k].map((o: any) => o.id),
-                          handleChangeOrderStatus
-                        })}
-                      />
+                      {!isHideRejectButtons && (
+                        <OButton
+                          text={t('REJECT_ALL', 'Reject all')}
+                          bgColor={theme.colors.danger100}
+                          borderColor={theme.colors.danger100}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.danger500, fontSize: 12 }}
+                          onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
+                            action: 'reject',
+                            order: _ordersGrouped[k][0],
+                            ids: _ordersGrouped[k].map((o: any) => o.id),
+                            handleChangeOrderStatus
+                          })}
+                        />
+                      )}
                       <OButton
                         text={t('ACCEPT_ALL', 'Accept all')}
                         bgColor={theme.colors.success100}
                         borderColor={theme.colors.success100}
                         imgRightSrc={null}
                         style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '45%' }}
+                        parentStyle={{ width: isHideRejectButtons ? '100%' : '45%' }}
                         textStyle={{ color: theme.colors.success500, fontSize: 12 }}
                         onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
                           action: 'accept',
@@ -236,7 +242,7 @@ export const PreviousOrders = (props: any) => {
                         />
                       </AcceptOrRejectOrderStyle>
                     )}
-                  {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 &&
+                  {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 && !isHideRejectButtons &&
                     (
                       <AcceptOrRejectOrderStyle>
                         <OButton
@@ -276,26 +282,28 @@ export const PreviousOrders = (props: any) => {
                     ![1].includes(_ordersGrouped[k][0]?.delivery_type) &&
                     (
                       <AcceptOrRejectOrderStyle>
-                        <OButton
-                          text={t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')}
-                          bgColor={theme.colors.danger100}
-                          borderColor={theme.colors.danger100}
-                          imgRightSrc={null}
-                          style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                          parentStyle={{ width: '45%' }}
-                          textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
-                          onClick={() => handleChangeOrderStatus(
-                            17,
-                            _ordersGrouped[k].map((o: any) => o.id),
-                          )}
-                        />
+                        {!isHideRejectButtons && (
+                          <OButton
+                            text={t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')}
+                            bgColor={theme.colors.danger100}
+                            borderColor={theme.colors.danger100}
+                            imgRightSrc={null}
+                            style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
+                            parentStyle={{ width: '45%' }}
+                            textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
+                            onClick={() => handleChangeOrderStatus(
+                              17,
+                              _ordersGrouped[k].map((o: any) => o.id),
+                            )}
+                          />
+                        )}
                         <OButton
                           text={t('PICKUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer')}
                           bgColor={theme.colors.success100}
                           borderColor={theme.colors.success100}
                           imgRightSrc={null}
                           style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                          parentStyle={{ width: '45%' }}
+                          parentStyle={{ width: isHideRejectButtons ? '100%' : '45%' }}
                           textStyle={{ color: theme.colors.success500, fontSize: 12, textAlign: 'center' }}
                           onClick={() => handleChangeOrderStatus(
                             15,
@@ -324,28 +332,30 @@ export const PreviousOrders = (props: any) => {
                     )}
                   {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && (
                     <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('PICKUP_FAILED', 'Pickup failed')}
-                        bgColor={theme.colors.danger100}
-                        borderColor={theme.colors.danger100}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
-                        onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
-                          action: 'pickupFailed',
-                          order: _ordersGrouped[k][0],
-                          ids: _ordersGrouped[k].map((o: any) => o.id),
-                          handleChangeOrderStatus
-                        })}
-                      />
+                      {!isHideRejectButtons && (
+                        <OButton
+                          text={t('PICKUP_FAILED', 'Pickup failed')}
+                          bgColor={theme.colors.danger100}
+                          borderColor={theme.colors.danger100}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
+                          onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
+                            action: 'pickupFailed',
+                            order: _ordersGrouped[k][0],
+                            ids: _ordersGrouped[k].map((o: any) => o.id),
+                            handleChangeOrderStatus
+                          })}
+                        />
+                      )}
                       <OButton
                         text={t('PICKUP_COMPLETE', 'Pickup complete')}
                         bgColor={theme.colors.success100}
                         borderColor={theme.colors.success100}
                         imgRightSrc={null}
                         style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
+                        parentStyle={{ width: isHideRejectButtons ? '100%' : '45%' }}
                         textStyle={{ color: theme.colors.success500, fontSize: 12, textAlign: 'center' }}
                         onClick={() => handleChangeOrderStatus(
                           9,
@@ -356,28 +366,30 @@ export const PreviousOrders = (props: any) => {
                   )}
                   {!!deliveryStatusCompleteBtn && deliveryStatusCompleteBtn.includes(_ordersGrouped[k][0]?.status) && (
                     <AcceptOrRejectOrderStyle>
-                      <OButton
-                        text={t('DELIVERY_FAILED', 'Delivery Failed')}
-                        bgColor={theme.colors.danger100}
-                        borderColor={theme.colors.danger100}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
-                        onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
-                          action: 'deliveryFailed',
-                          order: _ordersGrouped[k][0],
-                          ids: _ordersGrouped[k].map((o: any) => o.id),
-                          handleChangeOrderStatus
-                        })}
-                      />
+                      {!isHideRejectButtons && (
+                        <OButton
+                          text={t('DELIVERY_FAILED', 'Delivery Failed')}
+                          bgColor={theme.colors.danger100}
+                          borderColor={theme.colors.danger100}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.danger500, fontSize: 12, textAlign: 'center' }}
+                          onClick={() => onNavigationRedirect('AcceptOrRejectOrder', {
+                            action: 'deliveryFailed',
+                            order: _ordersGrouped[k][0],
+                            ids: _ordersGrouped[k].map((o: any) => o.id),
+                            handleChangeOrderStatus
+                          })}
+                        />
+                      )}
                       <OButton
                         text={t('DELIVERY_COMPLETE', 'Delivery complete')}
                         bgColor={theme.colors.success100}
                         borderColor={theme.colors.success100}
                         imgRightSrc={null}
                         style={{ borderRadius: 7, height: 40, paddingLeft: 10, paddingRight: 10 }}
-                        parentStyle={{ width: '45%' }}
+                        parentStyle={{ width: isHideRejectButtons ? '100%' : '45%' }}
                         textStyle={{ color: theme.colors.success500, fontSize: 12, textAlign: 'center' }}
                         onClick={() => handleChangeOrderStatus(
                           11,

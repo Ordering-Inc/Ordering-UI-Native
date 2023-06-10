@@ -568,7 +568,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               />
             </ProfessionalFilterWrapper>
           )}
-          <PageBanner position='app_business_page' navigation={navigation} />
+          {businessState?.business?.id && (
+            <PageBanner position='app_business_page' businessId={businessState?.business?.id} navigation={navigation} />
+          )}
           <View
             style={{
               height: 8,
@@ -726,6 +728,8 @@ export const BusinessProductsListing = (props: BusinessProductsListingParams) =>
   const businessProductslistingProps = {
     ...props,
     isForceSearch: Platform.OS === 'ios',
+    isApp: true,
+    isFetchAllProducts: true,
     UIComponent: BusinessProductsListingUI
   }
   return (

@@ -3,10 +3,11 @@ import {
   useLanguage,
   PurchaseGiftCard as PurchaseGiftCardController
 } from 'ordering-components/native'
-import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import { OText, OButton, OIcon } from '../../shared';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Container
@@ -17,7 +18,8 @@ const PurchaseGiftCardUI = (props: any) => {
     productsListState,
     selectedProduct,
     setSelectedProduct,
-    handleAccept
+    handleAccept,
+    onClose
   } = props
 
   const theme = useTheme()
@@ -42,7 +44,38 @@ const PurchaseGiftCardUI = (props: any) => {
 
   return (
     <Container>
-      <OText color={theme.colors.textNormal} weight='bold' size={20} mBottom={40}>{t('PURCHASE_GIFT_CARD', 'Purchase gift card')}</OText>
+      <View style={{
+        marginBottom: 40,
+        marginTop: Platform.OS === 'ios' ? 30 : 50,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+        <OButton
+          imgLeftStyle={{ width: 18 }}
+          imgRightSrc={null}
+          style={{
+            borderWidth: 0,
+            width: 26,
+            height: 26,
+            backgroundColor: '#FFF',
+            borderColor: '#FFF',
+            shadowColor: '#FFF',
+            paddingLeft: 0,
+            paddingRight: 0,
+          }}
+          onClick={onClose}
+          icon={AntDesignIcon}
+          iconProps={{
+            name: 'arrowleft',
+            size: 26,
+            style: {
+              color: theme.colors.textNormal
+            }
+          }}
+        />
+        <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('PURCHASE_GIFT_CARD', 'Purchase gift card')}</OText>
+      </View>
       <OText color={theme.colors.textNormal} size={14}>{t('SELECT_ONE_OPTION', 'Select one option')}</OText>
       <ScrollView
         contentContainerStyle={{

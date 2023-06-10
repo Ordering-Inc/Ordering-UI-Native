@@ -92,7 +92,6 @@ const NavBar = (props: Props) => {
 				<TitleWrapper style={{ ...{ paddingHorizontal: props.isVertical ? 0 : 10 }, ...props.titleWrapStyle }}>
 					<OText
 						size={20}
-						lineHeight={36}
 						weight={Platform.OS === 'ios' ? '600' : 'bold'}
 						style={
 							{

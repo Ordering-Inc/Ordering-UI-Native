@@ -40,6 +40,7 @@ import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 import { OrdersOptionDriver } from '../OrdersOptionDriver';
 import { OrdersOptionDate } from '../OrdersOptionDate';
 import { OrderDetailsBusiness } from '../OrderDetails/Business';
+import { WebsocketStatus } from '../WebsocketStatus'
 
 const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
@@ -314,7 +315,11 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
       </View>
       {configState?.configs?.order_deadlines_enabled?.value === '1' && (
         <View style={styles.SLAwrapper}>
-          <View style={{ flex: 0.5 }}>
+          <View style={{ flex: 1 }}>
+            <WebsocketStatus />
+          </View>
+          <View style={{ width: 10, height: '100%' }} />
+          <View style={{ flex: 1 }}>
             <OButton
               text={t('SLA_SETTING', 'SLA’s Settings')}
               textStyle={{ color: theme.colors.backArrow }}
@@ -330,7 +335,7 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
             />
           </View>
           <View style={{ width: 10, height: '100%' }} />
-          <View style={{ flex: 0.5, justifyContent: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <SelectDropdown
               defaultButtonText={t('SLA', 'SLA\'s')}
               data={preorderTypeList}

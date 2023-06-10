@@ -307,7 +307,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   }, [])
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
       <View style={styles.parent}>
         <View style={styles.upper}>
           <TopActions>
@@ -511,7 +515,10 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         <View
           style={{
             ...styles.bottomParent,
-            marginBottom: (keyboardState.height === 0) ? isPage ? 0 : 30 : keyboardState.height - (isPage ? 20 : -10)
+            marginBottom: Platform.OS === 'ios'
+              ? 30 : (keyboardState.height === 0)
+                ? isPage ? 0 : 30
+                : keyboardState.height - (isPage ? 20 : -10)
           }}
         >
           <OButton
