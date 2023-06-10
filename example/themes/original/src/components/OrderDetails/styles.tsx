@@ -10,7 +10,7 @@ export const NavBack = styled.TouchableOpacity`
 
 
 export const Header = styled.View`
-  padding: 10px 40px;
+  padding: 10px 20px;
   flex: 1;
 `
 
@@ -24,7 +24,7 @@ export const OrderContent = styled.View`
 export const OrderBusiness = styled.View`
   position: relative; 
   padding-vertical: 10px;
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   background-color: ${(props: any) => props.theme.colors.white};
   align-items: flex-start;
 `
@@ -64,7 +64,7 @@ export const SectionTitle = styled.View`
 `
 
 export const OrderCustomer = styled.View`
-  padding: 20px 40px 10px;
+  padding: 20px 20px 10px;
   background-color: ${(props: any) => props.theme.colors.white};
 `
 
@@ -86,7 +86,7 @@ export const InfoBlock = styled.View`
 export const HeaderInfo = styled.View`
   flex: 1;
   background-color: ${(props: any) => props.theme.colors.backgroundGray100};
-  padding: 20px 40px;
+  padding: 20px 20px;
 `
 
 export const OrderProducts = styled(OrderCustomer)``
@@ -100,7 +100,7 @@ export const Table = styled.View`
 `
 
 export const OrderBill = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   padding-vertical: 10px;
   flex: 1;
   background-color: ${(props: any) => props.theme.colors.white};
@@ -130,7 +130,7 @@ export const OrderAction = styled.View`
 `
 
 export const PlaceSpotWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
 `
 
 export const ProfessionalPhoto = styled.ImageBackground`
@@ -142,3 +142,20 @@ export const ProfessionalPhoto = styled.ImageBackground`
   resize-mode: cover;
   margin-right: 10px;
 `;
+
+export const TopActions = styled.TouchableOpacity`
+	height: 60px;
+	justify-content: center;
+  min-width: 30px;
+  padding-right: 15px;
+`;
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  height: 60px;
+  min-height: 60px;
+`

@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: 40,
+		paddingHorizontal: 20,
 	},
 	logo: {
 		marginTop: 64,

@@ -35,9 +35,7 @@ export const Favorite = (props: any) => {
   }
 
   return (
-    <Container
-      pdng={Platform.OS === 'ios' ? '10px' : '20px'}
-    >
+    <Container>
       <NavBar
         title={t('FAVORITE', 'Favorite')}
         titleAlign={'center'}

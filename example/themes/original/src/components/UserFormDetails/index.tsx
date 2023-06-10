@@ -468,12 +468,25 @@ export const UserFormDetailsUI = (props: any) => {
 								? t('SIGN_UP_AND_PLACE_ORDER', 'Sign up and place order')
 								: t('CONTINUE', 'Continue'))
 					}
-					bgColor={theme.colors.white}
-					textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+					bgColor={theme.colors.primary}
+					textStyle={{ 
+						color: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.primary : theme.colors.white, 
+						fontSize: 14 
+					}}
 					borderColor={theme.colors.primary}
 					isDisabled={!user?.guest_id && (formState.loading || !isValid)}
 					imgRightSrc={null}
-					style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20, marginBottom: 20 }}
+					style={{
+						borderRadius: 7.6,
+						shadowOpacity: 0,
+						width: '100%',
+						borderWidth: 1,
+						marginTop: 20,
+						marginBottom: 20,
+						backgroundColor: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.lightGray : theme.colors.primary,
+						borderColor: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.white : theme.colors.primary,
+						opacity: !user?.guest_id && (formState.loading || !isValid) ? 0.3 : 1,
+					}}
 					onClick={!user?.guest_id ? handleSubmit(onSubmit) : () => setIsModalOpen(true)}
 				/>
 			)}

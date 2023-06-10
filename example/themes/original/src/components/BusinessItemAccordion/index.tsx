@@ -23,7 +23,9 @@ export const BusinessItemAccordion = (props: any) => {
 		handleClickCheckout,
 		checkoutButtonDisabled,
 		isMultiCheckout,
-		isFromUpselling
+		isFromUpselling,
+		changeActiveState,
+		isActive
 	} = props
 
 	const [orderState] = useOrder();
@@ -38,14 +40,13 @@ export const BusinessItemAccordion = (props: any) => {
 	const isProducts = cart?.products?.length
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
-	const [isActive, setActiveState] = useState(!!singleBusiness)
 	const [viewedCart, setViewedCart] = useState<any>(null)
 
 	useEffect(() => {
 		const cartsArray = Object.values(orderState?.carts)
 		const cartsLength = cartsArray.filter((cart: any) => cart.products.length > 0).length ?? 0
 		if (cartsLength === 1) {
-			setActiveState(!isClosed)
+			changeActiveState(!isClosed, cart?.uuid)
 		}
 	}, [orderState?.carts, isClosed])
 
@@ -68,7 +69,7 @@ export const BusinessItemAccordion = (props: any) => {
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
 				isClosed={isClosed}
-				onPress={() => !isClosed ? setActiveState(!isActive) : isClosed}
+				onPress={() => !isClosed ? changeActiveState(!isClosed, cart?.uuid) : isClosed}
 				activeOpacity={1}
 			>
 				<BIInfo>

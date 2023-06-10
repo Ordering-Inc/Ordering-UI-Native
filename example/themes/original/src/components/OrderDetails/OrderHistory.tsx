@@ -33,7 +33,7 @@ export const OrderHistory = (props: any) => {
       paddingVertical: 16
     },
     container: {
-      paddingHorizontal: 40,
+      paddingHorizontal: 20,
       paddingVertical: 15
     }
   });

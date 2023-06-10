@@ -98,8 +98,6 @@ const PromotionsUI = (props: PromotionParams) => {
 
   return (
     <Container
-      noPadding
-      pt={20}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -112,7 +110,8 @@ const PromotionsUI = (props: PromotionParams) => {
         titleAlign={'center'}
         onActionLeft={() => navigation.goBack()}
         showCall={false}
-        style={{ paddingVertical: 0, marginLeft: 20 }}
+        style={{ paddingVertical: 0 }}
+        btnStyle={{ paddingLeft: 0 }}
       />
       <PromotionsContainer>
         <SearchBarContainer>

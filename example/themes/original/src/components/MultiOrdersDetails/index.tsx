@@ -93,7 +93,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
   }, [])
 
   return (
-    <OrdersDetailsContainer keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 40 }}>
+    <OrdersDetailsContainer keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 20 }}>
       <View style={{ flexDirection: 'row' }}>
         <OButton
           imgRightSrc={null}

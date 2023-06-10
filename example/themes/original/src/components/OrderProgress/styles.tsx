@@ -32,5 +32,5 @@ export const OrderInfoWrapper = styled.View`
 export const OrderProgressWrapper = styled.View`
   margin-top: 37px;
   margin-bottom: 20px;
-	padding-horizontal: 40px;
+	padding-horizontal: 20px;
 `

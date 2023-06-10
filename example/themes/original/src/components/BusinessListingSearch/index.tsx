@@ -92,7 +92,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     },
     filterContainer: {
       maxHeight: screenHeight - 150,
-      paddingHorizontal: 40,
+      paddingHorizontal: 20,
       width: '100%'
     },
     searchInput: {
@@ -259,7 +259,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: hideBrowse && !isChewLayout ? 40 : 20,
       }}>
         {hideBrowse && !isChewLayout && (
           <OButton
@@ -288,7 +287,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
       </View>
       <BContainer
-        style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+        style={{ paddingHorizontal: 20 }}
       >
         <SearchWrapper>
           <SearchBar

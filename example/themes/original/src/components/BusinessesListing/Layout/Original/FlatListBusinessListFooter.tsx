@@ -11,7 +11,7 @@ export const FlatListBusinessListFooter = (props : any) => {
     } = props
     return (
         <>
-            <ListWrapper style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+            <ListWrapper style={{ paddingHorizontal: 20 }}>
                 {(businessesList.loading || !businessesList?.fetched) && (
                     <>
                         {[

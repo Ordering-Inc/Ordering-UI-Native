@@ -75,10 +75,8 @@ const NotificationsUI = (props: any) => {
 				titleAlign={'center'}
 				onActionLeft={goToBack}
 				showCall={false}
-				style={{
-					paddingHorizontal: 40,
-					paddingVertical: 0,
-				}}
+				style={{ paddingVertical: 0 }}
+				btnStyle={{ paddingLeft: 0 }}
 			/>
 			{showCustomerPromotions && showNotifications && (
 				<>
