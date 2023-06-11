@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
-import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions, Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
 import { HeaderTitle, OButton, OModal, OText } from '../shared'
@@ -284,7 +284,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           />
         )}
         <HeaderTitle ph={20} text={t('SEARCH', 'Search')} />
-        <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
+        <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: Platform.OS === 'ios' ? 35 : 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
       </View>
       <BContainer
         style={{ paddingHorizontal: 20 }}

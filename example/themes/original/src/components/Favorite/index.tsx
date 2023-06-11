@@ -41,7 +41,8 @@ export const Favorite = (props: any) => {
         titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
-        paddingTop={10}
+        paddingTop={Platform.OS === 'ios' ? 20 : 10}
+        style={{ paddingVertical: 0 }}
         btnStyle={{ paddingLeft: 0 }}
       />
       <TabContainer>
