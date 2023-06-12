@@ -53,6 +53,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const [isPressed, setIsPressed] = useState(false)
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12, 15];
+  const isGiftCardOrder = !order?.business_id
 
   const styles = StyleSheet.create({
     container: {
@@ -290,7 +291,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   )}
                 </>
               )}
-              {!!pastOrders && (
+              {!!pastOrders && !isGiftCardOrder && (
                 <ButtonWrapper>
                   {!hideReviewOrderButton &&
                     allowedOrderStatus.includes(parseInt(order?.status)) &&
