@@ -211,7 +211,9 @@ export const ProductOptionsUI = (props: any) => {
 
 	const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
 	const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
-
+	const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
+  
 	const vibrateApp = (impact?: string) => {
 		const options = {
 			enableVibrateFallback: true,
@@ -439,7 +441,7 @@ export const ProductOptionsUI = (props: any) => {
 				}}>
 				{((productCart &&
 					auth &&
-					orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
+					(orderState.options?.address_id || isAllowUnaddressOrderType)) || (isSoldOut || maxProductQuantity <= 0)) && (
 						<OButton
 							onClick={() => handleSaveProduct()}
 							imgRightSrc=""
@@ -469,7 +471,7 @@ export const ProductOptionsUI = (props: any) => {
 						/>
 					)}
 				{auth &&
-					!orderState.options?.address_id &&
+					!orderState.options?.address_id && !isAllowUnaddressOrderType &&
 					(orderState.loading ? (
 						<OButton
 							isDisabled
