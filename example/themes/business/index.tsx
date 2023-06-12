@@ -1,6 +1,7 @@
 //Components
 import { AcceptOrRejectOrder } from './src/components/AcceptOrRejectOrder';
 import { BusinessController } from './src/components/BusinessController';
+import { BusinessProductList } from './src/components/BusinessProductList';
 import { Chat } from './src/components/Chat';
 import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
@@ -70,6 +71,7 @@ export {
   //Components
   AcceptOrRejectOrder,
   BusinessController,
+  BusinessProductList,
   Chat,
   DriverMap,
   FloatingButton,
