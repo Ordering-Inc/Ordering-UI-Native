@@ -800,7 +800,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   parentStyle={{ marginTop: 29, marginEnd: 15 }}
                   onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
                 />
-                {(reorderStatus?.includes(parseInt(order?.status)) && order?.cart) && (
+                {(reorderStatus?.includes(parseInt(order?.status)) && order?.cart) && !isGiftCardOrder && (
                   <OButton
                     text={order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
                     textStyle={{ fontSize: 14, color: theme.colors.primary }}
