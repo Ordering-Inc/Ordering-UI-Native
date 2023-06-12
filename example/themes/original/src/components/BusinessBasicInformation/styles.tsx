@@ -11,7 +11,7 @@ export const BusinessHeader = styled.ImageBackground`
 `;
 export const BusinessLogo = styled.View`
   position: absolute;
-  start: 40px;
+  start: 20px;
   top: -36px;
   z-index: 50;
   box-shadow: 0 0 2px ${Platform.OS == 'android' ? '#000000DD' : '#0000001A'};

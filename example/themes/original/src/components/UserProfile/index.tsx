@@ -101,7 +101,7 @@ const ProfileListUI = (props: ProfileParams) => {
 			marginEnd: 14
 		},
 		pagePadding: {
-			paddingHorizontal: isChewLayout ? 20 : 40
+			paddingHorizontal: 20
 		},
 		messageIconStyle: {
 			fontSize: 18,

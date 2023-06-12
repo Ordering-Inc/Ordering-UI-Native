@@ -19,7 +19,7 @@ import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { NotFoundSource } from '../NotFoundSource'
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
+import { View, StyleSheet, ScrollView, RefreshControl, Platform } from 'react-native'
 import { PromotionParams } from '../../types'
 import { Container } from '../../layouts/Container'
 
@@ -98,8 +98,6 @@ const PromotionsUI = (props: PromotionParams) => {
 
   return (
     <Container
-      noPadding
-      pt={20}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -112,7 +110,9 @@ const PromotionsUI = (props: PromotionParams) => {
         titleAlign={'center'}
         onActionLeft={() => navigation.goBack()}
         showCall={false}
-        style={{ paddingVertical: 0, marginLeft: 20 }}
+        paddingTop={Platform.OS === 'ios' ? 20 : 10}
+        style={{ paddingVertical: 0 }}
+        btnStyle={{ paddingLeft: 0 }}
       />
       <PromotionsContainer>
         <SearchBarContainer>

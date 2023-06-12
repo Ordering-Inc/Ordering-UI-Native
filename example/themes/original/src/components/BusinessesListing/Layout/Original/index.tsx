@@ -94,7 +94,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			backgroundColor: theme.colors.white,
 			borderColor: theme.colors.backgroundGray,
 			borderRadius: 8,
-			marginHorizontal: 40,
+			marginHorizontal: 20,
 			minHeight: 45,
 			paddingVertical: 5,
 			paddingHorizontal: 20,

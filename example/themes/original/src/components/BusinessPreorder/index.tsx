@@ -64,7 +64,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     container: {
       height: windowHeight,
       paddingVertical: 30,
-      paddingHorizontal: 40
+      paddingHorizontal: 20
     },
     businessLogo: {
       backgroundColor: 'white',
@@ -319,7 +319,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   return (
     <>
-      <PreOrderContainer contentContainerStyle={{ paddingVertical: 32, paddingHorizontal: 40 }}>
+      <PreOrderContainer contentContainerStyle={{ paddingVertical: 32, paddingHorizontal: 20 }}>
         <TouchableOpacity onPress={() => goToBack && goToBack()} style={{ marginBottom: 12 }}>
           <IconAntDesign
             name='close'

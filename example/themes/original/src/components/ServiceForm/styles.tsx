@@ -11,7 +11,7 @@ export const ProfessionalPhoto = styled.ImageBackground`
 `;
 
 export const InfoWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-vertical: 30px;
 `
 
@@ -22,7 +22,7 @@ export const Divider = styled.View`
 `
 
 export const ProfessionalWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-top: 30px;
 `
 
@@ -41,7 +41,7 @@ export const ButtonWrapper = styled.View`
   align-items: center;
   flex-direction: row;
   padding-vertical: 13px;
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-top: 30px;
   margin-bottom: 40px;
   width: 100%;

@@ -9,7 +9,6 @@ export const Container = styled.ScrollView`
 export const NotificationsGroupSwitchWrapper = styled.View`
   flex-grow: 1;
   justify-content: space-between;
-	padding: 0 20px;
 `
 
 export const SwitchWrapper = styled.View`

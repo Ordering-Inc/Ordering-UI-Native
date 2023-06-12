@@ -12,7 +12,7 @@ export const ProfessionalPhoto = styled.ImageBackground`
 
 export const InfoWrapper = styled.View`
   margin-vertical: 30px;
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
 `
 
 export const Divider = styled.View`
@@ -22,7 +22,7 @@ export const Divider = styled.View`
 `
 
 export const ScheduleWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-top: 30px;
 `
 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
+import { useLanguage, useConfig, useUtils, useOrder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { CCContainer, CCNotCarts, CCList, CheckoutAction, ChCartsTotal } from './styles';
 
@@ -11,10 +11,9 @@ import { NotFoundSource } from '../NotFoundSource';
 
 export const CartContent = (props: any) => {
 	const {
-		carts,
-		isOrderStateCarts,
 		onNavigationRedirect,
-		singleBusiness
+		singleBusiness,
+		businessSlug
 	} = props
 
 	const theme = useTheme();
@@ -22,16 +21,22 @@ export const CartContent = (props: any) => {
 	const [{ configs }] = useConfig()
 	const [{ parsePrice }] = useUtils();
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
-
-	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
+	const [cartsOpened, setCartsOpened] = useState([])
+	const [{ carts: cartsContext }] = useOrder();
+	const cartsList =
+		(cartsContext &&
+			Object.values(cartsContext).filter((cart: any) => cart.products.length > 0)) ??
+		[];
+	const carts = businessSlug
+		? cartsList.filter((cart: any) => cart?.business?.slug === businessSlug || parseInt(businessSlug) === cart?.business_id)
+		: cartsList
+	const isOrderStateCarts = !!carts
 	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
-	const cartsAvailable: any = Object.values(carts)?.filter((cart: any) => cart?.valid && cart?.status !== 2)
-
+	const cartsAvailable: any = Object.values(carts || {})?.filter((cart: any) => cart?.valid && cart?.status !== 2)
 	const totalCartsPrice = cartsAvailable?.length && cartsAvailable.reduce((total: any, cart: any) => { return total + cart?.total }, 0)
 	const totalCartsFee = cartsAvailable?.length && cartsAvailable
 		?.filter((cart: any) => cart?.status !== 1 && cart?.valid && cart?.products?.length)
 		?.reduce((total: any, cart: any) => { return total + (cart?.delivery_price_with_discount) }, 0)
-
 	const handleCheckoutRedirect = () => {
 		if (cartsAvailable.length === 1) {
 			onNavigationRedirect('CheckoutNavigator', {
@@ -66,9 +71,21 @@ export const CartContent = (props: any) => {
 		}
 	}
 
+	const changeActiveState = useCallback((isClosed : boolean, uuid : string) => {
+		const isActive = cartsOpened?.includes?.(uuid) || !!singleBusiness
+		if (isActive || !isClosed) {
+			setCartsOpened(cartsOpened?.filter?.((_uuid) => _uuid !== uuid))
+		} else {
+			setCartsOpened([
+				...cartsOpened,
+				uuid
+			])
+		}
+	}, [cartsOpened])
+
 	return (
 		<CCContainer
-			style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+			style={{ paddingHorizontal: 20 }}
 		>
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
@@ -88,8 +105,12 @@ export const CartContent = (props: any) => {
 										hideUpselling
 										businessConfigs={cart?.business?.configs}
 										hideCouponInput={configs?.multi_business_checkout_coupon_input_style?.value === 'group'}
-                    hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
+										hideDeliveryFee={configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'}
 										hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
+										cartsOpened={cartsOpened}
+										setCartsOpened={setCartsOpened}
+										changeActiveState={changeActiveState}
+										isActive={cartsOpened?.includes?.(cart?.uuid) || !!singleBusiness}
 									/>
 									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginTop: 20 }} />
 								</>
@@ -101,32 +122,32 @@ export const CartContent = (props: any) => {
 							{!!cartsAvailable.length && (
 								<ChCartsTotal>
 									{!!totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
-                      </OText>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {parsePrice(totalCartsFee)}
-                      </OText>
-                    </View>
-                  )}
-                  {cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
-                    configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {t('DRIVER_TIP', 'Driver tip')}
-                      </OText>
-                      <OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-                        {parsePrice(cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
-                      </OText>
-                    </View>
-                  )}
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
-                      {t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
-                    </OText>
-                    <OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
-                  </View>
+										<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+											<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+												{t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
+											</OText>
+											<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+												{parsePrice(totalCartsFee)}
+											</OText>
+										</View>
+									)}
+									{cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
+										configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
+											<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+												<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+													{t('DRIVER_TIP', 'Driver tip')}
+												</OText>
+												<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+													{parsePrice(cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
+												</OText>
+											</View>
+										)}
+									<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+										<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
+											{t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
+										</OText>
+										<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
+									</View>
 									<View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 20 }}>
 										<OText size={14} color={theme.colors.textNormal} weight={'300'} style={{ textAlign: 'center' }}>
 											{t('CART_GROUP_MESSAGE_ALERT', 'Discounts may be applied at the time of payment for this group.')}
