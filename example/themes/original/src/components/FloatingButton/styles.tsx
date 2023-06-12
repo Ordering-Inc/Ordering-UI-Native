@@ -5,7 +5,7 @@ export const Container = styled.View`
   bottom: 0px;
   left: 0;
   right: 0;
-  padding: 12px 40px;
+  padding: 12px 20px;
   flex-direction: row;
   border-top-width: 1px;
   border-color: ${(props: any) => props.theme.colors.border};

@@ -215,6 +215,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 												style={pickerStyle}
 												useNativeAndroidPickerStyle={false}
 												placeholder={{}}
+												touchableWrapperProps={{
+													style: {
+														width: 40,
+													}
+												}}
 												Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.textNormal} width={8} /></View>}
 												disabled={orderState.loading}
 											/>

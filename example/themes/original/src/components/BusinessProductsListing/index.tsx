@@ -45,6 +45,7 @@ import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
 import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 import { PageBanner } from '../PageBanner'
+import { NavBack } from 'ordering-ui-react-native/src/components/OrderDetails/styles';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -72,7 +73,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleUpdateProfessionals,
     handleChangeProfessionalSelected,
     onBusinessClick,
-    businessSingleId
+    businessSingleId,
+    productModal
   } = props
 
   const insets = useSafeAreaInsets()
@@ -112,7 +114,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     },
     searchIcon: {
       borderWidth: 0,
-      padding: 15,
+      padding: 10,
       justifyContent: 'center',
       shadowColor: theme.colors.clear,
     },
@@ -143,8 +145,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
+  const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
   const isOpenFiltProducts = isOpenSearchBar && !!searchValue
+  const filtProductsHeight = Platform.OS === 'ios' ? 65 : 30
   const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0
 
   const onRedirect = (route: string, params?: any) => {
@@ -189,8 +193,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       onRedirect('ProductDetails', {
         product: product,
         businessSlug: business.slug,
-        businessId: business.id,
-        productAddedToCartLength
+        businessId: business.id || product?.category?.business_id,
+        productAddedToCartLength,
+        isRedirect: false
       })
     }
     events.emit('product_clicked', product)
@@ -386,6 +391,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!business && !loading && !error) {
+      showToast(ToastType.Error, t('BUSINESS_NOT_FOUND', 'Business not found'))
+      navigation.navigate('BusinessList')
+    }
+  }, [business, error, loading])
+
+  useEffect(() => {
+    if (productModal?.product && !productModal?.loading && !productModal?.error) {
+      onProductClick(props?.productModal?.product)
+    }
+  }, [productModal])
+
   return (
     <>
       <View style={{ flex: 1, backgroundColor: backgroundColor }}>
@@ -473,8 +491,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         {business?.categories?.length > 0 && isOpenFiltProducts && (
           <FiltProductsContainer
             style={{
-              height: Dimensions.get('window').height - (keyboardHeight + (Platform.OS === 'ios' ? 100 : 80)),
-              top: Platform.OS === 'ios' ? searchBarHeight + insets.top : searchBarHeight
+              height: Dimensions.get('window').height - filtProductsHeight - keyboardHeight - (keyboardHeight > 0 && viewOrderButtonVisible ? 55 : 0),
+              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight,
             }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
@@ -511,9 +529,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               />
             </View>
           </FiltProductsContainer>
-        )}
-        {isOpenFiltProducts && (
-          <BackgroundGray isIos={Platform.OS === 'ios'} style={{ marginTop: insets.top + 60 }} />
         )}
         <IOScrollView
           stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 3]}
@@ -553,7 +568,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               />
             </ProfessionalFilterWrapper>
           )}
-          <PageBanner position='app_business_page' navigation={navigation} />
+          {businessState?.business?.id && (
+            <PageBanner position='app_business_page' businessId={businessState?.business?.id} navigation={navigation} />
+          )}
           <View
             style={{
               height: 8,
@@ -581,7 +598,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             <>
               <WrapContent
                 onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
-                style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+                style={{ paddingHorizontal: 20 }}
               >
                 <BusinessProductsList
                   categories={[
@@ -637,6 +654,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 />
               </WrapContent>
             </>
+          )}
+          {isOpenFiltProducts && (
+            <BackgroundGray isIos={Platform.OS === 'ios'} />
           )}
         </IOScrollView>
         {viewOrderButtonVisible && (
@@ -694,7 +714,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={business?.id}
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
-          handleChangeProfessional={handleChangeProfessionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}

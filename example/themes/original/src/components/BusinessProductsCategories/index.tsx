@@ -92,7 +92,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 			ref={tabsRef}
 			horizontal
 			style={{ ...styles.container, borderBottomWidth: loading ? 0 : 1 }}
-			contentContainerStyle={{ paddingHorizontal: 40 }}
+			contentContainerStyle={{ paddingHorizontal: 20 }}
 			showsHorizontalScrollIndicator={false}
 			onScroll={(e: any) => setScrollOffsetX(e.nativeEvent.contentOffset.x)}
 			scrollEventThrottle={16}

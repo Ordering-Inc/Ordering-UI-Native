@@ -13,7 +13,7 @@ const HeaderTitle = (props: any) => {
       weight={Platform.OS === 'ios' ? '600' : 'bold'}
       style={style ?? {
         marginTop: Platform.OS === 'android' ? 50 : 30,
-        paddingHorizontal: props.ph ?? 40,
+        paddingHorizontal: props.ph ?? 20,
         textTransform: 'capitalize',
         color: props.titleColor || theme.colors.textNormal,
       }}

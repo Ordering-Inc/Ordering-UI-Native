@@ -55,7 +55,7 @@ const StripeElementsFormUI = (props: any) => {
 	const styles = StyleSheet.create({
 		container: {
 			width: '100%',
-			paddingHorizontal: 40,
+			paddingHorizontal: 20,
 			justifyContent: 'space-between',
 			paddingBottom: 12
 		},

@@ -54,13 +54,13 @@ export const WrapMomentOption = styled.TouchableOpacity`
 export const HeaderWrapper = styled.ImageBackground`
 	width: 100%;
 	height: 370px;
-	padding: 20px 40px;
+	padding: 20px;
 	background-color: transparent;
 `;
 
 export const ListWrapper = styled.View`
 	background-color: ${(props: any) => props.theme.colors.backgroundLight};
-	padding-horizontal: 40px;
+	padding-horizontal: 20px;
 `;
 
 export const FeaturedWrapper = styled.View`
@@ -72,7 +72,7 @@ export const FeaturedWrapper = styled.View`
 export const OrderProgressWrapper = styled.View`
   margin-top: 37px;
   margin-bottom: 20px;
-	padding-horizontal: 40px;
+	padding-horizontal: 20px;
 `
 
 export const FarAwayMessage = styled.View`
@@ -98,10 +98,10 @@ export const FilterWrapper = styled.View`
 `
 
 export const ServiceWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
 `
 
 export const PriceWrapper = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-top: 30px;
 `

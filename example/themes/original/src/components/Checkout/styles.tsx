@@ -113,3 +113,20 @@ export const CartHeader = styled.View`
   justify-content: space-between;
   margin-bottom: 10px;
 `
+
+export const TopActions = styled.TouchableOpacity`
+	height: 60px;
+	justify-content: center;
+  min-width: 30px;
+  padding-right: 15px;
+`;
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  height: 60px;
+  min-height: 60px;
+`

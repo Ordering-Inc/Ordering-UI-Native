@@ -109,7 +109,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 	return (
 		<BusinessReviewsContainer>
 			<BusinessReviewContent
-				contentContainerStyle={{ paddingHorizontal: 40, paddingVertical: 27 }}>
+				contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 27 }}>
 				{reviewsList.error ? (
 					<OText size={16}>{t('ERROR_UNKNOWN', 'An error has ocurred')}</OText>
 				) : (

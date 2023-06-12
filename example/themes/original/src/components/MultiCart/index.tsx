@@ -11,7 +11,7 @@ export const MultiCartUI = () => {
   const theme = useTheme();
   return (
     <Container noPadding>
-      <ChContainer style={{ paddingHorizontal: 40 }}>
+      <ChContainer style={{ paddingHorizontal: 20 }}>
         <ChSection>
           <ChUserDetails>
             <Placeholder Animation={Fade}>

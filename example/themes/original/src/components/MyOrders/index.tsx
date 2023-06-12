@@ -87,7 +87,7 @@ export const MyOrders = (props: any) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            paddingHorizontal: isChewLayout ? 20 : 40,
+            paddingHorizontal: 20,
           },
           ...props.titleStyle
         }}>
@@ -124,7 +124,7 @@ export const MyOrders = (props: any) => {
         <ScrollView
           horizontal
           style={{ ...styles.container, borderBottomWidth: 1 }}
-          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : isChewLayout ? 20 : 40 }}
+          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : 20  }}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
@@ -148,7 +148,7 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+          <View style={{ paddingHorizontal: 20  }}>
             <OrdersOption
               {...props}
               preOrders
@@ -158,7 +158,7 @@ export const MyOrders = (props: any) => {
               refreshOrders={refreshOrders}
             />
           </View>
-          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+          <View style={{ paddingHorizontal: 20 }}>
             <OrdersOption
               {...props}
               activeOrders
@@ -168,7 +168,7 @@ export const MyOrders = (props: any) => {
               refreshOrders={refreshOrders}
             />
           </View>
-          <View style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+          <View style={{ paddingHorizontal: 20 }}>
             <OrdersOption
               {...props}
               ordersLength={ordersLength}

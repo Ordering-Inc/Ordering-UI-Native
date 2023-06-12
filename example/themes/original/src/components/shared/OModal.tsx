@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
-import { OIcon } from '.';
-import styled, { useTheme } from 'styled-components/native';
+import styled from 'styled-components/native';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 interface Props {
 	open?: boolean;
@@ -50,17 +50,15 @@ const OModal = (props: Props): React.ReactElement => {
 		isAvoidKeyBoardView
 	} = props
 
-	const theme = useTheme();
-
 	const renderSafeAreaView = () => (
 		<SafeAreaView style={styles.container}>
 			{!entireModal ? (
 				<View style={styles.centeredView}>
 					<View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-						<TouchableOpacity style={{...styles.wrapperIcon, ...styleContainerCloseButton}} onPress={onClose}>
-							<OIcon
-								src={theme.images.general.close}
-								width={16}
+						<TouchableOpacity style={{ ...styles.wrapperIcon, ...styleContainerCloseButton }} onPress={onClose}>
+							<AntDesignIcon
+								name='close'
+								size={26}
 								style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
 							/>
 						</TouchableOpacity>
@@ -73,9 +71,9 @@ const OModal = (props: Props): React.ReactElement => {
 					{!customClose && (
 						<View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
 							<TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
-								<OIcon
-									src={theme.images.general.close}
-									width={16}
+								<AntDesignIcon
+									name='close'
+									size={26}
 									style={styleCloseButton || styles.cancelBtn}
 								/>
 							</TouchableOpacity>
@@ -93,7 +91,7 @@ const OModal = (props: Props): React.ReactElement => {
 			animationType="slide"
 			transparent={isTransparent}
 			visible={open}
-			onRequestClose={() =>  onClose && onClose()}
+			onRequestClose={() => onClose && onClose()}
 			style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
 		>
 			{isAvoidKeyBoardView ? (
@@ -125,8 +123,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
-		paddingLeft: 40,
-		paddingRight: 40,
+		paddingLeft: 20,
+		paddingRight: 20,
 		marginBottom: 40
 	},
 	cancelBtn: {
