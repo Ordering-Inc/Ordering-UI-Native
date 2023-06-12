@@ -73,12 +73,12 @@ const MultiCheckoutUI = (props: any) => {
   const theme = useTheme();
   const styles = StyleSheet.create({
     pagePadding: {
-      paddingLeft: 40,
-      paddingRight: 40
+      paddingLeft: 20,
+      paddingRight: 20
     },
-    wrapperNavbar: { paddingHorizontal: 40 },
+    wrapperNavbar: { paddingHorizontal: 20 },
     detailWrapper: {
-			paddingHorizontal: 40,
+			paddingHorizontal: 20,
 			width: '100%'
 		},
   })

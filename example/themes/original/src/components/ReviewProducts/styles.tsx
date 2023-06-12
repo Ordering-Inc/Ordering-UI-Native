@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 
 export const ReviewProductsContainer = styled.ScrollView`
-  padding: 20px 40px;
+  padding: 20px;
   margin-bottom: 100px;
 `
 

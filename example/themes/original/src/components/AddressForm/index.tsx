@@ -122,8 +122,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 			width: 16
 		},
 		wrapperNavbar: Platform.OS === 'ios'
-			? { paddingVertical: 0, paddingLeft: 40, paddingRight: 20 }
-			: { paddingVertical: 10, paddingLeft: 40, paddingRight: 20 }
+			? { paddingVertical: 0, paddingLeft: 20, paddingRight: 20 }
+			: { paddingVertical: 10, paddingLeft: 20, paddingRight: 20 }
 	});
 
 	const [, t] = useLanguage();

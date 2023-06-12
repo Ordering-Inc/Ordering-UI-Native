@@ -82,7 +82,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	return (
 		<View>
-			<Container onPress={!(option?.with_half_option || option?.allow_suboption_quantity) ? () => handleSuboptionClick() : null}>
+			<Container onPress={!((option?.with_half_option || option?.allow_suboption_quantity) && state?.selected) ? () => handleSuboptionClick() : null}>
 				<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 					{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 						state?.selected ? (

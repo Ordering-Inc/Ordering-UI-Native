@@ -415,7 +415,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<ScrollView
 							showsHorizontalScrollIndicator={false}
 							nestedScrollEnabled
-							horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
+							horizontal contentContainerStyle={{ paddingHorizontal: 20 }}>
 							{featuredBusiness.map((bAry: any, idx) => (
 								<View key={'f-listing_' + idx}>
 									<BusinessFeaturedController

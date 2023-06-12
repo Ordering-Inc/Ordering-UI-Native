@@ -327,8 +327,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		<>
 			<Container
 				style={{
-					paddingLeft: !cateringPreorder || isPage ? 40 : 0,
-					paddingRight: !cateringPreorder || isPage ? 40 : 0
+					paddingLeft: !cateringPreorder || isPage ? 20 : 0,
+					paddingRight: !cateringPreorder || isPage ? 20 : 0
 				}}
 				nestedScrollEnabled
 			>
@@ -467,7 +467,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				<Spinner visible={momentState.isLoading === 1} />
 			</Container>
 			{!isCart && !cateringPreorder && (
-				<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%' }}>
+				<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 20, backgroundColor: 'white', width: '100%' }}>
 					<OButton onClick={() => handleChangeMoment()} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }} textStyle={{ color: 'white', fontSize: 14 }} showNextIcon />
 				</View>
 			)}
