@@ -162,4 +162,4 @@ export const HighestRatedBusinesses = (props: any) => {
   };
 
   return <BusinessesListingController {...highestRatedBusinessesProps} />;
-}; 
+};
