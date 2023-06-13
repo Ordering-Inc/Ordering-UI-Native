@@ -41,6 +41,16 @@ export const Timestatus = styled.View`
   height: 55px;
   border-radius: 20px;
   top: 5px;
+
+  ${({ timeState }: any) => timeState === 'in_time' && css`
+    background-color: #00D27A;
+  `}
+  ${({ timeState }: any) => timeState === 'at_risk' && css`
+    background-color: #FFC700;
+  `}
+  ${({ timeState }: any) => timeState === 'delayed' && css`
+    background-color: #E63757;
+  `}
 `
 
 export const AccordionSection = styled.View`
