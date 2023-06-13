@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ActivityIndicator, View } from 'react-native'
 import {
   Cart,
@@ -56,6 +56,7 @@ const OrderSummaryUI = (props: any) => {
   const [orderState] = useOrder();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [validationFields] = useValidationFields();
+  const commentRef = useRef()
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
   const hideCartComments = !validationFields?.fields?.checkout?.comments?.enabled
@@ -341,6 +342,7 @@ const OrderSummaryUI = (props: any) => {
                           marginTop: 10,
                           borderRadius: 8
                         }}
+                        forwardRef={commentRef}
                         multiline
                       />
                       {commentState?.loading && (

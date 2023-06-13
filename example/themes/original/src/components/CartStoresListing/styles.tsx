@@ -9,7 +9,7 @@ export const Container = styled.View`
 `
 
 export const ItemListing = styled.ScrollView`
-  padding: 0 40px;
+  padding: 0 20px;
   margin: 0 0 140px;
 `
 
@@ -19,7 +19,7 @@ export const TopHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  padding: 0 40px;
+  padding: 0 20px;
 `
 
 export const HeaderItem = styled.TouchableOpacity`

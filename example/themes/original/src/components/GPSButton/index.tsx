@@ -61,7 +61,7 @@ export const GPSButton = (props: any) => {
     if (trackingStatus === 'not-determined') {
       trackingStatus = await requestTrackingPermission()
     }
-    if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
+    if ( trackingStatus === 'authorized' || trackingStatus === 'denied' || trackingStatus === 'unavailable') {
       setLoading(true)
       Geolocation.getCurrentPosition((pos) => {
         geoCodePosition(pos.coords)

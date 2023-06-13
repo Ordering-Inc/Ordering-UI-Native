@@ -120,9 +120,7 @@ const WalletsUI = (props: any) => {
 
   return (
     <>
-      <Container
-        pdng={Platform.OS === 'ios' ? '10px' : '0'}
-      >
+      <Container>
         <Header>
           <View style={{
             ...{

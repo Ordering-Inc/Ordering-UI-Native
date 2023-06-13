@@ -10,7 +10,7 @@ export const Header = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
   box-shadow: 0 2px 2px #0000001A;
   padding-bottom: 10px;
-  padding-horizontal: 20px;
+  padding-horizontal: 10px;
 `
 
 export const TitleHeader = styled.View``

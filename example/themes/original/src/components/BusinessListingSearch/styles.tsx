@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native'
 
 export const BContainer = styled.View`
-  padding: 20px 40px;
+  padding: 20px;
 `
 
 export const SearchWrapper = styled.View`
