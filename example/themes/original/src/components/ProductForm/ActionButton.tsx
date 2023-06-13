@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSession, useOrder, useLanguage } from 'ordering-components/native'
+import { useSession, useOrder, useLanguage, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
 import { TouchableOpacity, View } from 'react-native'
 import { OButton, OText } from '../shared';
@@ -27,6 +27,9 @@ export const ActionButton = (props : any) => {
     const [{ auth }] = useSession()
     const [orderState] = useOrder()
     const theme = useTheme()
+	const [{ configs }] = useConfig()
+    const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
 
     const saveErrors =
 		orderState.loading ||
@@ -40,7 +43,7 @@ export const ActionButton = (props : any) => {
             }}>
             {((productCart &&
                 auth &&
-                orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
+                (orderState.options?.address_id || isAllowUnaddressOrderType)) || (isSoldOut || maxProductQuantity <= 0)) && (
                     <OButton
                         onClick={() => handleSaveProduct()}
                         imgRightSrc=""
@@ -70,7 +73,7 @@ export const ActionButton = (props : any) => {
                     />
                 )}
             {auth &&
-                !orderState.options?.address_id &&
+                !orderState.options?.address_id && !isAllowUnaddressOrderType &&
                 (orderState.loading ? (
                     <OButton
                         isDisabled
