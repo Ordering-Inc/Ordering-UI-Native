@@ -173,6 +173,7 @@ export interface BusinessControllerParams {
   isBusinessOpen?: boolean;
   businessWillCloseSoonMinutes?: number;
   updateBusiness?: (id: any, value: any) => {};
+  navigation?: any;
 }
 export interface BusinessProductsListingParams {
   navigation?: any;

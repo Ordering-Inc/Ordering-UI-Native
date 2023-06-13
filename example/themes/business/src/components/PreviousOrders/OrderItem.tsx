@@ -100,12 +100,13 @@ export const OrderItem = React.memo((props: any) => {
   });
 
   const getDelayMinutes = (order: any) => {
-    const cdtToutc = moment(order?.delivery_datetime).utc().format('YYYY-MM-DD HH:mm:ss')
+    const offset = 300
+    const cdtToutc = moment(order?.delivery_datetime).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc)
+      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm:ss' })
       : parseDate(cdtToutc)
     const _eta = order?.eta_time
-    const diffTimeAsSeconds = moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'seconds')
+    const diffTimeAsSeconds = moment(_delivery).add(_eta, 'minutes').diff(moment().utc(), 'seconds')
     return Math.ceil(diffTimeAsSeconds / 60)
   }
 
@@ -127,12 +128,6 @@ export const OrderItem = React.memo((props: any) => {
     return finalTaget
   }
 
-  const getStatusClassName = (minutes: number) => {
-    if (isNaN(Number(minutes))) return 'in_time'
-    const delayTime = configState?.configs?.order_deadlines_delayed_time?.value
-    return minutes > 0 ? 'in_time' : Math.abs(minutes) <= delayTime ? 'at_risk' : 'delayed'
-  }
-
   useEffect(() => {
     const slaSettings = configState?.configs?.order_deadlines_enabled?.value === '1'
     setAllowColumns({
@@ -152,15 +147,7 @@ export const OrderItem = React.memo((props: any) => {
       <Card key={order.id}>
         {!!allowColumns?.slaBar && (
           <Timestatus
-            style={{
-              backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time'
-                ? '#00D27A'
-                : getStatusClassName(getDelayMinutes(order)) === 'at_risk'
-                  ? '#FFC700'
-                  : getStatusClassName(getDelayMinutes(order)) === 'delayed'
-                    ? '#E63757'
-                    : ''
-            }}
+            timeState={order?.time_status}
           />
         )}
         <Logo style={styles.logo}>
@@ -214,11 +201,11 @@ export const OrderItem = React.memo((props: any) => {
                 <OText
                   style={styles.date}
                   color={
-                    getStatusClassName(getDelayMinutes(order)) === 'in_time'
+                    order?.time_status === 'in_time'
                       ? '#00D27A'
-                      : getStatusClassName(getDelayMinutes(order)) === 'at_risk'
+                      : order?.time_status === 'at_risk'
                         ? '#FFC700'
-                        : getStatusClassName(getDelayMinutes(order)) === 'delayed'
+                        : order?.time_status === 'delayed'
                           ? '#E63757'
                           : ''}
                 >
