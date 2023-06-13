@@ -8,7 +8,7 @@ import { AcceptOrRejectOrder as AcceptOrRejectOrderStyle } from './styles';
 
 function OrderListPropsAreEqual(prevProps: any, nextProps: any) {
 	return JSON.stringify(prevProps.order) === JSON.stringify(nextProps.order) &&
-        JSON.stringify(prevProps._order) === JSON.stringify(nextProps._order) && 
+        JSON.stringify(prevProps._order) === JSON.stringify(nextProps._order) &&
         JSON.stringify(prevProps.currentOrdenSelected) === JSON.stringify(nextProps.currentOrdenSelected) &&
         prevProps.currentTabSelected === nextProps.currentTabSelected
 }

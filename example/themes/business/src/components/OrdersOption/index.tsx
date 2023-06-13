@@ -98,27 +98,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
-  const [selectedTabStatus, setSelectedTabStatus] = useState<any>([])
-  const [openedSelect, setOpenedSelect] = useState('')
-
-  const HEIGHT_SCREEN = orientationState?.dimensions?.height
-  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
-
-  const preorderTypeList = [
-    { key: null, name: t('SLA', 'SLA\'s') },
-    { key: 'in_time', name: t('OK', 'Ok') },
-    { key: 'at_risk', name: t('AT_RISK', 'At Risk') },
-    { key: 'delayed', name: t('DELAYED', 'Delayed') }
-  ]
-
-  const defaultOrderTypes = [
-    { key: 1, name: t('DELIVERY', 'Delivery') },
-    { key: 2, name: t('PICKUP', 'Pickup') },
-    { key: 3, name: t('EAT_IN', 'Eat in') },
-    { key: 4, name: t('CURBSIDE', 'Curbside') },
-    { key: 5, name: t('DRIVE_THRU', 'Drive thru') }
-  ]
-
   const deliveryStatus = [
     {
       key: t('OK', 'Ok'),
@@ -141,6 +120,26 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       icon: theme.images.general?.clockDelayed,
       backColor: '#E63757'
     }
+  ]
+  const [selectedTabStatus, setSelectedTabStatus] = useState<any>(deliveryStatus)
+  const [openedSelect, setOpenedSelect] = useState('')
+
+  const HEIGHT_SCREEN = orientationState?.dimensions?.height
+  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+
+  const preorderTypeList = [
+    { key: null, name: t('SLA', 'SLA\'s') },
+    { key: 'in_time', name: t('OK', 'Ok') },
+    { key: 'at_risk', name: t('AT_RISK', 'At Risk') },
+    { key: 'delayed', name: t('DELAYED', 'Delayed') }
+  ]
+
+  const defaultOrderTypes = [
+    { key: 1, name: t('DELIVERY', 'Delivery') },
+    { key: 2, name: t('PICKUP', 'Pickup') },
+    { key: 3, name: t('EAT_IN', 'Eat in') },
+    { key: 4, name: t('CURBSIDE', 'Curbside') },
+    { key: 5, name: t('DRIVE_THRU', 'Drive thru') }
   ]
 
   const styles = StyleSheet.create({
@@ -382,10 +381,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
     setTags({ values: [] })
   }, [currentTabSelected])
-
-  useEffect(() => {
-    setSelectedTabStatus(deliveryStatus)
-  }, [])
 
   return (
     <>
