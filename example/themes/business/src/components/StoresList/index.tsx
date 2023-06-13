@@ -180,6 +180,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
               isBusinessOpen={business?.open}
               setIsUpdateStore={setIsUpdateStore}
               isUpdateStore={isUpdateStore}
+              navigation={navigation}
             />
           ))}
 

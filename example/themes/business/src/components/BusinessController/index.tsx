@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -14,7 +14,7 @@ import { OIcon, OText } from '../shared';
 import { BusinessControllerParams } from '../../types';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { businessState, updateBusiness, isUpdateStore, setIsUpdateStore } =
+  const { businessState, updateBusiness, isUpdateStore, setIsUpdateStore, navigation } =
     props;
 
   const { loading, business, error } = businessState;
@@ -93,21 +93,18 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     <>
       {business && (
         <Card key={business?.id}>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            <Logo style={styles.logo}>
-              <OIcon
-                url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                src={!business?.logo && theme?.images?.dummies?.businessLogo}
-                style={styles.icon}
-              />
-            </Logo>
-
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-              }}>
+          <View style={{ flexDirection: 'row', flex: 1 }}>
+            <TouchableOpacity
+              style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => navigation && business?.slug && navigation.navigate('BusinessProductListing', { slug: business?.slug })}
+            >
+              <Logo style={styles.logo}>
+                <OIcon
+                  url={optimizeImage(business?.logo, 'h_300,c_limit')}
+                  src={!business?.logo && theme?.images?.dummies?.businessLogo}
+                  style={styles.icon}
+                />
+              </Logo>
               <Information>
                 <View style={styles.header}>
                   <OText style={styles.title} numberOfLines={1}>
@@ -123,7 +120,12 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
                   {business?.zipcode}
                 </OText>
               </Information>
+            </TouchableOpacity>
 
+            <View
+              style={{
+                alignItems: 'flex-start',
+              }}>
               {loading && isUpdateStore ? (
                 <ActivityIndicator size="small" color={theme.colors.primary} />
               ) : (
