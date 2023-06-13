@@ -96,7 +96,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <TouchableOpacity
               style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => navigation && navigation.navigate('BusinessProductListing', { slug: business?.slug })}
+              onPress={() => navigation && business?.slug && navigation.navigate('BusinessProductListing', { slug: business?.slug })}
             >
               <Logo style={styles.logo}>
                 <OIcon
