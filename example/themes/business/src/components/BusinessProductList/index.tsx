@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
+import { SearchBar } from '../SearchBar';
 import {
   ToastType,
   useToast,
   useLanguage,
-  BusinessAndProductList,
+  StoreProductList
 } from 'ordering-components/native';
 import { NotFoundSource } from '../NotFoundSource';
-import { OText, OIconButton } from '../shared';
+import { OText, OIcon } from '../shared';
 import { IterateCategories } from './IterateCategories';
 import { ProductList } from './ProductList'
 
@@ -17,10 +18,16 @@ const BusinessProductListUI = (props: any) => {
   const {
     navigation,
     businessState,
-    handleChangeCategory,
-    categoryState,
+    productsList,
     updateStoreCategory,
-    updateStoreProduct
+    updateStoreProduct,
+    productSearch,
+    categorySearch,
+    handleChangeCategory,
+    handleChangeProductSearch,
+    handleChangeCategorySearch,
+    getCategoryProducts,
+    categories
   } = props;
 
   const { loading, error, business } = businessState;
@@ -59,28 +66,50 @@ const BusinessProductListUI = (props: any) => {
     sectionTitle: {
       fontStyle: 'normal',
       fontWeight: '600',
-      fontSize: 24,
+      fontSize: 20,
       color: theme.colors.textGray,
     },
-    arrowLeft: {
-      maxWidth: 40,
-      height: 25,
-      justifyContent: 'flex-end',
-      marginTop: 8
+    borderStyle: {
+      borderColor: theme.colors.red,
+      borderWidth: 0,
+      borderRadius: 10,
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0
     },
   });
 
   return (
     <>
       <View style={styles.header}>
-        <OIconButton
-          icon={theme.images.general.arrow_left}
-          borderColor={theme.colors.clear}
-          iconStyle={{ width: 20, height: 20 }}
-          style={styles.arrowLeft}
-          onClick={() => navigation?.canGoBack() && navigation.goBack()}
-        />
-        <OText style={styles.sectionTitle}>{t('CATEGORIES', 'Categories')}</OText>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => navigation?.canGoBack() && navigation.goBack()}
+            style={styles.btnBackArrow}
+          >
+            <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+          </TouchableOpacity>
+          <OText style={styles.sectionTitle}>{t('CATEGORIES', 'Categories')}</OText>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <SearchBar
+            borderStyle={styles.borderStyle}
+            onSearch={handleChangeCategorySearch}
+            searchValue={categorySearch}
+            lazyLoad
+            isCancelXButtonShow={!!categorySearch}
+            onCancel={() => handleChangeCategorySearch('')}
+            placeholder={t('FIND_CATEGORY', 'Find a category')}
+          />
+        </View>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -92,7 +121,7 @@ const BusinessProductListUI = (props: any) => {
             conditioned={false}
           />
         )}
-        {!error && !loading && business?.categories?.length > 0 && (
+        {!error && !loading && categories?.length > 0 && (
           <View
             style={{
               borderTopColor: theme.colors.borderTops,
@@ -100,7 +129,7 @@ const BusinessProductListUI = (props: any) => {
             }}
           >
             <IterateCategories
-              list={business?.categories}
+              list={categories}
               handlerClickCategory={handleOpenProducts}
               updateCategory={updateStoreCategory}
             />
@@ -143,8 +172,11 @@ const BusinessProductListUI = (props: any) => {
           }}
         >
           <ProductList
-            categoryState={categoryState}
+            productsList={productsList}
             updateProduct={updateStoreProduct}
+            searchValue={productSearch}
+            handleChangeSearch={handleChangeProductSearch}
+            getCategoryProducts={getCategoryProducts}
             onClose={() => setShowModal(false)}
           />
         </View>
@@ -156,9 +188,8 @@ const BusinessProductListUI = (props: any) => {
 export const BusinessProductList = (props: any) => {
   const businessProductListProps = {
     ...props,
-    isFetchAllProducts: true,
     UIComponent: BusinessProductListUI,
   };
 
-  return <BusinessAndProductList {...businessProductListProps} />;
+  return <StoreProductList {...businessProductListProps} />;
 };
