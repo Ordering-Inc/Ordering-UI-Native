@@ -1,45 +1,56 @@
-import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import React, { useCallback } from 'react'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native';
-import { OIcon, OText, OIconButton } from '../shared';
+import { OIcon, OText } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { SearchBar } from '../SearchBar';
+import { IOScrollView } from 'react-native-intersection-observer';
 import {
   useLanguage,
-  useUtils
+  useUtils,
+  ToastType,
+  useToast,
 } from 'ordering-components/native'
 
-export const ProductList = (props: any) => {
-  const { categoryState, onClose, updateProduct } = props
+const PIXELS_TO_SCROLL = 2000
 
-  const { loading, products, error } = categoryState
+export const ProductList = (props: any) => {
+  const { productsList, onClose, updateProduct, searchValue, handleChangeSearch, getCategoryProducts } = props
+
+  const { loading, products, error } = productsList
 
   const theme = useTheme()
   const [{ optimizeImage }] = useUtils();
+  const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
   const styles = StyleSheet.create({
     container: {
-      paddingBottom: 20,
-      marginBottom: 0,
       flex: 1,
+      marginBottom: 0
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 10,
     },
-    arrowLeft: {
-      maxWidth: 40,
-      height: 25,
-      justifyContent: 'flex-end',
-      marginTop: 8
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0
     },
     sectionTitle: {
       fontStyle: 'normal',
       fontWeight: '600',
-      fontSize: 24,
+      fontSize: 20,
       color: theme.colors.textGray,
     },
     logo: {
@@ -60,27 +71,60 @@ export const ProductList = (props: any) => {
       height: 35,
       marginRight: 5
     },
+    borderStyle: {
+      borderColor: theme.colors.red,
+      borderWidth: 0,
+      borderRadius: 10,
+    },
   });
 
   const handleSwitch = (enabled: boolean, categoryId: any, productId: any) => {
     updateProduct && updateProduct(categoryId, productId, { enabled })
   };
 
+  const handleScroll = ({ nativeEvent }: any) => {
+    const y = nativeEvent.contentOffset.y;
+    const height = nativeEvent.contentSize.height;
+    const hasMore = !(
+      productsList.pagination.totalPages === productsList.pagination.currentPage
+    );
+
+    if (y + PIXELS_TO_SCROLL > height && !productsList.loading && hasMore && productsList?.products?.length > 0) {
+      getCategoryProducts(false)
+      showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+    }
+  };
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 20 }}>
       <View style={styles.header}>
-        <OIconButton
-          icon={theme.images.general.arrow_left}
-          borderColor={theme.colors.clear}
-          iconStyle={{ width: 20, height: 20 }}
-          style={styles.arrowLeft}
-          onClick={onClose}
-        />
-        <OText style={styles.sectionTitle}>{t('PRODUCTS', 'Products')}</OText>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={styles.btnBackArrow}
+          >
+            <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+          </TouchableOpacity>
+          <OText style={styles.sectionTitle}>{t('PRODUCTS', 'Products')}</OText>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <SearchBar
+            borderStyle={styles.borderStyle}
+            onSearch={handleChangeSearch}
+            searchValue={searchValue}
+            lazyLoad
+            isCancelXButtonShow={!!searchValue}
+            onCancel={() => handleChangeSearch('')}
+            placeholder={t('FIND_PRODUCT', 'Find a product')}
+          />
+        </View>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.container}>
+      <IOScrollView
+        style={styles.container}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        bounces={false}
+      >
         {!loading && products?.length === 0 && (
           <NotFoundSource
             content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
@@ -98,7 +142,7 @@ export const ProductList = (props: any) => {
                   justifyContent: 'space-between',
                   borderBottomColor: theme.colors.borderTops,
                   borderBottomWidth: 1,
-                  paddingVertical: 10
+                  paddingVertical: 15
                 }}
               >
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', marginRight: 36 }}>
@@ -145,7 +189,7 @@ export const ProductList = (props: any) => {
             ))}
           </View>
         )}
-      </ScrollView>
+      </IOScrollView>
     </View>
   )
 }
