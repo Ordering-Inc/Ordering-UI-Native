@@ -266,7 +266,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         {order?.external_id && (
           <OText size={13}>
             <OText size={13} weight='bold'>{`${t('EXTERNAL_ID', 'External ID :')} `}</OText>
-            {order?.external_id}id_de_prueba
+            {order?.external_id}
           </OText>
         )}
         {!order?.isLogistic && !!order?.delivery_type && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
