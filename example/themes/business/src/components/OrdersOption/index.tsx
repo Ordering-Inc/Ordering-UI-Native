@@ -75,6 +75,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const defaultSearchList = {
     id: '',
+    external_id: '',
     state: '',
     city: '',
     business: '',
@@ -725,6 +726,21 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                     size={20}
                     style={{ position: 'absolute', right: 12, top: 13 }}
                     onPress={() => setSearch({ ...search, id: '' })}
+                  />
+                </InputContainer>
+                <InputContainer>
+                  <OInput
+                    value={search.external_id}
+                    onChange={(value: any) => setSearch({ ...search, external_id: value })}
+                    style={styles.inputStyle}
+                    placeholder={t('EXTERNAL_ID', 'External id')}
+                    autoCorrect={false}
+                  />
+                  <AntDesignIcon
+                    name='close'
+                    size={20}
+                    style={{ position: 'absolute', right: 12, top: 13 }}
+                    onPress={() => setSearch({ ...search, external_id: '' })}
                   />
                 </InputContainer>
                 <OrdersOptionDate
