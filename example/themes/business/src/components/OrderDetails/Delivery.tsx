@@ -115,6 +115,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages && readMessages();
   };
 
+  const goToPermissionPage = () => {
+    navigation.navigate('RequestPermissions')
+  }
+
   const handleOpenMapView = async () => {
     if (!isGrantedPermissions) {
       navigation.navigate('RequestPermissions')
@@ -478,7 +482,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               textStyle={{ color: theme.colors.primary }}
               text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
               onClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(3)
+                handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(3) : goToPermissionPage()
               }
               imgLeftStyle={{ tintColor: theme.colors.backArrow }}
             />
@@ -570,7 +574,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     btnText={t('PICKUP_FAILED', 'Pickup failed')}
                     isSecondaryBtn={false}
                     secondButtonClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(9)
+                      handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(9) : goToPermissionPage()
                     }
                     firstButtonClick={() =>
                       handleViewActionOrder && handleViewActionOrder('pickupFailed')
@@ -590,7 +594,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
                       isSecondaryBtn={false}
                       secondButtonClick={() =>
-                        handleChangeOrderStatus && handleChangeOrderStatus(11)
+                        handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(11) : goToPermissionPage()
                       }
                       firstButtonClick={() =>
                         handleViewActionOrder && handleViewActionOrder('deliveryFailed')
