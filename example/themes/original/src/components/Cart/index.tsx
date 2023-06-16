@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Cart as CartController,
   useOrder,
@@ -52,7 +52,11 @@ const CartUI = (props: any) => {
     preorderMaximumDays,
     preorderMinimumDays,
     cateringTypes,
-    isFromUpselling
+    isFromUpselling,
+    cartsOpened,
+    setCartsOpened,
+    changeActiveState,
+    isActive
   } = props
 
   const theme = useTheme();
@@ -62,7 +66,7 @@ const CartUI = (props: any) => {
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [validationFields] = useValidationFields()
-
+  const commentRef = useRef()
   const [openUpselling, setOpenUpselling] = useState(false)
   const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
@@ -109,7 +113,7 @@ const CartUI = (props: any) => {
     }
   }
 
-  const handleUpsellingPage = (individualCart : any) => {
+  const handleUpsellingPage = (individualCart: any) => {
     const isProductCartParam = !!individualCart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
@@ -232,6 +236,11 @@ const CartUI = (props: any) => {
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
         isFromUpselling={isFromUpselling}
+        cartsOpened={cartsOpened}
+        setCartsOpened={setCartsOpened}
+        changeActiveState={changeActiveState}
+        isActive={isActive}
+        isGiftCart={!cart?.business_id}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
@@ -423,6 +432,7 @@ const CartUI = (props: any) => {
               cart?.status !== 2 &&
               validationFields?.fields?.checkout?.driver_tip?.enabled &&
               driverTipsOptions && driverTipsOptions?.length > 0 &&
+              cart?.business_id &&
               (
                 <DriverTipsContainer>
                   <OText size={14} lineHeight={20} color={theme.colors.textNormal}>
@@ -489,6 +499,7 @@ const CartUI = (props: any) => {
                         marginTop: 10,
                         borderRadius: 7.6
                       }}
+                      forwardRef={commentRef}
                       multiline
                     />
                     {commentState?.loading && (

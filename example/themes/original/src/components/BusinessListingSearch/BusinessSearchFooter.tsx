@@ -17,7 +17,7 @@ import {
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { MaxSectionItem } from './MaxSectionItem'
 
-export const BusinessSearchFooter = (props : any) => {
+export const BusinessSearchFooter = (props: any) => {
     const {
         businessesSearchList,
         handleCloseFilters,

@@ -114,7 +114,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     },
     searchIcon: {
       borderWidth: 0,
-      padding: 15,
+      padding: 10,
       justifyContent: 'center',
       shadowColor: theme.colors.clear,
     },
@@ -194,7 +194,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         product: product,
         businessSlug: business.slug,
         businessId: business.id || product?.category?.business_id,
-        productAddedToCartLength
+        productAddedToCartLength,
+        isRedirect: false
       })
     }
     events.emit('product_clicked', product)
@@ -529,9 +530,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </View>
           </FiltProductsContainer>
         )}
-        {isOpenFiltProducts && (
-          <BackgroundGray isIos={Platform.OS === 'ios'} />
-        )}
         <IOScrollView
           stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 3]}
           style={{
@@ -570,7 +568,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               />
             </ProfessionalFilterWrapper>
           )}
-          <PageBanner position='app_business_page' navigation={navigation} />
+          {businessState?.business?.id && (
+            <PageBanner position='app_business_page' businessId={businessState?.business?.id} navigation={navigation} />
+          )}
           <View
             style={{
               height: 8,
@@ -598,7 +598,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             <>
               <WrapContent
                 onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
-                style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}
+                style={{ paddingHorizontal: 20 }}
               >
                 <BusinessProductsList
                   categories={[
@@ -654,6 +654,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 />
               </WrapContent>
             </>
+          )}
+          {isOpenFiltProducts && (
+            <BackgroundGray isIos={Platform.OS === 'ios'} />
           )}
         </IOScrollView>
         {viewOrderButtonVisible && (
@@ -712,7 +715,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           professionalList={business?.professionals}
           professionalSelected={professionalSelected}
           handleChangeProfessional={handleChangeProfessionalSelected}
-          handleChangeProfessional={handleChangeProfessionalSelected}
           handleUpdateProfessionals={handleUpdateProfessionals}
           onSave={() => setOpenService(false)}
           onClose={() => setOpenService(false)}
@@ -727,6 +729,7 @@ export const BusinessProductsListing = (props: BusinessProductsListingParams) =>
     ...props,
     isForceSearch: Platform.OS === 'ios',
     isApp: true,
+    isFetchAllProducts: true,
     UIComponent: BusinessProductsListingUI
   }
   return (

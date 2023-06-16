@@ -11,6 +11,7 @@ import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
+import { WebsocketStatus } from '../WebsocketStatus'
 
 import { OText, OButton, OModal, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -74,6 +75,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const defaultSearchList = {
     id: '',
+    external_id: '',
     state: '',
     city: '',
     business: '',
@@ -98,27 +100,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
-  const [selectedTabStatus, setSelectedTabStatus] = useState<any>([])
-  const [openedSelect, setOpenedSelect] = useState('')
-
-  const HEIGHT_SCREEN = orientationState?.dimensions?.height
-  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
-
-  const preorderTypeList = [
-    { key: null, name: t('SLA', 'SLA\'s') },
-    { key: 'in_time', name: t('OK', 'Ok') },
-    { key: 'at_risk', name: t('AT_RISK', 'At Risk') },
-    { key: 'delayed', name: t('DELAYED', 'Delayed') }
-  ]
-
-  const defaultOrderTypes = [
-    { key: 1, name: t('DELIVERY', 'Delivery') },
-    { key: 2, name: t('PICKUP', 'Pickup') },
-    { key: 3, name: t('EAT_IN', 'Eat in') },
-    { key: 4, name: t('CURBSIDE', 'Curbside') },
-    { key: 5, name: t('DRIVE_THRU', 'Drive thru') }
-  ]
-
   const deliveryStatus = [
     {
       key: t('OK', 'Ok'),
@@ -141,6 +122,26 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       icon: theme.images.general?.clockDelayed,
       backColor: '#E63757'
     }
+  ]
+  const [selectedTabStatus, setSelectedTabStatus] = useState<any>(deliveryStatus)
+  const [openedSelect, setOpenedSelect] = useState('')
+
+  const HEIGHT_SCREEN = orientationState?.dimensions?.height
+  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+
+  const preorderTypeList = [
+    { key: null, name: t('SLA', 'SLA\'s') },
+    { key: 'in_time', name: t('OK', 'Ok') },
+    { key: 'at_risk', name: t('AT_RISK', 'At Risk') },
+    { key: 'delayed', name: t('DELAYED', 'Delayed') }
+  ]
+
+  const defaultOrderTypes = [
+    { key: 1, name: t('DELIVERY', 'Delivery') },
+    { key: 2, name: t('PICKUP', 'Pickup') },
+    { key: 3, name: t('EAT_IN', 'Eat in') },
+    { key: 4, name: t('CURBSIDE', 'Curbside') },
+    { key: 5, name: t('DRIVE_THRU', 'Drive thru') }
   ]
 
   const styles = StyleSheet.create({
@@ -383,10 +384,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setTags({ values: [] })
   }, [currentTabSelected])
 
-  useEffect(() => {
-    setSelectedTabStatus(deliveryStatus)
-  }, [])
-
   return (
     <>
       <View style={styles.header}>
@@ -407,6 +404,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
+      <WebsocketStatus />
       {configState?.configs?.order_deadlines_enabled?.value === '1' && (
         <View style={styles.SLAwrapper}>
           <View style={{ flex: 0.5 }}>
@@ -730,6 +728,21 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                     onPress={() => setSearch({ ...search, id: '' })}
                   />
                 </InputContainer>
+                <InputContainer>
+                  <OInput
+                    value={search.external_id}
+                    onChange={(value: any) => setSearch({ ...search, external_id: value })}
+                    style={styles.inputStyle}
+                    placeholder={t('EXTERNAL_ID', 'External id')}
+                    autoCorrect={false}
+                  />
+                  <AntDesignIcon
+                    name='close'
+                    size={20}
+                    style={{ position: 'absolute', right: 12, top: 13 }}
+                    onPress={() => setSearch({ ...search, external_id: '' })}
+                  />
+                </InputContainer>
                 <OrdersOptionDate
                   {...props}
                   search={search}
@@ -919,7 +932,7 @@ export const Timer = () => {
   return (
     <TimerInputWrapper>
       <OText style={styles.settingTime} color={theme.colors.disabled}>{configs?.order_deadlines_delayed_time?.value}</OText>
-      <OText>{t('MIN', 'min')}</OText>
+      <OText>{t('TIME_MIN', 'min')}</OText>
     </TimerInputWrapper>
   )
 }

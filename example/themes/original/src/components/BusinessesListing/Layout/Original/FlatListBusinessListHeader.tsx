@@ -133,7 +133,7 @@ export const FlatListBusinessListHeader = (props: any) => {
             backgroundColor: theme.colors.white,
             borderColor: theme.colors.backgroundGray,
             borderRadius: 8,
-            marginHorizontal: 40,
+            marginHorizontal: 20,
             minHeight: 45,
             paddingVertical: 5,
             paddingHorizontal: 20,
@@ -165,7 +165,7 @@ export const FlatListBusinessListHeader = (props: any) => {
             )}
             <View style={{
                 height: !isPreOrderSetting && isChewLayout ? 150 : isChewLayout ? 200 : isFarAway ? 150 : 100,
-                marginTop: isChewLayout ? 0 : Platform.OS == 'ios' ? 0 : 50,
+                marginTop: 0,
                 backgroundColor: isChewLayout ? theme?.colors?.chew : theme.colors?.white
             }}
             >
@@ -276,7 +276,7 @@ export const FlatListBusinessListHeader = (props: any) => {
                             bgHeaderHeight={bgHeaderHeight}
                         >
                             {!auth && (
-                                <TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+                                <TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 20, paddingVertical: 20 }}>
                                     <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
                                 </TouchableOpacity>
                             )}
@@ -284,7 +284,7 @@ export const FlatListBusinessListHeader = (props: any) => {
                     ) : (
                         <>
                             {!auth && (
-                                <TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+                                <TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 20, paddingVertical: 20 }}>
                                     <OIcon src={theme.images.general.arrow_left} color={theme.colors.textNormal} />
                                 </TouchableOpacity>
                             )}
@@ -324,12 +324,12 @@ export const FlatListBusinessListHeader = (props: any) => {
             {
                 !businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
                     <FeaturedWrapper>
-                        <OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('BUSINESS_FEATURE', 'Featured business')}</OText>
+                        <OText size={16} style={{ marginLeft: 20 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('BUSINESS_FEATURE', 'Featured business')}</OText>
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
                             nestedScrollEnabled
                             horizontal
-                            contentContainerStyle={{ paddingHorizontal: 40 }}
+                            contentContainerStyle={{ paddingHorizontal: 20 }}
                         >
                             {featuredBusiness.map((bAry: any, idx: number) => (
                                 <View key={'f-listing_' + idx}>
@@ -372,7 +372,7 @@ export const FlatListBusinessListHeader = (props: any) => {
             <PageBanner position='app_business_listing' navigation={navigation} />
             <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 
-            <ListWrapper style={{ paddingHorizontal: isChewLayout ? 20 : 40 }}>
+            <ListWrapper style={{ paddingHorizontal: 20 }}>
                 {!businessId && !isAllCategoriesHidden && (
                     <BusinessTypeFilter
                         images={props.images}

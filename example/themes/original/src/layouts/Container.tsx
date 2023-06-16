@@ -6,7 +6,7 @@ import { Platform, View } from 'react-native';
 const ContainerStyled = styled.ScrollView`
   flex: 1;
   ${(props: any) => !props.noPadding && css`
-    padding: ${Platform.OS === 'ios' ? '0px 40px' : '20px 40px'};
+    padding: ${Platform.OS === 'ios' ? '0px 20px' : '20px 20px'};
   `}
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
 `;

@@ -35,15 +35,14 @@ export const Favorite = (props: any) => {
   }
 
   return (
-    <Container
-      pdng={Platform.OS === 'ios' ? '10px' : '20px'}
-    >
+    <Container>
       <NavBar
         title={t('FAVORITE', 'Favorite')}
         titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
-        paddingTop={10}
+        paddingTop={Platform.OS === 'ios' ? 20 : 10}
+        style={{ paddingVertical: 0 }}
         btnStyle={{ paddingLeft: 0 }}
       />
       <TabContainer>

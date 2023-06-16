@@ -50,7 +50,7 @@ export const BackgroundGray = styled.View`
 `
 
 export const ProfessionalFilterWrapper = styled.View`
-  padding-left: 40px;
+  padding-left: 20px;
   margin-bottom: 35px;
 `
 
@@ -63,6 +63,6 @@ export const NearBusiness = styled.View`
 export const TopActions = styled.TouchableOpacity`
 	height: 60px;
 	justify-content: center;
-  padding-horizontal: 30px;
+  padding-horizontal: 20px;
   width: 100px;
 `;

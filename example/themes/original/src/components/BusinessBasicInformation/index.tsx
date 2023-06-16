@@ -72,7 +72,7 @@ export const BusinessBasicInformation = (
 			alignItems: 'flex-start'
 		},
 		businessInfo: {
-			paddingHorizontal: 40,
+			paddingHorizontal: 20,
 			paddingTop: isChewLayout ? 0 : 56,
 		},
 		bullet: {
@@ -95,7 +95,7 @@ export const BusinessBasicInformation = (
 			width: '100%',
 			top: 0,
 			zIndex: 100,
-			left: 40
+			left: 20
 		},
 		socialIcon: {
 			borderRadius: 3,

@@ -312,7 +312,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					/>
 				)
 			)}
-			{loading && !hideOrders && (
+			{loading && !hideOrders && !preOrders && (
 				<>
 					{!activeOrders ? (
 						<Placeholder style={{ marginTop: 30 }} Animation={Fade}>
