@@ -5,12 +5,14 @@ import { DateContainer } from './styles';
 export const DatePickerUI = (props: any) => {
 	const {
 		birthdate,
-		handleChangeDate
+		handleChangeDate,
+		onConfirm,
+		onCancel
 	} = props;
 
 	return (
 		<DateContainer>
-			<DatePicker mode="date" date={birthdate ? new Date(birthdate) : new Date()} onDateChange={handleChangeDate} />
+			<DatePicker mode="date" date={birthdate ? new Date(birthdate) : new Date()} onDateChange={handleChangeDate} onConfirm={date => onConfirm(date)} onCancel={onCancel} />
 		</DateContainer>
 	);
 };
