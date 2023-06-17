@@ -16,6 +16,7 @@ export const SearchBar = (props: any) => {
     isCancelXButtonShow,
     noBorderShow,
     borderStyle,
+    containerStyle
   } = props;
 
   const [, t] = useLanguage();
@@ -67,7 +68,7 @@ export const SearchBar = (props: any) => {
   });
 
   return (
-    <View style={[styles.container]}>
+    <View style={{ ...styles.container, ...containerStyle}}>
       <OInput
         forwardRef={inputRef}
         value={searchValue}
