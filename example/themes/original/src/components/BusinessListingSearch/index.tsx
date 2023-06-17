@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
-import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions, Platform } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions, Platform, FlatList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
 import { HeaderTitle, OButton, OModal, OText } from '../shared'
@@ -249,140 +249,75 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     handleChangeTermValue('')
   }, [isFocused])
 
-  return (
-    <IOScrollView
-      onScroll={(e: any) => handleScroll(e)}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-        {hideBrowse && !isChewLayout && (
-          <OButton
-            imgLeftStyle={{ width: 18 }}
-            imgRightSrc={null}
-            style={{
-              borderWidth: 0,
-              width: 26,
-              height: 26,
-              backgroundColor: '#FFF',
-              borderColor: '#FFF',
-              shadowColor: '#FFF',
-              paddingLeft: 0,
-              paddingRight: 0,
-              marginTop: 50,
-            }}
-            onClick={() => props.navigation.goBack()}
-            icon={AntDesignIcon}
-            iconProps={{
-              name: 'arrowleft',
-              size: 26
-            }}
-          />
-        )}
-        <HeaderTitle ph={20} text={t('SEARCH', 'Search')} />
-        <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: Platform.OS === 'ios' ? 35 : 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
-      </View>
-      <BContainer
-        style={{ paddingHorizontal: 20 }}
-      >
-        <SearchWrapper>
-          <SearchBar
-            lazyLoad
-            {...(isChewLayout && { height: 55 })}
-            inputStyle={{ ...styles.searchInput }}
-            placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
-            onSearch={(val: string) => onChangeTermValue(val)}
-            value={termValue}
-          />
-        </SearchWrapper>
-        <OText size={12} lineHeight={20} color={theme.colors.textThird} mLeft={5}>
-          {t('TYPE_AT_LEAST_2_CHARACTERS', 'Type at least 2 characters')}
-        </OText>
-        {
-          noResults && (
-            <View>
-              <NotFoundSource
-                content={t('NOT_FOUND_BUSINESSES', 'No businesses to delivery / pick up at this address, please change filters or change address.')}
-              />
-            </View>
-          )
-        }
-        <ProductsList>
-          {businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0).map((business: any) => (
-            <SingleBusinessSearch key={`card-${business?.id}`}>
-              <SingleBusinessContainer>
-                <BusinessInfo>
-                  {(business?.logo || theme.images?.dummies?.businessLogo) && (
-                    <FastImage
-                      style={{ height: 48, width: 48 }}
-                      source={{
-                        uri: optimizeImage(business?.logo, 'h_120,c_limit'),
-                        priority: FastImage.priority.normal,
-                      }}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  )}
-                </BusinessInfo>
-                <BusinessInfoItem>
-                  <OText size={12}>{business?.name}</OText>
-                  <Metadata>
-                    {orderState?.options?.type === 1 && (
-                      <>
-                        <OText size={10}>{t('DELIVERY_FEE', 'Delivery fee')}{' '}</OText>
-                        <OText size={10} mRight={3}>
-                          {business && parsePrice(business?.delivery_price)}
-                        </OText>
-                      </>
-                    )}
-                    <OText size={10} mRight={3}>
-                      {convertHoursToMinutes(orderState?.options?.type === 1 ? business?.delivery_time : business?.pickup_time)}
-                    </OText>
-                    <OText size={10}>
-                      {parseDistance(business?.distance)}
-                    </OText>
-                  </Metadata>
-                </BusinessInfoItem>
-                <OButton
-                  onClick={() => onBusinessClick(business)}
-                  textStyle={{ color: theme.colors.primary, fontSize: 10 }}
-                  text={t('GO_TO_STORE', 'Go to store')}
-                  style={{
-                    borderRadius: 23,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    height: 23,
-                    shadowOpacity: 0,
-                    backgroundColor: theme.colors.primaryContrast,
-                    borderWidth: 0
-                  }}
+  const BusinessSearchHeader = () => {
+    return (
+      <>
+        <View style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+          {hideBrowse && !isChewLayout && (
+            <OButton
+              imgLeftStyle={{ width: 18 }}
+              imgRightSrc={null}
+              style={{
+                borderWidth: 0,
+                width: 26,
+                height: 26,
+                backgroundColor: '#FFF',
+                borderColor: '#FFF',
+                shadowColor: '#FFF',
+                paddingLeft: 0,
+                paddingRight: 0,
+                marginTop: 50,
+              }}
+              onClick={() => props.navigation.goBack()}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26
+              }}
+            />
+          )}
+          <HeaderTitle ph={20} text={t('SEARCH', 'Search')} />
+          <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: Platform.OS === 'ios' ? 35 : 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
+        </View>
+        <BContainer
+          style={{ paddingHorizontal: 20 }}
+        >
+          <SearchWrapper>
+            <SearchBar
+              lazyLoad
+              {...(isChewLayout && { height: 55 })}
+              inputStyle={{ ...styles.searchInput }}
+              placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
+              onSearch={(val: string) => onChangeTermValue(val)}
+              value={termValue}
+            />
+          </SearchWrapper>
+          <OText size={12} lineHeight={20} color={theme.colors.textThird} mLeft={5}>
+            {t('TYPE_AT_LEAST_2_CHARACTERS', 'Type at least 2 characters')}
+          </OText>
+          {
+            noResults && (
+              <View>
+                <NotFoundSource
+                  content={t('NOT_FOUND_BUSINESSES', 'No businesses to delivery / pick up at this address, please change filters or change address.')}
                 />
-              </SingleBusinessContainer>
-              <ScrollView horizontal style={styles.productsContainer} contentContainerStyle={{ flexGrow: 1 }}>
-                {business?.categories?.map((category: any) => category?.products?.map((product: any, i: number) => (
-                  <SingleProductCard
-                    key={product?.id}
-                    isSoldOut={(product.inventoried && !product.quantity)}
-                    product={product}
-                    enableIntersection={false}
-                    businessId={business?.id}
-                    onProductClick={(product: any) => onProductClick(business, category?.id, product?.id, product)}
-                    productAddedToCartLength={0}
-                    handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
-                    style={{
-                      width: screenWidth - (category?.products?.length > 1 ? 120 : 80),
-                      maxWidth: screenWidth - (category?.products?.length > 1 ? 120 : 80),
-                      marginRight: 20
-                    }}
-                  />
-                )))}
+              </View>
+            )
+          }
+        </BContainer>
+      </>
+    )
+  }
 
-              </ScrollView>
-            </SingleBusinessSearch>
-          ))}
+  const BusinessSearchFooter = () => {
+    return (
+      <>
+        <ProductsList>
           {businessesSearchList?.loading && (
             <>
               {[...Array(3).keys()].map(
@@ -581,8 +516,97 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             </View>
           </WrapperButtons>
         </OModal>
-      </BContainer>
-    </IOScrollView>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <FlatList
+        data={businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0)}
+        ListFooterComponent={BusinessSearchFooter}
+        ListHeaderComponent={BusinessSearchHeader}
+        onScroll={(e: any) => handleScroll(e)}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={({ item: business }: any) => `card-${business?.id}`}
+        renderItem={({ item: business }: any) => (
+          <SingleBusinessSearch >
+            <SingleBusinessContainer>
+              <BusinessInfo>
+                {(business?.logo || theme.images?.dummies?.businessLogo) && (
+                  <FastImage
+                    style={{ height: 48, width: 48 }}
+                    source={{
+                      uri: optimizeImage(business?.logo, 'h_120,c_limit'),
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                )}
+              </BusinessInfo>
+              <BusinessInfoItem>
+                <OText size={12}>{business?.name}</OText>
+                <Metadata>
+                  {orderState?.options?.type === 1 && (
+                    <>
+                      <OText size={10}>{t('DELIVERY_FEE', 'Delivery fee')}{' '}</OText>
+                      <OText size={10} mRight={3}>
+                        {business && parsePrice(business?.delivery_price)}
+                      </OText>
+                    </>
+                  )}
+                  <OText size={10} mRight={3}>
+                    {convertHoursToMinutes(orderState?.options?.type === 1 ? business?.delivery_time : business?.pickup_time)}
+                  </OText>
+                  <OText size={10}>
+                    {parseDistance(business?.distance)}
+                  </OText>
+                </Metadata>
+              </BusinessInfoItem>
+              <OButton
+                onClick={() => onBusinessClick(business)}
+                textStyle={{ color: theme.colors.primary, fontSize: 10 }}
+                text={t('GO_TO_STORE', 'Go to store')}
+                style={{
+                  borderRadius: 23,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  height: 23,
+                  shadowOpacity: 0,
+                  backgroundColor: theme.colors.primaryContrast,
+                  borderWidth: 0
+                }}
+              />
+            </SingleBusinessContainer>
+            <ScrollView horizontal style={styles.productsContainer} contentContainerStyle={{ flexGrow: 1 }}>
+              {business?.categories?.map((category: any) => category?.products?.map((product: any, i: number) => (
+                <SingleProductCard
+                  key={product?.id}
+                  isSoldOut={(product.inventoried && !product.quantity)}
+                  product={product}
+                  enableIntersection={false}
+                  businessId={business?.id}
+                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id, product)}
+                  productAddedToCartLength={0}
+                  handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
+                  style={{
+                    width: screenWidth - (category?.products?.length > 1 ? 120 : 80),
+                    maxWidth: screenWidth - (category?.products?.length > 1 ? 120 : 80),
+                    marginRight: 20
+                  }}
+                />
+              )))}
+            </ScrollView>
+          </SingleBusinessSearch>
+        )}
+      />
+      {/* <IOScrollView
+        onScroll={(e: any) => handleScroll(e)}
+        showsVerticalScrollIndicator={false}
+      >
+
+      </IOScrollView> */}
+    </>
   )
 }
 
