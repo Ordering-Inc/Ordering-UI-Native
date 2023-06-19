@@ -107,7 +107,8 @@ const BusinessProductListUI = (props: any) => {
             lazyLoad
             isCancelXButtonShow={!!categorySearch}
             onCancel={() => handleChangeCategorySearch('')}
-            placeholder={t('FIND_CATEGORY', 'Find a category')}
+            placeholder={t('SEARCH', 'Search')}
+            containerStyle={{ width: 180 }}
           />
         </View>
       </View>

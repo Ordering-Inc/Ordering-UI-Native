@@ -32,3 +32,10 @@ export const WrapperPhone = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
+
+export const WrapperBirthdate = styled.View`
+  margin-bottom: 25px;
+  width: 100%;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
+`

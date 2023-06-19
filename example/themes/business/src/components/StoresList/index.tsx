@@ -133,7 +133,8 @@ const StoresListUI = (props: BusinessesListingParams) => {
               lazyLoad
               isCancelXButtonShow={!!searchValue}
               onCancel={() => handleChangeSearch('')}
-              placeholder={t('FIND_BUSINESS', 'Find a business')}
+              placeholder={t('SEARCH', 'Search')}
+              containerStyle={{ width: 210 }}
             />
           </View>
         )}

@@ -115,7 +115,8 @@ export const ProductList = (props: any) => {
             lazyLoad
             isCancelXButtonShow={!!searchValue}
             onCancel={() => handleChangeSearch('')}
-            placeholder={t('FIND_PRODUCT', 'Find a product')}
+            placeholder={t('SEARCH', 'Search')}
+            containerStyle={{ width: 180 }}
           />
         </View>
       </View>
