@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
 import { SignupForm } from '../SignupForm'
 
-import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
+import { UDForm, UDLoader, UDWrapper, WrapperPhone, WrapperBirthdate } from './styles';
 
 import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { OAlert } from '../../../../../src/components/shared'
@@ -380,19 +380,17 @@ export const UserFormDetailsUI = (props: any) => {
 									),
 							)}
 							{showInputBirthday && (
-								<WrapperPhone>
+								<WrapperBirthdate>
 									<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
 										{t('BIRTHDATE', 'Birthdate')}
 									</OText>
 									<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
-										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ alignSelf: 'flex-start' }}>
+										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ marginTop: 6, marginBottom: -15 }}>
 											{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
 										</OText>
 									</TouchableOpacity>
-									{showDatePicker && (
-										<DatePickerUI birthdate={birthdate} handleChangeDate={_handleChangeDate} />
-									)}
-								</WrapperPhone>
+									<DatePickerUI open={showDatePicker} birthdate={birthdate} onConfirm={_handleChangeDate} onCancel={() => setShowDatePicker(false)} />
+								</WrapperBirthdate>
 							)}
 							{!!showInputPhoneNumber && ((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
@@ -503,9 +501,9 @@ export const UserFormDetailsUI = (props: any) => {
 								: t('CONTINUE', 'Continue'))
 					}
 					bgColor={theme.colors.primary}
-					textStyle={{ 
-						color: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.primary : theme.colors.white, 
-						fontSize: 14 
+					textStyle={{
+						color: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.primary : theme.colors.white,
+						fontSize: 14
 					}}
 					borderColor={theme.colors.primary}
 					isDisabled={!user?.guest_id && (formState.loading || !isValid)}
