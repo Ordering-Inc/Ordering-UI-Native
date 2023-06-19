@@ -323,8 +323,8 @@ export const ProductOptionsUI = (props: any) => {
 		const guestToken = uuid.v4()
 		if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
 	}
-	
-	let _optionLayout : any = {}
+
+	let _optionLayout: any = {}
 
 	const handleOnLayout = (event: any, optionId: any, lastMounts: boolean) => {
 		_optionLayout = { ..._optionLayout }
@@ -859,7 +859,7 @@ export const ProductOptionsUI = (props: any) => {
 								<ProductComment>
 									<SectionTitle>
 										<OText size={16} weight={'600'} lineHeight={24}>
-											{t('SPECIAL_COMMENT', 'Special comment')}
+											{t('COMMENTS', 'Special comment')}
 										</OText>
 									</SectionTitle>
 									<OInput
