@@ -4,7 +4,9 @@ import styled, { css, useTheme } from 'styled-components/native';
 import { Platform, View } from 'react-native';
 
 const ContainerStyled = styled.ScrollView`
-  flex: 1;
+  ${(props: any) => !props.disableFlex && css`
+    flex: 1
+  `}
   ${(props: any) => !props.noPadding && css`
     padding: ${Platform.OS === 'ios' ? '0px 20px' : '20px 20px'};
   `}
@@ -17,7 +19,7 @@ export const Container = (props: any) => {
   return (
     <View
       style={{
-        flex: 1,
+        flex: props.disableFlex ? undefined : 1,
         paddingTop: props.pt ?? insets.top,
         backgroundColor: theme.colors.backgroundPage
       }}

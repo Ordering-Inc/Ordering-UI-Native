@@ -323,7 +323,6 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         <TouchableOpacity onPress={() => goToBack && goToBack()} style={{ marginBottom: 12 }}>
           <IconAntDesign
             name='close'
-            color={theme.colors.textThird}
             size={24}
             style={{ marginLeft: -4 }}
           />

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
@@ -170,6 +170,7 @@ const CheckoutUI = (props: any) => {
 	const [paymethodClicked, setPaymethodClicked] = useState<any>(null)
 	const [showTitle, setShowTitle] = useState(false)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
+	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const placeSpotTypes = [3, 4, 5]
@@ -411,6 +412,15 @@ const CheckoutUI = (props: any) => {
 		}
 	}, [cartState?.error, cartState?.cart, cartState?.loading])
 
+	useEffect(() => {
+		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+			containerRef?.current?.scrollToEnd && containerRef.current.scrollToEnd({ animated: true })
+		})
+		return () => {
+			keyboardDidShowListener.remove()
+		}
+	}, [])
+
 	return (
 		<>
 			<View style={styles.wrapperNavbar}>
@@ -436,7 +446,7 @@ const CheckoutUI = (props: any) => {
 					</>
 				</TopHeader>
 			</View>
-			<Container noPadding onScroll={handleScroll}>
+			<Container forwardRef={containerRef} noPadding onScroll={handleScroll}>
 				<View style={styles.wrapperNavbar}>
 					<NavBar
 						hideArrowLeft
