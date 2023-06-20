@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 export const Container = styled.View`
   padding-horizontal: 20px;
   padding-bottom: 20px;
-  padding-top: ${(props: any) => props.pdng};
+  padding-top: ${(props: any) => props.pdng || 0};
 `
 export const Header = styled.View`
   flex-direction: row;
