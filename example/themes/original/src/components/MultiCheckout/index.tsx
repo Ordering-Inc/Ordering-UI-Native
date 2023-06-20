@@ -147,7 +147,7 @@ const MultiCheckoutUI = (props: any) => {
 	const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
   const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
   const methodsPay = ['global_google_pay', 'global_apple_pay']
-  const isDisablePlaceOrderButton = cartGroup?.loading || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
+  const isDisablePlaceOrderButton = cartGroup?.loading || placing || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
     (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
     walletCarts.length > 0
     || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading)) || openCarts?.length === 0
