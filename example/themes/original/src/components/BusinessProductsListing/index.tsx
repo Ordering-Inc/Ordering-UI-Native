@@ -148,7 +148,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
   const isOpenFiltProducts = isOpenSearchBar && !!searchValue
-  const filtProductsHeight = Platform.OS === 'ios' ? 165 : 100
+  const filtProductsHeight = Platform.OS === 'ios' ? 65 : 30
   const viewOrderButtonVisible = !loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0
 
   const onRedirect = (route: string, params?: any) => {
