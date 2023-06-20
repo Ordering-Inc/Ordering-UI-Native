@@ -357,7 +357,7 @@ const CheckoutUI = (props: any) => {
 
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
-			if (cart?.business?.slug) {
+			if (cart?.business_id !== null) {
 				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null, fromMulti: props.fromMulti })
 			} else {
 				onNavigationRedirect('Wallets')
