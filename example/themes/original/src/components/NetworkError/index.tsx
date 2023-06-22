@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLanguage, useOrderingTheme } from 'ordering-components/native'
+import { useLanguage } from 'ordering-components/native'
 import { Dimensions } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { OText, OIcon, OButton } from '../shared'
@@ -16,8 +16,7 @@ export const NetworkError = (props: NoNetworkParams) => {
   } = props
   const theme = useTheme()
   const [, t] = useLanguage()
-  const [orderingTheme] = useOrderingTheme()
-  const urlimage = orderingTheme?.theme?.no_internet?.components?.image
+  const urlimage = theme?.no_internet?.components?.image
   const noNetworkImage = image || theme.images.general.noNetwork
   const deviceWidth = Dimensions.get('screen').width
 

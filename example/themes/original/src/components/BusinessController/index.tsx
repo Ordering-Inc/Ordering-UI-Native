@@ -274,7 +274,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							<OText
 								size={textSize + 2}
 								style={{ lineHeight: 18, marginBottom: 6, width: '90%' }}
-								weight={'500'}>
+								weight={'500'}
+								numberOfLines={1}
+								ellipsizeMode='tail'
+							>
 								{business?.name}
 							</OText>
 							{(!hideBusinessFavorite || !hideBusinessReviews) && (

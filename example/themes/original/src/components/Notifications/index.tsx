@@ -3,7 +3,6 @@ import {
 	UserFormDetails as NotificationsController,
 	useLanguage,
 	useSession,
-	useOrderingTheme,
 	useToast,
 	ToastType,
 } from 'ordering-components/native'
@@ -28,7 +27,6 @@ const NotificationsUI = (props: any) => {
 	const [{ user: userSession }] = useSession()
 	const [, t] = useLanguage();
 	const [, { showToast }] = useToast();
-	const [orderingTheme] = useOrderingTheme()
 
 	const user = userData || userSession
 
@@ -45,8 +43,8 @@ const NotificationsUI = (props: any) => {
 	})
 
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
-	const showCustomerPromotions = !orderingTheme?.theme?.profile?.components?.promotions?.hidden
-	const showNotifications = !orderingTheme?.theme?.profile?.components?.notification_settings?.hidden
+	const showCustomerPromotions = !theme?.profile?.components?.promotions?.hidden
+	const showNotifications = !theme?.profile?.components?.notification_settings?.hidden
 
 	const handleEditNotifications = (key: any, value: any) => {
 		setNotificationsList({
