@@ -304,7 +304,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 								</ReviewAndFavorite>
 							)}
 						</View>
-						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3 }} numberOfLines={1}>
+						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3 }} numberOfLines={2}>
 							{business?.address}
 						</OText>
 						<Metadata>
