@@ -40,19 +40,19 @@ export const Otp = (props: otpParams) => {
     onSubmit()
   }
 
-  const handleChangeCode = (code : string) => {
+  const handleChangeCode = (code: string) => {
     if (code?.length === pinCount) {
-      setCheckingCode(true)
+      setCheckingCode && setCheckingCode(true)
       handleLoginOtp(code)
       inputRef.current?.reset && inputRef.current.reset()
       setTimeout(() => inputRef.current?.focus && inputRef.current.focus(), 100)
     }
-    setOtpError(null)
+    setOtpError && setOtpError(null)
   }
 
   const handleCloseOtp = () => {
     setWillVerifyOtpState(false)
-    setOtpError(null)
+    setOtpError && setOtpError(null)
   }
 
   useEffect(() => {
@@ -108,18 +108,6 @@ export const Otp = (props: otpParams) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.backgroundPage }}>
       <OTPContainer>
-        <View
-          style={loginStyle.closeContainer}>
-          <TouchableOpacity onPress={() => handleCloseOtp()} style={loginStyle.wrapperIcon}>
-            <OIcon
-              src={theme.images.general.close}
-              width={22}
-            />
-          </TouchableOpacity>
-          <OText size={22}>
-            {t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
-          </OText>
-        </View>
         <OText size={24}>
           {formatSeconds(otpLeftTime)}
         </OText>
