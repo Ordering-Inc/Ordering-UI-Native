@@ -196,6 +196,14 @@ const CartUI = (props: any) => {
     return acc = acc
   }, cart?.subtotal)
 
+  const handleClickCheckout = () => {
+    if (cart?.business_id) {
+      setOpenUpselling(true)
+    } else {
+      handleUpsellingPage(cart)
+    }
+  }
+
   useEffect(() => {
     const limitDays = parseInt(preorderMaximumDays ?? configs?.max_days_preorder?.value, 10)
     const currentDate = new Date()
@@ -232,7 +240,7 @@ const CartUI = (props: any) => {
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
         handleChangeStore={() => setOpenChangeStore(true)}
-        handleClickCheckout={() => setOpenUpselling(true)}
+        handleClickCheckout={() => handleClickCheckout()}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
         isFromUpselling={isFromUpselling}
@@ -549,7 +557,7 @@ const CartUI = (props: any) => {
                   borderColor={theme.colors.primary}
                   imgRightSrc={null}
                   textStyle={{ color: '#fff', textAlign: 'center', flex: 1 }}
-                  onClick={() => setOpenUpselling(true)}
+                  onClick={() => handleClickCheckout()}
                   style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
                 />
               </CheckoutAction>
