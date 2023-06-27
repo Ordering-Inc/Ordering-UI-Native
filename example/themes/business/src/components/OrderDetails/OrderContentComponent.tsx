@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 
 import { Platform, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { OButton, OText, OLink, OModal } from '../shared'
 import {
@@ -53,6 +54,7 @@ export const OrderContentComponent = (props: OrderContent) => {
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
   const [openReviewModal, setOpenReviewModal] = useState(false)
+  const [showCustomFields, setShowCustomFields] = useState<boolean>(false);
 
   const [isReadMore, setIsReadMore] = useState({
     customerAddress: false,
@@ -134,27 +136,36 @@ export const OrderContentComponent = (props: OrderContent) => {
 
       {order?.metafields?.length > 0 && (
         <OrderBusiness>
-          <OText style={{ marginBottom: 5 }} size={16} weight="600">
-            {t('CUSTOM_FIELDS', 'Custom fields')}
-          </OText>
-
-          {order.metafields.map((field: any) => (
-            <View
-              key={field.id}
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                marginBottom: 5
-              }}
-            >
-              <OText style={{ width: '50%' }}>
-                {field.key}
-              </OText>
-              <OText style={{ width: '45%', textAlign: 'right' }}>
-                {field.value}
-              </OText>
-            </View>
-          ))}
+          <TouchableOpacity onPress={() => setShowCustomFields((prev: boolean) => !prev)} style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <OText style={{ marginBottom: 5 }} size={16} weight="600">
+              {t('CUSTOM_FIELDS', 'Custom fields')}
+            </OText>
+            <AntDesignIcon
+              name={showCustomFields ? 'up' : 'down'}
+              size={14}
+            />
+          </TouchableOpacity>
+          {showCustomFields && (
+            <>
+              {order.metafields.map((field: any) => (
+                <View
+                  key={field.id}
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    marginBottom: 5
+                  }}
+                >
+                  <OText style={{ width: '50%' }}>
+                    {field.key}
+                  </OText>
+                  <OText style={{ width: '45%', textAlign: 'right' }}>
+                    {field.value}
+                  </OText>
+                </View>
+              ))}
+            </>
+          )}
         </OrderBusiness>
       )}
 
