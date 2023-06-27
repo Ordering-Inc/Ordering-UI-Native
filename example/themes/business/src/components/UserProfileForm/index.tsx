@@ -116,7 +116,8 @@ const ProfileUI = (props: ProfileParams) => {
         maxWidth: 200,
         includeBase64: true,
       },
-      (response: any) => {
+      (image: any) => {
+        const response = image?.assets[0];
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {
