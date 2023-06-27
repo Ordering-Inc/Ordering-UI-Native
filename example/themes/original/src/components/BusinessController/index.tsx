@@ -76,7 +76,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
 
 	const textSize = 12
-	const cardHeight = windowHeight * 0.3
+	const cardHeight = windowHeight * 0.34
 
 	const styles = StyleSheet.create({
 		container: {
@@ -256,7 +256,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</BusinessState>
 					</BusinessHero>
 					<BusinessContent>
-						<BusinessInfo style={{ position: 'absolute', bottom: 85, left: 15 }}>
+						<BusinessInfo style={{ position: 'absolute', top: -26, left: 15 }}>
 							{!hideBusinessLogo && (
 								<BusinessLogo style={styles.businessLogo}>
 									<FastImage
