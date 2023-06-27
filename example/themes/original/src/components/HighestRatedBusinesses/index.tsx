@@ -56,7 +56,7 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled
             horizontal
-            style={{ height: 300, paddingHorizontal: 20 }}
+            style={{ height: 325, paddingHorizontal: 20 }}
           >
             {[
               ...Array(10).keys()
