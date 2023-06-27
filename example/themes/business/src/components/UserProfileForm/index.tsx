@@ -39,7 +39,6 @@ import { NotFoundSource } from '../NotFoundSource';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 const ProfileUI = (props: ProfileParams) => {
   const {
-    navigation,
     formState,
     isEdit,
     validationFields,
@@ -48,9 +47,7 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
     userState,
-    isAvailableLoading,
-    isAlsea,
-    isHideDriverStatus
+    isAlsea
   } = props;
 
   const [{ user }] = useSession();
@@ -59,6 +56,8 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ optimizeImage }] = useUtils();
   const { errors } = useForm();
   const theme = useTheme();
+
+  const isShowDriverStatus = user?.level === 4 && (props.isShowDriverStatus || (!props.isShowDriverStatus && !userState?.result?.result?.available))
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -347,7 +346,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
           </CenterView>
 
-          {user?.level === 4 && !isHideDriverStatus && (
+          {isShowDriverStatus && (
             <EnabledStatusDriver>
               <View style={{ flex: 1 }}>
                 <OText
@@ -375,7 +374,7 @@ const ProfileUI = (props: ProfileParams) => {
                       !userState?.result?.result?.available,
                     )
                   }
-                  disabled={userState?.loading}
+                  disabled={userState?.loading || userState?.result?.result?.available}
                   animationSpeed={200}
                 />
               )}
