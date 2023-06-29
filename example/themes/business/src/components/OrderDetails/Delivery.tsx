@@ -393,7 +393,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [props.order?.loading]);
 
   useEffect(() => {
-    if (!order?.driver_id && session?.user?.level === 4) {
+    if (order?.driver_id === null && session?.user?.level === 4) {
       setAlertState({
         open: true,
         content: [
