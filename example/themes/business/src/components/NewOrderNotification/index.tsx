@@ -113,14 +113,14 @@ const NewOrderNotificationUI = (props: any) => {
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
       if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
-        setCurrentEvent({ evt: 2, orderId: value?.id })
+        setCurrentEvent({ evt: 2, orderId: value?.id ?? value?.order_id })
       }
     }
-    if (evtType === 3 || value?.author_id === user.id) return
+    if ((evtType === 3 && (value.status !== 8 || !value?.driver)) || value?.author_id === user.id) return
     setCurrentEvent({
       evt: evtType,
       orderId: value?.driver
-        ? value?.order_id
+        ? value?.order_id ?? value?.id
         : evtList(currentEvent)[evtType].event === 'messages'
           ? value?.order?.id
           : value?.order_id ?? value?.id
