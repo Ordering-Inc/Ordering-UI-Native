@@ -55,7 +55,7 @@ const MapViewComponent = (props: MapViewParams) => {
     if (mapRef.current) {
       mapRef.current.fitToCoordinates(
         [
-          { latitude: location.latitude, longitude: location.longitude },
+          { latitude: location.latitude ?? 0, longitude: location.longitude ?? 0},
           {
             latitude: userLocation?.latitude,
             longitude: userLocation?.longitude,
@@ -72,8 +72,8 @@ const MapViewComponent = (props: MapViewParams) => {
     const lastRegion = mapRef?.current?.__lastRegion
     mapRef?.current && mapRef.current.animateToRegion({
       ...mapRef?.current?.__lastRegion,
-      longitudeDelta: lastRegion.longitudeDelta / 8,
-      latitudeDelta: lastRegion.longitudeDelta / 8
+      longitudeDelta: lastRegion?.longitudeDelta / 8,
+      latitudeDelta: lastRegion?.longitudeDelta / 8
     })
   }
 
@@ -81,8 +81,8 @@ const MapViewComponent = (props: MapViewParams) => {
     const lastRegion = mapRef?.current?.__lastRegion
     mapRef?.current && mapRef.current.animateToRegion({
       ...lastRegion,
-      longitudeDelta: lastRegion.longitudeDelta * 8,
-      latitudeDelta: lastRegion.longitudeDelta * 8
+      longitudeDelta: lastRegion?.longitudeDelta * 8,
+      latitudeDelta: lastRegion?.longitudeDelta * 8
     })
   }
 
