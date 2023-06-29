@@ -59,6 +59,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
   const distanceUnit = configState?.configs?.distance_unit?.value
+  const isHideRejectButtons = configState?.configs?.reject_orders_enabled && configState?.configs?.reject_orders_enabled?.value !== '1'
 
   const {
     hasLocation,
@@ -539,8 +540,9 @@ export const DriverMap = (props: GoogleMapsParams) => {
             secondButton={true}
             firstColorCustom={theme.colors.red}
             secondColorCustom={theme.colors.green}
-            widthButton={'45%'}
+            widthButton={isHideRejectButtons ? '100%': '45%'}
             isPadding
+            isHideRejectButtons={isHideRejectButtons}
           />
         )}
 
