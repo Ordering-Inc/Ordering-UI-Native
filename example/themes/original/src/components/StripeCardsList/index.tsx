@@ -29,7 +29,8 @@ export const StripeCardsListUI = (props: any) => {
 		cardSelected,
 		cardsList,
 		handleCardClick,
-		setAddCardOpen,
+		onOpen,
+		onCancel,
 		gateway,
 		setCardsList,
 		addCardOpen,
@@ -54,7 +55,7 @@ export const StripeCardsListUI = (props: any) => {
 
 	useEffect(() => {
 		if (!cardsList?.loading && cardsList?.cards?.length === 0 && !paymethodsWithoutSaveCards.includes(gateway)) {
-			setAddCardOpen({ ...addCardOpen, stripe: true })
+			onOpen && onOpen();
 		}
 	}, [cardsList?.loading])
 
@@ -150,8 +151,8 @@ export const StripeCardsListUI = (props: any) => {
 			<OModal
 				entireModal
 				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-				open={addCardOpen.stripe}
-				onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+				open={addCardOpen?.stripe}
+				onClose={onCancel}
 				style={{ backgroundColor: 'red' }}
 			>
 				<KeyboardAvoidingView
@@ -170,7 +171,7 @@ export const StripeCardsListUI = (props: any) => {
 						requirements={props.clientSecret}
 						handleCardClick={handleCardClick}
 						onSelectCard={handlePaymethodDataChange}
-						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+						onCancel={onCancel}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>

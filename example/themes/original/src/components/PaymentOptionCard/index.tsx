@@ -26,7 +26,7 @@ const PaymentOptionCardUI = (props: any) => {
     const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string> }>({ open: false, content: [] })
     const [newCard, setNewCard] = useState<any>(null)
 
-    const onChangeCardForm = (values : any) => {
+    const onChangeCardForm = (values: any) => {
         if (values?.valid) {
             const expiry = values?.values?.expiry?.split('/')
             const expiryMonth = expiry[0]
@@ -107,6 +107,8 @@ const PaymentOptionCardUI = (props: any) => {
                     cardsList={cardsList}
                     noShowErrors
                     gateway={gateway}
+                    onOpen={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
+                    onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
                 />
             </>
             <Modal
@@ -169,7 +171,7 @@ const PaymentOptionCardUI = (props: any) => {
     )
 }
 
-export const PaymentOptionCard = (props : any) => {
+export const PaymentOptionCard = (props: any) => {
     const paymentOptions = {
         ...props,
         UIComponent: PaymentOptionCardUI
