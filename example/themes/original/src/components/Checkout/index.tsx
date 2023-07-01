@@ -461,44 +461,46 @@ const CheckoutUI = (props: any) => {
 					/>
 				</View>
 				<ChContainer style={styles.pagePadding}>
-					<ChSection style={{ paddingTop: 0 }}>
-						<ChHeader>
-							<CHMomentWrapper isCustomColor={isChewLayout} onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-								<OText
-									size={12}
-									numberOfLines={1}
-									ellipsizeMode={'tail'}
-									color={theme.colors?.[isChewLayout ? 'white' : 'textSecondary']}
-								>
-									{t(getTypesText(options?.type || 1), 'Delivery')}
-								</OText>
-								<OIcon
-									src={theme.images.general.arrow_down}
-									width={10}
-									style={{ marginStart: 8 }}
-									{...(isChewLayout && { color: 'white' })}
-								/>
-							</CHMomentWrapper>
-							<CHMomentWrapper
-								onPress={() => handleMomentClick()}
-								disabled={loading}
-							>
-								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
-									{options?.moment
-										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
-										: t('ASAP_ABBREVIATION', 'ASAP')}
-								</OText>
-								{isPreOrder && (
+					{!isGiftCardCart && (
+						<ChSection style={{ paddingTop: 0 }}>
+							<ChHeader>
+								<CHMomentWrapper isCustomColor={isChewLayout} onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+									<OText
+										size={12}
+										numberOfLines={1}
+										ellipsizeMode={'tail'}
+										color={theme.colors?.[isChewLayout ? 'white' : 'textSecondary']}
+									>
+										{t(getTypesText(options?.type || 1), 'Delivery')}
+									</OText>
 									<OIcon
 										src={theme.images.general.arrow_down}
 										width={10}
 										style={{ marginStart: 8 }}
+										{...(isChewLayout && { color: 'white' })}
 									/>
-								)}
-							</CHMomentWrapper>
-						</ChHeader>
-						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
-					</ChSection>
+								</CHMomentWrapper>
+								<CHMomentWrapper
+									onPress={() => handleMomentClick()}
+									disabled={loading}
+								>
+									<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
+										{options?.moment
+											? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+											: t('ASAP_ABBREVIATION', 'ASAP')}
+									</OText>
+									{isPreOrder && (
+										<OIcon
+											src={theme.images.general.arrow_down}
+											width={10}
+											style={{ marginStart: 8 }}
+										/>
+									)}
+								</CHMomentWrapper>
+							</ChHeader>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
+						</ChSection>
+					)}
 
 					{!isGiftCardCart && !hideBusinessDetails && (
 						<ChSection>

@@ -84,12 +84,12 @@ const SendGiftCardUI = (props: any) => {
         />
       </FormController>
       <FormController>
-        <OText color={theme.colors.textNormal} size={14} mBottom={10}>{t('FROM', 'From')}</OText>
+        <OText color={theme.colors.textNormal} size={14} mBottom={10}>{t('NAME', 'Name')}</OText>
         <Controller
           control={control}
           render={({ onChange, value }: any) => (
             <OInput
-              placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
+              placeholder={t('WRITE_A_NAME', 'Write a name')}
               value={value}
               onChange={(val: any) => onChange(val)}
               autoCapitalize='none'
