@@ -32,7 +32,7 @@ export const CartContent = (props: any) => {
 		: cartsList
 	const isOrderStateCarts = !!carts
 	const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
-	const cartsAvailable: any = Object.values(carts || {})?.filter((cart: any) => cart?.valid && cart?.status !== 2)
+	const cartsAvailable: any = Object.values(carts || {})?.filter((cart: any) => cart?.valid && cart?.status !== 2 && cart?.business_id)
 	const totalCartsPrice = cartsAvailable?.length && cartsAvailable.reduce((total: any, cart: any) => { return total + cart?.total }, 0)
 	const totalCartsFee = cartsAvailable?.length && cartsAvailable
 		?.filter((cart: any) => cart?.status !== 1 && cart?.valid && cart?.products?.length)

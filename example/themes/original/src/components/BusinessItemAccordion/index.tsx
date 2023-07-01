@@ -47,7 +47,7 @@ export const BusinessItemAccordion = (props: any) => {
 		const cartsArray = Object.values(orderState?.carts)
 		const cartsLength = cartsArray.filter((cart: any) => cart.products.length > 0).length ?? 0
 		if (cartsLength === 1) {
-			changeActiveState(!isClosed, cart?.uuid)
+			changeActiveState && changeActiveState(!isClosed, cart?.uuid)
 		}
 	}, [orderState?.carts, isClosed])
 
@@ -70,7 +70,7 @@ export const BusinessItemAccordion = (props: any) => {
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
 				isClosed={isClosed}
-				onPress={() => !isClosed ? changeActiveState(!isClosed, cart?.uuid) : isClosed}
+				onPress={() => !isClosed ? changeActiveState && changeActiveState(!isClosed, cart?.uuid) : isClosed}
 				activeOpacity={1}
 			>
 				<BIInfo>
