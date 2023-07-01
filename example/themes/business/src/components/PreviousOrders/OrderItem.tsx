@@ -104,7 +104,7 @@ export const OrderItem = React.memo((props: any) => {
     const cdtToutc = moment(order?.delivery_datetime).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
       ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm:ss' })
-      : parseDate(cdtToutc)
+      : parseDate(cdtToutc, { outputFormat: 'YYYY-MM-DD HH:mm:ss' })
     const _eta = order?.eta_time
     const diffTimeAsSeconds = moment(_delivery).add(_eta, 'minutes').diff(moment().utc(), 'seconds')
     return Math.ceil(diffTimeAsSeconds / 60)
