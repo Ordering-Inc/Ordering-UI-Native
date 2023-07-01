@@ -382,7 +382,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
                   <View style={styles.view}>
                     <OIcon
                       style={styles.image}
-                      url={location.icon}
+                      src={typeof location.icon === 'number' ? location.icon : { uri: location.icon }}
                       width={25}
                       height={25}
                     />
