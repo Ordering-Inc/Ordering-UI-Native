@@ -51,7 +51,7 @@ const ProfileUI = (props: ProfileParams) => {
   } = props;
 
   const [{ user }] = useSession();
-  const [state, t] = useLanguage();
+  const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const [{ optimizeImage }] = useUtils();
   const { errors } = useForm();
@@ -255,7 +255,7 @@ const ProfileUI = (props: ProfileParams) => {
         />
       )}
 
-      {(formState?.loading || state?.loading) && !validationFields.error && (
+      {formState?.loading && !validationFields.error && (
         <View
           style={{
             backgroundColor: theme.colors.backgroundLight,
@@ -326,7 +326,7 @@ const ProfileUI = (props: ProfileParams) => {
         </View>
       )}
 
-      {!formState?.loading && !state?.loading && !validationFields.error && (
+      {!formState?.loading && !validationFields.error && (
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
