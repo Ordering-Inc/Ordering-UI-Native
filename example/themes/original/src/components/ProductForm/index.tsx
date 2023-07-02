@@ -58,6 +58,8 @@ import NavBar from '../NavBar';
 import { orderTypeList } from '../../utils';
 import { ActionButton } from './ActionButton'
 import { ExtraOptions } from './ExtraOptions'
+import { IOScrollView } from 'react-native-intersection-observer';
+
 const windowWidth = Dimensions.get('window').width;
 
 
@@ -286,14 +288,14 @@ export const ProductOptionsUI = (props: any) => {
 		setQtyBy({ [val]: true, [!val]: false })
 	}
 
-	const onStateChange = useCallback((state) => {
+	const onStateChange = useCallback((state : string) => {
 		if (state === "ended") {
 			setPlaying(false);
 		}
 	}, []);
 
 	const togglePlaying = useCallback(() => {
-		setPlaying((prev) => !prev);
+		setPlaying((prev : any) => !prev);
 	}, []);
 
 	const onChangeProductCartQuantity = (quantity: number) => {
@@ -327,6 +329,9 @@ export const ProductOptionsUI = (props: any) => {
 	let _optionLayout: any = {}
 
 	const handleOnLayout = (event: any, optionId: any, lastMounts: boolean) => {
+		if (suboptionsLength >= 200) {
+			return
+		}
 		_optionLayout = { ..._optionLayout }
 		const optionKey = 'id:' + optionId
 		_optionLayout[optionKey] = { y: event.nativeEvent.layout?.y }
@@ -436,6 +441,8 @@ export const ProductOptionsUI = (props: any) => {
 		selOpt
 	}
 
+	const suboptionsLength = product.extras.reduce((acc : number, extras : any) => acc + extras?.options?.reduce((accSuboptions : number, options: any) => accSuboptions + options?.suboptions?.length, 0), 0)
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<View style={styles.wrapperNavbar}>
@@ -462,7 +469,7 @@ export const ProductOptionsUI = (props: any) => {
 				</TopHeader>
 			</View>
 			{!error && (
-				<ScrollView
+				<IOScrollView
 					ref={scrollViewRef}
 					contentContainerStyle={{ paddingBottom: 80 }}
 					stickyHeaderIndices={[2]}
@@ -488,7 +495,7 @@ export const ProductOptionsUI = (props: any) => {
 									showsButtons={true}
 									style={styles.mainSwiper}
 									showsPagination={false}
-									onIndexChanged={(index) => handleChangeMainIndex(index)}
+									onIndexChanged={(index : any) => handleChangeMainIndex(index)}
 									prevButton={
 										<View style={styles.swiperButton}>
 											<IconAntDesign
@@ -510,7 +517,7 @@ export const ProductOptionsUI = (props: any) => {
 										</View>
 									}
 								>
-									{gallery && gallery?.length > 0 && gallery.map((img, i) => (
+									{gallery && gallery?.length > 0 && gallery.map((img : any, i: number) => (
 										<View
 											style={styles.slide1}
 											key={i}
@@ -545,7 +552,7 @@ export const ProductOptionsUI = (props: any) => {
 										paddingVertical: 15
 									}}
 								>
-									{gallery?.length > 1 && gallery.map((img, index) => (
+									{gallery?.length > 1 && gallery.map((img: any, index: number) => (
 										<TouchableOpacity
 											key={index}
 											onPress={() => handleClickThumb(index)}
@@ -727,7 +734,7 @@ export const ProductOptionsUI = (props: any) => {
 									</OText>
 								</TouchableOpacity>
 							)}
-							{product?.extras?.map((extra: any) =>
+							{suboptionsLength < 200 && product?.extras?.map((extra: any) =>
 								<ExtraOptions key={extra.id} options={extra.options} {...extraOptionsProps} />
 							)}
 						</ExtraOptionWrap>
@@ -842,6 +849,7 @@ export const ProductOptionsUI = (props: any) => {
 																				}
 																				setIsScrollAvailable={setIsScrollAvailable}
 																				error={errors[`id:${option.id}`]}
+																				enableIntersection={suboptionsLength >= 200}
 																			/>
 																		);
 																	},
@@ -882,7 +890,7 @@ export const ProductOptionsUI = (props: any) => {
 					{!!error && error?.length > 0 && (
 						<NotFoundSource content={error[0]?.message || error[0]} />
 					)}
-				</ScrollView>
+				</IOScrollView>
 			)}
 			{!loading && !error && product && (
 				<ProductActions ios={Platform?.OS === 'ios'} isColumn={isHaveWeight}>
