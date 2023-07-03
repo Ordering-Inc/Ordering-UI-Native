@@ -190,13 +190,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         setOpenService(true)
         return
       }
-      onRedirect('ProductDetails', {
-        product: product,
-        businessSlug: business.slug,
-        businessId: business.id || product?.category?.business_id,
-        productAddedToCartLength,
-        isRedirect: false
-      })
+      if (product?.enabled) {
+        onRedirect('ProductDetails', {
+          product: product,
+          businessSlug: business.slug,
+          businessId: business.id || product?.category?.business_id,
+          productAddedToCartLength,
+          isRedirect: false
+        })
+      } else {
+        showToast(ToastType.Error, t('PRODUCT_NOT_FOUND', 'Product not found'))
+      }
     }
     events.emit('product_clicked', product)
   }
