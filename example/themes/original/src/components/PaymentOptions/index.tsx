@@ -217,7 +217,7 @@ const PaymentOptionsUI = (props: any) => {
 								style={{ margin: 0, marginTop: 4 }}
 								color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
 							>
-								{t(item.gateway.toUpperCase(), item.name)}
+								{t(item?.gateway?.toUpperCase(), item.name)}
 							</OText>
 						</PMItem>
 					</TouchableOpacity>
