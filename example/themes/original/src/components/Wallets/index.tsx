@@ -129,7 +129,7 @@ const WalletsUI = (props: any) => {
               flexDirection: !hideWalletsTheme ? 'column' : 'row',
               justifyContent: !hideWalletsTheme ? 'flex-start' : 'space-between',
               alignItems: !hideWalletsTheme ? 'flex-start' : 'center',
-              marginTop: !hideWalletsTheme ? 30 : 10,
+              marginTop: !hideWalletsTheme ? Platform.OS === 'ios' ? 20 : 30 : 10,
             },
           }}>
             <NavBar
