@@ -491,8 +491,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         {business?.categories?.length > 0 && isOpenFiltProducts && (
           <FiltProductsContainer
             style={{
-              height: Dimensions.get('window').height - filtProductsHeight - keyboardHeight - (keyboardHeight > 0 && viewOrderButtonVisible ? 55 : 0),
-              top: Platform.OS === 'ios' ? (searchBarHeight - 10) + insets.top : searchBarHeight,
+              height: Dimensions.get('window').height - filtProductsHeight - keyboardHeight - (keyboardHeight > 0 && viewOrderButtonVisible ? 10 : 0),
+              top: Platform.OS === 'ios' ? viewOrderButtonVisible ? (searchBarHeight - 10) + insets.top + 10 : (searchBarHeight - 10) + insets.top : searchBarHeight,
             }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
