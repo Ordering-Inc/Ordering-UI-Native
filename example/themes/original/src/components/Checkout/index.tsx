@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard, BackHandler } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
@@ -159,7 +159,7 @@ const CheckoutUI = (props: any) => {
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
 	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
-	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
+	const [showGateway, setShowGateway] = useState<any>({ closedByUser: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
@@ -430,6 +430,21 @@ const CheckoutUI = (props: any) => {
 			keyboardDidShowListener.remove()
 		}
 	}, [])
+
+	useEffect(() => {
+		const onBackFunction = () => {
+			if (webviewPaymethod?.gateway === 'paypal' && showGateway.open) {
+				setShowGateway({ open: false, closedByUser: true })
+				return true
+			} else {
+				return false
+			}
+		}
+		BackHandler.addEventListener('hardwareBackPress', onBackFunction)
+		return () => {
+			BackHandler.removeEventListener('hardwareBackPress', onBackFunction)
+		}
+	}, [BackHandler, webviewPaymethod?.gateway, showGateway.open])
 
 	return (
 		<>
