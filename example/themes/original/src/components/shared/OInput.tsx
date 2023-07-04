@@ -53,9 +53,9 @@ const Wrapper = styled.Pressable`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	${(props: any) => props.theme?.general?.components?.inputs?.borderRadius && css`
-      border-radius: ${props?.theme?.general?.components?.inputs?.borderRadius};
-  `}
+	${(props: any) => props?.borderRadius && css`
+      border-radius: ${typeof props?.borderRadius === 'string' ? props?.borderRadius : `${props?.borderRadius}px`};
+  	`}
 `;
 
 const OInput = (props: Props): React.ReactElement => {
@@ -70,6 +70,7 @@ const OInput = (props: Props): React.ReactElement => {
 					? props.borderColor
 					: inputFocused ? theme.colors.primary : theme.colors.border,
 				...props.style,
+				borderRadius: parseInt(theme?.general?.components?.inputs?.borderRadius) || props.style?.borderRadius
 			}}>
 			{props.icon ? (
 				<OIcon
@@ -104,9 +105,9 @@ const OInput = (props: Props): React.ReactElement => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
 				style={{
-          ...(theme?.general?.components?.inputs?.color && {
-            color: theme?.general?.components?.inputs?.color
-          }),
+					...(theme?.general?.components?.inputs?.color && {
+						color: theme?.general?.components?.inputs?.color
+					}),
 					...props?.inputStyle
 				}}
 				onFocus={() => setInputFocused(true)}

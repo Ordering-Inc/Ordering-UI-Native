@@ -27,9 +27,9 @@ const StyledButton = styled.View<Props>`
 	padding-left: 20px;
 	padding-right: 20px;
 	position: relative;
-	${(props: any) => props?.theme?.general?.components?.buttons?.borderRadius && css`
-      border-radius: ${props?.theme?.general?.components?.buttons?.borderRadius}px;
-  `}
+	${(props: any) => props?.borderRadius && css`
+      border-radius: ${typeof props?.borderRadius === 'string' ? props?.borderRadius : `${props?.borderRadius}px`};
+  	`}
 `
 const StyledButtonDisabled = styled(StyledButton)`
 	background-color: ${(props: any) => props.theme.colors.disabled};
