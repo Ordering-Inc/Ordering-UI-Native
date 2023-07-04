@@ -33,6 +33,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
   const [state, setState] = useState({
     selectedPrinter: { url: undefined },
   });
+  const paymethodsLength = order?.payment_events?.filter((item: any) => item.event === 'payment')?.length
 
   const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
     if (name !== 'No') {
@@ -83,6 +84,24 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
   const customerName = `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''
     }`?.replace('  ', ' ')?.trim() ?? ''
 
+  const walletName: any = {
+    cash: {
+      name: t('CASH_WALLET', 'Cash Wallet')
+    },
+    credit_point: {
+      name: t('POINTS_WALLET', 'Points Wallet')
+    }
+  }
+
+  const handlePaymethodsListString = () => {
+    const paymethodsList = order?.payment_events?.filter((item: any) => item.event === 'payment').map((paymethod: any) => {
+      return paymethod?.wallet_event
+        ? walletName[paymethod?.wallet_event?.wallet?.type]?.name
+        : t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+    })
+    return paymethodsList.join(', ')
+  }
+
   const orderSummary = () => {
     return `
     <div>
@@ -99,7 +118,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         : parseDate(order?.delivery_datetime, { utc: false })
       }
           </br>
-          ${t('PAYMENT_METHOD')}: ${order?.paymethod?.name}
+          ${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}: ${handlePaymethodsListString()}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
@@ -114,8 +133,8 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         } </br>`
         : ''
       }
-         ${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address} 
-         </br> 
+         ${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address}
+         </br>
          ${!!order?.customer?.internal_number
         ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number
         } </br>`
@@ -379,10 +398,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                 }`}
             </OText>
 
-            <OText style={{ marginBottom: 5 }}>{`${t('PAYMENT_METHOD')}: ${t(
-              order?.paymethod?.name.toUpperCase(),
-              order?.paymethod?.name,
-            )}`}</OText>
+            <OText style={{ marginBottom: 5 }}>{`${t(`${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${handlePaymethodsListString()}`}</OText>
           </OrderHeader>
 
           <OrderCustomer>
