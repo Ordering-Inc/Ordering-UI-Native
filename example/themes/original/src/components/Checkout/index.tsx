@@ -170,12 +170,12 @@ const CheckoutUI = (props: any) => {
 	const [paymethodClicked, setPaymethodClicked] = useState<any>(null)
 	const [showTitle, setShowTitle] = useState(false)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
+	const [isGiftCardCart, setIsGiftCardCart] = useState(!cart?.business_id)
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
-	const isGiftCardCart = !cart?.business_id
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
@@ -359,11 +359,21 @@ const CheckoutUI = (props: any) => {
 		if (cart?.products?.length === 0) {
 			if (cart?.business_id !== null) {
 				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null, fromMulti: props.fromMulti })
-			} else {
+			} else if (isGiftCardCart) {
 				onNavigationRedirect('Wallets')
 			}
 		}
-	}, [cart?.products])
+	}, [cart?.products?.length])
+
+	useEffect(() => {
+		if (cart?.products?.length > 0) {
+			if (cart?.uuid && cart?.business_id === null) {
+				setIsGiftCardCart(true)
+			} else {
+				setIsGiftCardCart(false)
+			}
+		}
+	}, [cart?.uuid, cart?.products?.length])
 
 	useEffect(() => {
 		onFailPaypal()
