@@ -120,53 +120,55 @@ export const CartContent = (props: any) => {
 					{isMultiCheckout && (
 						<>
 							{!!cartsAvailable.length && (
-								<ChCartsTotal>
-									{!!totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
-										<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-											<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-												{t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
-											</OText>
-											<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-												{parsePrice(totalCartsFee)}
-											</OText>
-										</View>
-									)}
-									{cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
-										configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
+								<>
+									<ChCartsTotal>
+										{!!totalCartsFee && configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1' && (
 											<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 												<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-													{t('DRIVER_TIP', 'Driver tip')}
+													{t('TOTAL_DELIVERY_FEE', 'Total delivery fee')}
 												</OText>
 												<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
-													{parsePrice(cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
+													{parsePrice(totalCartsFee)}
 												</OText>
 											</View>
 										)}
-									<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
-											{t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
-										</OText>
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
-									</View>
-									<View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 20 }}>
-										<OText size={14} color={theme.colors.textNormal} weight={'300'} style={{ textAlign: 'center' }}>
-											{t('CART_GROUP_MESSAGE_ALERT', 'Discounts may be applied at the time of payment for this group.')}
-										</OText>
-									</View>
-								</ChCartsTotal>
+										{cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0) > 0 &&
+											configs?.multi_business_checkout_show_combined_driver_tip?.value === '1' && (
+												<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+													<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+														{t('DRIVER_TIP', 'Driver tip')}
+													</OText>
+													<OText size={14} lineHeight={24} color={theme.colors.textNormal} weight={'400'}>
+														{parsePrice(cartsAvailable.reduce((sum: any, cart: any) => sum + cart?.driver_tip, 0))}
+													</OText>
+												</View>
+											)}
+										<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>
+												{t('TOTAL_FOR_ALL_CARTS', 'Total for all Carts')}
+											</OText>
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal} weight={'500'}>{parsePrice(totalCartsPrice)}</OText>
+										</View>
+										<View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 20 }}>
+											<OText size={14} color={theme.colors.textNormal} weight={'300'} style={{ textAlign: 'center' }}>
+												{t('CART_GROUP_MESSAGE_ALERT', 'Discounts may be applied at the time of payment for this group.')}
+											</OText>
+										</View>
+									</ChCartsTotal>
+									<CheckoutAction style={{ marginTop: 0 }}>
+										<OButton
+											text={t('CHECKOUT', 'Checkout')}
+											bgColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
+											isDisabled={!cartsAvailable.length}
+											borderColor={theme.colors.primary}
+											imgRightSrc={null}
+											textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+											onClick={() => handleCheckoutRedirect()}
+											style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+										/>
+									</CheckoutAction>
+								</>
 							)}
-							<CheckoutAction style={{ marginTop: 0 }}>
-								<OButton
-									text={t('CHECKOUT', 'Checkout')}
-									bgColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
-									isDisabled={!cartsAvailable.length}
-									borderColor={theme.colors.primary}
-									imgRightSrc={null}
-									textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-									onClick={() => handleCheckoutRedirect()}
-									style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
-								/>
-							</CheckoutAction>
 						</>
 					)}
 				</>
