@@ -368,7 +368,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [order?.delivery_type])
 
   return (
-    <SafeAreaView>
+    <>
       <View style={styles.wrapperNavbar}>
         <TopHeader>
           <>
@@ -1125,8 +1125,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           />
         </OModal>
       </OrderDetailsContainer>
-    </SafeAreaView>
-
+    </>
   );
 };
 
