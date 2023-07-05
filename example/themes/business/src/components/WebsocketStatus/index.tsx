@@ -51,7 +51,7 @@ const SocketStatusUI = (props: any) => {
         return '#E63757';
       default:
         return '#FF9922';
-    }  
+    }
   }
 
   return (
@@ -73,7 +73,7 @@ const SocketStatusUI = (props: any) => {
         <OText
           style={{ color: theme.colors.backArrow, fontSize: 16, marginBottom: 0, lineHeight: 16 }}
         >
-          {t('CONNECTION_STATUS', 'Connection status')}
+          {t('CONNECTION_STATUS_SHORT', 'Status')}
         </OText>
         <MaterialIcon
           name='circle'

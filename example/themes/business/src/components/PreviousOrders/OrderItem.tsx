@@ -153,10 +153,10 @@ export const OrderItem = React.memo((props: any) => {
         <Logo style={styles.logo}>
           <FastImage
             style={styles.icon}
-            source={order.business?.logo ? {
-              uri: optimizeImage(order.business?.logo, 'h_100,c_limit'),
+            source={order.business?.logo?.includes('https') ? {
+              uri: order.business?.logo,
               priority: FastImage.priority.normal,
-            } : theme?.images?.dummies?.businessLogo}
+            } : order.business?.logo ?? theme?.images?.dummies?.businessLogo}
             resizeMode={FastImage.resizeMode.cover}
           />
         </Logo>
