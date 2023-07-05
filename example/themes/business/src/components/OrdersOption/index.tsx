@@ -389,6 +389,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
         <IconWrapper>
+          <View style={{ marginRight: 10 }}>
+            <WebsocketStatus />
+          </View>
           <FeatherIcon
             name='refresh-cw'
             color={theme.colors.backgroundDark}
@@ -404,10 +407,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      <WebsocketStatus />
       {configState?.configs?.order_deadlines_enabled?.value === '1' && (
         <View style={styles.SLAwrapper}>
-          <View style={{ flex: 0.5 }}>
+          {/* <View style={{ flex: 0.5 }}>
             <OButton
               text={t('SLA_SETTING', 'SLA’s Settings')}
               textStyle={{ color: theme.colors.backArrow }}
@@ -421,9 +423,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               }}
               onClick={onClickSetting}
             />
-          </View>
-          <View style={{ width: 10, height: '100%' }} />
-          <View style={{ flex: 0.5, justifyContent: 'center' }}>
+          </View> */}
+          {/* <View style={{ width: 10, height: '100%' }} /> */}
+          {/* <View style={{ flex: 0.5, justifyContent: 'center' }}>
             <SelectDropdown
               defaultButtonText={t('SLA', 'SLA\'s')}
               data={preorderTypeList}
@@ -453,7 +455,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 );
               }}
             />
-          </View>
+          </View> */}
         </View>
       )}
       <FiltersTab>
@@ -713,6 +715,39 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             {openSearchModal && (
               <SearchModalContent>
                 <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
+                <InputContainer style={{ marginBottom: 24 }}>
+                  <SelectDropdown
+                    defaultButtonText={search?.timeStatus
+                      ? preorderTypeList.find(type => type.key === search?.timeStatus)?.name
+                      : t('SLA', 'SLA\'s')}
+                    data={preorderTypeList}
+                    onSelect={(selectedItem, index) => {
+                      setSearch({ ...search, timeStatus: selectedItem?.key })
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      return selectedItem.name
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      return item.key
+                    }}
+                    buttonStyle={styles.selectOption}
+                    buttonTextStyle={styles.buttonTextStyle}
+                    renderDropdownIcon={isOpened => {
+                      return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                    }}
+                    dropdownStyle={styles.dropdownStyle}
+                    dropdownOverlayColor='transparent'
+                    rowStyle={styles.rowStyle}
+                    renderCustomizedRowChild={(item, index) => {
+                      return (
+                        <SlaOption>
+                          {index !== 0 && <OrderStatus timeState={item?.key} />}
+                          <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
+                        </SlaOption>
+                      );
+                    }}
+                  />
+                </InputContainer>
                 <InputContainer>
                   <OInput
                     value={search.id}
