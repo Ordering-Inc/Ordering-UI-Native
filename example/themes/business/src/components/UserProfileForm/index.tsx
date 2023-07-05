@@ -46,11 +46,10 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
-    userState,
     isAlsea
   } = props;
 
-  const [{ user }] = useSession();
+  const [{ user, sessionLoading }] = useSession();
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const [{ optimizeImage }] = useUtils();
@@ -67,6 +66,7 @@ const ProfileUI = (props: ProfileParams) => {
     },
   });
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [userState, setUserState] = useState(props.userState)
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneToShow, setPhoneToShow] = useState('');
   const [openModal, setOpenModal] = useState(false)
@@ -207,6 +207,22 @@ const ProfileUI = (props: ProfileParams) => {
     }
   }, [user?.country_phone_code]);
 
+  useEffect(() => {
+    setUserState({ ...userState, ...props.userState })
+  }, [props.userState])
+
+  useEffect(() => {
+    if (!user?.id) return
+
+    setUserState({
+      ...userState,
+      result: {
+        error: true,
+        result: user
+      }
+    })
+  }, [user, props.isFocused])
+
   const styles = StyleSheet.create({
     label: {
       color: theme.colors.textGray,
@@ -255,7 +271,7 @@ const ProfileUI = (props: ProfileParams) => {
         />
       )}
 
-      {formState?.loading && !validationFields.error && (
+      {(formState?.loading || sessionLoading) && !validationFields.error && (
         <View
           style={{
             backgroundColor: theme.colors.backgroundLight,
@@ -326,7 +342,7 @@ const ProfileUI = (props: ProfileParams) => {
         </View>
       )}
 
-      {!formState?.loading && !validationFields.error && (
+      {!(formState?.loading || sessionLoading) && !validationFields.error && (
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
