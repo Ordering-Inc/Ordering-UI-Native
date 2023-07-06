@@ -46,7 +46,8 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
-    isAlsea
+    isAlsea,
+    isHideDriverStatus
   } = props;
 
   const [{ user, sessionLoading }] = useSession();
@@ -55,8 +56,6 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ optimizeImage }] = useUtils();
   const { errors } = useForm();
   const theme = useTheme();
-
-  const isShowDriverStatus = user?.level === 4 && (props.isShowDriverStatus || (!props.isShowDriverStatus && !userState?.result?.result?.available))
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -362,7 +361,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
           </CenterView>
 
-          {isShowDriverStatus && (
+          {user?.level === 4 && !isHideDriverStatus && (
             <EnabledStatusDriver>
               <View style={{ flex: 1 }}>
                 <OText
@@ -390,7 +389,7 @@ const ProfileUI = (props: ProfileParams) => {
                       !userState?.result?.result?.available,
                     )
                   }
-                  disabled={userState?.loading || userState?.result?.result?.available}
+                  disabled={userState?.loading}
                   animationSpeed={200}
                 />
               )}
