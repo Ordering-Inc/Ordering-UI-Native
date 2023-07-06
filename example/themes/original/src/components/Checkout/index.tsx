@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard, BackHandler } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard, BackHandler, SafeAreaView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
@@ -448,9 +448,9 @@ const CheckoutUI = (props: any) => {
 
 	return (
 		<>
-			<View style={styles.wrapperNavbar}>
-				<TopHeader>
-					<>
+			<SafeAreaView style={{ backgroundColor: theme.colors.backgroundPage }}>
+				<View style={styles.wrapperNavbar}>
+					<TopHeader>
 						<TopActions onPress={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}>
 							<IconAntDesign
 								name='arrowleft'
@@ -468,10 +468,10 @@ const CheckoutUI = (props: any) => {
 								{t('CHECKOUT', 'Checkout')}
 							</OText>
 						)}
-					</>
-				</TopHeader>
-			</View>
-			<Container forwardRef={containerRef} noPadding onScroll={handleScroll}>
+					</TopHeader>
+				</View>
+			</SafeAreaView>
+			<Container pt={0} forwardRef={containerRef} noPadding onScroll={handleScroll}>
 				<View style={styles.wrapperNavbar}>
 					<NavBar
 						hideArrowLeft
