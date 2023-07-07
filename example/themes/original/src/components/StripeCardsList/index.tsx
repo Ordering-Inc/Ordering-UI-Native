@@ -30,12 +30,7 @@ export const StripeCardsListUI = (props: any) => {
 		cardsList,
 		handleCardClick,
 		onOpen,
-		onCancel,
 		gateway,
-		setCardsList,
-		addCardOpen,
-		isOpenMethod,
-		handlePaymethodDataChange
 	} = props;
 
 	const theme = useTheme();
@@ -148,33 +143,6 @@ export const StripeCardsListUI = (props: any) => {
 					))}
 				</ScrollView>
 			)}
-			<OModal
-				entireModal
-				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-				open={addCardOpen?.stripe}
-				onClose={onCancel}
-				style={{ backgroundColor: 'red' }}
-			>
-				<KeyboardAvoidingView
-					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-					keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-					enabled={Platform.OS === 'ios' ? true : false}
-				>
-					<StripeElementsForm
-						openCarts={props.openCarts}
-						toSave
-						businessId={props.businessId}
-						businessIds={props.businessIds}
-						publicKey={props.publicKey || isOpenMethod?.paymethod?.credentials?.publishable}
-						setCardsList={setCardsList}
-						cardsList={cardsList}
-						requirements={props.clientSecret}
-						handleCardClick={handleCardClick}
-						onSelectCard={handlePaymethodDataChange}
-						onCancel={onCancel}
-					/>
-				</KeyboardAvoidingView>
-			</OModal>
 		</>
 	)
 }
