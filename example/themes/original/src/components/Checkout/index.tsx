@@ -859,7 +859,7 @@ const CheckoutUI = (props: any) => {
 					{!cartState.loading && cart && (
 						<ChSection>
 							<ChCart>
-								{cartsWithProducts && cart?.products?.length === 0 ? (
+								{cartsWithProducts?.length > 0 && cart?.products?.length === 0 ? (
 									<NotFoundSource
 										content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
 										btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
@@ -937,13 +937,15 @@ const CheckoutUI = (props: any) => {
 									</OText>
 								)}
 
-								{!cart?.valid_products && cart?.status !== 2 && (
-									<OText
-										color={theme.colors.error}
-										size={12}
-									>
-										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
-									</OText>
+								{!cart?.valid_products && cart?.status !== 2 && cart?.total !== 0 && (
+									<>
+										<OText
+											color={theme.colors.error}
+											size={12}
+										>
+											{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+										</OText>
+									</>
 								)}
 								{cart?.valid_preorder !== undefined && !cart?.valid_preorder && (
 									<OText

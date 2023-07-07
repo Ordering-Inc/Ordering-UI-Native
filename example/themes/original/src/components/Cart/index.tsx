@@ -219,7 +219,7 @@ const CartUI = (props: any) => {
 
   return (
     <CContainer>
-      {openUpselling && (
+      {!!openUpselling && (
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
           openUpselling={openUpselling}

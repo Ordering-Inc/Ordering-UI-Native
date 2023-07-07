@@ -237,7 +237,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
                     <SingleProductCard
                       key={`${product?.id}_${i}`}
-                      enableIntersection={!isFiltMode}
+                      // enableIntersection={!isFiltMode}
                       isSoldOut={product.inventoried && !product.quantity}
                       businessId={businessId}
                       product={product}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent, BackHandler } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent, BackHandler, ScrollView } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -534,7 +534,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </View>
           </FiltProductsContainer>
         )}
-        <IOScrollView
+        <ScrollView
           stickyHeaderIndices={[business?.professionals?.length > 0 ? 4 : 3]}
           style={{
             ...styles.mainContainer,
@@ -662,7 +662,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           {isOpenFiltProducts && (
             <BackgroundGray isIos={Platform.OS === 'ios'} />
           )}
-        </IOScrollView>
+        </ScrollView>
         {viewOrderButtonVisible && (
           <View style={{ marginBottom: 0 }}>
             <FloatingButton
