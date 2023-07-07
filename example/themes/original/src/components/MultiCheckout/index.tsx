@@ -10,7 +10,7 @@ import {
   ToastType,
   MultiCheckout as MultiCheckoutController
 } from 'ordering-components/native'
-import { View, StyleSheet, Platform, ScrollView } from 'react-native'
+import { View, StyleSheet, Platform, ScrollView, SafeAreaView } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { Container } from '../../layouts/Container';
@@ -285,30 +285,32 @@ const MultiCheckoutUI = (props: any) => {
 
   return (
     <>
-      <View style={styles.wrapperNavbar}>
-				<TopHeader>
-					<>
-						<TopActions onPress={() => navigation?.canGoBack() && navigation.goBack()}>
-							<IconAntDesign
-								name='arrowleft'
-								size={26}
-							/>
-						</TopActions>
-						{showTitle && (
-							<OText
-								size={16}
-								style={{ flex: 1, textAlign: 'center', right: 15 }}
-								weight={Platform.OS === 'ios' ? '600' : 'bold'}
-								numberOfLines={2}
-								ellipsizeMode='tail'
-							>
-								{t('CHECKOUT', 'Checkout')}
-							</OText>
-						)}
-					</>
-				</TopHeader>
-			</View>
-      <Container noPadding onScroll={handleScroll}>
+      <SafeAreaView style={{ backgroundColor: theme.colors.backgroundPage }}>
+        <View style={styles.wrapperNavbar}>
+          <TopHeader>
+            <>
+              <TopActions onPress={() => navigation?.canGoBack() && navigation.goBack()}>
+                <IconAntDesign
+                  name='arrowleft'
+                  size={26}
+                />
+              </TopActions>
+              {showTitle && (
+                <OText
+                  size={16}
+                  style={{ flex: 1, textAlign: 'center', right: 15 }}
+                  weight={Platform.OS === 'ios' ? '600' : 'bold'}
+                  numberOfLines={2}
+                  ellipsizeMode='tail'
+                >
+                  {t('CHECKOUT', 'Checkout')}
+                </OText>
+              )}
+            </>
+          </TopHeader>
+        </View>
+      </SafeAreaView>
+      <Container pt={0} noPadding onScroll={handleScroll}>
         <View style={styles.wrapperNavbar}>
           <NavBar
             hideArrowLeft

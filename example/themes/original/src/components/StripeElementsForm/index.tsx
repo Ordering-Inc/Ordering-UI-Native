@@ -33,7 +33,8 @@ const StripeElementsFormUI = (props: any) => {
 		placeByMethodPay,
 		methodPaySupported,
 		setPlaceByMethodPay,
-		cartTotal
+		cartTotal,
+		publicKeyAddCard
 	} = props;
 
 	const theme = useTheme();
@@ -52,6 +53,7 @@ const StripeElementsFormUI = (props: any) => {
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 	const zipCodeEnabled = validationFields?.fields?.card?.zipcode?.enabled
 	const zipCodeRequired = validationFields?.fields?.card?.zipcode?.required
+	const isToSave = methodsPay?.includes(paymethod) ? publicKey : publicKeyAddCard
 	const styles = StyleSheet.create({
 		container: {
 			width: '100%',
@@ -200,7 +202,7 @@ const StripeElementsFormUI = (props: any) => {
 			{publicKey ? (
 				<View style={{ flex: 1 }}>
 					<StripeProvider
-						publishableKey={publicKey}
+						publishableKey={isToSave}
 						merchantIdentifier={merchantId}
 						urlScheme={merchantId}
 					>
