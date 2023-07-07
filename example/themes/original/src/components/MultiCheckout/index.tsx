@@ -10,8 +10,9 @@ import {
   ToastType,
   MultiCheckout as MultiCheckoutController
 } from 'ordering-components/native'
-import { View, StyleSheet, Platform, ScrollView } from 'react-native'
+import { View, StyleSheet, Platform, ScrollView, SafeAreaView } from 'react-native'
 import { useTheme } from 'styled-components/native';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OText, OIcon, OModal, OButton } from '../shared';
@@ -30,6 +31,8 @@ import { SignupForm } from '../SignupForm'
 import { LoginForm } from '../LoginForm'
 
 import {
+  TopHeader,
+  TopActions,
   ChContainer,
   ChSection,
   ChHeader,
@@ -76,7 +79,11 @@ const MultiCheckoutUI = (props: any) => {
       paddingLeft: 20,
       paddingRight: 20
     },
-    wrapperNavbar: { paddingHorizontal: 20 },
+    wrapperNavbar: {
+      paddingHorizontal: 20,
+      backgroundColor: theme?.colors?.white,
+			borderWidth: 0
+    },
     detailWrapper: {
 			paddingHorizontal: 20,
 			width: '100%'
@@ -136,6 +143,7 @@ const MultiCheckoutUI = (props: any) => {
     ?.reduce((sum: any, cart: any) => sum + clearAmount((cart?.subtotal + getIncludedTaxes(cart)) * accumulationRateBusiness(cart?.business_id)), 0)
     ?.toFixed(configs.format_number_decimal_length?.value ?? 2)
 
+	const [showTitle, setShowTitle] = useState(false)
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
@@ -233,6 +241,10 @@ const MultiCheckoutUI = (props: any) => {
 		if (user) setOpenModal({ ...openModal, login: false })
 	}
 
+  const handleScroll = ({ nativeEvent: { contentOffset } }: any) => {
+		setShowTitle(contentOffset.y > 30)
+	}
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -273,15 +285,44 @@ const MultiCheckoutUI = (props: any) => {
 
   return (
     <>
-      <Container noPadding>
+      <SafeAreaView style={{ backgroundColor: theme.colors.backgroundPage }}>
+        <View style={styles.wrapperNavbar}>
+          <TopHeader>
+            <>
+              <TopActions onPress={() => navigation?.canGoBack() && navigation.goBack()}>
+                <IconAntDesign
+                  name='arrowleft'
+                  size={26}
+                />
+              </TopActions>
+              {showTitle && (
+                <OText
+                  size={16}
+                  style={{ flex: 1, textAlign: 'center', right: 15 }}
+                  weight={Platform.OS === 'ios' ? '600' : 'bold'}
+                  numberOfLines={2}
+                  ellipsizeMode='tail'
+                >
+                  {t('CHECKOUT', 'Checkout')}
+                </OText>
+              )}
+            </>
+          </TopHeader>
+        </View>
+      </SafeAreaView>
+      <Container pt={0} noPadding onScroll={handleScroll}>
         <View style={styles.wrapperNavbar}>
           <NavBar
+            hideArrowLeft
             title={t('CHECKOUT', 'Checkout')}
             titleAlign={'center'}
             onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
             showCall={false}
             paddingTop={Platform.OS === 'ios' ? 0 : 4}
             btnStyle={{ paddingLeft: 0 }}
+            titleWrapStyle={{ paddingHorizontal: 0 }}
+						titleStyle={{ marginRight: 0, marginLeft: 0 }}
+						style={{ marginTop: 20 }}
           />
         </View>
         <ChContainer style={styles.pagePadding}>
