@@ -16,7 +16,8 @@ import {
   useApi,
   useEvent,
   useLanguage,
-  useSession
+  useSession,
+  useConfig
 } from 'ordering-components/native'
 
 import { OIcon, OText } from '../shared'
@@ -95,8 +96,13 @@ const NewOrderNotificationUI = (props: any) => {
   const [events] = useEvent()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
+  const [{ configs }] = useConfig()
   const { getCurrentLocation } = useLocation()
   const [currentEvent, setCurrentEvent] = useState<any>(null)
+
+  const orderStatus = !!isBusinessApp
+    ? configs?.notification_business_states?.value.split('|').map((value: any) => Number(value)) || []
+    : configs?.notification_driver_states?.value.split('|').map((value: any) => Number(value)) || []
 
   const handleEventNotification = async (evtType: number, value: any) => {
     if (value?.driver) {
@@ -105,18 +111,26 @@ const NewOrderNotificationUI = (props: any) => {
         await fetch(`${ordering.root}/users/${user.id}/locations`, {
           method: 'POST',
           body: JSON.stringify({
-            location: JSON.stringify({ location: `{lat: ${location.latitude}, lng: ${location.longitude}}` })
+            location: JSON.stringify({
+              location: `{
+                lat: ${location.latitude},
+                lng: ${location.longitude}
+              }`
+            })
           }),
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
         })
       } catch { }
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
-      if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
+      if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status && orderStatus.includes(value.status)) {
         setCurrentEvent({ evt: 2, orderId: value?.id ?? value?.order_id })
       }
     }
-    if ((evtType === 3 && (value.status !== 8 || !value?.driver) && !value.uuid) || value?.author_id === user.id) return
+    if (!orderStatus.includes(value.status) || value?.author_id === user.id) return
     setCurrentEvent({
       evt: evtType,
       orderId: value?.driver
