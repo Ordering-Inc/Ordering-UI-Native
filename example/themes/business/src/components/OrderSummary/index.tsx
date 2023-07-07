@@ -118,7 +118,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         : parseDate(order?.delivery_datetime, { utc: false })
       }
           </br>
-          ${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}: ${handlePaymethodsListString()}
+          ${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: ${handlePaymethodsListString()}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
