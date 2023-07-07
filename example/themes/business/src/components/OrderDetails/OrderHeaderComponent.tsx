@@ -50,6 +50,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils();
+  const paymethodsLength = order?.payment_events?.filter((item: any) => item.event === 'payment')?.length
 
   const styles = StyleSheet.create({
     icons: {
@@ -119,6 +120,15 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         : order.delivery_type === 4
           ? t('CURBSIDE', 'Curbside')
           : t('DRIVER_THRU', 'Driver thru')
+
+  const handlePaymethodsListString = () => {
+    const paymethodsList = order?.payment_events?.filter((item: any) => item.event === 'payment').map((paymethod: any) => {
+      return paymethod?.wallet_event
+        ? walletName[paymethod?.wallet_event?.wallet?.type]?.name
+        : t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+    })
+    return paymethodsList.join(', ')
+  }
 
   return (
     <>
@@ -283,20 +293,10 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
             <OText>
               <OText size={13} weight='bold'>
-                {`${t('PAYMENT_METHODS', 'Payment methods')}: `}
+                {`${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: `}
               </OText>
               {order?.payment_events?.length > 0 ? (
-                <OText size={13}>
-                  {order?.payment_events?.map((event: any, idx: number) => {
-                    return event?.wallet_event
-                      ? idx < order?.payment_events?.length - 1
-                        ? `${walletName[event?.wallet_event?.wallet?.type]?.name} - `
-                        : walletName[event?.wallet_event?.wallet?.type]?.name
-                      : idx < order?.payment_events?.length - 1
-                        ? `${t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)} - `
-                        : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)
-                  })}
-                </OText>
+                <OText size={13}>{`${handlePaymethodsListString()}`}</OText>
               ) : (
                 <OText size={13}>{t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}</OText>
               )}
