@@ -53,6 +53,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
   const [{ configs }] = useConfig()
 
   const isTaxIncludedOnPrice = orders.every((_order: any) => _order.taxes?.length ? _order.taxes?.every((_tax: any) => _tax.type === 1) : true)
+  const deliveryType = orders.find((order: any) => order.delivery_type)?.delivery_type
   const progressBarStyle = configs.multi_business_checkout_progress_bar_style?.value
   const showBarInOrder = ['group', 'both']
   const showBarInIndividual = ['individual', 'both']
@@ -171,19 +172,23 @@ export const MultiOrdersDetailsUI = (props: any) => {
         ))}
       </Section>
       <Divider />
-      <Section>
-        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={20}>
-          {t('DELIVERYA_V21', 'Delivery address')}
-        </OText>
-        {loading ? (
-          <PlaceholderLine height={18} noMargin style={{ borderRadius: 2 }} />
-        ) : (
-          <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
-            {customer?.address}
-          </OText>
-        )}
-      </Section>
-      <Divider />
+      {deliveryType === 1 && (
+        <>
+          <Section>
+            <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={20}>
+              {t('DELIVERYA_V21', 'Delivery address')}
+            </OText>
+            {loading ? (
+              <PlaceholderLine height={18} noMargin style={{ borderRadius: 2 }} />
+            ) : (
+              <OText size={12} lineHeight={18} color={theme.colors.textNormal} mBottom={2}>
+                {customer?.address}
+              </OText>
+            )}
+          </Section>
+          <Divider />
+        </>
+      )}
       {loading ? (
         <Placeholder Animation={Fade}>
           <PlaceholderLine
