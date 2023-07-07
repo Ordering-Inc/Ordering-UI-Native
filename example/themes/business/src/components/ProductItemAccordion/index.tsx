@@ -72,7 +72,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const getProductPrice = (product: any) => {
     let subOptionPrice = 0;
-    if (product?.options?.length > 0 && product?.options?.suboptions?.length > 0) {
+    if (product?.options?.length > 0 && product?.options[0]?.suboptions?.length > 0) {
       for (const option of product?.options) {
         for (const suboption of option?.suboptions) {
           subOptionPrice += suboption.quantity * suboption.price;
@@ -118,7 +118,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const onTextLayout = useCallback((e: any) => {
     setLengthMore((e.nativeEvent.lines.length == 2 && e.nativeEvent.lines[1].width > WIDTH_SCREEN * .76) || e.nativeEvent.lines.length > 2); //to check the text is more than 2 lines or not
-  },[]);
+  }, []);
 
   return (
     <AccordionSection>
