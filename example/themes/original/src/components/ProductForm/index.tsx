@@ -62,8 +62,6 @@ import { IOScrollView } from 'react-native-intersection-observer';
 
 const windowWidth = Dimensions.get('window').width;
 
-
-
 export const ProductOptionsUI = (props: any) => {
 	const {
 		navigation,
@@ -441,7 +439,7 @@ export const ProductOptionsUI = (props: any) => {
 		selOpt
 	}
 
-	const suboptionsLength = product.extras.reduce((acc : number, extras : any) => acc + extras?.options?.reduce((accSuboptions : number, options: any) => accSuboptions + options?.suboptions?.length, 0), 0)
+	const suboptionsLength = product?.extras?.reduce((acc : number, extras : any) => acc + extras?.options?.reduce((accSuboptions : number, options: any) => accSuboptions + options?.suboptions?.length, 0), 0)
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>

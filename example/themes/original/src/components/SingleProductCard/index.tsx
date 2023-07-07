@@ -169,7 +169,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: hideAddButton ? 125 : 190, marginLeft: logoPosition === 'left' ? 12.5 : 0 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
+		<View style={{ minHeight: hideAddButton ? 125 : 190, marginLeft: logoPosition === 'left' ? 12.5 : 0 }}>
 			{isIntersectionObserver ? (
 				<CardAnimation
 					onClick={() => handleClickproduct()}
@@ -340,7 +340,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					</Placeholder>
 				</View>
 			)}
-		</InView>
+		</View>
 	);
 }, SingleProductCardPropsAreEqual);
 
