@@ -1,5 +1,22 @@
 import styled from 'styled-components/native'
 
+export const TopActions = styled.TouchableOpacity`
+	height: 60px;
+	justify-content: center;
+  min-width: 30px;
+  padding-right: 15px;
+`;
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  height: 60px;
+  min-height: 60px;
+`
+
 export const ChContainer = styled.View`
   margin-bottom: 60px;
 `
