@@ -630,3 +630,11 @@ export interface OrderDetailsLogisticParams {
   orderAssingId: number,
   order: any
 }
+
+export interface SessionsParams {
+  navigation: any,
+  sessionsList: any,
+  actionState: any,
+  handleDeleteSession: any,
+  handleDeleteAllSessions: any
+}

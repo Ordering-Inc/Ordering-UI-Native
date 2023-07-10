@@ -513,6 +513,17 @@ const ProfileUI = (props: ProfileParams) => {
               marginTop: 10
             }} />
           </Pressable>
+          <Pressable style={{ marginBottom: 10 }} onPress={() => navigation.navigate('Sessions')}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <OText size={16}>{t('SESSIONS', 'Sessions')}</OText>
+              <AntDesignIcon size={18} name='right' />
+            </View>
+            <View style={{
+              borderBottomColor: theme.colors.tabBar,
+              borderBottomWidth: 1,
+              marginTop: 10
+            }} />
+          </Pressable>
           <Actions>
             <LanguageSelector />
 
