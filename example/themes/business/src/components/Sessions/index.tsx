@@ -76,7 +76,7 @@ export const SessionsUI = (props: SessionsParams) => {
       shadowColor: theme.colors.clear,
       paddingLeft: 0,
       paddingRight: 0,
-      marginTop: 10
+      marginTop: Platform.OS === 'ios' ? 30 : 10
     },
     innerPadding: {
       paddingLeft: 10,
@@ -87,7 +87,7 @@ export const SessionsUI = (props: SessionsParams) => {
   return (
     <Container
       pdng={Platform.OS === 'ios' ? '10px' : '8px'}
-      style={Platform.OS !== 'ios' && styles.innerPadding}
+      style={styles.innerPadding}
     >
       <View style={styles.titleGroups}>
         <TouchableOpacity onPress={() => goToBack()} style={styles.btnBackArrow}>
