@@ -47,7 +47,8 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
     isAlsea,
-    isHideDriverStatus
+    isHideDriverStatus,
+    navigation
   } = props;
 
   const [{ user, sessionLoading }] = useSession();
@@ -501,6 +502,17 @@ const ProfileUI = (props: ProfileParams) => {
           <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
+              <AntDesignIcon size={18} name='right' />
+            </View>
+            <View style={{
+              borderBottomColor: theme.colors.tabBar,
+              borderBottomWidth: 1,
+              marginTop: 10
+            }} />
+          </Pressable>
+          <Pressable style={{ marginBottom: 10 }} onPress={() => navigation.navigate('Sessions')}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <OText size={16}>{t('SESSIONS', 'Sessions')}</OText>
               <AntDesignIcon size={18} name='right' />
             </View>
             <View style={{
