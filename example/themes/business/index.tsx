@@ -43,6 +43,7 @@ import { NewOrderNotification } from './src/components/NewOrderNotification';
 import { DriverSchedule } from './src/components/DriverSchedule';
 import { ScheduleBlocked } from './src/components/ScheduleBlocked';
 import { OrderDetailsLogistic } from './src/components/OrderDetailsLogistic'
+import { Sessions } from './src/components/Sessions';
 //OComponents
 import {
   OText,
@@ -106,6 +107,7 @@ export {
   ReviewCustomer,
   SafeAreaContainerLayout,
   SearchBar,
+  Sessions,
   SignupForm,
   StoresList,
   UserFormDetailsUI,
