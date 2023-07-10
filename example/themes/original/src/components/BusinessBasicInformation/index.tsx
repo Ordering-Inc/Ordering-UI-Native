@@ -247,7 +247,7 @@ export const BusinessBasicInformation = (
 								<View style={styles.tiktokIcon}>
 									<OIcon
 										src={theme.images.general.tiktok}
-										style={{ width: 10, height: 12 }}
+										style={{ width: 10, height: 12, bottom: 1 }}
 										cover
 									/>
 								</View>
