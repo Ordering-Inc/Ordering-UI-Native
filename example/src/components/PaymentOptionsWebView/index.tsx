@@ -156,6 +156,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
                 user_id: user?.id,
                 user_name: user?.name
               },
+              xappx: ordering?.appId,
               currency: configs?.stripe_currency?.value || currency,
               userToken: token,
               clientId: webviewPaymethod?.credentials?.client_id,
