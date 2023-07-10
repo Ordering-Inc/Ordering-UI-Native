@@ -361,7 +361,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
           </CenterView>
 
-          {user?.level === 4 && !isHideDriverStatus && (
+          {user?.level === 4 && (
             <EnabledStatusDriver>
               <View style={{ flex: 1 }}>
                 <OText
@@ -369,29 +369,33 @@ const ProfileUI = (props: ProfileParams) => {
                   adjustsFontSizeToFit
                   style={{ ...styles.label, paddingHorizontal: 0 }}>
                   {t(
-                    'AVAILABLE_TO_RECEIVE_ORDERS',
-                    'Available to receive orders',
+                    `${isHideDriverStatus ? 'NOT_' : ''}AVAILABLE_TO_RECEIVE_ORDERS`,
+                    `${isHideDriverStatus ? 'You are not ' : ''}Available to receive orders`
                   )}
                 </OText>
               </View>
 
-              {userState.loadingDriver ? (
-                <ActivityIndicator size="small" color={theme.colors.primary} />
-              ) : (
-                <ToggleSwitch
-                  isOn={userState?.result?.result?.available}
-                  onColor={theme.colors.primary}
-                  offColor={theme.colors.offColor}
-                  size="small"
-                  onToggle={() =>
-                    handleToggleAvalaibleStatusDriver &&
-                    handleToggleAvalaibleStatusDriver(
-                      !userState?.result?.result?.available,
-                    )
-                  }
-                  disabled={userState?.loading}
-                  animationSpeed={200}
-                />
+              {!isHideDriverStatus && (
+                <>
+                  {userState.loadingDriver ? (
+                    <ActivityIndicator size="small" color={theme.colors.primary} />
+                  ) : (
+                    <ToggleSwitch
+                      isOn={userState?.result?.result?.available}
+                      onColor={theme.colors.primary}
+                      offColor={theme.colors.offColor}
+                      size="small"
+                      onToggle={() =>
+                        handleToggleAvalaibleStatusDriver &&
+                        handleToggleAvalaibleStatusDriver(
+                          !userState?.result?.result?.available,
+                        )
+                      }
+                      disabled={userState?.loading}
+                      animationSpeed={200}
+                    />
+                  )}
+                </>
               )}
             </EnabledStatusDriver>
           )}
