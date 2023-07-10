@@ -57,7 +57,7 @@ export interface ProfileParams {
   showField?: any;
   isRequiredField?: any;
   isAlsea?: boolean;
-  isHideDriverStatus?: boolean;
+  isShowDriverStatus?: boolean;
   isFocused?: boolean;
 }
 
