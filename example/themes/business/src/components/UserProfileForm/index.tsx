@@ -47,7 +47,8 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
     isAlsea,
-    isHideDriverStatus
+    isShowDriverStatus,
+    navigation
   } = props;
 
   const [{ user, sessionLoading }] = useSession();
@@ -369,13 +370,13 @@ const ProfileUI = (props: ProfileParams) => {
                   adjustsFontSizeToFit
                   style={{ ...styles.label, paddingHorizontal: 0 }}>
                   {t(
-                    `${isHideDriverStatus ? 'NOT_' : ''}AVAILABLE_TO_RECEIVE_ORDERS`,
-                    `${isHideDriverStatus ? 'You are not ' : ''}Available to receive orders`
+                    `${!isShowDriverStatus ? 'NOT_' : ''}AVAILABLE_TO_RECEIVE_ORDERS`,
+                    `${!isShowDriverStatus ? 'You are not ' : ''}Available to receive orders`
                   )}
                 </OText>
               </View>
 
-              {!isHideDriverStatus && (
+              {isShowDriverStatus && (
                 <>
                   {userState.loadingDriver ? (
                     <ActivityIndicator size="small" color={theme.colors.primary} />
