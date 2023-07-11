@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLanguage } from 'ordering-components/native';
 import { View, StyleSheet, RefreshControl, Platform } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-
+import { GiftCardOrdersList } from '../GiftCard/GiftCardOrdersList'
 import { OrdersOption } from '../OrdersOption'
 import { HeaderTitle, OButton, OText } from '../shared'
 import { ScrollView } from 'react-native-gesture-handler';
@@ -40,7 +40,8 @@ export const MyOrders = (props: any) => {
   const MyOrdersMenu = [
     { key: 'orders', value: t('ORDERS', 'Orders'), disabled: false },
     { key: 'business', value: t('BUSINESS', 'Business'), disabled: hideBusinessTab },
-    { key: 'products', value: t('PRODUCTS', 'Products'), disabled: hideProductsTab }
+    { key: 'products', value: t('PRODUCTS', 'Products'), disabled: hideProductsTab },
+    { key: 'giftCards', value: t('GIFT_CARD', 'Gift card'), disabled: false }
   ]
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
@@ -215,7 +216,14 @@ export const MyOrders = (props: any) => {
           setOrdersLength={setOrdersLength}
         />
       )}
+      
+      {selectedOption === 'giftCards' && (
+        <View style={{ paddingHorizontal: 20  }}>
+          <GiftCardOrdersList
+            onNavigationRedirect={props?.onNavigationRedirect}
+          />
+        </View>
+      )}
     </Container>
-
   )
 }
