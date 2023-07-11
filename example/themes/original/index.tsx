@@ -100,7 +100,7 @@ import { PageBanner } from './src/components/PageBanner'
 import { MultiCart } from './src/components/MultiCart'
 import { USER_TYPE, ORDER_TYPES } from './src/config/constants'
 import { DatePickerUI } from './src/components/DatePicker'
-
+import { WebsocketStatus } from './src/components/WebsocketStatus';
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/OrderSummary/styles';
 
 import { FormInput, FormSide, ButtonsWrapper, LoginWith, OTab, OTabs } from './src/components/LoginForm/styles';
@@ -265,6 +265,7 @@ export {
 	PageBanner,
 	MyOrders,
 	MultiCart,
+	WebsocketStatus,
 	ORDER_TYPES,
 	USER_TYPE,
 
