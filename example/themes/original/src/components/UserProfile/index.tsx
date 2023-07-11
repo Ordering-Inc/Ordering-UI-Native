@@ -20,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FastImage from 'react-native-fast-image'
 import { OAlert } from '../../../../../src/components/shared'
-
+import { WebsocketStatus } from '../WebsocketStatus'
 import {
 	OIcon,
 	OText,
@@ -270,6 +270,7 @@ const ProfileListUI = (props: ProfileParams) => {
 					<View style={{ height: 17 }} />
 				</Actions>
 			</ListWrap>
+			<WebsocketStatus />
 			<OAlert
 				open={confirm.open}
 				title={confirm.title}
