@@ -254,6 +254,14 @@ const MultiCheckoutUI = (props: any) => {
     }
   }
 
+  const handleGoBack = () => {
+    if (navigation?.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('BottomTab', { screen: 'Cart' })
+    }
+  }
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
