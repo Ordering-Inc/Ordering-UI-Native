@@ -245,6 +245,14 @@ const MultiCheckoutUI = (props: any) => {
 		setShowTitle(contentOffset.y > 30)
 	}
 
+  const handleGoBack = () => {
+    if (navigation?.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('BottomTab', { screen: 'Cart' })
+    }
+  }
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -289,7 +297,7 @@ const MultiCheckoutUI = (props: any) => {
         <View style={styles.wrapperNavbar}>
           <TopHeader>
             <>
-              <TopActions onPress={() => navigation?.canGoBack() && navigation.goBack()}>
+              <TopActions onPress={() => handleGoBack()}>
                 <IconAntDesign
                   name='arrowleft'
                   size={26}

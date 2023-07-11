@@ -5,6 +5,7 @@ import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
 import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { useIsFocused } from '@react-navigation/native';
 
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import {
@@ -104,6 +105,7 @@ const CheckoutUI = (props: any) => {
 	} = props
 
 	const theme = useTheme();
+	const isFocused = useIsFocused();
 
 	const styles = StyleSheet.create({
 		btnBackArrow: {
@@ -413,6 +415,7 @@ const CheckoutUI = (props: any) => {
 	}, [])
 
 	useEffect(() => {
+		if (!isFocused) return
 		if (!cartState?.loading && (cartState?.error || typeof cartState?.cart === 'string')) {
 			const error = cartState?.error || typeof cartState.cart === 'string' && cartState.cart
 			if (error) {
@@ -420,7 +423,7 @@ const CheckoutUI = (props: any) => {
 				navigation.navigate('BusinessList')
 			}
 		}
-	}, [cartState?.error, cartState?.cart, cartState?.loading])
+	}, [cartState?.error, cartState?.cart, cartState?.loading, isFocused])
 
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {

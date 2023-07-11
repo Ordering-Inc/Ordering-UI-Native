@@ -11,6 +11,7 @@ import {
   useToast,
   useLanguage,
   useUtils,
+  useConfig
 } from 'ordering-components/native';
 import {
   CenterView,
@@ -55,6 +56,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const [{ optimizeImage }] = useUtils();
+  const [{ configs }] = useConfig()
   const { errors } = useForm();
   const theme = useTheme();
 
@@ -70,7 +72,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneToShow, setPhoneToShow] = useState('');
   const [openModal, setOpenModal] = useState(false)
-
+  const allowDriverUpdateData = user?.level !== 4 || configs?.allow_driver_update_data?.value === "1"
   useEffect(() => {
     if (phoneInputData.phone.cellphone) {
       const codeNumberPhone = phoneInputData.phone.cellphone.slice(0, 3);
@@ -352,14 +354,15 @@ const ProfileUI = (props: ProfileParams) => {
               height={150}
               style={{ borderRadius: 7.2 }}
             />
-
-            <OIconButton
-              icon={theme.images.general.camera}
-              borderColor={theme.colors.clear}
-              iconStyle={{ width: 21, height: 21 }}
-              style={{ maxWidth: 40 }}
-              onClick={() => handleImagePicker()}
-            />
+            {allowDriverUpdateData && (
+              <OIconButton
+                icon={theme.images.general.camera}
+                borderColor={theme.colors.clear}
+                iconStyle={{ width: 21, height: 21 }}
+                style={{ maxWidth: 40 }}
+                onClick={() => handleImagePicker()}
+              />
+            )}
           </CenterView>
 
           {user?.level === 4 && (
@@ -485,7 +488,7 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </View>
           )}
-          {!validationFields.loading && !isEdit && (
+          {!validationFields.loading && !isEdit && allowDriverUpdateData && (
             <EditButton>
               <OButton
                 text={t('EDIT', 'Edit')}
