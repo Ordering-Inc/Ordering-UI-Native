@@ -474,7 +474,7 @@ const CheckoutUI = (props: any) => {
 					</TopHeader>
 				</View>
 			</SafeAreaView>
-			<Container pt={0} forwardRef={containerRef} noPadding onScroll={handleScroll}>
+			<Container pt={0} forwardRef={containerRef} showsVerticalScrollIndicator={false} noPadding onScroll={handleScroll}>
 				<View style={styles.wrapperNavbar}>
 					<NavBar
 						hideArrowLeft
