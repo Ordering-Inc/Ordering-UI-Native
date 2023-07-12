@@ -59,7 +59,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ configs }] = useConfig()
   const { errors } = useForm();
   const theme = useTheme();
-  console.log(configs)
+
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
