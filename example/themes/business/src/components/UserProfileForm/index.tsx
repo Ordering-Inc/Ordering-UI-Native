@@ -59,7 +59,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ configs }] = useConfig()
   const { errors } = useForm();
   const theme = useTheme();
-
+  console.log(configs)
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -118,14 +118,14 @@ const ProfileUI = (props: ProfileParams) => {
         includeBase64: true,
       },
       (image: any) => {
-        const response = image?.assets[0];
-        if (response.didCancel) {
+        const response = image?.assets?.[0];
+        if (response?.didCancel) {
           console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
+        } else if (response?.errorMessage) {
           console.log('ImagePicker Error: ', response.errorMessage);
           showToast(ToastType.Error, response.errorMessage);
         } else {
-          if (response.uri) {
+          if (response?.uri) {
             const url = `data:${response.type};base64,${response.base64}`;
             handleButtonUpdateClick(null, true, url);
           } else {
