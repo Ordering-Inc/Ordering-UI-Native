@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useLanguage, useConfig, useUtils, useOrder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -13,7 +13,8 @@ export const CartContent = (props: any) => {
 	const {
 		onNavigationRedirect,
 		singleBusiness,
-		businessSlug
+		businessSlug,
+		navigation
 	} = props
 
 	const theme = useTheme();
@@ -22,7 +23,7 @@ export const CartContent = (props: any) => {
 	const [{ parsePrice }] = useUtils();
 	const [isCartsLoading, setIsCartsLoading] = useState(false)
 	const [cartsOpened, setCartsOpened] = useState([])
-	const [{ carts: cartsContext }] = useOrder();
+	const [{ carts: cartsContext }, { confirmCart }] = useOrder();
 	const cartsList =
 		(cartsContext &&
 			Object.values(cartsContext).filter((cart: any) => cart.products.length > 0)) ??
@@ -71,7 +72,7 @@ export const CartContent = (props: any) => {
 		}
 	}
 
-	const changeActiveState = useCallback((isClosed : boolean, uuid : string) => {
+	const changeActiveState = useCallback((isClosed: boolean, uuid: string) => {
 		const isActive = cartsOpened?.includes?.(uuid) || !!singleBusiness
 		if (isActive || !isClosed) {
 			setCartsOpened(cartsOpened?.filter?.((_uuid) => _uuid !== uuid))
@@ -82,6 +83,20 @@ export const CartContent = (props: any) => {
 			])
 		}
 	}, [cartsOpened])
+
+	useEffect(() => {
+		const unsuscribe = navigation.addListener('focus', () => {
+			const cartsListBlockedByPaypal = carts?.filter((cart: any) => cart?.status === 2 && cart?.paymethod_data?.gateway === 'paypal')
+			if (cartsListBlockedByPaypal?.length > 0) {
+				cartsListBlockedByPaypal.map(async (cart: any) => {
+					await confirmCart(cart?.uuid)
+				})
+			}
+		})
+		return () => {
+			return unsuscribe()
+		}
+	}, [carts, navigation])
 
 	return (
 		<CCContainer
