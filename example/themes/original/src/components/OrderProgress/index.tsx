@@ -110,7 +110,7 @@ const OrderProgressUI = (props: any) => {
     setInitialLoaded(true)
   }, [orderList.loading, initialLoaded])
 
-  const progressBarObjt = lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+  const progressBarObjt = (s: any) => lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp(s) : getOrderStatus(s)
 
   return (
     <>
@@ -130,7 +130,7 @@ const OrderProgressUI = (props: any) => {
               <View style={styles.logoWrapper}>
                 <FastImage
                   style={{ width: 50, height: 50 }}
-                  source={orderList?.orders.length === 1 ? {
+                  source={orderList?.orders.length === 1 && lastOrder?.business?.logo.includes('http') ? {
                     uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
                     priority: FastImage.priority.normal,
                   } : theme.images.logos.logotype}
@@ -209,6 +209,16 @@ export const OrderProgress = (props: any) => {
       pageSize: 10,
       controlType: 'infinity'
     },
+    propsToFetch: [
+      'id',
+      'name',
+      'business',
+      'status',
+      'delivery_type',
+      'delivery_datetime_utc',
+      'delivery_datetime',
+      'reporting_data'
+    ],
     noGiftCardOrders: true
   }
 

@@ -24,7 +24,7 @@ const AddressDetailsUI = (props: any) => {
 
 	const styles = StyleSheet.create({
 		productStyle: {
-			width: width,
+			width,
 			height: 151,
 			marginVertical: 10
 		}
@@ -45,7 +45,7 @@ const AddressDetailsUI = (props: any) => {
 			</ADHeader>
 			{!!apiKey && googleMapsUrl && (
 				<ADMap
-					style={{ marginStart: -40, marginEnd: -40, width: width, flex: 1 }}>
+					style={{ width, flex: 1, marginStart: -20, marginEnd: -20, }}>
 					<FastImage
 						style={styles.productStyle}
 						source={{
