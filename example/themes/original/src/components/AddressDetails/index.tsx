@@ -1,26 +1,36 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image'
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import {
 	AddressDetails as AddressDetailsController,
 	useOrder,
 	useLanguage,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 
 import { ADContainer, ADHeader, ADAddress, ADMap } from './styles';
-
-import { useTheme } from 'styled-components/native';
-import { OText, OIcon } from '../shared';
-import { useWindowDimensions } from 'react-native';
+import { OText } from '../shared';
+import { getTypesText } from '../../utils';
 
 const AddressDetailsUI = (props: any) => {
-	const { navigation, addressToShow, isCartPending, googleMapsUrl, apiKey } =
-		props;
+	const {
+		navigation,
+		addressToShow,
+		isCartPending,
+		googleMapsUrl,
+		apiKey
+	} = props;
 
 	const theme = useTheme();
 	const [orderState] = useOrder();
+	const [{ options }] = useOrder();
 	const [, t] = useLanguage();
 	const { width } = useWindowDimensions();
+
+	const orderTypeText = {
+		key: getTypesText(options?.type || 1),
+		value: t(getTypesText(options?.type || 1), 'Delivery')
+	}
 
 	const styles = StyleSheet.create({
 		productStyle: {
@@ -39,7 +49,7 @@ const AddressDetailsUI = (props: any) => {
 						lineHeight={24}
 						color={theme.colors.textNormal}
 					>
-						{t('DELIVERY_ADDRESS', 'Delivery address')}
+						{t(`${orderTypeText.key}_ADDRESS`, `${orderTypeText.value} address`)}
 					</OText>
 				)}
 			</ADHeader>
