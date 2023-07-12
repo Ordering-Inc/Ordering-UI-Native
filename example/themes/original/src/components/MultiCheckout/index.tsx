@@ -310,7 +310,7 @@ const MultiCheckoutUI = (props: any) => {
           </TopHeader>
         </View>
       </SafeAreaView>
-      <Container pt={0} noPadding onScroll={handleScroll}>
+      <Container pt={0} noPadding onScroll={handleScroll} showsVerticalScrollIndicator={false}>
         <View style={styles.wrapperNavbar}>
           <NavBar
             hideArrowLeft
