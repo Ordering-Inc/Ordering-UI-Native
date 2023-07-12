@@ -285,7 +285,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   ) : (
                     <Price>
                       <OText size={12} lineHeight={18}>
-                        {parsePrice(order?.summary?.total || order?.total)}
+                        {parsePrice(order?.total)}
                       </OText>
                     </Price>
                   )}
