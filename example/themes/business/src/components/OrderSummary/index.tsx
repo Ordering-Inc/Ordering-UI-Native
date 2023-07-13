@@ -140,8 +140,10 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         } </br>`
         : ''
       }
-         ${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}
-         </p>  
+        ${order?.customer.zipcode ?
+        `${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}`
+        : ''}
+         </p>
 
         <h1>${t('BUSINESS_DETAILS', 'Business details')}</h1>
         <p style="font-size: 27px"> 
@@ -241,15 +243,18 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         : ''
       }
 
-        ${order?.summary?.delivery_price > 0
-        ? `<div style="font-size: 25px;"> ${t(
-          'DELIVERY_FEE',
-          'Delivery Fee',
-        )}
-              </div>`
-        : ''
-      }
+      ${order?.summary?.delivery_price > 0 ?
+        ` <div style="display: flex">
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
+            ${t('DELIVERY_FEE', 'Delivery Fee')}
+          </div>
 
+          <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
+            ${parsePrice(order?.summary?.delivery_price ?? 0)}
+          </div>` :
+        ''}
+
+        </div>
         <div style="display: flex">
 
           <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
