@@ -64,6 +64,7 @@ interface Props extends TextInputProps {
   onSubmitEditing?: any;
   blurOnSubmit?: any;
   color?: any;
+  isValueSync?: boolean
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -118,6 +119,7 @@ const OInput = (props: Props): React.ReactElement => {
         selectionColor={props.selectionColor}
         color={props.color}
         maxLength={props.maxLength || 1000}
+        value={props.isValueSync && props.value}
       />
 
       {props.iconRight && (

@@ -138,7 +138,10 @@ export const Home = (props: any) => {
                       placeholder={t('PROJECT_NAME', 'Project Name')}
                       icon={theme.images.general.project}
                       iconColor={theme.colors.arrowColor}
-                      onChange={(e: any) => onChange(e?.target?.value)}
+                      onChange={(e: any) => {
+                        const project = e?.target?.value?.replace(/\s/g, '')
+                        onChange(project)
+                      }}
                       selectionColor={theme.colors.primary}
                       color={theme.colors.white}
                       value={value}
@@ -148,6 +151,7 @@ export const Home = (props: any) => {
                       autoCapitalize='none'
                       blurOnSubmit={false}
                       onSubmitEditing={() => handleSubmit(onSubmit)()}
+                      isValueSync
                     />
                   )}
                 />
