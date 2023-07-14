@@ -4,7 +4,10 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  NativeModules,
+  PermissionsAndroid,
+  Platform
 } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import moment from 'moment'
@@ -32,7 +35,7 @@ const SoundPlayerComponent = (props: any) => {
 
   const theme = useTheme()
   const [count, setCount] = useState(0);
-
+  const [isEnabledReadStorage, setIsEnabledReadStorage] = useState(true)
   const URL_SOUND = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
 
   useEffect(() => {
@@ -43,15 +46,28 @@ const SoundPlayerComponent = (props: any) => {
       await new Promise(resolve => setTimeout(resolve, DELAY_SOUND))
       SoundPlayer.stop()
     }
-
-    playSound()
+    if (NativeModules?.RNSoundPlayer?.playUrl && typeof URL_SOUND === 'string' && isEnabledReadStorage) {
+      playSound()
+    }
 
     return () => {
       SoundPlayer.stop()
       clearInterval(id);
     }
-  }, [count])
+  }, [count, isEnabledReadStorage])
 
+  useEffect(() => {
+    const checkSoundMedia = async () => {
+      if (Platform.OS === 'android') {
+        const enabled = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+        setIsEnabledReadStorage(enabled)
+      } else {
+        setIsEnabledReadStorage(true)
+      }
+    }
+    checkSoundMedia()
+
+  }, [])
   return (
     <Modal
       animationType='slide'
