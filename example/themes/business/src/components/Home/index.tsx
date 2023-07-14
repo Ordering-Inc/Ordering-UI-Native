@@ -139,7 +139,7 @@ export const Home = (props: any) => {
                       icon={theme.images.general.project}
                       iconColor={theme.colors.arrowColor}
                       onChange={(e: any) => {
-                        const project = e.target.value.replace(/\s/g, '')
+                        const project = e?.target?.value?.replace(/\s/g, '')
                         onChange(project)
                       }}
                       selectionColor={theme.colors.primary}
