@@ -303,6 +303,7 @@ export interface OrdersOptionParams {
   filtered?: any;
   handleClickOrder?: any;
   orderGroupStatusCustom?: {
+    active?: Array<number>;
     pending?: Array<number>;
     inProgress?: Array<number>;
     completed?: Array<number>;

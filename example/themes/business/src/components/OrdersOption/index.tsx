@@ -123,6 +123,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       backColor: '#E63757'
     }
   ]
+  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1'
   const [selectedTabStatus, setSelectedTabStatus] = useState<any>(deliveryStatus)
   const [openedSelect, setOpenedSelect] = useState('')
 
@@ -467,7 +468,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           nestedScrollEnabled={true}
         >
           <TabsContainer>
-            {(isLogisticActivated && !isBusinessApp) && (
+            {(isLogisticActivated && !isBusinessApp && !combineTabs) && (
               <Pressable
                 style={styles.pressable}
                 onPress={() => setCurrentTabSelected('logisticOrders')}>
@@ -974,7 +975,9 @@ export const Timer = () => {
 
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
+  const [configState] = useConfig()
   const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
+  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1'
   const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
@@ -1061,32 +1064,52 @@ export const OrdersOption = (props: OrdersOptionParams) => {
         text: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
       }
     ],
-    tabs: [
+    tabs: combineTabs ? [
       {
         key: 0,
-        text: t('PENDING', 'Pending'),
-        tags: props?.orderGroupStatusCustom?.pending ?? [0, 13],
-        title: 'pending'
+        text: t('ACTIVE', 'Active'),
+        tags: props?.orderGroupStatusCustom?.active ?? [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23],
+        title: 'active',
       },
       {
         key: 1,
-        text: t('IN_PROGRESS', 'In Progress'),
-        tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23],
-        title: 'inProgress',
-      },
-      {
-        key: 2,
         text: t('COMPLETED', 'Completed'),
         tags: props?.orderGroupStatusCustom?.completed ?? [1, 11, 15],
         title: 'completed',
       },
       {
-        key: 3,
+        key: 2,
         text: t('CANCELLED', 'Cancelled'),
         tags: props?.orderGroupStatusCustom?.cancelled ?? [2, 5, 6, 10, 12, 16, 17],
         title: 'cancelled',
       },
-    ]
+    ] :
+      [
+        {
+          key: 0,
+          text: t('PENDING', 'Pending'),
+          tags: props?.orderGroupStatusCustom?.pending ?? [0, 13],
+          title: 'pending'
+        },
+        {
+          key: 1,
+          text: t('IN_PROGRESS', 'In Progress'),
+          tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23],
+          title: 'inProgress',
+        },
+        {
+          key: 2,
+          text: t('COMPLETED', 'Completed'),
+          tags: props?.orderGroupStatusCustom?.completed ?? [1, 11, 15],
+          title: 'completed',
+        },
+        {
+          key: 3,
+          text: t('CANCELLED', 'Cancelled'),
+          tags: props?.orderGroupStatusCustom?.cancelled ?? [2, 5, 6, 10, 12, 16, 17],
+          title: 'cancelled',
+        },
+      ]
   };
 
   return (<>

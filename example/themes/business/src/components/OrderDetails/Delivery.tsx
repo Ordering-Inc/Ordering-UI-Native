@@ -64,6 +64,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const { order } = props.order
 
+  const hideTimer = configs?.hidden_driver_eta_time?.value === '1'
   const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
   const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1'
   const theme = useTheme();
@@ -583,7 +584,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     secondButton={true}
                     firstColorCustom={theme.colors.red}
                     secondColorCustom={theme.colors.green}
-                    widthButton={isHideRejectButtons ? '100%': '45%'}
+                    widthButton={isHideRejectButtons ? '100%' : '45%'}
                     isHideRejectButtons={isHideRejectButtons}
                   />
                 )}
@@ -603,7 +604,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       secondButton={true}
                       firstColorCustom={theme.colors.red}
                       secondColorCustom={theme.colors.green}
-                      widthButton={isHideRejectButtons ? '100%': '45%'}
+                      widthButton={isHideRejectButtons ? '100%' : '45%'}
                       isHideRejectButtons={isHideRejectButtons}
                     />
                   </>
@@ -612,13 +613,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <FloatingButton
                     btnText={t('REJECT', 'Reject')}
                     isSecondaryBtn={false}
-                    secondButtonClick={() => (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
+                    secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
                     firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
                     secondBtnText={t('ACCEPT', 'Accept')}
                     secondButton={true}
                     firstColorCustom={theme.colors.red}
                     secondColorCustom={theme.colors.green}
-                    widthButton={isHideRejectButtons ? '100%': '45%'}
+                    widthButton={isHideRejectButtons ? '100%' : '45%'}
                     isHideRejectButtons={isHideRejectButtons}
                   />
                 )}
