@@ -116,7 +116,7 @@ export const SessionsUI = (props: SessionsParams) => {
           ) : (
             sessionsList.sessions.length > 0 ? (
               <SessionsWrapper>
-                {sessionsList.sessions.map((session: any) => (
+                {sessionsList.sessions.reverse().map((session: any) => (
                   <SessionItem key={session.id}>
                     <DurationWrapper>
                       <OText>{parseDate(session.created_at)}</OText>
