@@ -210,7 +210,7 @@ const CheckoutUI = (props: any) => {
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
 		placing || errorCash || subtotalWithTaxes < cart?.minimum ||
 		(cardsMethods.includes(paymethodSelected?.gateway) && cardList?.cards?.length === 0) ||
-		(options.type === 1 &&
+		(options.type === 1 && !isGiftCardCart &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
 			(Number(cart?.driver_tip) <= 0)) ||
@@ -958,7 +958,7 @@ const CheckoutUI = (props: any) => {
 										{t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
 									</OText>
 								)}
-								{options.type === 1 &&
+								{options.type === 1 && !isGiftCardCart &&
 									validationFields?.fields?.checkout?.driver_tip?.enabled &&
 									validationFields?.fields?.checkout?.driver_tip?.required &&
 									(Number(cart?.driver_tip) <= 0) && (
