@@ -40,7 +40,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const theme = useTheme();
 
-
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
 			width: 34,
@@ -77,7 +76,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	const [isServiceOpen, setIsServiceOpen] = useState(false)
 	// const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
 	// const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
-	const [productQuantity, setProductQuantity] = useState(product.quantity.toString())
+	let productQuantity = product.quantity.toString()
 
 	const productInfo = () => {
 		if (isCartProduct) {
@@ -121,7 +120,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const handleChangeQuantity = (value: string) => {
 		if (!orderState.loading) {
-			setProductQuantity(value)
+			productQuantity = value 
 			if (parseInt(value) === 0) {
 				onDeleteProduct && onDeleteProduct(product)
 			} else {
