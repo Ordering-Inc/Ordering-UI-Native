@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   useLanguage,
   useConfig,
@@ -82,12 +82,12 @@ const MultiCheckoutUI = (props: any) => {
     wrapperNavbar: {
       paddingHorizontal: 20,
       backgroundColor: theme?.colors?.white,
-			borderWidth: 0
+      borderWidth: 0
     },
     detailWrapper: {
-			paddingHorizontal: 20,
-			width: '100%'
-		},
+      paddingHorizontal: 20,
+      width: '100%'
+    },
   })
 
   const [, { showToast }] = useToast();
@@ -143,16 +143,17 @@ const MultiCheckoutUI = (props: any) => {
     ?.reduce((sum: any, cart: any) => sum + clearAmount((cart?.subtotal + getIncludedTaxes(cart)) * accumulationRateBusiness(cart?.business_id)), 0)
     ?.toFixed(configs.format_number_decimal_length?.value ?? 2)
 
-	const [showTitle, setShowTitle] = useState(false)
+  const [showTitle, setShowTitle] = useState(false)
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
+  const [cartsOpened, setCartsOpened] = useState([])
   const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
-	const [allowedGuest, setAllowedGuest] = useState(false)
-	const [isOpen, setIsOpen] = useState(false)
-	const [requiredFields, setRequiredFields] = useState<any>([])
-	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
-	const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
+  const [allowedGuest, setAllowedGuest] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [requiredFields, setRequiredFields] = useState<any>([])
+  const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+  const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
   const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
   const methodsPay = ['global_google_pay', 'global_apple_pay']
   const isDisablePlaceOrderButton = cartGroup?.loading || placing || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
@@ -170,7 +171,7 @@ const MultiCheckoutUI = (props: any) => {
     setUserErrors([])
     const errors = []
     const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
-		const _requiredFields: any = []
+    const _requiredFields: any = []
 
     Object.values(validationFields?.fields?.checkout).map((field: any) => {
       if (field?.required && !notFields.includes(field.code)) {
@@ -188,7 +189,7 @@ const MultiCheckoutUI = (props: any) => {
     ) {
       _requiredFields.push('cellphone')
     }
-		setRequiredFields(_requiredFields)
+    setRequiredFields(_requiredFields)
 
     if (phoneUpdate) {
       errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
@@ -203,18 +204,18 @@ const MultiCheckoutUI = (props: any) => {
 
   const handlePlaceOrder = (confirmPayment?: any) => {
     if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
-			setOpenModal({ ...openModal, signup: true, isGuest: true })
-			return
-		}
+      setOpenModal({ ...openModal, signup: true, isGuest: true })
+      return
+    }
 
     if (!userErrors.length && (!requiredFields?.length || allowedGuest)) {
       handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
     }
     if (requiredFields?.length) {
-			setIsOpen(true)
-			return
-		}
+      setIsOpen(true)
+      return
+    }
     let stringError = ''
     Object.values(userErrors).map((item: any, i: number) => {
       stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
@@ -224,26 +225,26 @@ const MultiCheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrderAsGuest = () => {
-		setIsOpen(false)
-		handleGroupPlaceOrder && handleGroupPlaceOrder()
-	}
+    setIsOpen(false)
+    handleGroupPlaceOrder && handleGroupPlaceOrder()
+  }
 
   const handleSuccessSignup = (user: any) => {
-		login({
-			user,
-			token: user?.session?.access_token
-		})
-		openModal?.isGuest && handlePlaceOrderAsGuest()
-		setOpenModal({ ...openModal, signup: false, isGuest: false })
-	}
+    login({
+      user,
+      token: user?.session?.access_token
+    })
+    openModal?.isGuest && handlePlaceOrderAsGuest()
+    setOpenModal({ ...openModal, signup: false, isGuest: false })
+  }
 
-	const handleSuccessLogin = (user: any) => {
-		if (user) setOpenModal({ ...openModal, login: false })
-	}
+  const handleSuccessLogin = (user: any) => {
+    if (user) setOpenModal({ ...openModal, login: false })
+  }
 
   const handleScroll = ({ nativeEvent: { contentOffset } }: any) => {
-		setShowTitle(contentOffset.y > 30)
-	}
+    setShowTitle(contentOffset.y > 30)
+  }
 
   const handleGoBack = () => {
     if (navigation?.canGoBack()) {
@@ -291,6 +292,18 @@ const MultiCheckoutUI = (props: any) => {
     }
   }, [paymethodSelected])
 
+  const changeActiveState = useCallback((isClosed: boolean, uuid: string) => {
+    const isActive = cartsOpened?.includes?.(uuid)
+    if (isActive || !isClosed) {
+      setCartsOpened(cartsOpened?.filter?.((_uuid) => _uuid !== uuid))
+    } else {
+      setCartsOpened([
+        ...cartsOpened,
+        uuid
+      ])
+    }
+  }, [cartsOpened])
+
   return (
     <>
       <SafeAreaView style={{ backgroundColor: theme.colors.backgroundPage }}>
@@ -329,8 +342,8 @@ const MultiCheckoutUI = (props: any) => {
             paddingTop={Platform.OS === 'ios' ? 0 : 4}
             btnStyle={{ paddingLeft: 0 }}
             titleWrapStyle={{ paddingHorizontal: 0 }}
-						titleStyle={{ marginRight: 0, marginLeft: 0 }}
-						style={{ marginTop: 20 }}
+            titleStyle={{ marginRight: 0, marginLeft: 0 }}
+            style={{ marginTop: 20 }}
           />
         </View>
         <ChContainer style={styles.pagePadding}>
@@ -522,6 +535,9 @@ const MultiCheckoutUI = (props: any) => {
                     hideDriverTip={configs?.multi_business_checkout_show_combined_driver_tip?.value === '1'}
                     onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
                     businessConfigs={cart?.business?.configs}
+                    cartsOpened={cartsOpened}
+                    changeActiveState={changeActiveState}
+                    isActive={cartsOpened?.includes?.(cart?.uuid)}
                   />
                   {openCarts.length > 1 && (
                     <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
@@ -631,30 +647,30 @@ const MultiCheckoutUI = (props: any) => {
           </ScrollView>
         </OModal>
         <OModal
-						open={isOpen}
-						onClose={() => setIsOpen(false)}
-					>
-						<View style={styles.detailWrapper}>
-							<UserDetails
-								isUserDetailsEdit
-								useValidationFields
-								useDefualtSessionManager
-								useSessionUser
-								isCheckout
-								isEdit
-								phoneUpdate={phoneUpdate}
-								togglePhoneUpdate={togglePhoneUpdate}
-								requiredFields={requiredFields}
-								hideUpdateButton
-								handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
-								onClose={() => {
-									setIsOpen(false)
-									handlePlaceOrder()
-								}}
-								setIsOpen={setIsOpen}
-							/>
-						</View>
-					</OModal>
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+        >
+          <View style={styles.detailWrapper}>
+            <UserDetails
+              isUserDetailsEdit
+              useValidationFields
+              useDefualtSessionManager
+              useSessionUser
+              isCheckout
+              isEdit
+              phoneUpdate={phoneUpdate}
+              togglePhoneUpdate={togglePhoneUpdate}
+              requiredFields={requiredFields}
+              hideUpdateButton
+              handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+              onClose={() => {
+                setIsOpen(false)
+                handlePlaceOrder()
+              }}
+              setIsOpen={setIsOpen}
+            />
+          </View>
+        </OModal>
       </Container>
 
       <FloatingButton
