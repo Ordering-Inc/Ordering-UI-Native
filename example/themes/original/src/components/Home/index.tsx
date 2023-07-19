@@ -27,7 +27,7 @@ export const Home = (props: any) => {
 	return (
 		<View style={styles.container}>
 			<View>
-				<View style={{paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0 }}>
+				<View style={{ paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0 }}>
 					<LanguageSelector />
 				</View>
 				<OIcon
@@ -49,11 +49,11 @@ export const Home = (props: any) => {
 				</OText>
 				<OButton
 					text={t('LOGIN_NOW', 'Login now')}
-					bgColor={theme.colors.primary}
-					borderColor={theme.colors.primary}
+					bgColor={theme.general.components.buttons.color ?? theme.colors.primary}
+					borderColor={theme.general.components.buttons.color ?? theme.colors.primary}
 					style={styles.buttons}
 					isCircle={false}
-					textStyle={{ color: 'white' }}
+					textStyle={{ color: `${theme.general.components.buttons.buttonTextColor ?? 'white'}` }}
 					onClick={() => onNavigationRedirect('Login')}
 					imgRightSrc={null}
 				/>

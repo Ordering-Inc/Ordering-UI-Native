@@ -9,6 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Tab } from './styles'
 import { useTheme } from 'styled-components/native';
 import { Container } from '../../layouts/Container';
+import NavBar from '../NavBar'
 
 export const MyOrders = (props: any) => {
   const {
@@ -93,29 +94,15 @@ export const MyOrders = (props: any) => {
           ...props.titleStyle
         }}>
           {!props.hideBackBtn && (!isChewLayout || (isChewLayout && hideOrdersTheme)) && (
-            <OButton
-              imgLeftStyle={{ width: 18 }}
-              imgRightSrc={null}
-              style={{
-                borderWidth: 0,
-                width: 26,
-                height: 26,
-                backgroundColor: '#FFF',
-                borderColor: '#FFF',
-                shadowColor: '#FFF',
-                paddingLeft: 0,
-                paddingRight: 0,
-                marginTop: 30,
-              }}
-              onClick={goToBack}
-              icon={AntDesignIcon}
-              iconProps={{
-                name: 'arrowleft',
-                size: 26
-              }}
+            <NavBar
+              title={t('MY_ORDERS', 'My Orders')}
+              titleAlign={'center'}
+              onActionLeft={goToBack}
+              showCall={false}
+              paddingTop={30}
+              btnStyle={{ paddingLeft: 0 }}
             />
           )}
-          <HeaderTitle ph={10} text={t('MY_ORDERS', 'My Orders')} />
         </View>
       )}
       {!hideOrders && !isChewLayout && !showNavbar && (
@@ -125,7 +112,7 @@ export const MyOrders = (props: any) => {
         <ScrollView
           horizontal
           style={{ ...styles.container, borderBottomWidth: 1 }}
-          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : 20  }}
+          contentContainerStyle={{ paddingHorizontal: !!businessesSearchList ? 0 : 20 }}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
         >
@@ -149,7 +136,7 @@ export const MyOrders = (props: any) => {
       )}
       {selectedOption === 'orders' && (
         <>
-          <View style={{ paddingHorizontal: 20  }}>
+          <View style={{ paddingHorizontal: 20 }}>
             <OrdersOption
               {...props}
               preOrders
@@ -216,9 +203,9 @@ export const MyOrders = (props: any) => {
           setOrdersLength={setOrdersLength}
         />
       )}
-      
+
       {selectedOption === 'giftCards' && (
-        <View style={{ paddingHorizontal: 20  }}>
+        <View style={{ paddingHorizontal: 20 }}>
           <GiftCardOrdersList
             onNavigationRedirect={props?.onNavigationRedirect}
           />
