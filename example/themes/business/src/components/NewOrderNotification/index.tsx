@@ -20,7 +20,9 @@ import {
   useEvent,
   useLanguage,
   useSession,
-  useConfig
+  useConfig,
+  useToast,
+  ToastType
 } from 'ordering-components/native'
 
 import { OIcon, OText } from '../shared'
@@ -108,11 +110,12 @@ const SoundPlayerComponent = (props: any) => {
 
 const NewOrderNotificationUI = (props: any) => {
   const { isBusinessApp, evtList } = props
-
+  const [, t] = useLanguage()
   const [events] = useEvent()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
   const [{ configs }] = useConfig()
+  const [, { showToast }] = useToast()
   const { getCurrentLocation } = useLocation()
   const [currentEvent, setCurrentEvent] = useState<any>(null)
 
@@ -124,6 +127,10 @@ const NewOrderNotificationUI = (props: any) => {
     if (value?.driver) {
       try {
         const location = await getCurrentLocation()
+        if (!location?.latitude || !location?.longitude) {
+          showToast(t('ERROR_UPDATING_COORDS', 'Error updating coords'), ToastType.Error)
+          return
+        }
         await fetch(`${ordering.root}/users/${user.id}/locations`, {
           method: 'POST',
           body: JSON.stringify({
