@@ -35,7 +35,12 @@ import FastImage from 'react-native-fast-image'
 import { LottieAnimation } from '../LottieAnimation';
 import { CardAnimation } from '../shared/CardAnimation';
 
-export const BusinessControllerUI = (props: BusinessControllerParams) => {
+function BusinessControllerPropsAreEqual (prevProps: any, nextProps: any) {
+	return JSON.stringify(prevProps.business) === JSON.stringify(nextProps.business) &&
+	prevProps.isBusinessOpen === nextProps.isBusinessOpen
+}
+
+export const BusinessControllerUI = React.memo((props: BusinessControllerParams) => {
 	const {
 		business,
 		handleClick,
@@ -184,7 +189,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
+		<View style={{ minHeight: 200 }}>
 			{isIntersectionObserver ? (
 				<CardAnimation
 					style={[style, styles.container]}
@@ -376,9 +381,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					</View>
 				</Placeholder>
 			)}
-		</InView>
+		</View>
 	);
-};
+}, BusinessControllerPropsAreEqual);
 
 export const BusinessController = (props: BusinessControllerParams) => {
 	const BusinessControllerProps = {

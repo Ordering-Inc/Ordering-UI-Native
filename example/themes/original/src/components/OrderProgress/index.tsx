@@ -23,6 +23,7 @@ import {
   OrderProgressWrapper
 } from './styles'
 import { getOrderStatuPickUp, getOrderStatus } from '../../utils'
+import DeviceInfo from 'react-native-device-info'
 
 const OrderProgressUI = (props: any) => {
   const {
@@ -56,7 +57,9 @@ const OrderProgressUI = (props: any) => {
       shadowColor: '#000',
       shadowOpacity: 0.2,
       shadowRadius: 2,
-      elevation: 3
+      elevation: 3,
+      borderWidth: Platform.OS === 'android' && Number(DeviceInfo?.getSystemVersion?.()) < 5 ? 1 : 0,
+      borderColor: 'rgba(0,0,0,0.2)'
     },
     logoWrapper: {
       overflow: 'hidden',
