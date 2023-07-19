@@ -50,6 +50,7 @@ const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
+    navigation,
     setCurrentFilters,
     tabs,
     currentTabSelected,
@@ -384,6 +385,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
     setTags({ values: [] })
   }, [currentTabSelected])
+
+	useEffect(() => {
+		const unsubcribe = navigation.addListener('focus', () => {
+      currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })
+		})
+		return unsubcribe
+	}, [navigation, loadOrders, loadLogisticOrders])
 
   return (
     <>
