@@ -34,7 +34,8 @@ const StripeElementsFormUI = (props: any) => {
 		methodPaySupported,
 		setPlaceByMethodPay,
 		cartTotal,
-		publicKeyAddCard
+		publicKeyAddCard,
+		urlScheme
 	} = props;
 
 	const theme = useTheme();
@@ -204,7 +205,7 @@ const StripeElementsFormUI = (props: any) => {
 					<StripeProvider
 						publishableKey={isToSave}
 						merchantIdentifier={merchantId}
-						urlScheme={merchantId}
+						urlScheme={`${urlScheme}://checkout/${cart?.uuid}`}
 					>
 						{methodsPay?.includes(paymethod) ? (
 							<StripeMethodForm
