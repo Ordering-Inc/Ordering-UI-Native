@@ -74,9 +74,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const [isActive, setActiveState] = useState(false)
 	const [isServiceOpen, setIsServiceOpen] = useState(false)
+	const [productQuantityState, setProductQuantityState] = useState(product.quantity.toString())
 	// const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
 	// const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
-	let productQuantity = product.quantity.toString()
 
 	const productInfo = () => {
 		if (isCartProduct) {
@@ -120,7 +120,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const handleChangeQuantity = (value: string) => {
 		if (!orderState.loading) {
-			productQuantity = value 
+			setProductQuantityState(value)
 			if (parseInt(value) === 0) {
 				onDeleteProduct && onDeleteProduct(product)
 			} else {
@@ -210,7 +210,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 											<RNPickerSelect
 												items={productOptions}
 												onValueChange={handleChangeQuantity}
-												value={productQuantity}
+												value={productQuantityState}
 												style={pickerStyle}
 												useNativeAndroidPickerStyle={false}
 												placeholder={{}}
@@ -286,15 +286,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
 								<ProductOptionsList>
 									<OText size={10} color={theme.colors.textSecondary}>{t('INGREDIENTS', 'Ingredients')}</OText>
-									{productInfo().ingredients.map((ingredient: any) => !ingredient.selected && (
-										<OText size={10} color={theme.colors.textThird} key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
+									{productInfo().ingredients.map((ingredient: any, i) => !ingredient.selected && (
+										<OText size={10} color={theme.colors.textThird} key={ingredient.id + i} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
 									))}
 								</ProductOptionsList>
 							)}
 							{productInfo().options.length > 0 && (
 								<ProductOptionsList>
-									{productInfo().options.sort((a: any, b: any) => a.rank - b.rank).map((option: any, i: number) => (
-										<ProductOption key={option.id + i}>
+									{productInfo().options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => (
+										<ProductOption key={option.id}>
 											<OText size={10} color={theme.colors.textSecondary}>{option.name}</OText>
 											{option.suboptions.map((suboption: any) => (
 												<ProductSubOption key={suboption.id}>
