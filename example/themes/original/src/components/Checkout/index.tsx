@@ -102,7 +102,8 @@ const CheckoutUI = (props: any) => {
 		merchantId,
 		setPlaceSpotNumber,
 		maxDate,
-		urlscheme
+		urlscheme,
+		androidAppId
 	} = props
 
 	const theme = useTheme();
@@ -819,6 +820,7 @@ const CheckoutUI = (props: any) => {
 									handlePlaceOrder={handlePlaceOrder}
 									merchantId={merchantId}
 									urlscheme={urlscheme}
+									androidAppId={androidAppId}
 									setMethodPaySupported={setMethodPaySupported}
 									methodPaySupported={methodPaySupported}
 									placeByMethodPay={placeByMethodPay}

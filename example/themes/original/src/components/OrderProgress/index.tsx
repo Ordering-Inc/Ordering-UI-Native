@@ -56,7 +56,9 @@ const OrderProgressUI = (props: any) => {
       shadowColor: '#000',
       shadowOpacity: 0.2,
       shadowRadius: 2,
-      elevation: 3
+      elevation: 3,
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.1)'
     },
     logoWrapper: {
       overflow: 'hidden',

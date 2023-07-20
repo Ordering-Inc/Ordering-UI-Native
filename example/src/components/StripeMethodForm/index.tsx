@@ -3,7 +3,6 @@ import { useLanguage, useConfig, useOrder } from 'ordering-components/native'
 import { useGooglePay, useApplePay } from '@stripe/stripe-react-native'
 import { Platform } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
-import { android_app_id } from '../../config.json'
 
 export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const {
@@ -17,7 +16,8 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     placeByMethodPay,
     methodPaySupported,
     setPlaceByMethodPay,
-    cartTotal
+    cartTotal,
+    androidAppId
   } = props
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
@@ -61,7 +61,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
       })
       const { error } = await initGooglePay({
         testEnv: devMode,
-        merchantName: android_app_id,
+        merchantName: androidAppId,
         countryCode: 'US',
         billingAddressConfig: {
           format: 'FULL',
