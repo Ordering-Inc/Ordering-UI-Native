@@ -23,6 +23,7 @@ import {
   OrderProgressWrapper
 } from './styles'
 import { getOrderStatuPickUp, getOrderStatus } from '../../utils'
+import DeviceInfo from 'react-native-device-info'
 
 const OrderProgressUI = (props: any) => {
   const {

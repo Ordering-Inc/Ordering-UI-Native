@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, PlatformIOSStatic, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, PlatformIOSStatic, Pressable, StyleSheet, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native';
@@ -138,8 +138,7 @@ export const OrderItem = React.memo((props: any) => {
   }, [configState.loading])
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
+    <Pressable
       disabled={order?.locked && isLogisticOrder}
       style={styles.cardButton}
       onPress={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
@@ -237,6 +236,6 @@ export const OrderItem = React.memo((props: any) => {
           )}
         </Information>
       </Card>
-    </TouchableOpacity>
+    </Pressable>
   )
 }, OrderItemPropsAreEqual)
