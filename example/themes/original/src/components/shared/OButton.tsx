@@ -119,7 +119,7 @@ const OButton = (props: Props): React.ReactElement => {
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
 			disabled={props.isDisabledWithSameStyles}
 		>
-			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: theme?.general?.components?.buttons?.color ?? props.bgColor, borderColor: theme?.general?.components?.buttons?.color ?? props.borderColor, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius } : { ...props.style, backgroundColor: theme?.general?.components?.buttons?.color, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius }}>
+			<StyledButton style={{ ...props.style, backgroundColor: theme?.general?.components?.buttons?.color ?? props.bgColor, borderColor: theme?.general?.components?.buttons?.color ?? props.borderColor, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius }}>
 				{props.icon ? (
 					<props.icon {...props.iconProps} />
 				) : null}
