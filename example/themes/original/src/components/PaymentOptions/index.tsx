@@ -75,7 +75,8 @@ const PaymentOptionsUI = (props: any) => {
 		requiredFields,
 		openUserModal,
 		paymethodClicked,
-		setPaymethodClicked
+		setPaymethodClicked,
+		androidAppId
 	} = props
 
 	const theme = useTheme();
@@ -362,6 +363,7 @@ const PaymentOptionsUI = (props: any) => {
 					onCancel={() => handlePaymethodClick(null)}
 					merchantId={merchantId}
 					urlscheme={urlscheme}
+					androidAppId={androidAppId}
 					setMethodPaySupported={setMethodPaySupported}
 					methodPaySupported={methodPaySupported}
 					placeByMethodPay={placeByMethodPay}
@@ -410,6 +412,7 @@ const PaymentOptionsUI = (props: any) => {
 						onCancel={() => handlePaymethodClick(null)}
 						merchantId={merchantId}
 						urlscheme={urlscheme}
+						androidAppId={androidAppId}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
 					/>
 				</KeyboardAvoidingView>

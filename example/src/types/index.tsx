@@ -494,5 +494,6 @@ export interface StripeMethodFormParams {
   placeByMethodPay?: any
   methodPaySupported?: any,
   setPlaceByMethodPay?: any,
-  cartTotal?: number
+  cartTotal?: number,
+  androidAppId?: string
 }
