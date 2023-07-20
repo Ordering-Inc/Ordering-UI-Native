@@ -101,7 +101,8 @@ const CheckoutUI = (props: any) => {
 		currency,
 		merchantId,
 		setPlaceSpotNumber,
-		maxDate
+		maxDate,
+		urlscheme
 	} = props
 
 	const theme = useTheme();
@@ -817,6 +818,7 @@ const CheckoutUI = (props: any) => {
 									handlePaymentMethodClickCustom={handlePaymentMethodClick}
 									handlePlaceOrder={handlePlaceOrder}
 									merchantId={merchantId}
+									urlscheme={urlscheme}
 									setMethodPaySupported={setMethodPaySupported}
 									methodPaySupported={methodPaySupported}
 									placeByMethodPay={placeByMethodPay}

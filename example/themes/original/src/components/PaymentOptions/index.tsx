@@ -65,6 +65,7 @@ const PaymentOptionsUI = (props: any) => {
 		handlePaymentMethodClickCustom,
 		handlePlaceOrder,
 		merchantId,
+		urlscheme,
 		setMethodPaySupported,
 		placeByMethodPay,
 		methodPaySupported,
@@ -360,6 +361,7 @@ const PaymentOptionsUI = (props: any) => {
 					handleSource={handlePaymethodDataChange}
 					onCancel={() => handlePaymethodClick(null)}
 					merchantId={merchantId}
+					urlscheme={urlscheme}
 					setMethodPaySupported={setMethodPaySupported}
 					methodPaySupported={methodPaySupported}
 					placeByMethodPay={placeByMethodPay}
@@ -407,6 +409,7 @@ const PaymentOptionsUI = (props: any) => {
 						handleSource={handlePaymethodDataChange}
 						onCancel={() => handlePaymethodClick(null)}
 						merchantId={merchantId}
+						urlscheme={urlscheme}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
 					/>
 				</KeyboardAvoidingView>
