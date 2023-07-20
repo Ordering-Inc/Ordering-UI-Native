@@ -58,8 +58,8 @@ const OrderProgressUI = (props: any) => {
       shadowOpacity: 0.2,
       shadowRadius: 2,
       elevation: 3,
-      borderWidth: Platform.OS === 'android' && Number(DeviceInfo?.getSystemVersion?.()) < 5 ? 1 : 0,
-      borderColor: 'rgba(0,0,0,0.2)'
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.1)'
     },
     logoWrapper: {
       overflow: 'hidden',
