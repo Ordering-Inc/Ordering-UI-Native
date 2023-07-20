@@ -200,7 +200,11 @@ const CartUI = (props: any) => {
     if (cart?.business_id) {
       setOpenUpselling(true)
     } else {
-      handleUpsellingPage(cart)
+      onNavigationRedirect('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cart?.uuid,
+        cartTotal: cart?.total
+      }, true)
     }
   }
 
