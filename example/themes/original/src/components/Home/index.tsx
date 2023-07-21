@@ -49,11 +49,11 @@ export const Home = (props: any) => {
 				</OText>
 				<OButton
 					text={t('LOGIN_NOW', 'Login now')}
-					bgColor={theme.general.components.buttons.color ?? theme.colors.primary}
-					borderColor={theme.general.components.buttons.color ?? theme.colors.primary}
+					bgColor={theme.colors.primary}
+					borderColor={theme.colors.primary}
 					style={styles.buttons}
 					isCircle={false}
-					textStyle={{ color: `${theme.general.components.buttons.buttonTextColor ?? 'white'}` }}
+					textStyle={{ color: 'white' }}
 					onClick={() => onNavigationRedirect('Login')}
 					imgRightSrc={null}
 				/>

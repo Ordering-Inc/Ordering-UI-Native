@@ -220,7 +220,13 @@ export const OrderProgress = (props: any) => {
       'delivery_type',
       'delivery_datetime_utc',
       'delivery_datetime',
-      'reporting_data'
+      'reporting_data',
+      'eta_current_status_time',
+      'eta_previous_status_times',
+      'eta_time',
+      'delivered_in',
+      'prepared_in',
+      'eta_drive_time'
     ],
     noGiftCardOrders: true
   }
