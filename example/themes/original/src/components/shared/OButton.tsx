@@ -27,9 +27,9 @@ const StyledButton = styled.View<Props>`
 	padding-left: 20px;
 	padding-right: 20px;
 	position: relative;
-	${(props: any) => props?.theme?.general?.components?.buttons?.borderRadius && css`
-      border-radius: ${props?.theme?.general?.components?.buttons?.borderRadius}px;
-  `}
+	${(props: any) => props?.borderRadius && css`
+      border-radius: ${typeof props?.borderRadius === 'string' ? props?.borderRadius : `${props?.borderRadius}px`};
+  	`}
 `
 const StyledButtonDisabled = styled(StyledButton)`
 	background-color: ${(props: any) => props.theme.colors.disabled};
@@ -119,7 +119,7 @@ const OButton = (props: Props): React.ReactElement => {
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
 			disabled={props.isDisabledWithSameStyles}
 		>
-			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius } : { ...props.style, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius }}>
+			<StyledButton style={{ ...props.style, backgroundColor: theme?.general?.components?.buttons?.color ?? props.bgColor, borderColor: theme?.general?.components?.buttons?.color ?? props.borderColor, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius }}>
 				{props.icon ? (
 					<props.icon {...props.iconProps} />
 				) : null}
@@ -127,7 +127,7 @@ const OButton = (props: Props): React.ReactElement => {
 					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} color={theme.colors.textNormal} />
 				) : null}
 				{props.text ? (
-					<StyledText style={props.textStyle}>{props.text}</StyledText>
+					<StyledText style={{ ...props.textStyle, color: theme?.general?.components?.buttons?.buttonTextColor ?? props?.textStyle?.color }}>{props.text}</StyledText>
 				) : null}
 				{props.imgRightSrc ? (
 					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />
