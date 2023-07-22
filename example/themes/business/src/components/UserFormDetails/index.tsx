@@ -36,7 +36,8 @@ export const UserFormDetailsUI = (props: any) => {
     handleCancelEdit,
     toggleIsEdit,
     isCheckout,
-    isAlsea
+    isAlsea,
+    allowDriverUpdateData
   } = props;
 
   const theme = useTheme();
@@ -66,9 +67,9 @@ export const UserFormDetailsUI = (props: any) => {
     const rules: any = {
       required: isRequiredField(field.code)
         ? t(
-            `VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`,
-            `${field.name} is required`,
-          ).replace('_attribute_', t(field.name, field.code))
+          `VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`,
+          `${field.name} is required`,
+        ).replace('_attribute_', t(field.name, field.code))
         : null,
     };
     if (field.code && field.code === 'email') {
@@ -261,90 +262,93 @@ export const UserFormDetailsUI = (props: any) => {
           sortInputFields({ values: validationFields?.fields?.checkout })
             .length > 0 && (
             <UDWrapper>
-              {sortInputFields({
-                values: validationFields.fields?.checkout,
-              }).map(
-                (field: any) =>
-                  showField &&
-                  showField(field.code) &&
-                  !isAlsea
-                  && (
-                    <React.Fragment key={field.id}>
-                      <OText style={styles.label}>
-                        {t(field?.code.toUpperCase(), field?.name)}
-                      </OText>
+              {allowDriverUpdateData && (
+                <>
+                  {sortInputFields({
+                    values: validationFields.fields?.checkout,
+                  }).map(
+                    (field: any) =>
+                      showField &&
+                      showField(field.code) &&
+                      !isAlsea
+                      && (
+                        <React.Fragment key={field.id}>
+                          <OText style={styles.label}>
+                            {t(field?.code.toUpperCase(), field?.name)}
+                          </OText>
 
-                      <Controller
-                        key={field.id}
-                        control={control}
-                        render={() => (
-                          <OInput
-                            name={field.code}
-                            placeholder={t(
-                              field.code.toUpperCase(),
-                              field?.name,
-                            )}
-                            placeholderTextColor={theme.colors.arrowColor}
-                            style={styles.inputStyle}
-                            icon={
-                              field.code === 'email'
-                                ? theme.images.general.email
-                                : theme.images.general.user
-                            }
-                            autoCapitalize={
-                              field.code === 'email' ? 'none' : 'sentences'
-                            }
-                            isDisabled={!isEdit}
-                            value={
-                              formState?.changes[field.code] ??
-                              (user && user[field.code]) ??
-                              ''
-                            }
-                            onChange={(val: any) => {
-                              field.code !== 'email'
-                                ? setValue(field.code, val.target.value)
-                                : setValue(
-                                    field.code,
-                                    val.target.value
-                                      .toLowerCase()
-                                      .replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''),
-                                  );
-                              field.code !== 'email'
-                                ? handleChangeInput(val)
-                                : handleChangeInput({
-                                    target: {
-                                      name: 'email',
-                                      value: val.target.value
+                          <Controller
+                            key={field.id}
+                            control={control}
+                            render={() => (
+                              <OInput
+                                name={field.code}
+                                placeholder={t(
+                                  field.code.toUpperCase(),
+                                  field?.name,
+                                )}
+                                placeholderTextColor={theme.colors.arrowColor}
+                                style={styles.inputStyle}
+                                icon={
+                                  field.code === 'email'
+                                    ? theme.images.general.email
+                                    : theme.images.general.user
+                                }
+                                autoCapitalize={
+                                  field.code === 'email' ? 'none' : 'sentences'
+                                }
+                                isDisabled={!isEdit}
+                                value={
+                                  formState?.changes[field.code] ??
+                                  (user && user[field.code]) ??
+                                  ''
+                                }
+                                onChange={(val: any) => {
+                                  field.code !== 'email'
+                                    ? setValue(field.code, val.target.value)
+                                    : setValue(
+                                      field.code,
+                                      val.target.value
                                         .toLowerCase()
-                                        .replace(
-                                          /[&,()%";:ç?<>{}\\[\]\s]/g,
-                                          '',
-                                        ),
-                                    },
-                                  });
-                            }}
-                            autoCorrect={field.code === 'email' && false}
-                            type={
-                              field.code === 'email'
-                                ? 'email-address'
-                                : 'default'
-                            }
-                            returnKeyType="done"
-                            autoCompleteType={
-                              field.code === 'email' ? 'email' : 'off'
-                            }
-                            selectionColor={theme.colors.primary}
-                            color={theme.colors.textGray}
+                                        .replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''),
+                                    );
+                                  field.code !== 'email'
+                                    ? handleChangeInput(val)
+                                    : handleChangeInput({
+                                      target: {
+                                        name: 'email',
+                                        value: val.target.value
+                                          .toLowerCase()
+                                          .replace(
+                                            /[&,()%";:ç?<>{}\\[\]\s]/g,
+                                            '',
+                                          ),
+                                      },
+                                    });
+                                }}
+                                autoCorrect={field.code === 'email' && false}
+                                type={
+                                  field.code === 'email'
+                                    ? 'email-address'
+                                    : 'default'
+                                }
+                                returnKeyType="done"
+                                autoCompleteType={
+                                  field.code === 'email' ? 'email' : 'off'
+                                }
+                                selectionColor={theme.colors.primary}
+                                color={theme.colors.textGray}
+                              />
+                            )}
+                            name={field.code}
+                            rules={getInputRules(field)}
+                            defaultValue={user && user[field.code]}
                           />
-                        )}
-                        name={field.code}
-                        rules={getInputRules(field)}
-                        defaultValue={user && user[field.code]}
-                      />
-                    </React.Fragment>
-                  ),
+                        </React.Fragment>
+                      ),
+                  )}
+                </>
               )}
-
               <OText style={styles.label}>{t('PASSWORD', 'Password')}</OText>
 
               <Controller
@@ -445,7 +449,7 @@ export const UserFormDetailsUI = (props: any) => {
                 </OText>
               )}
 
-              {!!showInputPhoneNumber && !isAlsea && (
+              {!!showInputPhoneNumber && !isAlsea && allowDriverUpdateData && (
                 <WrapperPhone>
                   <PhoneInputNumber
                     data={phoneInputData}
@@ -487,28 +491,28 @@ export const UserFormDetailsUI = (props: any) => {
             isEdit) ||
             (watchPassword?.length > 0 && watchConfirmPassword?.length > 0) ||
             formState?.loading) && (
-            <View style={{ flex: 1, marginLeft: 5 }}>
-              <OButton
-                text={
-                  formState.loading
-                    ? t('UPDATING', 'Updating')
-                    : t('UPDATE', 'Update')
-                }
-                bgColor={theme.colors.primary}
-                textStyle={{
-                  ...styles.btnText,
-                  color: formState.loading
-                    ? theme.colors.textGray
-                    : theme.colors.white,
-                }}
-                borderColor={theme.colors.primary}
-                isDisabled={formState.loading}
-                imgRightSrc={null}
-                style={styles.editButton}
-                onClick={handleSubmit(onSubmit)}
-              />
-            </View>
-          )}
+              <View style={{ flex: 1, marginLeft: 5 }}>
+                <OButton
+                  text={
+                    formState.loading
+                      ? t('UPDATING', 'Updating')
+                      : t('UPDATE', 'Update')
+                  }
+                  bgColor={theme.colors.primary}
+                  textStyle={{
+                    ...styles.btnText,
+                    color: formState.loading
+                      ? theme.colors.textGray
+                      : theme.colors.white,
+                  }}
+                  borderColor={theme.colors.primary}
+                  isDisabled={formState.loading}
+                  imgRightSrc={null}
+                  style={styles.editButton}
+                  onClick={handleSubmit(onSubmit)}
+                />
+              </View>
+            )}
         </EditButton>
       )}
     </>
