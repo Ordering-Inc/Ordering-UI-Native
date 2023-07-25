@@ -771,7 +771,7 @@ const CheckoutUI = (props: any) => {
 						cart?.status !== 2 &&
 						validationFields?.fields?.checkout?.driver_tip?.enabled &&
 						driverTipsOptions && driverTipsOptions?.length > 0 &&
-						!isGiftCardCart &&
+						cart?.business_id &&
 						(
 							<ChSection>
 								<ChDriverTips>
