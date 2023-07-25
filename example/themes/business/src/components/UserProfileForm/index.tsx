@@ -485,10 +485,11 @@ const ProfileUI = (props: ProfileParams) => {
                 handleCancelEdit={handleCancelEdit}
                 toggleIsEdit={toggleIsEdit}
                 isAlsea={isAlsea}
+                allowDriverUpdateData={allowDriverUpdateData}
               />
             </View>
           )}
-          {!validationFields.loading && !isEdit && allowDriverUpdateData && (
+          {!validationFields.loading && !isEdit && (
             <EditButton>
               <OButton
                 text={t('EDIT', 'Edit')}
