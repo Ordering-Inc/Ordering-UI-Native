@@ -48,8 +48,8 @@ export const useLocation = () => {
       GeoLocation.getCurrentPosition(
         ({ coords }) => {
           resolve({
-            latitude: typeof coords.latitude !== 'number' && !Number.isNaN(coords.latitude) ? coords.latitude : 0,
-            longitude: typeof coords.longitude !== 'number' && !Number.isNaN(coords.longitude) ? coords.longitude : 0,
+            latitude: typeof coords.latitude === 'number' && !Number.isNaN(coords.latitude) ? coords.latitude : 0,
+            longitude: typeof coords.longitude === 'number' && !Number.isNaN(coords.longitude) ? coords.longitude : 0,
             speed: coords.speed,
           });
         },
