@@ -4,8 +4,10 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { StarPRNT } from 'react-native-star-prnt';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import {
@@ -35,6 +37,8 @@ import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
+import { _retrieveStoreData } from '../../providers/StoreUtil'
+import { usePrinterCommands } from './usePrinterCommands'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -57,6 +61,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
+  const { generateCommands } = usePrinterCommands()
   const [, { showToast }] = useToast();
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,
@@ -70,6 +75,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForAccept, setOpenModalForAccept] = useState(false);
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
+  const [printerSettings, setPrinterSettings] = useState('')
 
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
@@ -291,7 +297,40 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setOpenModalForAccept(true);
   };
 
+  const printAction = async (printerSettings: any, commands: any) => {
+    try {
+      var printResult = await StarPRNT.print(printerSettings?.emulation, commands, printerSettings?.portName);
+      Alert.alert(
+        t('PRINT_SUCCESS_TITLE', 'Print Success'),
+        t('PRINT_SUCCESS_SUBTITLE', `Go check your _printer_ printer!`).replace('_printer_', printerSettings?.model),
+        [
+          {text: 'OK', onPress: () => null},
+        ],
+        { cancelable: false }
+      )
+    } catch (e) {
+      Alert.alert(
+        t('PRINT_FAIL_TITLE', 'Connection Failed'),
+        t('PRINT_FAIL_SUBTITLE', 'Make sure your Star Printer is turned on and have thermal paper in it.'),
+        [
+          {text: 'OK', onPress: () => null},
+        ],
+        { cancelable: false }
+      )
+    }
+  }
+
   const handleViewSummaryOrder = () => {
+    if (printerSettings) {
+      const commands: any = generateCommands({
+        ...order,
+        orderStatus: getOrderStatus(order?.status, t)?.value
+      })
+      commands.push({ appendCutPaper: StarPRNT.CutPaperAction.PartialCutWithFeed })
+
+      printAction(printerSettings, commands)
+      return
+    }
     navigation?.navigate &&
       navigation.navigate('OrderSummary', {
         order,
@@ -371,6 +410,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       locations[0] = { ...locations[0], driverLocation };
     }
   }, [driverLocation]);
+
+  useEffect(() => {
+    const getPrinterDefault = async () => {
+      const printer = await _retrieveStoreData('printer')
+      setPrinterSettings(printer)
+    }
+
+    getPrinterDefault()
+  }, [])
 
   const styles = StyleSheet.create({
     driverOff: {
