@@ -59,6 +59,7 @@ export interface ProfileParams {
   isAlsea?: boolean;
   isShowDriverStatus?: boolean;
   isFocused?: boolean;
+  isBusinessApp?: boolean;
 }
 
 export interface AddressListParams {
