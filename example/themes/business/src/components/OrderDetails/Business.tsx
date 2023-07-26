@@ -655,7 +655,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               disabled={loading}
             />
           )}
-          {order?.status === 4 && ![1].includes(order?.delivery_type) && (
+          {[4,20,21].includes(order?.status) && ![1].includes(order?.delivery_type) && (
             <FloatingButton
               btnText={t(
                 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
