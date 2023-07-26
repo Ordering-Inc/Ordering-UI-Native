@@ -54,4 +54,6 @@ export const ProductSubOption = styled.View`
   margin-left: 0px;
 `
 
-export const ProductComment = styled.View``
+export const ProductComment = styled.View`
+margin-left: 20px;
+`
