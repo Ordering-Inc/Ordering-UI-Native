@@ -24,6 +24,7 @@ import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { DriverSchedule } from '../DriverSchedule'
+import { PrinterSettings } from '../PrinterSettings'
 import ToggleSwitch from 'toggle-switch-react-native';
 import { UDWrapper } from '../UserFormDetails/styles';
 import {
@@ -485,11 +486,10 @@ const ProfileUI = (props: ProfileParams) => {
                 handleCancelEdit={handleCancelEdit}
                 toggleIsEdit={toggleIsEdit}
                 isAlsea={isAlsea}
-                allowDriverUpdateData={allowDriverUpdateData}
               />
             </View>
           )}
-          {!validationFields.loading && !isEdit && (
+          {!validationFields.loading && !isEdit && allowDriverUpdateData && (
             <EditButton>
               <OButton
                 text={t('EDIT', 'Edit')}
@@ -503,17 +503,31 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </EditButton>
           )}
-          <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
-              <AntDesignIcon size={18} name='right' />
-            </View>
-            <View style={{
-              borderBottomColor: theme.colors.tabBar,
-              borderBottomWidth: 1,
-              marginTop: 10
-            }} />
-          </Pressable>
+          {!props.isBusinessApp ? (
+            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
+                <AntDesignIcon size={18} name='right' />
+              </View>
+              <View style={{
+                borderBottomColor: theme.colors.tabBar,
+                borderBottomWidth: 1,
+                marginTop: 10
+              }} />
+            </Pressable>
+          ) : (
+            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OText size={16}>{t('PRINTER_SETTINGS', 'Printer Settings')}</OText>
+                <AntDesignIcon size={18} name='right' />
+              </View>
+              <View style={{
+                borderBottomColor: theme.colors.tabBar,
+                borderBottomWidth: 1,
+                marginTop: 10
+              }} />
+            </Pressable>
+          )}
           <Pressable style={{ marginBottom: 10 }} onPress={() => navigation.navigate('Sessions')}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <OText size={16}>{t('SESSIONS', 'Sessions')}</OText>
@@ -536,7 +550,11 @@ const ProfileUI = (props: ProfileParams) => {
             entireModal
             hideIcons
           >
-            <DriverSchedule schedule={user?.schedule} />
+            {props.isBusinessApp ? (
+              <PrinterSettings onClose={() => setOpenModal(false)} />
+            ) : (
+              <DriverSchedule schedule={user?.schedule} />
+            )}
           </OModal>
         </ScrollView>
       )}
