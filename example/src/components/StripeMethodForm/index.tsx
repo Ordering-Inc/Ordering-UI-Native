@@ -152,7 +152,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
     const { error, paymentMethod } = await presentApplePay({
       cartItems: [{
-        label: t('CART', 'Cart'),
+        label: t('CART_APPLE_PAY_LABEL', 'Cart'),
         amount: cartTotal?.toString?.() ?? cart?.balance?.toString() ?? cart?.total?.toString?.(),
         paymentType: 'Immediate'
       }],
