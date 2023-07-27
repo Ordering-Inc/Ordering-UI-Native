@@ -368,7 +368,7 @@ const PaymentOptionsUI = (props: any) => {
 					methodPaySupported={methodPaySupported}
 					placeByMethodPay={placeByMethodPay}
 					setPlaceByMethodPay={setPlaceByMethodPay}
-					publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+					publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 				/>
 			)}
 
@@ -413,7 +413,7 @@ const PaymentOptionsUI = (props: any) => {
 						merchantId={merchantId}
 						urlscheme={urlscheme}
 						androidAppId={androidAppId}
-						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
@@ -438,7 +438,7 @@ const PaymentOptionsUI = (props: any) => {
 						onNavigationRedirect={onNavigationRedirect}
 						onCancel={() => handlePaymethodClick(null)}
 						publicKey={isOpenMethod?.paymethod?.credentials.publishable}
-						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 					/>
 				</View>
 			)}
@@ -463,7 +463,7 @@ const PaymentOptionsUI = (props: any) => {
 						accountId={isOpenMethod?.paymethod?.credentials?.user}
 						onSelectCard={handlePaymethodDataChange}
 						onCancel={() => setAddCardOpen({ ...addCardOpen, stripeConnect: false })}
-						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
@@ -491,7 +491,7 @@ const PaymentOptionsUI = (props: any) => {
 						requirements={props.clientSecret}
 						onSelectCard={handlePaymethodDataChange}
 						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
-						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
