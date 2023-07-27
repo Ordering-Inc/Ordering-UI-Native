@@ -280,7 +280,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 						)}
 				</Accordion>
 
-				<View style={{ display: isActive ? 'flex' : 'none', paddingStart: 40 }}>
+				<View style={{ display: isActive ? 'flex' : 'none', paddingStart: isFromCheckout ? 100 : 40, marginTop: isFromCheckout ? -80 : -30 }}>
 					<Animated.View>
 						<AccordionContent>
 							{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
