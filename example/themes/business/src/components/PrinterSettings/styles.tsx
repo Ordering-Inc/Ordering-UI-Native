@@ -8,3 +8,10 @@ export const Container = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: ${(props: any) => props.theme.colors.lightGray};
 `
+
+export const EnabledAutoPrint = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px 10px;
+`;

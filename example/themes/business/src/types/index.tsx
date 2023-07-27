@@ -392,7 +392,7 @@ export interface OrderDetailsParams {
   urlToShare?: string;
   messages?: any;
   handleAssignDriver?: (id: any) => {};
-  handleChangeOrderStatus?: (status: any) => {};
+  handleChangeOrderStatus?: (status: any, isAcceptOrReject: any) => {};
   order?: any;
   isFromRoot?: any;
   handleOrderRedirect?: () => {};
