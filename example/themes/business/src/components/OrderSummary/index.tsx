@@ -119,6 +119,8 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
       }
           </br>
           ${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: ${handlePaymethodsListString()}
+
+          ${order?.comment ? ('</br>'+ t('ORDER_COMMENT', 'Order Comment') + ':' + order?.comment) : ''}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
@@ -404,6 +406,13 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
             </OText>
 
             <OText style={{ marginBottom: 5 }}>{`${t(`${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${handlePaymethodsListString()}`}</OText>
+
+            {order?.comment && (
+              <OText style={{ marginBottom: 5 }}>
+                {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
+              </OText>
+            )}
+
           </OrderHeader>
 
           <OrderCustomer>
