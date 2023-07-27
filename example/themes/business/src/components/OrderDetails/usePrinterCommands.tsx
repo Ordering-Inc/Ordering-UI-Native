@@ -50,20 +50,17 @@ export const usePrinterCommands = () => {
   const generateCommands = (order: any) => {
     let commands: any = [];
 
-    const textProps = {
-      fontSize: 12,
-      absolutePosition: 40
-    }
+    const textProps = { fontSize: 12 }
 
     const generateProductsText = () => {
       const list: any = []
 
       if (order?.products.length) {
         order?.products.map((product: any) => {
-          list.push(`${product?.quantity}  ${product?.name} \t\t\t ${parsePrice(product.total ?? getProductPrice(product))}`)
+          list.push(`${product?.quantity}  ${product?.name} \t\t ${parsePrice(product.total ?? getProductPrice(product))}`)
 
           product.options?.map((option: any) => {
-            list.push(`\t ${option.name}`)
+            list.push({ text: `\t ${option.name}`, props: { fontSize: 10 } })
 
             option.suboptions?.map((suboption: any) => {
               const { quantity, name, position, price } = suboption
@@ -74,16 +71,16 @@ export const usePrinterCommands = () => {
                   : `${quantity} x ${name} +${parsePrice(price)}`
                 : 'No'
 
-              list.push(`\t\t ${string}`)
+              list.push({ text: `\t\t ${string}`, props: { fontSize: 10 } })
             })
           })
 
           if (product.comment) {
-            list.push(`\t ${t('COMMENT', 'Comment')}`)
-            list.push(`\t\t ${product.comment}`)
+            list.push({ text: `\t ${t('COMMENT', 'Comment')}`, props: { fontSize: 10 } })
+            list.push({ text: `\t\t ${product.comment}`, props: { fontSize: 10 } })
           }
 
-          list.push('------------------------------------------------',)
+          list.push('_separator_')
         })
       }
 
@@ -91,14 +88,14 @@ export const usePrinterCommands = () => {
     }
 
     const appends: any = [
-      `${t('ORDER_NO', 'Order No.')} ${order.id}`,
-      '\n', // need to replace with other break line command
+      { text: `${t('ORDER_NO', 'Order No.')} ${order.id}`, props: { fontSize: 16 } },
+      ' ',
       order.orderStatus,
-      `${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]}`,
+      { text: `${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]}`, props: { fontSize: 14 } },
+      { text: `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}`, props: { fontSize: 14 } },
       `${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}`,
-      `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}`,
-      '\n', // need to replace with other break line command
-      `${t('CUSTOMER_DETAILS', 'Customer details')}`,
+      '_separator_',
+      { text: `${t('CUSTOMER_DETAILS', 'Customer details')}`, props: { fontSize: 14 } },
       `${t('FULL_NAME', 'Full Name')}: ${customerName(order)}`,
       `${t('EMAIL', 'Email')}: ${order?.customer?.email}`,
       `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}`,
@@ -106,31 +103,41 @@ export const usePrinterCommands = () => {
       `${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address}`,
       `${!!order?.customer?.internal_number ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}` : '\n'}`,
       `${!!order?.customer?.zipcode ? `${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}` : '\n'}`,
-      '\n', // need to replace with other break line command
-      `${t('BUSINESS_DETAILS', 'Business details')}`,
+      '_separator_',
+      { text: `${t('BUSINESS_DETAILS', 'Business details')}`, props: { fontSize: 14 } },
       order?.business?.name,
       order?.business?.email,
       `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}`,
       `${!!order?.business?.phone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone}` : '\n'}`,
       `${t('ADDRESS', 'Address')}: ${order?.business?.address}`,
       `${!!order?.business?.address_notes ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes}` : '\n'}`,
-      '\n', // need to replace with other break line command
-      `${t('ORDER_DETAILS', 'Order Details')}`,
+      '_separator_',
+      { text: `${t('ORDER_DETAILS', 'Order Details')}`, props: { fontSize: 14 } },
       ...generateProductsText(),
-      '\n', // need to replace with other break line command
-      `${t('SUBTOTAL', 'Subtotal')} \t\t\t ${parsePrice(order.tax_type === 1 ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0 : order?.summary?.subtotal ?? 0)}`,
-      `${order?.summary?.discount > 0 ? `${order?.offer_type === 1 ? `${t('DISCOUNT', 'Discount')} (${verifyDecimals(order?.offer_rate, parsePrice)}%)` : t('DISCOUNT', 'Discount')} \t\t\t ${parsePrice(order?.summary?.discount)}` : '\n'}`,
-      `${order?.tax_type !== 1 ? `${t('TAX', 'Tax')} (${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%) \t\t\t ${parsePrice(order?.summary?.tax ?? 0)}` : '\n'}`,
-      `${order?.summary?.delivery_price > 0 ? `${t('DELIVERY_FEE', 'Delivery Fee')} \t\t\t ${parsePrice(order?.summary?.delivery_price ?? 0)}` : '\n'}`,
-      `${t('DRIVER_TIP', 'Driver tip')} ${percentTip(order) ? `(${percentTip(order)}%)` : ''} \t\t\t ${parsePrice(order?.summary?.driver_tip ?? 0)}`,
-      `${t('SERVICE_FEE', 'Service Fee')} (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%) \t\t\t ${parsePrice(order?.summary?.service_fee ?? 0)}`,
-      '------------------------------------------------',
-      `${t('TOTAL', 'Total')} \t\t\t ${parsePrice(order?.summary?.total ?? 0)}`
+      ' ',
+      `${t('SUBTOTAL', 'Subtotal')} \t\t ${parsePrice(order.tax_type === 1 ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0 : order?.summary?.subtotal ?? 0)}`,
+      `${order?.summary?.discount > 0 ? `${order?.offer_type === 1 ? `${t('DISCOUNT', 'Discount')} (${verifyDecimals(order?.offer_rate, parsePrice)}%)` : t('DISCOUNT', 'Discount')} \t\t ${parsePrice(order?.summary?.discount)}` : '\n'}`,
+      `${order?.tax_type !== 1 ? `${t('TAX', 'Tax')} (${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%) \t\t ${parsePrice(order?.summary?.tax ?? 0)}` : '\n'}`,
+      `${order?.summary?.delivery_price > 0 ? `${t('DELIVERY_FEE', 'Delivery Fee')} \t\t ${parsePrice(order?.summary?.delivery_price ?? 0)}` : '\n'}`,
+      `${t('DRIVER_TIP', 'Driver tip')} ${percentTip(order) ? `(${percentTip(order)}%)` : ''} \t\t ${parsePrice(order?.summary?.driver_tip ?? 0)}`,
+      `${t('SERVICE_FEE', 'Service Fee')} (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%) \t\t ${parsePrice(order?.summary?.service_fee ?? 0)}`,
+      '_separator_',
+      `${t('TOTAL', 'Total')} \t\t ${parsePrice(order?.summary?.total ?? 0)}`,
+      ' ',
+      ' ',
     ]
 
     commands = [
       ...commands,
-      ...appends.map((append: any) => ({ appendBitmapText: append, ...textProps }))
+      ...appends.map((append: any) => {
+        return append === '_separator_'
+          ? { appendBitmapText: '---------------------------------------' }
+          : {
+            appendBitmapText: append?.text ?? append,
+            ...textProps,
+            ...append?.props
+          }
+      })
     ]
 
     return commands
