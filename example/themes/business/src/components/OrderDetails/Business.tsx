@@ -130,7 +130,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (props.handleChangeOrderStatus) {
       const order: any = await props.handleChangeOrderStatus(status, isAcceptOrReject)
 
-      if (order?.status !== 0 && autoPrintEnabled && printerSettings) {
+      if (order?.status === 7 && autoPrintEnabled && printerSettings) {
         handleViewSummaryOrder()
       }
     }
@@ -310,23 +310,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const printAction = async (printerSettings: any, commands: any) => {
     try {
       var printResult = await StarPRNT.print(printerSettings?.emulation, commands, printerSettings?.portName);
-      Alert.alert(
-        t('PRINT_SUCCESS_TITLE', 'Print Success'),
-        t('PRINT_SUCCESS_SUBTITLE', `Go check your _printer_ printer!`).replace('_printer_', printerSettings?.model),
-        [
-          {text: 'OK', onPress: () => null},
-        ],
-        { cancelable: false }
-      )
+      showToast(ToastType.Info, t('ORDER_PRINTED_SUCCESS', 'Order printed'), 1000)
     } catch (e) {
-      Alert.alert(
-        t('PRINT_FAIL_TITLE', 'Connection Failed'),
-        t('PRINT_FAIL_SUBTITLE', 'Make sure your Star Printer is turned on and have thermal paper in it.'),
-        [
-          {text: 'OK', onPress: () => null},
-        ],
-        { cancelable: false }
-      )
+      showToast(ToastType.Error, t('ORDER_PRINTED_FAILED', 'Order not printed, connection failed'), 1000)
     }
   }
 
