@@ -77,6 +77,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
   const [printerSettings, setPrinterSettings] = useState('')
 
+  const orderToComplete = [4,20,21]
+
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
       drivers.forEach((driver: any) => {
@@ -655,7 +657,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               disabled={loading}
             />
           )}
-          {[4,20,21].includes(order?.status) && ![1].includes(order?.delivery_type) && (
+          {orderToComplete.includes(order?.status) && ![1].includes(order?.delivery_type) && (
             <FloatingButton
               btnText={t(
                 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
