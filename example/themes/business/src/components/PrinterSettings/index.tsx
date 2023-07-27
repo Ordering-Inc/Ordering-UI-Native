@@ -6,16 +6,18 @@ import FeatherIcon from 'react-native-vector-icons/Feather'
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FAIcons from 'react-native-vector-icons/FontAwesome'
 import { useTheme } from 'styled-components/native'
+import ToggleSwitch from 'toggle-switch-react-native';
 import { useLanguage } from 'ordering-components/native'
 
 import { _setStoreData, _retrieveStoreData } from '../../providers/StoreUtil'
-import { Container } from './styles'
+import { Container, EnabledAutoPrint } from './styles'
 import { OText, OInput} from '../shared'
 
 export const PrinterSettings = (props: any) => {
   const { onClose } = props
 
   const [currentPrinter, setCurrentPrinter] = useState<any>(null)
+  const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
   const [layoutWidth, setLayoutWidth] = useState<any>({ actionsBtns: 0 })
 
   const WIDTH_SCREEN = Dimensions.get('window').width
@@ -57,6 +59,9 @@ export const PrinterSettings = (props: any) => {
       height: 40,
       borderWidth: 1,
       borderRadius: 8,
+    },
+    label: {
+      color: theme.colors.textGray
     },
   })
 
@@ -111,13 +116,20 @@ export const PrinterSettings = (props: any) => {
     onClose && onClose()
   }
 
+  const handleAutoPrint = async () => {
+    setAutoPrintEnabled(!autoPrintEnabled)
+    await _setStoreData('auto_print_after_accept_order', !autoPrintEnabled)
+  }
+
   useEffect(() => {
-    const getPrinterDefault = async () => {
+    const getStorageData = async () => {
       const printer = await _retrieveStoreData('printer')
+      const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
       setCurrentPrinter(printer)
+      setAutoPrintEnabled(!!autoPrint)
     }
 
-    getPrinterDefault()
+    getStorageData()
   }, [])
 
   useEffect(() => {
@@ -131,7 +143,25 @@ export const PrinterSettings = (props: any) => {
       <OText size={24} style={{ paddingLeft: 30 }}>
         {t('PRINTER_SETTINGS', 'Printer Settings')}
       </OText>
-      <View style={{ padding: 30 }}>
+      <EnabledAutoPrint>
+        <View style={{ flex: 1 }}>
+          <OText
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            style={{ ...styles.label, paddingHorizontal: 0 }}>
+            {t('AUTO_PRINT_AFTER_ACCEPTING_ORDER', 'Auto print after accepting order')}
+          </OText>
+        </View>
+        <ToggleSwitch
+          isOn={autoPrintEnabled}
+          onColor={theme.colors.primary}
+          offColor={theme.colors.offColor}
+          size="small"
+          onToggle={() => handleAutoPrint()}
+          animationSpeed={200}
+        />
+      </EnabledAutoPrint>
+      <View style={{ paddingHorizontal: 30 }}>
         {printerList.map((item: any, i: number) => (
           <Container
             key={i}
