@@ -31,6 +31,7 @@ export const StripeCardsListUI = (props: any) => {
 		handleCardClick,
 		onOpen,
 		gateway,
+		paySelected
 	} = props;
 
 	const theme = useTheme();
@@ -93,10 +94,9 @@ export const StripeCardsListUI = (props: any) => {
 				>
 					{cardsList.cards.map((card: any) => (
 						<OSItem key={card.id} isUnique={cardsList.cards.length} isInvalid={!card?.zipcode && validateZipcodeCard}>
-							{console.log(card?.zipcode && validateZipcodeCard)}
 							<OSItemContent onPress={() => handleCardSelected(card)}>
 								<View style={styles.viewStyle}>
-									{card.id === cardSelected?.id ? (
+									{(card.id === cardSelected?.id || card.id === paySelected?.data?.id) ? (
 										<OIcon
 											src={theme.images.general.radio_act}
 											width={16}

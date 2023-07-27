@@ -344,10 +344,11 @@ const PaymentOptionsUI = (props: any) => {
 						setAddCardOpen={setAddCardOpen}
 						addCardOpen={addCardOpen}
 						isOpenMethod={isOpenMethod}
-						handlePaymethodDataChange={handlePaymethodDataChange}
+						handleSource={handlePaymethodDataChange}
 						clientSecret={props.clientSecret}
 						businessId={props.businessId}
 						onPaymentChange={onPaymentChange}
+						paySelected={props.paySelected}
 					/>
 				</View>
 			)}
@@ -414,6 +415,7 @@ const PaymentOptionsUI = (props: any) => {
 						urlscheme={urlscheme}
 						androidAppId={androidAppId}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
+						paySelected={props.paySelected}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
@@ -439,6 +441,7 @@ const PaymentOptionsUI = (props: any) => {
 						onCancel={() => handlePaymethodClick(null)}
 						publicKey={isOpenMethod?.paymethod?.credentials.publishable}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
+						paySelected={props.paySelected}
 					/>
 				</View>
 			)}
@@ -489,6 +492,7 @@ const PaymentOptionsUI = (props: any) => {
 						publicKey={props.publicKey || isOpenMethod?.paymethod?.credentials?.publishable}
 						setCardsList={setCardList}
 						requirements={props.clientSecret}
+						handleSource={handlePaymethodDataChange}
 						onSelectCard={handlePaymethodDataChange}
 						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
