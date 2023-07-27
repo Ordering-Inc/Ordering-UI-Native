@@ -48,7 +48,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     messagesReadList,
     handleAssignDriver,
-    handleChangeOrderStatus,
     isFromCheckout,
     driverLocation,
     actions,
@@ -76,6 +75,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
   const [printerSettings, setPrinterSettings] = useState('')
+  const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
 
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
@@ -123,6 +123,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       itemsDrivers.sort((a: any, b: any) => {
         if (a.available > b.available) return -1;
       });
+    }
+  }
+
+  const handleChangeOrderStatus = async (status: any, isAcceptOrReject: any = {}) => {
+    if (props.handleChangeOrderStatus) {
+      const order: any = await props.handleChangeOrderStatus(status, isAcceptOrReject)
+
+      if (order?.status !== 0 && autoPrintEnabled && printerSettings) {
+        handleViewSummaryOrder()
+      }
     }
   }
 
@@ -412,12 +422,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [driverLocation]);
 
   useEffect(() => {
-    const getPrinterDefault = async () => {
-      const printer = await _retrieveStoreData('printer')
+    const getStorageData = async () => {
+    const printer = await _retrieveStoreData('printer')
+      const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
       setPrinterSettings(printer)
+      setAutoPrintEnabled(!!autoPrint)
     }
 
-    getPrinterDefault()
+    getStorageData()
   }, [])
 
   const styles = StyleSheet.create({
