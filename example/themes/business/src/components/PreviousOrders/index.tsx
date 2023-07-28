@@ -45,6 +45,8 @@ export const PreviousOrders = (props: any) => {
   const deliveryPickupBtn = props.appTitle?.text?.includes('Delivery') && [3, 8, 18]
   const deliveryStatusCompleteBtn = props.appTitle?.text?.includes('Delivery') && [9, 19, 23]
   const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1' && !isBusinessApp
+  const isEnabledOrderNotReady = configs?.order_not_ready_enabled?.value === '1'
+  const isEnabledFailedPickupDriver = configs?.failed_pickup_by_driver_enabled?.value === '1'
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
@@ -242,7 +244,7 @@ export const PreviousOrders = (props: any) => {
                         />
                       </AcceptOrRejectOrderStyle>
                     )}
-                  {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 && !isHideRejectButtons &&
+                  {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady &&
                     (
                       <AcceptOrRejectOrderStyle>
                         <OButton
@@ -330,9 +332,9 @@ export const PreviousOrders = (props: any) => {
                         })}
                       />
                     )}
-                  {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && (
+                  {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && isEnabledFailedPickupDriver && (
                     <AcceptOrRejectOrderStyle>
-                      {!isHideRejectButtons && (
+                      {!isHideRejectButtons && isEnabledOrderNotReady && (
                         <OButton
                           text={t('PICKUP_FAILED', 'Pickup failed')}
                           bgColor={theme.colors.danger100}
