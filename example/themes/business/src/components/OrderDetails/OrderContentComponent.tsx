@@ -219,8 +219,8 @@ export const OrderContentComponent = (props: OrderContent) => {
             <OLink
               PressStyle={styles.linkWithIcons}
               url={Platform.select({
-                ios: `maps:0,0?q=${order?.business?.address}`,
-                android: `geo:0,0?q=${order?.business?.address}`,
+                ios: `maps:0,0?q=${order?.business?.address}@${order?.business?.location?.lat},${order?.business?.location?.lng}`,
+                android: `geo:0,0?q=${order?.business?.address}@${order?.business?.location?.lat},${order?.business?.location?.lng}`,
               })}
               numberOfLines={2}
               shorcut={order?.business?.address}
@@ -239,8 +239,8 @@ export const OrderContentComponent = (props: OrderContent) => {
               <OLink
                 PressStyle={styles.linkWithIcons}
                 url={Platform.select({
-                  ios: `maps:0,0?q=${order?.business?.address_notes}`,
-                  android: `geo:0,0?q=${order?.business?.address_notes}`,
+                  ios: `maps:0,0?q=${order?.business?.address_notes}@${order?.business?.location?.lat},${order?.business?.location?.lng}`,
+                  android: `geo:0,0?q=${order?.business?.address_notes}@${order?.business?.location?.lat},${order?.business?.location?.lng}`,
                 })}
                 shorcut={order?.business?.address_notes}
                 TextStyle={styles.textLink}
@@ -360,8 +360,8 @@ export const OrderContentComponent = (props: OrderContent) => {
               <OLink
                 PressStyle={{ ...styles.linkWithIcons, marginBottom: 0 }}
                 url={Platform.select({
-                  ios: `maps:0,0?q=${order?.customer?.address}`,
-                  android: `geo:0,0?q=${order?.customer?.address}`,
+                  ios: `maps:0,0?q=${order?.customer?.address}@${order?.customer?.location?.lat},${order?.customer?.location?.lng}`,
+                  android: `geo:0,0?q=${order?.customer?.address}@${order?.customer?.location?.lat},${order?.customer?.location?.lng}`,
                 })}
                 onTextLayout={e => onTextLayout(e, 'customerAddress')}
                 numberOfLines={isReadMore.customerAddress ? 20 : 2}

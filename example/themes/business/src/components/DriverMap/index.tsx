@@ -30,7 +30,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     isBusinessMarker,
     isToFollow,
     handleViewActionOrder,
-    updateDriverPosition,
     driverUpdateLocation,
     setDriverUpdateLocation,
   } = props;
