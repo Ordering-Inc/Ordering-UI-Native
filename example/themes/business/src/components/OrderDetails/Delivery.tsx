@@ -67,6 +67,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const hideTimer = configs?.hidden_driver_eta_time?.value === '1'
   const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
   const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1'
+  const isEnabledOrderNotReady = configs?.order_not_ready_enabled?.value === '1'
+  const isEnabledFailedPickupDriver = configs?.failed_pickup_by_driver_enabled?.value === '1'
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -489,7 +491,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           </Pickup>
         )}
-        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && (
+        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -584,8 +586,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     secondButton={true}
                     firstColorCustom={theme.colors.red}
                     secondColorCustom={theme.colors.green}
-                    widthButton={isHideRejectButtons ? '100%' : '45%'}
-                    isHideRejectButtons={isHideRejectButtons}
+                    widthButton={isHideRejectButtons || !isEnabledFailedPickupDriver ? '100%' : '45%'}
+                    isHideRejectButtons={isHideRejectButtons || !isEnabledFailedPickupDriver}
                   />
                 )}
                 {(validStatusComplete.includes(order?.status)) && (
