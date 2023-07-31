@@ -168,7 +168,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			setFeaturedBusinesses(ary);
 		}
 		resetInactivityTimeout()
-	}, [businessesList.loading])
+	}, [businessesList.loading, businessesList?.businesses])
 
 	const handleOnRefresh = () => {
 		if (!businessesList.loading) {
