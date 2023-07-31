@@ -35,9 +35,9 @@ import FastImage from 'react-native-fast-image'
 import { LottieAnimation } from '../LottieAnimation';
 import { CardAnimation } from '../shared/CardAnimation';
 
-function BusinessControllerPropsAreEqual (prevProps: any, nextProps: any) {
+function BusinessControllerPropsAreEqual(prevProps: any, nextProps: any) {
 	return JSON.stringify(prevProps.business) === JSON.stringify(nextProps.business) &&
-	prevProps.isBusinessOpen === nextProps.isBusinessOpen
+		prevProps.isBusinessOpen === nextProps.isBusinessOpen
 }
 
 export const BusinessControllerUI = React.memo((props: BusinessControllerParams) => {
@@ -244,7 +244,7 @@ export const BusinessControllerUI = React.memo((props: BusinessControllerParams)
 									numberOfLines={2}
 									ellipsizeMode='tail'
 									lineHeight={13}
-								>{getBusinessOffer((business?.offers)) || parsePrice(0)}</OText>
+								>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((business?.offers)) || parsePrice(0)}</OText>
 							</OfferBox>
 						)}
 						<BusinessState isRibbon={business?.ribbon?.enabled && !!business?.ribbon?.text}>
