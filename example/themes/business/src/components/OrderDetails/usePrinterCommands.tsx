@@ -52,12 +52,13 @@ export const usePrinterCommands = () => {
   const customerName = (order: any) => `${order?.customer?.name ?? ''} ${order?.customer?.middle_name ?? ''} ${order?.customer?.lastname ?? ''} ${order?.customer?.second_lastname ?? ''}`?.replace('  ', ' ')?.trim() ?? ''
 
   const deliveryDate = (order: any) => {
-    const dateString = order?.delivery_datetime_utc ? order?.delivery_datetime_utc : order?.delivery_datetime
+    const dateString = order?.delivery_datetime_utc ?? order?.delivery_datetime
     const currentDate = new Date();
-    const receivedDate: any = new Date(dateString.replace(/-/g, '/'));
+    const receivedDate: any = new Date(dateString);
+
     const formattedDate = receivedDate <= currentDate
-      ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })})`
-      : parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })
+      ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(dateString, { utc: !!order?.delivery_datetime_utc })})`
+      : parseDate(dateString, { utc: !!order?.delivery_datetime_utc })
     return formattedDate
   }
 
