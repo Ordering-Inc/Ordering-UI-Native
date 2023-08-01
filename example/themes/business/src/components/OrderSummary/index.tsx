@@ -101,7 +101,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
   const deliveryDate = (order: any) => {
     const dateString = order?.delivery_datetime_utc ?? order?.delivery_datetime
     const currentDate = new Date();
-    const receivedDate: any = new Date(dateString);
+    const receivedDate: any = new Date(order?.delivery_datetime);
 
     const formattedDate = receivedDate <= currentDate
       ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(dateString, { utc: !!order?.delivery_datetime_utc })})`
