@@ -66,17 +66,17 @@ export const usePrinterCommands = () => {
 
     if (order?.products.length) {
       order?.products.map((product: any) => {
-        list.push(`${product?.quantity}  ${product?.name} \t ${parsePrice(product.total ?? getProductPrice(product))}`)
+        list.push(`${product?.quantity}  ${product?.name} \t ${parsePrice(product.total ?? getProductPrice(product))}\n`)
 
         if (product?.ingredients?.length) {
-          list.push({ text: `\t ${t('INGREDIENTS', 'Ingredients')}:`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${t('INGREDIENTS', 'Ingredients')}:\n`, props: { fontSize: 10 } })
           product?.ingredients?.map((ingredient: any) => {
-            list.push({ text: `\t ${t('NO', 'No')} ${ingredient.name}` , fontSize: 10 })
+            list.push({ text: `\t ${t('NO', 'No')} ${ingredient.name}\n` , fontSize: 10 })
           })
         }
 
         product.options?.map((option: any) => {
-          list.push({ text: `\t ${option.name}`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${option.name}\n`, props: { fontSize: 10 } })
 
           option.suboptions?.map((suboption: any) => {
             const { quantity, name, position, price } = suboption
@@ -87,16 +87,16 @@ export const usePrinterCommands = () => {
                 : `${quantity} x ${name} +${parsePrice(price)}`
               : 'No'
 
-            list.push({ text: `\t\t ${string}`, props: { fontSize: 10 } })
+            list.push({ text: `\t\t ${string}\n`, props: { fontSize: 10 } })
           })
         })
 
         if (product.comment) {
-          list.push({ text: `\t ${t('COMMENT', 'Comment')}`, props: { fontSize: 10 } })
-          list.push({ text: `\t\t ${product.comment}`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${t('COMMENT', 'Comment')}\n`, props: { fontSize: 10 } })
+          list.push({ text: `\t\t ${product.comment}\n`, props: { fontSize: 10 } })
         }
 
-        list.push('_separator_')
+        list.push('_separator_\n')
       })
     }
 
@@ -116,70 +116,72 @@ export const usePrinterCommands = () => {
           ? parsePrice(order?.cash, { currency: order?.currency })
           : `-${parsePrice(event?.amount, { currency: order?.currency })}`
 
-        list.push(`${payment} \t ${amount}`)
+        list.push(`${payment} \t ${amount}\n`)
       })
     }
 
     return list
   }
 
-  const generateCommands = (order: any) => {
+  const generateCommands = (order: any, printMode: string = 'append') => {
     let commands: any = [];
 
     const textProps = { fontSize: 12 }
 
     const appends: any = [
-      { text: `${t('ORDER_NO', 'Order No.')} ${order.id}`, props: { fontSize: 16 } },
+      { text: `${t('ORDER_NO', 'Order No.')} ${order.id}\n`, props: { fontSize: 16 } },
       ' ',
-      order.orderStatus,
-      { text: `${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]}`, props: { fontSize: 14 } },
-      { text: `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}`, props: { fontSize: 14 } },
-      `${!!order?.delivery_option ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}` : ''}`,
-      `${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}`,
-      '_separator_',
-      { text: `${t('CUSTOMER_DETAILS', 'Customer details')}`, props: { fontSize: 14 } },
-      `${t('FULL_NAME', 'Full Name')}: ${customerName(order)}`,
-      `${t('EMAIL', 'Email')}: ${order?.customer?.email}`,
-      `${!!order?.customer?.cellphone ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}` : ''}`,
-      `${!!order?.customer?.phone ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone}` : ''}`,
-      `${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address}`,
-      `${!!order?.customer?.internal_number ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}` : ''}`,
-      `${!!order?.customer?.zipcode ? `${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}` : ''}`,
-      '_separator_',
-      { text: `${t('BUSINESS_DETAILS', 'Business details')}`, props: { fontSize: 14 } },
-      order?.business?.name,
-      order?.business?.email,
-      `${!!order?.business?.cellphone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}` : ''}`,
-      `${!!order?.business?.phone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone}` : ''}`,
-      `${t('ADDRESS', 'Address')}: ${order?.business?.address}`,
-      `${!!order?.business?.address_notes ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes}` : ''}`,
-      '_separator_',
-      { text: `${t('ORDER_DETAILS', 'Order Details')}`, props: { fontSize: 14 } },
-      `${!!order?.comment ? `${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}` : ''}`,
+      `${order.orderStatus}\n`,
+      { text: `${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]}\n`, props: { fontSize: 14 } },
+      { text: `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}\n`, props: { fontSize: 14 } },
+      `${!!order?.delivery_option ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}\n` : '\n'}`,
+      `${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}\n`,
+      '_separator_\n',
+      { text: `${t('CUSTOMER_DETAILS', 'Customer details')}\n`, props: { fontSize: 14 } },
+      `${t('FULL_NAME', 'Full Name')}: ${customerName(order)}\n`,
+      `${t('EMAIL', 'Email')}: ${order?.customer?.email}\n`,
+      `${!!order?.customer?.cellphone ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}\n` : '\n'}`,
+      `${!!order?.customer?.phone ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone}\n` : '\n'}`,
+      `${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address}\n`,
+      `${!!order?.customer?.internal_number ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}\n` : '\n'}`,
+      `${!!order?.customer?.zipcode ? `${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}\n` : '\n'}`,
+      '_separator_\n',
+      { text: `${t('BUSINESS_DETAILS', 'Business details')}\n`, props: { fontSize: 14 } },
+      `${order?.business?.name}\n`,
+      `${order?.business?.email}\n`,
+      `${!!order?.business?.cellphone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}\n` : '\n'}`,
+      `${!!order?.business?.phone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone}\n` : '\n'}`,
+      `${t('ADDRESS', 'Address')}: ${order?.business?.address}\n`,
+      `${!!order?.business?.address_notes ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes}\n` : '\n'}`,
+      '_separator_\n',
+      { text: `${t('ORDER_DETAILS', 'Order Details')}\n`, props: { fontSize: 14 } },
+      `${!!order?.comment ? `${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}\n` : '\n'}`,
       ...generateProductsText(order),
       ' ',
-      `${t('SUBTOTAL', 'Subtotal')} \t\t ${parsePrice(order.tax_type === 1 ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0 : order?.summary?.subtotal ?? 0)}`,
-      `${order?.summary?.discount > 0 ? `${order?.offer_type === 1 ? `${t('DISCOUNT', 'Discount')} (${verifyDecimals(order?.offer_rate, parsePrice)}%)` : t('DISCOUNT', 'Discount')} \t\t ${parsePrice(order?.summary?.discount)}` : ''}`,
-      `${order?.tax_type !== 1 ? `${t('TAX', 'Tax')} (${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%) \t\t ${parsePrice(order?.summary?.tax ?? 0)}` : ''}`,
-      `${order?.summary?.delivery_price > 0 && order.delivery_type !== 2 ? `${t('DELIVERY_FEE', 'Delivery Fee')} \t\t ${parsePrice(order?.summary?.delivery_price ?? 0)}` : ''}`,
-      `${(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && order.delivery_type !== 2 ? `${t('DRIVER_TIP', 'Driver tip')} ${percentTip(order) ? `(${percentTip(order)}%)` : ''} \t\t ${parsePrice(order?.summary?.driver_tip ?? 0)}` : ''}`,
-      `${t('SERVICE_FEE', 'Service Fee')} (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%) \t\t ${parsePrice(order?.summary?.service_fee ?? 0)}`,
-      '_separator_',
-      `${t('TOTAL', 'Total')} \t\t ${parsePrice(order?.summary?.total ?? 0)}`,
+      `${t('SUBTOTAL', 'Subtotal')} \t\t ${parsePrice(order.tax_type === 1 ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0 : order?.summary?.subtotal ?? 0)}\n`,
+      `${order?.summary?.discount > 0 ? `${order?.offer_type === 1 ? `${t('DISCOUNT', 'Discount')} (${verifyDecimals(order?.offer_rate, parsePrice)}%)\n` : t('DISCOUNT', 'Discount')} \t\t ${parsePrice(order?.summary?.discount)}\n` : '\n'}`,
+      `${order?.tax_type !== 1 ? `${t('TAX', 'Tax')} (${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%) \t\t ${parsePrice(order?.summary?.tax ?? 0)}\n` : '\n'}`,
+      `${order?.summary?.delivery_price > 0 && order.delivery_type !== 2 ? `${t('DELIVERY_FEE', 'Delivery Fee')} \t\t ${parsePrice(order?.summary?.delivery_price ?? 0)}\n` : '\n'}`,
+      `${(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && order.delivery_type !== 2 ? `${t('DRIVER_TIP', 'Driver tip')} ${percentTip(order) ? `(${percentTip(order)}%)` : ''} \t\t ${parsePrice(order?.summary?.driver_tip ?? 0)}\n` : '\n'}`,
+      `${order?.summary?.service_fee > 0 ? `${t('SERVICE_FEE', 'Service Fee')} (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%) \t\t ${parsePrice(order?.summary?.service_fee ?? 0)}\n` : '\n'}`,
+      '_separator_\n',
+      `${t('TOTAL', 'Total')} \t\t ${parsePrice(order?.summary?.total ?? 0)}\n`,
       ' ',
-      `${order?.payment_events?.length > 0 ? `${t('PAYMENTS', 'Payments')}` : ''}`,
+      `${order?.payment_events?.length > 0 ? `${t('PAYMENTS', 'Payments')}\n` : '\n'}`,
       ...paymethodsList(order),
       ' ',
+      '\n',
       ' ',
+      '\n',
     ]
 
     commands = [
       ...commands,
       ...appends.map((append: any) => {
         return append === '_separator_'
-          ? { appendBitmapText: '---------------------------------------' }
+          ? { [printMode]: '---------------------------------------' }
           : {
-            appendBitmapText: append?.text ?? append,
+            [printMode]: append?.text ?? append,
             ...textProps,
             ...append?.props
           }
