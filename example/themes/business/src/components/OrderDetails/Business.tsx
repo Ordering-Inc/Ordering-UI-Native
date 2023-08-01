@@ -74,7 +74,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForAccept, setOpenModalForAccept] = useState(false);
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
-  const [printerSettings, setPrinterSettings] = useState('')
+  const [printerSettings, setPrinterSettings] = useState<any>('')
   const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
 
   const orderToComplete = [4,20,21]
@@ -323,7 +323,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       const commands: any = generateCommands({
         ...order,
         orderStatus: getOrderStatus(order?.status, t)?.value
-      })
+      }, printerSettings?.printMode)
       commands.push({ appendCutPaper: StarPRNT.CutPaperAction.PartialCutWithFeed })
 
       printAction(printerSettings, commands)
