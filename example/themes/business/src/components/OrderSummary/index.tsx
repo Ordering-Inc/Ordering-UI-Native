@@ -75,6 +75,39 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
     return array.join('')
   }
 
+  const getIngredients = (ingredients: any) => {
+    const _ingredients: any = (ingredients.length > 0 && ingredients.filter((i: any) => !i.selected)) || []
+    const texts: any = []
+
+    _ingredients.map((ingredient: any) => {
+      texts.push(`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${t('NO', 'No')} ${ingredient.name} <br/>`)
+    })
+
+    if (_ingredients.length) {
+      return `
+        <div style="font-size: 26px;width:100%">
+          <div style=width:90%;display:flex;justifyContent:center;margin:auto;">
+            <div>
+              ${t('INGREDIENTS', 'Ingredients')}:
+            </div>
+          </div>
+          ${texts.join('')}
+        </div>
+      `
+    }
+    return ''
+  }
+
+  const deliveryDate = (order: any) => {
+    const dateString = order?.delivery_datetime_utc ? order?.delivery_datetime_utc : order?.delivery_datetime
+    const currentDate = new Date();
+    const receivedDate: any = new Date(dateString.replace(/-/g, '/'));
+    const formattedDate = receivedDate <= currentDate
+      ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })})`
+      : parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })
+    return formattedDate
+  }
+
   const theme = useTheme();
   const percentTip =
     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
@@ -97,7 +130,11 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
     const paymethodsList = order?.payment_events?.filter((item: any) => item.event === 'payment').map((paymethod: any) => {
       return paymethod?.wallet_event
         ? walletName[paymethod?.wallet_event?.wallet?.type]?.name
-        : t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+        : paymethod?.paymethod?.gateway && paymethod?.paymethod?.gateway === 'cash' && order?.cash > 0
+          ? `${t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)} (${t('CASH_CHANGE_OF', 'Change of :amount:').replace(':amount:', parsePrice(order?.cash))})`
+          : paymethod?.paymethod?.gateway
+            ? t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+            : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)
     })
     return paymethodsList.join(', ')
   }
@@ -110,17 +147,18 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
           ${orderStatus} </br>
 
-          ${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]
-      }
+          ${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]}
           </br>
-          ${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc
-        ? parseDate(order?.delivery_datetime_utc)
-        : parseDate(order?.delivery_datetime, { utc: false })
-      }
+
+          ${!!order?.delivery_option
+            ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)
+            } </br>`
+            : ''
+          }
+
+          ${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}
           </br>
           ${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: ${handlePaymethodsListString()}
-
-          ${order?.comment ? ('</br>'+ t('ORDER_COMMENT', 'Order Comment') + ':' + order?.comment) : ''}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
@@ -128,8 +166,11 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         </br>
         ${t('EMAIL', 'Email')}: ${order?.customer?.email}
         </br>
-        ${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}
-         </br>
+         ${!!order?.customer?.cellphone
+          ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
+          } </br>`
+          : ''}
+
          ${!!order?.customer?.phone
         ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone
         } </br>`
@@ -148,20 +189,23 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
          </p>
 
         <h1>${t('BUSINESS_DETAILS', 'Business details')}</h1>
-        <p style="font-size: 27px"> 
-        ${order?.business?.name} 
-        </br> 
+        <p style="font-size: 27px">
+        ${order?.business?.name}
+        </br>
         ${order?.business?.email}
-        </br> 
-        ${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}
-        </br> 
+        </br>
+        ${!!order?.business?.cellphone
+          ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone
+          } </br>`
+          : ''
+        }
         ${!!order?.business?.phone
         ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone
         } </br>`
         : ''
-      } 
+      }
 
-        ${t('ADDRESS', 'Address')}: ${order?.business?.address} 
+        ${t('ADDRESS', 'Address')}: ${order?.business?.address}
         </br>
         ${!!order?.business?.address_notes
         ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes
@@ -170,6 +214,8 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
       }
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
+
+        ${order?.comment ? ('</br>'+ t('ORDER_COMMENT', 'Order Comment') + ':' + order?.comment) : ''}
 
         ${order?.products.length &&
       order?.products.map(
@@ -184,6 +230,8 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                   ${parsePrice(product.total ?? getProductPrice(product))}
                   </div>
                 </div>
+
+                ${getIngredients(product?.ingredients)}
 
                 <div style="font-size: 26px;width:100%">
                   <div style="width:90%;display:flex;justifyContent:center;margin:auto;">
@@ -245,9 +293,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         : ''
       }
 
-      ${order?.summary?.delivery_price > 0 ?
+      ${order?.summary?.delivery_price > 0 && order.delivery_type !== 2 ?
         ` <div style="display: flex">
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
             ${t('DELIVERY_FEE', 'Delivery Fee')}
           </div>
 
@@ -259,7 +307,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         </div>
         <div style="display: flex">
 
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
             ${t('DRIVER_TIP', 'Driver tip')}
             ${percentTip ? `(${percentTip}%)` : ''}
           </div>
@@ -272,7 +320,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
         <div style="display: flex">
 
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
             ${t('SERVICE_FEE', 'Service Fee')}
            (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)
           </div>
@@ -285,7 +333,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
         <div style="display: flex">
 
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold"> 
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
             ${t('TOTAL', 'Total')}
           </div>
 
@@ -294,7 +342,36 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
           </div>
 
         </div>
-        
+
+        ${order?.payment_events.length && `
+          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
+            ${t('PAYMENTS', 'Payments')}
+          </div>
+        `}
+
+        ${order?.payment_events.length &&
+          order?.payment_events.map(
+            (event: any, i: number) =>
+              `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
+                    <div style="display:flex;width:100%">
+                      <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+                      ${event?.wallet_event
+                        ? walletName[event?.wallet_event?.wallet?.type]?.name
+                        : event?.paymethod?.gateway && event?.paymethod?.gateway === 'cash' && order?.cash > 0
+                          ? `${t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)} (${t('CASH_CHANGE_OF', 'Change of :amount:').replace(':amount:', parsePrice(order?.cash))})`
+                          : event?.paymethod?.gateway
+                            ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+                            : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}
+                      </div>
+
+                      <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+                        ${(event?.paymethod?.gateway === 'cash' && order?.cash)
+                          ? parsePrice(order?.cash, { currency: order?.currency })
+                          : `-${parsePrice(event?.amount, { currency: order?.currency })}`}
+                      </div>
+                    </div>
+                  </div>`
+        )}
     </div>`;
   };
 
@@ -394,24 +471,22 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
             </OText>
 
             <OText style={{ marginBottom: 5 }}>
-              {`${t('DELIVERY_TYPE', 'Delivery Type')}: ${deliveryStatus[order?.delivery_type]
+              {`${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]
                 }`}
             </OText>
 
+            {order?.delivery_option && (
+              <OText size={13}>
+                <OText size={13} weight='bold'>{`${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: `}</OText>
+                {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
+              </OText>
+            )}
+
             <OText style={{ marginBottom: 5 }}>
-              {`${t('DELIVERY_DATE', 'Delivery Date')}: ${order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })
-                }`}
+              {`${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}`}
             </OText>
 
             <OText style={{ marginBottom: 5 }}>{`${t(`${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${handlePaymethodsListString()}`}</OText>
-
-            {order?.comment && (
-              <OText style={{ marginBottom: 5 }}>
-                {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
-              </OText>
-            )}
 
           </OrderHeader>
 
@@ -444,16 +519,18 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               {`${t('EMAIL', 'Email')}: ${order?.customer?.email}`}
             </OText>
 
-            <OText
-              style={{ marginBottom: 5 }}
-              size={14}
-              numberOfLines={2}
-              adjustsFontSizeToFit
-              ellipsizeMode="tail"
-              color={theme.colors.textGray}>
-              {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
-                }`}
-            </OText>
+            {!!order?.customer?.cellphone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
+                  }`}
+              </OText>
+            )}
 
             {!!order?.customer?.phone && (
               <OText
@@ -584,6 +661,12 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               {t('ORDER_DETAILS', 'Order Details')}
             </OText>
 
+            {order?.comment && (
+              <OText style={{ marginBottom: 5 }}>
+                {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
+              </OText>
+            )}
+
             {order?.products.length &&
               order?.products.map((product: any, i: number) => (
                 <View key={i}>
@@ -651,7 +734,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               </Table>
             )}
 
-            {order?.summary?.delivery_price > 0 && (
+            {order?.summary?.delivery_price > 0 && order.delivery_type !== 2 && (
               <Table>
                 <OText style={{ marginBottom: 5 }}>
                   {t('DELIVERY_FEE', 'Delivery Fee')}
@@ -661,22 +744,24 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               </Table>
             )}
 
-            <Table>
-              <OText style={{ marginBottom: 5 }}>
-                {t('DRIVER_TIP', 'Driver tip')}
-                {order?.summary?.driver_tip > 0 &&
-                  parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                  !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  `(${verifyDecimals(
-                    order?.summary?.driver_tip,
-                    parseNumber,
-                  )}%)`}
-              </OText>
+            {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && order.delivery_type !== 2 && (
+              <Table>
+                <OText style={{ marginBottom: 5 }}>
+                  {t('DRIVER_TIP', 'Driver tip')}
+                  {order?.summary?.driver_tip > 0 &&
+                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                    !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                    `(${verifyDecimals(
+                      order?.summary?.driver_tip,
+                      parseNumber,
+                    )}%)`}
+                </OText>
 
-              <OText style={{ marginBottom: 5 }}>
-                {parsePrice(order?.summary?.driver_tip ?? 0)}
-              </OText>
-            </Table>
+                <OText style={{ marginBottom: 5 }}>
+                  {parsePrice(order?.summary?.driver_tip ?? 0)}
+                </OText>
+              </Table>
+            )}
 
             {order?.summary?.service_fee > 0 && (
               <Table>
@@ -702,6 +787,53 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                 </OText>
               </Table>
             </Total>
+
+            {order?.payment_events?.length > 0 && (
+              <View>
+                <OText size={14} color={theme.colors.textNormal}>{t('PAYMENTS', 'Payments')}</OText>
+                <View
+                  style={{
+                    width: '100%',
+                    marginTop: 5
+                  }}
+                >
+                  {order?.payment_events?.map((event: any) => (
+                    <View
+                      key={event.id}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 10
+                      }}
+                    >
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <OText>
+                          {event?.wallet_event
+                            ? walletName[event?.wallet_event?.wallet?.type]?.name
+                            : event?.paymethod?.gateway
+                              ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+                              : order?.paymethod?.id === event?.paymethod_id
+                                ? t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)
+                                : ''}
+                        </OText>
+                      </View>
+                      <OText>
+                        {(event?.paymethod?.gateway === 'cash' && order?.cash)
+                          ? parsePrice(order?.cash, { currency: order?.currency })
+                          : `-${parsePrice(event?.amount, { currency: order?.currency })}`}
+                      </OText>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
           </OrderBill>
         </OrderContent>
         <View style={{ height: 40 }} />
