@@ -54,7 +54,7 @@ export const usePrinterCommands = () => {
   const deliveryDate = (order: any) => {
     const dateString = order?.delivery_datetime_utc ?? order?.delivery_datetime
     const currentDate = new Date();
-    const receivedDate: any = new Date(dateString);
+    const receivedDate: any = new Date(order?.delivery_datetime);
 
     const formattedDate = receivedDate <= currentDate
       ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(dateString, { utc: !!order?.delivery_datetime_utc })})`
@@ -124,6 +124,29 @@ export const usePrinterCommands = () => {
     return list
   }
 
+  const replaceChars = (string: string) => {
+    const accents: any = {
+      'á': 'a',
+      'é': 'e',
+      'í': 'i',
+      'ó': 'o',
+      'ú': 'u',
+      'Á': 'A',
+      'É': 'E',
+      'Í': 'I',
+      'Ó': 'O',
+      'Ú': 'U',
+      'ü': 'u',
+      'Ü': 'U',
+      'ñ': 'n',
+      'Ñ': 'N',
+      "'": '',
+      "’": '',
+      "`": '',
+    };
+    return string.replace(/[áéíóúÁÉÍÓÚüÜñÑ'’`]/g, (match: any) => accents[match])
+  }
+
   const generateCommands = (order: any, printMode: string = 'append') => {
     let commands: any = [];
 
@@ -183,7 +206,7 @@ export const usePrinterCommands = () => {
         return append === '_separator_'
           ? { [printMode]: `---------------------------------------${endLine}` }
           : {
-            [printMode]: append?.text ?? append,
+            [printMode]: replaceChars(append?.text ?? append),
             ...textProps,
             ...append?.props
           }
