@@ -66,26 +66,27 @@ export const PrinterSettings = (props: any) => {
   })
 
   const printerList = [
-    { model: 'mPOP', emulation: 'StarPRNT', portName1: 'BT:mPOP', type: 1, ip: '' },
-    { model: 'FVP10', emulation: 'StarLine', portName1: 'BT:FVP10', type: 1, ip: '' },
-    { model: 'TSP100', emulation: 'StarGraphic', portName1: 'BT:TSP100', type: 1, ip: '' },
-    { model: 'TSP65011', emulation: 'StarLine', portName1: 'BT:TSP65011', type: 1, ip: '' },
-    { model: 'TSP7001', emulation: 'StarLine', portName1: 'BT:TSP7001', type: 1, ip: '' },
-    { model: 'TSP80011', emulation: 'StarLine', portName1: 'BT:TSP80011', type: 1, ip: '' },
-    { model: 'SP700', emulation: 'StarDotimpact', portName1: 'BT:SP700', type: 1, ip: '' },
-    { model: 'SM-S210i', emulation: 'EscPosMobile', portName1: 'BT:SMS210i', type: 1, ip: '' },
-    { model: 'SM-S220i', emulation: 'EscPosMobile', portName1: 'BT:SMS220i', type: 1, ip: '' },
-    { model: 'SM-S230i', emulation: 'EscosMobile', portName1: 'BT:SMS230i', type: 1, ip: '' },
-    { model: 'SM-T300i/T300', emulation: 'EscPosMobile', portName1: 'BT:SMT300i/T300', type: 1, ip: '' },
-    { model: 'SM-T400i', emulation: 'EscosMobile', portName1: 'BT:SMT400i', type: 1, ip: '' },
-    { model: 'SM-L200', emulation: 'StarPRNT', portName1: 'BT:SML200', type: 1, ip: '' },
-    { model: 'SM-L300', emulation: 'StarPRNT', portName1: 'BT:SML300', type: 1, ip: '' },
-    { model: 'BSC10', emulation: 'EscPos', portName1: 'BT:BSC10', type: 1, ip: '' },
-    { model: 'SM-S210i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS210i', type: 1, ip: '' },
-    { model: 'SM-S220i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS220i', type: 1, ip: '' },
-    { model: 'SM-S230i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS230i', type: 1, ip: '' },
-    { model: 'SM-T300i/T300 StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT300i', type: 1, ip: '' },
-    { model: 'SM-T400i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT400i', type: 1, ip: '' },
+    { model: 'mPOP', emulation: 'StarPRNT', portName1: 'BT:mPOP', type: 1, ip: '', printMode: 'append' },
+    { model: 'FVP10', emulation: 'StarLine', portName1: 'BT:FVP10', type: 1, ip: '', printMode: 'append' },
+    { model: 'TSP100', emulation: 'StarGraphic', portName1: 'BT:TSP100', type: 1, ip: '', printMode: 'appendBitmapText' },
+    { model: 'TSP100IV', emulation: 'StarLine', portName1: 'BT:TSP100iv', type: 1, ip: '', printMode: 'append' },
+    { model: 'TSP65011', emulation: 'StarLine', portName1: 'BT:TSP65011', type: 1, ip: '', printMode: 'append' },
+    { model: 'TSP7001', emulation: 'StarLine', portName1: 'BT:TSP7001', type: 1, ip: '', printMode: 'append' },
+    { model: 'TSP80011', emulation: 'StarLine', portName1: 'BT:TSP80011', type: 1, ip: '', printMode: 'append' },
+    { model: 'SP700', emulation: 'StarDotImpact', portName1: 'BT:SP700', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S210i', emulation: 'EscPosMobile', portName1: 'BT:SMS210i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S220i', emulation: 'EscPosMobile', portName1: 'BT:SMS220i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S230i', emulation: 'EscosMobile', portName1: 'BT:SMS230i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-T300i/T300', emulation: 'EscPosMobile', portName1: 'BT:SMT300i/T300', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-T400i', emulation: 'EscosMobile', portName1: 'BT:SMT400i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-L200', emulation: 'StarPRNT', portName1: 'BT:SML200', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-L300', emulation: 'StarPRNT', portName1: 'BT:SML300', type: 1, ip: '', printMode: 'append' },
+    { model: 'BSC10', emulation: 'EscPos', portName1: 'BT:BSC10', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S210i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS210i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S220i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS220i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-S230i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS230i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-T300i/T300 StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT300i', type: 1, ip: '', printMode: 'append' },
+    { model: 'SM-T400i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT400i', type: 1, ip: '', printMode: 'append' },
   ]
 
   const handleClick = async (item: any, type?: number, ip?: string) => {
@@ -95,9 +96,9 @@ export const PrinterSettings = (props: any) => {
         ...currentPrinter,
         ...item,
         type: type ?? currentPrinter?.type,
-        ip: ip ?? currentPrinter?.ip,
+        ip: ip ?? currentPrinter?.ip ?? '',
         portName: (type ?? currentPrinter?.type) === 1 || !ip
-          ? currentPrinter?.portName1 ?? item.portName1
+          ? item.portName1 ?? currentPrinter?.portName1
           : `TCP:${ip}`
       }
     }
