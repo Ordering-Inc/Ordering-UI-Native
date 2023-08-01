@@ -49,7 +49,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   } = props
   const theme = useTheme();
   const [, t] = useLanguage();
-  const [{ parseDate }] = useUtils();
+  const [{ parseDate, parsePrice }] = useUtils();
   const paymethodsLength = order?.payment_events?.filter((item: any) => item.event === 'payment')?.length
 
   const styles = StyleSheet.create({
@@ -125,9 +125,23 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     const paymethodsList = order?.payment_events?.filter((item: any) => item.event === 'payment').map((paymethod: any) => {
       return paymethod?.wallet_event
         ? walletName[paymethod?.wallet_event?.wallet?.type]?.name
-        : t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+        : paymethod?.paymethod?.gateway && paymethod?.paymethod?.gateway === 'cash' && order?.cash > 0
+          ? `${t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)} (${t('CASH_CHANGE_OF', 'Change of :amount:').replace(':amount:', parsePrice(order?.cash))})`
+          : paymethod?.paymethod?.gateway
+            ? t(paymethod?.paymethod?.gateway?.toUpperCase(), paymethod?.paymethod?.name)
+            : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)
     })
     return paymethodsList.join(', ')
+  }
+
+  const deliveryDate = () => {
+    const dateString = order?.delivery_datetime_utc ? order?.delivery_datetime_utc : order?.delivery_datetime
+    const currentDate = new Date();
+    const receivedDate: any = new Date(dateString.replace(/-/g, '/'));
+    const formattedDate = receivedDate <= currentDate
+      ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })})`
+      : parseDate(receivedDate.toLocaleString(), { utc: !!order?.delivery_datetime_utc })
+    return formattedDate
   }
 
   return (
@@ -192,16 +206,12 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
       <OrderHeader>
         {!props.isCustomView ? (
           <OText size={13} style={{ marginBottom: 5 }}>
-            {order?.delivery_datetime_utc
-              ? parseDate(order?.delivery_datetime_utc)
-              : parseDate(order?.delivery_datetime, { utc: false })}
+            {deliveryDate()}
           </OText>
         ) : (
           <Header style={{ alignItems: 'center' }}>
             <OText size={13} style={{ marginBottom: 5 }}>
-              {order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })}
+              {deliveryDate()}
             </OText>
 
             {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (

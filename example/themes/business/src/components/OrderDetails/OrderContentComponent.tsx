@@ -408,22 +408,12 @@ export const OrderContentComponent = (props: OrderContent) => {
             {t('ON_BEHALF_OF', 'On behalf of')}{': '} {order?.on_behalf_of}
           </OText>
         )}
-        {((order?.delivery_option !== undefined && order?.delivery_type === 1) || !!order?.comment) && (
+        {(order?.delivery_option !== undefined && order?.delivery_type === 1) && (
           <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
               <OText>
                 {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
-            )}
-            {!!order?.comment && (
-              <>
-                <OText weight='500' style={{ marginBottom: 5 }}>
-                  {t('ORDER_COMMENT', 'Order Comment')}
-                </OText>
-                <OText style={{ fontStyle: 'italic', opacity: 0.6, marginBottom: 20 }}>
-                  {order?.comment}
-                </OText>
-              </>
             )}
           </View>
         )}
@@ -439,9 +429,15 @@ export const OrderContentComponent = (props: OrderContent) => {
       </OrderCustomer>
 
       <OrderProducts>
-        <OText style={{ marginBottom: 5 }} size={16} weight="600">
+        <OText style={{ marginBottom: 10 }} size={16} weight="600">
           {t('ORDER_DETAILS', 'Order Details')}
         </OText>
+
+        {!!order?.comment && (
+          <OText>
+            {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
+          </OText>
+        )}
 
         {order?.products?.length > 0 &&
           order?.products.map((product: any, i: number) => (
@@ -561,7 +557,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           ))
         }
         {
-          typeof order?.summary?.delivery_price === 'number' && (
+          typeof order?.summary?.delivery_price === 'number' && order.delivery_type !== 2 && (
             <Table>
               <OText mBottom={4}>
                 {t('DELIVERY_FEE', 'Delivery Fee')}
@@ -588,7 +584,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             </Table>
           ))
         }
-        {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && (
+        {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && order.delivery_type !== 2 && (
           <Table>
             <OText mBottom={4}>
               {t('DRIVER_TIP', 'Driver tip')}
@@ -646,13 +642,12 @@ export const OrderContentComponent = (props: OrderContent) => {
                     <OText>
                       {event?.wallet_event
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
-                        : t(event?.paymethod?.name?.toUpperCase()?.replace(/ /g, '_'), event?.paymethod?.name)}
+                        : event?.paymethod?.gateway
+                          ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+                          : order?.paymethod?.id === event?.paymethod_id
+                            ? t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)
+                            : ''}
                     </OText>
-                    {/* {event?.data?.charge_id && (
-                      <OText>
-                        {`${t('CODE', 'Code')}: ${event?.data?.charge_id}`}
-                      </OText>
-                    )} */}
                   </View>
                   <OText>
                     {(event?.paymethod?.gateway === 'cash' && order?.cash)
