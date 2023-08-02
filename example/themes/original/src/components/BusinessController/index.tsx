@@ -232,7 +232,7 @@ export const BusinessControllerUI = React.memo((props: BusinessControllerParams)
 							</View>
 						)}
 						{!hideBusinessOffer && (
-							getBusinessOffer((business?.offers)) &&
+							!!getBusinessOffer((business?.offers)) &&
 							<OfferBox
 								isClosed={!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1')}
 								isRibbon={business?.ribbon?.enabled && !!business?.ribbon?.text}
@@ -244,7 +244,7 @@ export const BusinessControllerUI = React.memo((props: BusinessControllerParams)
 									numberOfLines={2}
 									ellipsizeMode='tail'
 									lineHeight={13}
-								>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((business?.offers)) || parsePrice(0)}</OText>
+								>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((business?.offers))}</OText>
 							</OfferBox>
 						)}
 						<BusinessState isRibbon={business?.ribbon?.enabled && !!business?.ribbon?.text}>
