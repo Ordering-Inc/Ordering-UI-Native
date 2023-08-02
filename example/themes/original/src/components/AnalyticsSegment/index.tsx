@@ -23,8 +23,7 @@ export const AnalyticsSegment = (props: any) => {
     segmentClient.track('Product List Viewed', {
       business_id: category?.business_id,
       category_id: category?.id,
-      category: category?.name,
-      products: category?.products
+      category: category?.name
     })
   }
 

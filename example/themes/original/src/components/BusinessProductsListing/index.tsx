@@ -385,18 +385,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       if (business.categories) {
         const categoryAll: any = {}
         categoryAll.business_id = business.id
-        categoryAll.category_id = null
-        categoryAll.category = 'All'
-        const productsAll = business?.categories?.reduce(
-          (products, category) => {
-            if (category.products) {
-              return [...products, ...category.products]
-            }
-            return [...products]
-          }
-          , []
-        )
-        categoryAll.products = productsAll
+        categoryAll.id = null
+        categoryAll.name = 'All'
         events.emit('product_list_viewed', categoryAll)
       }
     }
