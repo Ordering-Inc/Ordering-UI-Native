@@ -23,8 +23,7 @@ export const AnalyticsSegment = (props: any) => {
     segmentClient.track('Product List Viewed', {
       business_id: category?.business_id,
       category_id: category?.id,
-      category: category?.name,
-      products: category?.products
+      category: category?.name
     })
   }
 
@@ -62,11 +61,12 @@ export const AnalyticsSegment = (props: any) => {
     })
   }
 
-  const handleProductAdded = (product: any) => {
+  const handleProductAdded = (product: any, result: any) => {
     segmentClient.track('Product Added', {
-      id: product.id,
+      cart_id: result.uuid,
+      product_id: product.id,
       name: product.name,
-      category: product.category_id,
+      category: product.category_id || product?.categoryId,
       price: product.price,
       quantity: product.quantity
     })
@@ -101,7 +101,7 @@ export const AnalyticsSegment = (props: any) => {
 
   const handleOrderPlaced = (order: any) => {
     segmentClient.track('Order Placed', {
-      id: order.id,
+      order_id: order.id,
       affiliation: order.business?.name,
       revenue: order.total,
       tax: order.tax_total,
