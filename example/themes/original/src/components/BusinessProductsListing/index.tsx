@@ -381,6 +381,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         setViewedCategory(_viewedCategory)
         events.emit('product_list_viewed', _viewedCategory)
       }
+    } else {
+      if (business.categories) {
+        const categoryAll: any = {}
+        categoryAll.business_id = business.id
+        categoryAll.category_id = null
+        categoryAll.category = 'All'
+        const productsAll = business?.categories?.reduce(
+          (products, category) => {
+            if (category.products) {
+              return [...products, ...category.products]
+            }
+            return [...products]
+          }
+          , []
+        )
+        categoryAll.products = productsAll
+        events.emit('product_list_viewed', categoryAll)
+      }
     }
   }, [business?.lazy_load_products_recommended, selectedCategoryId, categorySelected?.id, viewedCategory])
 
