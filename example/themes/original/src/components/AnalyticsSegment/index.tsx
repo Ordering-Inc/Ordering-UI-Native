@@ -62,9 +62,10 @@ export const AnalyticsSegment = (props: any) => {
     })
   }
 
-  const handleProductAdded = (product: any) => {
+  const handleProductAdded = (product: any, result: any) => {
     segmentClient.track('Product Added', {
-      id: product.id,
+      cart_id: result.uuid,
+      product_id: product.id,
       name: product.name,
       category: product.category_id,
       price: product.price,
@@ -101,7 +102,7 @@ export const AnalyticsSegment = (props: any) => {
 
   const handleOrderPlaced = (order: any) => {
     segmentClient.track('Order Placed', {
-      id: order.id,
+      order_id: order.id,
       affiliation: order.business?.name,
       revenue: order.total,
       tax: order.tax_total,
