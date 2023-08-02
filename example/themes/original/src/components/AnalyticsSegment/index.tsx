@@ -66,7 +66,7 @@ export const AnalyticsSegment = (props: any) => {
       cart_id: result.uuid,
       product_id: product.id,
       name: product.name,
-      category: product.category_id,
+      category: product.category_id || product?.categoryId,
       price: product.price,
       quantity: product.quantity
     })
