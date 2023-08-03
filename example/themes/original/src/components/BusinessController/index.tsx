@@ -309,7 +309,7 @@ export const BusinessControllerUI = React.memo((props: BusinessControllerParams)
 								</ReviewAndFavorite>
 							)}
 						</View>
-						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 5, fontFamily: '' }} numberOfLines={1}>
+						<OText size={textSize} style={{ lineHeight: 15, marginBottom: 3, fontFamily: '' }} numberOfLines={1}>
 							{business?.address}
 						</OText>
 						<Metadata>
