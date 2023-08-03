@@ -109,21 +109,16 @@ const SoundPlayerComponent = (props: any) => {
 }
 
 const NewOrderNotificationUI = (props: any) => {
-  const { isBusinessApp, evtList } = props
+  const { isBusinessApp, evtList, orderStatus } = props
   const [, t] = useLanguage()
   const [events] = useEvent()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
-  const [{ configs }] = useConfig()
   const [, { showToast }] = useToast()
   const { getCurrentLocation } = useLocation()
   const [currentEvent, setCurrentEvent] = useState<any>(null)
 
-  const orderStatus = !!isBusinessApp
-    ? configs?.notification_business_states?.value.split('|').map((value: any) => Number(value)) || []
-    : configs?.notification_driver_states?.value.split('|').map((value: any) => Number(value)) || []
-
-  const handleEventNotification = async (evtType: number, value: any) => {
+  const handleEventNotification = async (evtType: number, value: any, orderStatus?: any) => {
     if (value?.driver) {
       try {
         const location = await getCurrentLocation()
@@ -165,11 +160,11 @@ const NewOrderNotificationUI = (props: any) => {
   }
 
   useEffect(() => {
-    events.on('message_added_notification', (o: any) => handleEventNotification(1, o))
-    events.on('order_added_notification', (o: any) => handleEventNotification(2, o))
-    events.on('order_updated_notification', (o: any) => handleEventNotification(3, o))
-    events.on('request_register_notification', (o: any) => handleEventNotification(2, o))
-    events.on('request_update_notification', (o: any) => handleEventNotification(3, o))
+    events.on('message_added_notification', (o: any) => handleEventNotification(1, o, orderStatus))
+    events.on('order_added_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+    events.on('order_updated_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+    events.on('request_register_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+    events.on('request_update_notification', (o: any) => handleEventNotification(3, o, orderStatus))
 
     return () => {
       events.off('message_added_notification', (o: any) => handleEventNotification(1, o))
@@ -178,7 +173,7 @@ const NewOrderNotificationUI = (props: any) => {
       events.off('request_register_notification', (o: any) => handleEventNotification(2, o))
       events.off('request_update_notification', (o: any) => handleEventNotification(3, o))
     }
-  }, [])
+  }, [orderStatus])
 
   useEffect(() => {
     return () => setCurrentEvent(null)
@@ -186,13 +181,13 @@ const NewOrderNotificationUI = (props: any) => {
 
   return (
     <>
-      {!!currentEvent ? (
+      {!!currentEvent && (
         <SoundPlayerComponent
           evtList={evtList}
           currentEvent={currentEvent}
           handleCloseEvents={() => setCurrentEvent(null)}
         />
-      ) : null}
+      )}
     </>
   )
 };
