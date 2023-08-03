@@ -133,7 +133,7 @@ const OrderProgressUI = (props: any) => {
               <View style={styles.logoWrapper}>
                 <FastImage
                   style={{ width: 50, height: 50 }}
-                  source={orderList?.orders.length === 1 && lastOrder?.business?.logo.includes('http') ? {
+                  source={orderList?.orders.length === 1 && lastOrder?.business?.logo?.includes?.('http') ? {
                     uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
                     priority: FastImage.priority.normal,
                   } : theme.images.logos.logotype}
