@@ -380,17 +380,19 @@ export const UserFormDetailsUI = (props: any) => {
 									),
 							)}
 							{showInputBirthday && (
-								<WrapperBirthdate>
-									<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-										{t('BIRTHDATE', 'Birthdate')}
-									</OText>
-									<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
-										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ marginTop: 6, marginBottom: -15 }}>
-											{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
+								<>
+									<WrapperBirthdate>
+										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+											{t('BIRTHDATE', 'Birthdate')}
 										</OText>
-									</TouchableOpacity>
+										<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
+											<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ marginTop: 6 }}>
+												{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
+											</OText>
+										</TouchableOpacity>
+									</WrapperBirthdate>
 									<DatePickerUI open={showDatePicker} birthdate={birthdate} onConfirm={_handleChangeDate} onCancel={() => setShowDatePicker(false)} />
-								</WrapperBirthdate>
+								</>
 							)}
 							{!!showInputPhoneNumber && ((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
