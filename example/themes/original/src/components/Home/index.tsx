@@ -62,6 +62,7 @@ export const Home = (props: any) => {
 					bgColor={theme.colors.primaryContrast}
 					borderColor={theme.colors.primaryContrast}
 					style={styles.buttons}
+					textStyle={{ color: 'black' }}
 					onClick={() => onNavigationRedirect('Signup')}
 					imgRightSrc={null}
 				/>
