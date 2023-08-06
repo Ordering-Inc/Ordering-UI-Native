@@ -371,6 +371,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 		setToggleMap(!toggleMap);
 	};
 
+	const showFieldWithTheme = (name) => {
+		return !theme?.address?.components?.[name]?.hidden
+	}
+
 	useEffect(() => {
 		if (
 			orderState.loading &&
@@ -672,7 +676,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 							)}
 
 							<View style={{ flexDirection: 'row', flexBasis: '50%' }}>
-								{showField && showField('internal_number') && (
+								{((isRequiredField && isRequiredField('internal_number')) || showFieldWithTheme('internal_number')) && (
 									<Controller
 										control={control}
 										name="internal_number"
@@ -708,7 +712,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												isFocusHighlight
 												style={{
 													...styles.inputsStyle,
-													marginRight: showField('internal_number') && showField('zipcode') ? 24 : 0
+													marginRight: showField?.('internal_number') && showField?.('zipcode') ? 24 : 0
 												}}
 												forwardRef={internalNumberRef}
 												returnKeyType="next"
@@ -719,7 +723,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									/>
 								)}
 
-								{showField && showField('zipcode') && (
+								{((isRequiredField && isRequiredField('zipcode')) || showFieldWithTheme('zipcode')) && (
 									<Controller
 										control={control}
 										name="zipcode"
@@ -764,7 +768,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								)}
 							</View>
 
-							{showField && showField('address_notes') && (
+							{((isRequiredField && isRequiredField('address_notes')) || showFieldWithTheme('address_notes')) && (
 								<Controller
 									control={control}
 									name="address_notes"
