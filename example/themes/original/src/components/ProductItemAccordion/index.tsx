@@ -39,6 +39,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	} = props
 
 	const theme = useTheme();
+	const hideProductImage = isFromCheckout
+		? theme?.checkout?.components?.cart?.components?.product?.components?.image?.hidden
+		: theme?.confirmation?.components?.cart?.components?.products?.components?.photo?.hidden
+
+	const hideProductCommentHide = isFromCheckout && theme?.checkout?.components?.cart?.components?.product?.components?.comments?.hidden
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
@@ -157,7 +162,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
 						<ContentInfo>
-							{(product?.images || theme?.images?.dummies?.product) && (
+							{(product?.images || theme?.images?.dummies?.product) && !hideProductImage && (
 								<ProductImage>
 									{isFromCheckout ? (
 										product?.images ? (
@@ -312,7 +317,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									))}
 								</ProductOptionsList>
 							)}
-							{!!product.comment && (
+							{!!product.comment && !hideProductCommentHide && (
 								<ProductComment>
 									<OText size={10} color={theme.colors.textSecondary}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
 									<OText size={10} color={theme.colors.textThird}>{product.comment}</OText>
