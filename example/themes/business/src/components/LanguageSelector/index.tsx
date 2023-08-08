@@ -25,8 +25,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       value: language?.code,
       label: language?.name,
       inputLabel: language?.code.toUpperCase(),
-      countryCode: langCountries.find(item => item.value == language?.code)
-        ?.countryCode,
+      countryCode: langCountries.find(item => item.value == language?.code)?.countryCode,
     };
   });
 
@@ -49,6 +48,9 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       fontSize: 16,
     },
   });
+
+  console.log('_languages', _languages);
+
 
   return (
     <Container style={{ backgroundColor: theme.colors.inputChat }}>
