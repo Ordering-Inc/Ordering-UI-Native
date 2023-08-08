@@ -47,6 +47,7 @@ export const OrderItem = React.memo((props: any) => {
     timer: configState?.configs?.order_deadlines_enabled?.value === '1',
     slaBar: configState?.configs?.order_deadlines_enabled?.value === '1',
   })
+  const showExternalId = configState?.configs?.change_order_id?.value === '1'
 
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
   const platformIOS = Platform as PlatformIOSStatic
@@ -76,7 +77,7 @@ export const OrderItem = React.memo((props: any) => {
       marginLeft: 3,
     },
     title: {
-      marginBottom: 6,
+      marginBottom: showExternalId ? 0 : 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
@@ -84,7 +85,7 @@ export const OrderItem = React.memo((props: any) => {
       color: theme.colors.textGray,
     },
     date: {
-      marginBottom: 6,
+      marginBottom: showExternalId ? 0 : 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -179,17 +180,27 @@ export const OrderItem = React.memo((props: any) => {
               />
             </NotificationIcon>
           )}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View style={{ flexDirection: `${showExternalId ? 'column' : 'row'}`, flexWrap: 'wrap' }}>
+            {!order?.order_group_id && showExternalId && !order?.order_group && (
+              <OText
+                style={styles.date}
+                color={theme.colors.unselectText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {order?.external_id ?? t('NO_EXTERNAL_ID', 'No external Id ') + t('NO', 'Order No.') + order?.id}
+              </OText>
+            )}
             <OText
               style={styles.date}
               color={theme.colors.unselectText}
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              {(!!order?.order_group_id && order?.order_group && isLogisticOrder
+              {(!showExternalId && ((!!order?.order_group_id && order?.order_group && isLogisticOrder
                 ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
-                : (t('NO', 'Order No.') + order.id)
-              ) + ' · '}
+                : (t('NO', 'Order No.') + order?.id)
+              ) + ' · '))}
               {order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}
