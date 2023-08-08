@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -47,25 +47,34 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
-			width: 34,
+			width: 45,
 			textAlign: 'center',
 			overflow: 'visible',
 			fontSize: 12,
-			height: 20,
-			padding: 0,
-			color: theme.colors.textNormal
+			height: 30,
+			color: theme.colors.textNormal,
+			backgroundColor: theme.colors.backgroundGray100,
+			paddingVertical: 8,
+			paddingRight: 10,
+			paddingLeft: 0,
+			borderRadius: 7.6,
 		},
 		inputIOS: {
-			width: 34,
+			width: 45,
 			textAlign: 'center',
 			overflow: 'visible',
 			fontSize: 12,
+			backgroundColor: theme.colors.backgroundGray100,
+			paddingVertical: 8,
+			paddingRight: 15,
+			paddingLeft: 0,
+			borderRadius: 7.6,
 		},
 		icon: {
 			position: 'absolute',
 			zIndex: 1,
-			top: -4,
-			end: -4,
+			top: 0,
+			end: 8,
 		},
 		placeholder: {
 			color: theme.colors.secundaryContrast
@@ -79,9 +88,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const [isActive, setActiveState] = useState(false)
 	const [isServiceOpen, setIsServiceOpen] = useState(false)
-	const [productQuantityState, setProductQuantityState] = useState(product.quantity.toString())
-	// const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
-	// const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
+	const [productQuantityState, setProductQuantityState] = useState<any>(product.quantity.toString())
 
 	const productInfo = () => {
 		if (isCartProduct) {
@@ -109,20 +116,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		setIsServiceOpen(true)
 	}
 
-	/* const toggleAccordion = () => {
-		if ((!product?.valid_menu && isCartProduct)) return
-		if (isActive) {
-			Animated.timing(setHeight.height, {
-			 toValue: 100,
-			 duration: 500,
-			 easing: Easing.linear,
-			 useNativeDriver: false,
-			}).start()
-		} else {
-			setHeightState({height: new Animated.Value(0)})
-		}
-	 }*/
-
 	const handleChangeQuantity = (value: string) => {
 		if (!orderState.loading) {
 			setProductQuantityState(value)
@@ -139,10 +132,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		return `${quantity} x ${name} ${pos} +${price}`
 	}
 
-	/*useEffect(() => {
-		toggleAccordion()
-	}, [isActive])*/
-
 	const productOptions = getProductMax && [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
 		return {
 			label: opt === 0 ? t('REMOVE', 'Remove') : opt.toString(),
@@ -150,15 +139,23 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		}
 	})
 
+	useEffect(() => {
+		if (product.quantity.toString() === productQuantityState || productQuantityState) {
+			setProductQuantityState(null)
+		}
+	}, [product.quantity])
+
 	return (
 		<>
 			<AccordionSection>
 				<Accordion
-					isValid={product?.valid ?? true}
-					onPress={() => (!product?.valid_menu && isCartProduct)
-						? {}
-						: setActiveState(!isActive)}
 					activeOpacity={1}
+					isValid={product?.valid ?? true}
+					onPress={
+						(!product?.valid_menu && isCartProduct) ||
+						!(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || !!product.comment)
+						? null : () => setActiveState(!isActive)
+					}
 				>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
 						<ContentInfo>
@@ -215,16 +212,20 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 											<RNPickerSelect
 												items={productOptions}
 												onValueChange={handleChangeQuantity}
-												value={productQuantityState}
+												value={productQuantityState ?? product.quantity.toString()}
 												style={pickerStyle}
 												useNativeAndroidPickerStyle={false}
 												placeholder={{}}
-												touchableWrapperProps={{
-													style: {
-														width: 40,
-													}
-												}}
-												Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.textNormal} width={8} /></View>}
+												touchableWrapperProps={{ style: { width: 45 } }}
+												Icon={() => (
+													<View style={pickerStyle.icon}>
+														<OIcon
+															src={theme.images.general.arrow_down}
+															color={theme.colors.textNormal}
+															width={8}
+														/>
+													</View>
+												)}
 												disabled={orderState.loading}
 											/>
 										</ProductInfo>
