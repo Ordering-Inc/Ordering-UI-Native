@@ -17,9 +17,6 @@ export const Accordion = styled.TouchableOpacity`
 
 export const ProductInfo = styled.View`
 	margin-horizontal: 7px;
-	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
-	padding: 4px 12px 4px 0px;
-	border-radius: 7.6px;
 `
 
 export const ProductQuantity = styled.View`
