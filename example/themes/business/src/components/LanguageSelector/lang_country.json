@@ -6,18 +6,6 @@
     "countryCode": "US"
   },
   {
-    "inputLabel": "DE",
-    "label": "German",
-    "value": "de",
-    "countryCode": "DE"
-  },
-  {
-    "inputLabel": "ES",
-    "label": "Spanish",
-    "value": "es",
-    "countryCode": "ES"
-  },
-  {
     "inputLabel": "MX",
     "label": "Spanish",
     "value": "es-419-1",
@@ -30,22 +18,70 @@
     "countryCode": "GT"
   },
   {
-    "inputLabel": "DA",
-    "label": "Danish",
-    "value": "da",
-    "countryCode": "DK"
+    "inputLabel": "AF",
+    "label": "Afghanistan",
+    "value": "af",
+    "countryCode": "AF"
   },
   {
-    "inputLabel": "NL",
-    "label": "Dutch",
-    "value": "nl",
-    "countryCode": "NL"
+    "inputLabel": "AL",
+    "label": "Albania",
+    "value": "sq",
+    "countryCode": "AL"
   },
   {
-    "inputLabel": "PT",
-    "label": "Portuguese",
-    "value": "pt",
-    "countryCode": "PT"
+    "inputLabel": "AD",
+    "label": "Andorra",
+    "value": "ca",
+    "countryCode": "AD"
+  },
+  {
+    "inputLabel": "AM",
+    "label": "Armenia",
+    "value": "hy",
+    "countryCode": "AM"
+  },
+  {
+    "inputLabel": "AZ",
+    "label": "Azerbaijan",
+    "value": "az",
+    "countryCode": "AZ"
+  },
+  {
+    "inputLabel": "BD",
+    "label": "Bangladesh",
+    "value": "bn",
+    "countryCode": "BD"
+  },
+  {
+    "inputLabel": "BY",
+    "label": "Belarus",
+    "value": "be",
+    "countryCode": "BY"
+  },
+  {
+    "inputLabel": "BT",
+    "label": "Bhutan",
+    "value": "dz",
+    "countryCode": "BT"
+  },
+  {
+    "inputLabel": "BA",
+    "label": "Bosnia and Herzegovina",
+    "value": "bs",
+    "countryCode": "BA"
+  },
+  {
+    "inputLabel": "BG",
+    "label": "Bulgaria",
+    "value": "bg",
+    "countryCode": "BG"
+  },
+  {
+    "inputLabel": "BI",
+    "label": "Burundi",
+    "value": "rn",
+    "countryCode": "BI"
   },
   {
     "inputLabel": "CA",
@@ -54,40 +90,172 @@
     "countryCode": "ES"
   },
   {
-    "inputLabel": "FR",
-    "label": "French",
-    "value": "fr",
-    "countryCode": "FR"
-  },
-  {
-    "inputLabel": "TR",
-    "label": "Turkish",
-    "value": "tr",
-    "countryCode": "TR"
-  },
-  {
-    "inputLabel": "KM",
-    "label": "Cambodian",
+    "inputLabel": "KH",
+    "label": "Cambodia",
     "value": "km",
     "countryCode": "KH"
   },
   {
-    "inputLabel": "ZH-CN",
-    "label": "Chinese Simplified",
-    "value": "zh-CN",
+    "inputLabel": "CN",
+    "label": "China",
+    "value": "zh",
     "countryCode": "CN"
   },
   {
-    "inputLabel": "HI",
-    "label": "Hindi",
+    "inputLabel": "HR",
+    "label": "Croatia",
+    "value": "hr",
+    "countryCode": "HR"
+  },
+  {
+    "inputLabel": "CZ",
+    "label": "Czechia",
+    "value": "cs",
+    "countryCode": "CZ"
+  },
+  {
+    "inputLabel": "DK",
+    "label": "Denmark",
+    "value": "da",
+    "countryCode": "DK"
+  },
+  {
+    "inputLabel": "DJ",
+    "label": "Djibouti",
+    "value": "aa",
+    "countryCode": "DJ"
+  },
+  {
+    "inputLabel": "EE",
+    "label": "Estonia",
+    "value": "et",
+    "countryCode": "EE"
+  },
+  {
+    "inputLabel": "SZ",
+    "label": "Eswatini",
+    "value": "ss",
+    "countryCode": "SZ"
+  },
+  {
+    "inputLabel": "ET",
+    "label": "Ethiopia",
+    "value": "am",
+    "countryCode": "ET"
+  },
+  {
+    "inputLabel": "FO",
+    "label": "Faroe Islands",
+    "value": "fo",
+    "countryCode": "FO"
+  },
+  {
+    "inputLabel": "FJ",
+    "label": "Fiji",
+    "value": "fj",
+    "countryCode": "FJ"
+  },
+  {
+    "inputLabel": "FI",
+    "label": "Finland",
+    "value": "fi",
+    "countryCode": "FI"
+  },
+  {
+    "inputLabel": "FR",
+    "label": "France",
+    "value": "fr",
+    "countryCode": "FR"
+  },
+  {
+    "inputLabel": "GE",
+    "label": "Georgia",
+    "value": "ka",
+    "countryCode": "GE"
+  },
+  {
+    "inputLabel": "DE",
+    "label": "Germany",
+    "value": "de",
+    "countryCode": "DE"
+  },
+  {
+    "inputLabel": "GH",
+    "label": "Ghana",
+    "value": "ak",
+    "countryCode": "GH"
+  },
+  {
+    "inputLabel": "GR",
+    "label": "Greece",
+    "value": "el",
+    "countryCode": "GR"
+  },
+  {
+    "inputLabel": "GL",
+    "label": "Greenland",
+    "value": "kl",
+    "countryCode": "GL"
+  },
+  {
+    "inputLabel": "HT",
+    "label": "Haiti",
+    "value": "ht",
+    "countryCode": "HT"
+  },
+  {
+    "inputLabel": "HU",
+    "label": "Hungary",
+    "value": "hu",
+    "countryCode": "HU"
+  },
+  {
+    "inputLabel": "IS",
+    "label": "Iceland",
+    "value": "is",
+    "countryCode": "IS"
+  },
+  {
+    "inputLabel": "IN",
+    "label": "India",
     "value": "hi",
     "countryCode": "IN"
   },
   {
     "inputLabel": "ID",
-    "label": "Indonesian",
+    "label": "Indonesia",
     "value": "id",
     "countryCode": "ID"
+  },
+  {
+    "inputLabel": "IR",
+    "label": "Iran",
+    "value": "fa",
+    "countryCode": "IR"
+  },
+  {
+    "inputLabel": "IE",
+    "label": "Ireland",
+    "value": "ga",
+    "countryCode": "IE"
+  },
+  {
+    "inputLabel": "IL",
+    "label": "Israel",
+    "value": "he",
+    "countryCode": "IL"
+  },
+  {
+    "inputLabel": "IT",
+    "label": "Italy",
+    "value": "it",
+    "countryCode": "IT"
+  },
+  {
+    "inputLabel": "JP",
+    "label": "Japan",
+    "value": "ja",
+    "countryCode": "JP"
   },
   {
     "inputLabel": "KN",
@@ -96,10 +264,221 @@
     "countryCode": "IN"
   },
   {
-    "inputLabel": "MS",
-    "label": "Malay",
+    "inputLabel": "KZ",
+    "label": "Kazakhstan",
+    "value": "kk",
+    "countryCode": "KZ"
+  },
+  {
+    "inputLabel": "KG",
+    "label": "Kyrgyzstan",
+    "value": "ky",
+    "countryCode": "KG"
+  },
+  {
+    "inputLabel": "LA",
+    "label": "Laos",
+    "value": "lo",
+    "countryCode": "LA"
+  },
+  {
+    "inputLabel": "LV",
+    "label": "Latvia",
+    "value": "lv",
+    "countryCode": "LV"
+  },
+  {
+    "inputLabel": "LT",
+    "label": "Lithuania",
+    "value": "lt",
+    "countryCode": "LT"
+  },
+  {
+    "inputLabel": "LU",
+    "label": "Luxembourg",
+    "value": "lb",
+    "countryCode": "LU"
+  },
+  {
+    "inputLabel": "MK",
+    "label": "North Macedonia",
+    "value": "mk",
+    "countryCode": "MK"
+  },
+  {
+    "inputLabel": "MG",
+    "label": "Madagascar",
+    "value": "mg",
+    "countryCode": "MG"
+  },
+  {
+    "inputLabel": "MW",
+    "label": "Malawi",
+    "value": "ny",
+    "countryCode": "MW"
+  },
+  {
+    "inputLabel": "MY",
+    "label": "Malaysia",
     "value": "ms",
     "countryCode": "MY"
+  },
+  {
+    "inputLabel": "MV",
+    "label": "Maldives",
+    "value": "dv",
+    "countryCode": "MV"
+  },
+  {
+    "inputLabel": "ML",
+    "label": "Mali",
+    "value": "bm",
+    "countryCode": "ML"
+  },
+  {
+    "inputLabel": "MT",
+    "label": "Malta",
+    "value": "mt",
+    "countryCode": "MT"
+  },
+  {
+    "inputLabel": "MH",
+    "label": "Marshall Islands",
+    "value": "mh",
+    "countryCode": "MH"
+  },
+  {
+    "inputLabel": "MN",
+    "label": "Mongolia",
+    "value": "mn",
+    "countryCode": "MN"
+  },
+  {
+    "inputLabel": "NR",
+    "label": "Nauru",
+    "value": "na",
+    "countryCode": "NR"
+  },
+  {
+    "inputLabel": "NP",
+    "label": "Nepal",
+    "value": "ne",
+    "countryCode": "NP"
+  },
+  {
+    "inputLabel": "NL",
+    "label": "Netherlands",
+    "value": "nl",
+    "countryCode": "NL"
+  },
+
+  {
+    "inputLabel": "NU",
+    "label": "Niue",
+    "value": "ni",
+    "countryCode": "NU"
+  },
+  {
+    "inputLabel": "NO",
+    "label": "Norway",
+    "value": "no",
+    "countryCode": "NO"
+  },
+  {
+    "inputLabel": "PK",
+    "label": "Pakistan",
+    "value": "ur",
+    "countryCode": "PK"
+  },
+  {
+    "inputLabel": "PW",
+    "label": "Palau",
+    "value": "pau",
+    "countryCode": "PW"
+  },
+  {
+    "inputLabel": "PY",
+    "label": "Paraguay",
+    "value": "gn",
+    "countryCode": "PY"
+  },
+  {
+    "inputLabel": "PH",
+    "label": "Philippines",
+    "value": "tl",
+    "countryCode": "PH"
+  },
+  {
+    "inputLabel": "PL",
+    "label": "Poland",
+    "value": "pl",
+    "countryCode": "PL"
+  },
+  {
+    "inputLabel": "PT",
+    "label": "Portugal",
+    "value": "pt",
+    "countryCode": "PT"
+  },
+  {
+    "inputLabel": "RO",
+    "label": "Romania",
+    "value": "ro",
+    "countryCode": "RO"
+  },
+  {
+    "inputLabel": "RU",
+    "label": "Russia",
+    "value": "ru",
+    "countryCode": "RU"
+  },
+  {
+    "inputLabel": "RW",
+    "label": "Rwanda",
+    "value": "rw",
+    "countryCode": "RW"
+  },
+  {
+    "inputLabel": "WS",
+    "label": "Samoa",
+    "value": "sm",
+    "countryCode": "WS"
+  },
+  {
+    "inputLabel": "RS",
+    "label": "Serbia",
+    "value": "sr",
+    "countryCode": "RS"
+  },
+  {
+    "inputLabel": "SA",
+    "label": "Saudi Arabia",
+    "value": "ar",
+    "countryCode": "SA"
+  },
+  {
+    "inputLabel": "SC",
+    "label": "Seychelles",
+    "value": "crs",
+    "countryCode": "SC"
+  },
+  {
+    "inputLabel": "SK",
+    "label": "Slovakia",
+    "value": "sk",
+    "countryCode": "SK"
+  },
+  {
+    "inputLabel": "SI",
+    "label": "Slovenia",
+    "value": "sl",
+    "countryCode": "SI"
+  },
+  {
+    "inputLabel": "SO",
+    "label": "Somalia",
+    "value": "so",
+    "countryCode": "SO"
   },
   {
     "inputLabel": "TA",
@@ -108,45 +487,111 @@
     "countryCode": "IN"
   },
   {
-    "inputLabel": "AR",
-    "label": "Arabic",
-    "value": "ar",
-    "countryCode": "EG"
+    "inputLabel": "ZA",
+    "label": "South Africa",
+    "value": "zu",
+    "countryCode": "ZA"
   },
   {
-    "inputLabel": "RU",
-    "label": "Russian",
-    "value": "ru",
-    "countryCode": "RU"
+    "inputLabel": "KR",
+    "label": "South Korea",
+    "value": "ko",
+    "countryCode": "KR"
   },
   {
-    "inputLabel": "JA",
-    "label": "Japanese",
-    "value": "ja",
-    "countryCode": "JP"
+    "inputLabel": "ES",
+    "label": "Spain",
+    "value": "es",
+    "countryCode": "ES"
   },
   {
-    "inputLabel": "BN",
-    "label": "Bengali",
-    "value": "bn",
-    "countryCode": "BD"
+    "inputLabel": "LK",
+    "label": "Sri Lanka",
+    "value": "si",
+    "countryCode": "LK"
   },
   {
-    "inputLabel": "IT",
-    "label": "Italian",
-    "value": "it",
-    "countryCode": "IT"
+    "inputLabel": "SE",
+    "label": "Sweden",
+    "value": "sv",
+    "countryCode": "SE"
   },
   {
-    "inputLabel": "EL",
-    "label": "Greek",
-    "value": "el",
-    "countryCode": "GR"
+    "inputLabel": "TJ",
+    "label": "Tajikistan",
+    "value": "tg",
+    "countryCode": "TJ"
   },
   {
-    "inputLabel": "BG",
-    "label": "Bulgarian Translation",
-    "value": "bg",
-    "countryCode": "BG"
+    "inputLabel": "TZ",
+    "label": "Tanzania",
+    "value": "sw",
+    "countryCode": "TZ"
+  },
+  {
+    "inputLabel": "TH",
+    "label": "Thailand",
+    "value": "th",
+    "countryCode": "TH"
+  },
+  {
+    "inputLabel": "TK",
+    "label": "Tokelau",
+    "value": "tkl",
+    "countryCode": "TK"
+  },
+  {
+    "inputLabel": "TO",
+    "label": "Tonga",
+    "value": "to",
+    "countryCode": "TO"
+  },
+  {
+    "inputLabel": "TR",
+    "label": "Turkey",
+    "value": "tr",
+    "countryCode": "TR"
+  },
+  {
+    "inputLabel": "TM",
+    "label": "Turkmenistan",
+    "value": "tk",
+    "countryCode": "TM"
+  },
+  {
+    "inputLabel": "UA",
+    "label": "Ukraine",
+    "value": "uk",
+    "countryCode": "UA"
+  },
+  {
+    "inputLabel": "UZ",
+    "label": "Uzbekistan",
+    "value": "uz",
+    "countryCode": "UZ"
+  },
+  {
+    "inputLabel": "VU",
+    "label": "Vanuatu",
+    "value": "bi",
+    "countryCode": "VU"
+  },
+  {
+    "inputLabel": "VN",
+    "label": "Vietnam",
+    "value": "vi",
+    "countryCode": "VN"
+  },
+  {
+    "inputLabel": "ZW",
+    "label": "Zimbabwe",
+    "value": "sn",
+    "countryCode": "ZW"
+  },
+  {
+    "inputLabel": "ZH-CN",
+    "label": "Chinese Simplified",
+    "value": "zh-CN",
+    "countryCode": "CN"
   }
 ]
