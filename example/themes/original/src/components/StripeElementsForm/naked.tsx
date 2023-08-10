@@ -13,6 +13,7 @@ export const StripeElementsForm = (props: any) => {
   const [ordering] = useApi();
   const [{ token }] = useSession();
   const [state, setState] = useState({ loading: false, loadingAdd: false, error: null, requirements: null });
+  const [publicKeyState, setPublicKeyState] = useState({ key: props.publicKey, loading: true, error: null })
 
   const getRequirements = async () => {
     try {
@@ -85,6 +86,51 @@ export const StripeElementsForm = (props: any) => {
     }
   }
 
+  /**
+   * Method to get stripe credentials from API
+   */
+  const getCredentials = async () => {
+    try {
+      setPublicKeyState({
+        ...publicKeyState,
+        loading: true
+      })
+      const { content: { result, error } } = await ordering.setAccessToken(token).paymentCards().getCredentials()
+      if (!error) {
+        setPublicKeyState({
+          loading: false,
+          key: result.publishable,
+          error: null
+        })
+      } else {
+        setPublicKeyState({
+          ...publicKeyState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (error) {
+      setPublicKeyState({
+        ...publicKeyState,
+        loading: false,
+        error: error.message
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (!token) return
+    if (props.publicKey) {
+      setPublicKeyState({
+        loading: false,
+        key: props.publicKey,
+        error: null
+      })
+    } else {
+      getCredentials()
+    }
+  }, [token, props.publicKey])
+
   useEffect(() => {
     if (!token || state.requirements) return
     toSave && getRequirements()
@@ -96,6 +142,7 @@ export const StripeElementsForm = (props: any) => {
       values={state}
       requirements={state.requirements}
       stripeTokenHandler={stripeTokenHandler}
+      publicKeyState={publicKeyState}
     />
   )
 }
