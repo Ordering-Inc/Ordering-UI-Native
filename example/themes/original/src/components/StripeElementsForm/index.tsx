@@ -9,7 +9,7 @@ import {
 } from '@stripe/stripe-react-native';
 import { useTheme } from 'styled-components/native';
 import { ErrorMessage } from './styles';
-
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { StripeElementsForm as StripeFormController } from './naked';
 import { OButton, OText } from '../shared';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +17,7 @@ import { StripeMethodForm } from '../../../../../src/components/StripeMethodForm
 
 const StripeElementsFormUI = (props: any) => {
 	const {
-		publicKey,
+		publicKeyState,
 		handleSource,
 		values,
 		businessId,
@@ -55,7 +55,7 @@ const StripeElementsFormUI = (props: any) => {
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 	const zipCodeEnabled = validationFields?.fields?.card?.zipcode?.enabled
 	const zipCodeRequired = validationFields?.fields?.card?.zipcode?.required
-	const isToSave = methodsPay?.includes(paymethod) ? publicKey : publicKeyAddCard
+	const isToSave = methodsPay?.includes(paymethod) ? publicKeyState?.key : (publicKeyAddCard || publicKeyState?.key)
 	const styles = StyleSheet.create({
 		container: {
 			width: '100%',
@@ -201,70 +201,78 @@ const StripeElementsFormUI = (props: any) => {
 
 	return (
 		<View style={{ ...styles.container, height: methodsPay?.includes(paymethod) ? 'auto' : height - top - bottom - 60 - (isKeyboardShow ? 250 : 0) }}>
-			{publicKey ? (
-				<View style={{ flex: 1 }}>
-					<StripeProvider
-						publishableKey={isToSave}
-						merchantIdentifier={merchantId}
-						urlScheme={`${urlScheme}://checkout/${cart?.uuid}`}
-					>
-						{methodsPay?.includes(paymethod) ? (
-							<StripeMethodForm
-								handleSource={handleSource}
-								onCancel={onCancel}
-								cart={cart}
-								cartTotal={cartTotal}
-								setErrors={setErrors}
-								paymethod={paymethod}
-								devMode={publicKey?.includes('test')}
-								setMethodPaySupported={setMethodPaySupported}
-								placeByMethodPay={placeByMethodPay}
-								methodPaySupported={methodPaySupported}
-								setPlaceByMethodPay={setPlaceByMethodPay}
-								androidAppId={androidAppId}
-							/>
-						) : (
-							<CardField
-								postalCodeEnabled={zipCodeEnabled}
-								cardStyle={{
-									backgroundColor: '#FFFFFF',
-									textColor: '#000000',
-									borderWidth: 1,
-									borderRadius: 8,
-									borderColor: theme.colors.border
-								}}
-								style={{
-									width: '100%',
-									height: 50,
-									marginVertical: 30,
-									zIndex: 9999,
-								}}
-								onCardChange={(cardDetails: any) => setCard(cardDetails)}
-							/>
-						)}
-					</StripeProvider>
-					{!!errors && (
+			{publicKeyState.loading ? (
+				<Placeholder Animation={Fade}>
+					<PlaceholderLine height={50} style={{ marginTop: 20 }} />
+				</Placeholder>
+			) : (
+				<>
+					{publicKeyState?.key ? (
+						<View style={{ flex: 1 }}>
+							<StripeProvider
+								publishableKey={isToSave}
+								merchantIdentifier={merchantId}
+								urlScheme={`${urlScheme}://checkout/${cart?.uuid}`}
+							>
+								{methodsPay?.includes(paymethod) ? (
+									<StripeMethodForm
+										handleSource={handleSource}
+										onCancel={onCancel}
+										cart={cart}
+										cartTotal={cartTotal}
+										setErrors={setErrors}
+										paymethod={paymethod}
+										devMode={publicKeyState?.key?.includes('test')}
+										setMethodPaySupported={setMethodPaySupported}
+										placeByMethodPay={placeByMethodPay}
+										methodPaySupported={methodPaySupported}
+										setPlaceByMethodPay={setPlaceByMethodPay}
+										androidAppId={androidAppId}
+									/>
+								) : (
+									<CardField
+										postalCodeEnabled={zipCodeEnabled}
+										cardStyle={{
+											backgroundColor: '#FFFFFF',
+											textColor: '#000000',
+											borderWidth: 1,
+											borderRadius: 8,
+											borderColor: theme.colors.border
+										}}
+										style={{
+											width: '100%',
+											height: 50,
+											marginVertical: 30,
+											zIndex: 9999,
+										}}
+										onCardChange={(cardDetails: any) => setCard(cardDetails)}
+									/>
+								)}
+							</StripeProvider>
+							{!!errors && (
+								<ErrorMessage>
+									<OText
+										size={20}
+										color={theme.colors.error}
+										style={{ marginTop: 20, textAlign: 'center' }}
+									>
+										{errors}
+									</OText>
+								</ErrorMessage>
+							)}
+						</View>
+					) : (
 						<ErrorMessage>
 							<OText
 								size={20}
 								color={theme.colors.error}
-								style={{ marginTop: 20, textAlign: 'center' }}
+								style={{ marginTop: 20 }}
 							>
-								{errors}
+								{t('SOMETHING_WRONG', 'Something is wrong!')}
 							</OText>
 						</ErrorMessage>
 					)}
-				</View>
-			) : (
-				<ErrorMessage>
-					<OText
-						size={20}
-						color={theme.colors.error}
-						style={{ marginTop: 20 }}
-					>
-						{t('SOMETHING_WRONG', 'Something is wrong!')}
-					</OText>
-				</ErrorMessage>
+				</>
 			)}
 			{!methodsPay?.includes(paymethod) && (
 				<OButton
