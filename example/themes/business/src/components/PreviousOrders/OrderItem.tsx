@@ -121,7 +121,7 @@ export const OrderItem = React.memo((props: any) => {
     let restHours: string | number = Math.floor(restMinOfTargetedMin / 60)
     let restMins: string | number = restMinOfTargetedMin - 60 * restHours
     // make standard time format
-    day = day === 0 ? '' : day + 'day  '
+    day = day === 0 ? '' : `${day + ' ' + t('DAY', 'day') + ' '}`
     restHours = restHours < 10 ? '0' + restHours : restHours
     restMins = restMins < 10 ? '0' + restMins : restMins
 
