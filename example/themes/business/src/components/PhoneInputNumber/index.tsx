@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components/native';
 import { Wrapper } from './styles';
 import { OText, OIcon } from '../shared';
 import { PhoneInputParams } from '../../types';
-import { transformCountryCode } from '../../utils';
+import { transformCountryCode, findExitingCode } from '../../utils';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
@@ -97,10 +97,13 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         containerStyle={{ width: '100%' }}
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
-        defaultCode={
-          defaultCode
-            ? transformCountryCode(defaultCode)
-            : configs?.default_country_code?.value
+        defaultCode={defaultCode ?
+					!isNaN(defaultCode)
+						? transformCountryCode(defaultCode)
+						: findExitingCode(defaultCode)
+					: !isNaN((configs?.default_country_code?.value || '')?.replace(/\+/g, ''))
+             ? transformCountryCode((configs?.default_country_code?.value || '')?.replace(/\+/g, ''))
+             : findExitingCode(configs?.default_country_code?.value?.toUpperCase())
         }
         onChangeFormattedText={(text: string) => handleChangeNumber(text)}
         countryPickerProps={{
