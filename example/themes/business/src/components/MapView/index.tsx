@@ -165,14 +165,16 @@ const MapViewComponent = (props: MapViewParams) => {
           size={50}
           color={theme.colors.primary}
         />
-        <View style={styles.view}>
-          <OIcon
-            style={styles.image}
-            src={{ uri: customer ? marker?.customer?.photo : marker?.business?.logo }}
-            width={25}
-            height={25}
-          />
-        </View>
+        {(!!marker?.customer?.photo || !!marker?.business?.logo) && (
+          <View style={styles.view}>
+            <OIcon
+              style={styles.image}
+              src={{ uri: customer ? marker?.customer?.photo : marker?.business?.logo }}
+              width={25}
+              height={25}
+            />
+          </View>
+        )}
         <Callout
           onPress={() => !!orderIds && orderIds.toString().includes(',') ? onNavigationRedirect('Orders') : onNavigationRedirect('OrderDetails', { order: marker })}
         >
@@ -193,8 +195,8 @@ const MapViewComponent = (props: MapViewParams) => {
             {((customer && marker?.customer?.city?.address_notes) || !customer) && (
               <OText>{customer ? marker?.customer?.city?.address_notes : marker?.business?.city?.name}</OText>
             )}
-            {((customer && marker?.business?.zipcode) || (!customer && marker?.business?.zipcode)) && (
-              <OText>{customer ? marker?.customer?.zipcode : marker?.business?.zipcode}</OText>
+            {((customer && !!marker?.business?.zipcode) || (!customer && !!marker?.business?.zipcode)) && (
+              <OText>{customer ? marker?.customer?.zipcode ?? '' : marker?.business?.zipcode ?? ''}</OText>
             )}
             {customer && !!marker?.customer?.internal_number && (
               <OText>{marker?.customer?.internal_number}</OText>
