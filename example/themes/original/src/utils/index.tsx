@@ -259,7 +259,7 @@ export const sortInputFields = ({ fields, values }: any) => {
 
   fieldsBase.forEach((f: any) => {
     fieldsArray && fieldsArray.forEach((field: any) => {
-      if (f === field.code) {
+      if (f === (field.validation_field?.code || field?.code)) {
         fieldsSorted.push(field)
       }
     })

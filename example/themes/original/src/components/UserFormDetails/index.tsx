@@ -304,80 +304,82 @@ export const UserFormDetailsUI = (props: any) => {
 							{sortInputFields({
 								values: validationFields.fields?.checkout,
 							}).map(
-								(field: any) =>
-									showField &&
-									showField(field.code) && ((requiredFields && requiredFields.includes(field.code)) || !requiredFields) && (
-										<React.Fragment key={field.id}>
-											<Controller
-												key={field.id}
-												control={control}
-												render={() => (
-													<>
-														<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-															{t(field?.code?.toUpperCase(), field?.name)}
-														</OText>
-														<OInput
-															name={field.code}
-															placeholder={t(
-																field.code.toUpperCase(),
-																field?.name,
-															)}
-															inputStyle={styles.inputStyle}
-															style={{ paddingLeft: 0, paddingRight: 0, marginTop: 6, height: 44, minHeight: 44 }}
-															autoCapitalize={
-																field.code === 'email' ? 'none' : 'sentences'
-															}
-															isDisabled={false}
-															value={
-																formState?.changes[field.code] ??
-																(user && user[field.code]) ??
-																''
-															}
-															onChange={(val: any) => {
-																field.code !== 'email'
-																	? setValue(field.code, val.target.value)
-																	: setValue(
-																		field.code,
-																		val.target.value
-																			.toLowerCase()
-																			.replace(
-																				/[&,()%";:ç?<>{}\\[\]\s]/g,
-																				'',
-																			),
-																	);
-																field.code !== 'email'
-																	? handleChangeInput(val)
-																	: handleChangeInput({
-																		target: {
-																			name: 'email',
-																			value: val.target.value
+								(item: any) => {
+									const field = item?.validation_field || item
+									return (showField &&
+										showField(field.code) && ((requiredFields && requiredFields.includes(field.code)) || !requiredFields) && (
+											<React.Fragment key={field.id}>
+												<Controller
+													key={field.id}
+													control={control}
+													render={() => (
+														<>
+															<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+																{t(field?.code?.toUpperCase(), field?.name)}
+															</OText>
+															<OInput
+																name={field.code}
+																placeholder={t(
+																	field.code.toUpperCase(),
+																	field?.name,
+																)}
+																inputStyle={styles.inputStyle}
+																style={{ paddingLeft: 0, paddingRight: 0, marginTop: 6, height: 44, minHeight: 44 }}
+																autoCapitalize={
+																	field.code === 'email' ? 'none' : 'sentences'
+																}
+																isDisabled={false}
+																value={
+																	formState?.changes[field.code] ??
+																	(user && user[field.code]) ??
+																	''
+																}
+																onChange={(val: any) => {
+																	field.code !== 'email'
+																		? setValue(field.code, val.target.value)
+																		: setValue(
+																			field.code,
+																			val.target.value
 																				.toLowerCase()
 																				.replace(
 																					/[&,()%";:ç?<>{}\\[\]\s]/g,
 																					'',
 																				),
-																		},
-																	});
-															}}
-															autoCorrect={field.code === 'email' && false}
-															type={
-																field.code === 'email'
-																	? 'email-address'
-																	: 'default'
-															}
-															returnKeyType="done"
-															autoCompleteType={
-																field.code === 'email' ? 'email' : 'off'
-															}
-														/>
-													</>
-												)}
-												name={field.code}
-												rules={getInputRules(field)}
-												defaultValue={user && user[field.code]}
-											/>
-										</React.Fragment>
-									),
+																		);
+																	field.code !== 'email'
+																		? handleChangeInput(val)
+																		: handleChangeInput({
+																			target: {
+																				name: 'email',
+																				value: val.target.value
+																					.toLowerCase()
+																					.replace(
+																						/[&,()%";:ç?<>{}\\[\]\s]/g,
+																						'',
+																					),
+																			},
+																		});
+																}}
+																autoCorrect={field.code === 'email' && false}
+																type={
+																	field.code === 'email'
+																		? 'email-address'
+																		: 'default'
+																}
+																returnKeyType="done"
+																autoCompleteType={
+																	field.code === 'email' ? 'email' : 'off'
+																}
+															/>
+														</>
+													)}
+													name={field.code}
+													rules={getInputRules(field)}
+													defaultValue={user && user[field.code]}
+												/>
+											</React.Fragment>
+										))
+								},
 							)}
 							{showInputBirthday && (
 								<>

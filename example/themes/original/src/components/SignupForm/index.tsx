@@ -583,65 +583,67 @@ const SignupFormUI = (props: SignupParams) => {
 							{sortInputFields({
 								values: validationFields?.fields?.checkout,
 							}).map(
-								(field: any, i: number) =>
-									!notValidationFields.includes(field.code) &&
-									showField &&
-									showField(field.code) &&
-									(signUpTab === 'default' ||
-										(signUpTab === 'otpEmail' && field.code === 'email')) && (
-										<React.Fragment key={field.id}>
-											{errors?.[`${field.code}`] && (
-												<OText
-													size={14}
-													color={theme.colors.danger5}
-													weight={'normal'}>
-													{errors?.[`${field.code}`]?.message} {errors?.[`${field.code}`]?.type === 'required' && '*'}
-												</OText>
-											)}
-											<Controller
-												control={control}
-												render={({ onChange, value }: any) => (
-													<OInput
-														placeholder={t(field.name?.replace(/\s/g, '_')?.toUpperCase(), field.name)}
-														style={style.inputStyle}
-														icon={
-															field.code === 'email'
-																? theme.images.general.email
-																: theme.images.general.user
-														}
-														value={value}
-														onChange={(val: any) =>
-															field.code !== 'email'
-																? (onChange(val))
-																: handleChangeInputEmail(val, onChange)
-														}
-														autoCapitalize={
-															field.code === 'email' ? 'none' : 'sentences'
-														}
-														autoCorrect={field.code === 'email' && false}
-														type={
-															field.code === 'email' ? 'email-address' : 'default'
-														}
-														autoCompleteType={
-															field.code === 'email' ? 'email' : 'off'
-														}
-														returnKeyType="next"
-														blurOnSubmit={false}
-														forwardRef={(ref: any) => handleRefs(ref, field.code)}
-														onSubmitEditing={() =>
-															field.code === 'email'
-																? phoneRef?.current?.focus?.()
-																: handleFocusRef(getNextFieldCode(i))
-														}
-														borderColor={errors?.[`${field.code}`] ? theme.colors.danger5 : theme.colors.border}
-													/>
+								(item: any, i: number) => {
+									const field = item?.validation_field || item
+									return (!notValidationFields.includes(field.code) &&
+										showField &&
+										showField(field.code) &&
+										(signUpTab === 'default' ||
+											(signUpTab === 'otpEmail' && field.code === 'email')) && (
+											<React.Fragment key={field.id}>
+												{errors?.[`${field.code}`] && (
+													<OText
+														size={14}
+														color={theme.colors.danger5}
+														weight={'normal'}>
+														{errors?.[`${field.code}`]?.message} {errors?.[`${field.code}`]?.type === 'required' && '*'}
+													</OText>
 												)}
-												name={field.code}
-												rules={getInputRules(field)}
-												defaultValue=""
-											/>
-										</React.Fragment>
-									),
+												<Controller
+													control={control}
+													render={({ onChange, value }: any) => (
+														<OInput
+															placeholder={t(field.name?.replace(/\s/g, '_')?.toUpperCase(), field.name)}
+															style={style.inputStyle}
+															icon={
+																field.code === 'email'
+																	? theme.images.general.email
+																	: theme.images.general.user
+															}
+															value={value}
+															onChange={(val: any) =>
+																field.code !== 'email'
+																	? (onChange(val))
+																	: handleChangeInputEmail(val, onChange)
+															}
+															autoCapitalize={
+																field.code === 'email' ? 'none' : 'sentences'
+															}
+															autoCorrect={field.code === 'email' && false}
+															type={
+																field.code === 'email' ? 'email-address' : 'default'
+															}
+															autoCompleteType={
+																field.code === 'email' ? 'email' : 'off'
+															}
+															returnKeyType="next"
+															blurOnSubmit={false}
+															forwardRef={(ref: any) => handleRefs(ref, field.code)}
+															onSubmitEditing={() =>
+																field.code === 'email'
+																	? phoneRef?.current?.focus?.()
+																	: handleFocusRef(getNextFieldCode(i))
+															}
+															borderColor={errors?.[`${field.code}`] ? theme.colors.danger5 : theme.colors.border}
+														/>
+													)}
+													name={field.code}
+													rules={getInputRules(field)}
+													defaultValue=""
+												/>
+											</React.Fragment>
+										))
+								}
 							)}
 
 							{(!!showInputPhoneNumber && (signUpTab === 'default' || signUpTab === 'otpCellphone')) && (
