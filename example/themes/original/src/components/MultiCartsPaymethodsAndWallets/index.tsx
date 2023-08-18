@@ -233,6 +233,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
           toSave
           businessId={businessIds[0]}
           businessIds={businessIds}
+          businessNames={openCarts?.map?.((cart : any) => cart?.business?.name)}
           publicKey={paymethodSelected?.data?.publishable}
           requirements={props.clientSecret}
           handleSource={handlePaymethodDataChange}
