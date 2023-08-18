@@ -24,11 +24,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const PaymentOptionsUI = (props: any) => {
   const {
-    cart,
-    onNavigationRedirect,
-    isDisabled,
-    paymethodData,
-    handlePaymethodDataChange,
     errorCash,
     isLoading,
     paymethodsList,
@@ -48,11 +43,11 @@ const PaymentOptionsUI = (props: any) => {
   const [orientationState] = useDeviceOrientation();
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const paymethodSelected =
-    paySelected || props.paymethodSelected || isOpenMethod.paymethod;
+  const paymethodSelected = paySelected || props.paymethodSelected || isOpenMethod.paymethod;
+  const includePaymethods = ['cash', 'card_delivery'];
 
   useEffect(() => {
-    if (paymethodsList.paymethods.length === 1) {
+    if (paymethodsList?.paymethods?.length === 1) {
       handlePaymethodClick &&
         handlePaymethodClick(paymethodsList.paymethods[0]);
     }
@@ -85,23 +80,11 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [isOpenMethod.paymethod, placing, isLoading, paySelected]);
 
-  // const includePaymethods = ['cash', 'card_delivery', 'stripe'];
-  const includePaymethods = ['cash', 'card_delivery'];
-
   const supportedMethods = paymethodsList.paymethods.filter((p: any) =>
     includePaymethods.includes(p.gateway),
   );
 
-  const cashIndex: number = supportedMethods?.findIndex(
-    (item: any) => item?.gateway === 'cash',
-  );
-  const cardOnDeliveryIndex = supportedMethods?.findIndex(
-    (item: any) => item?.gateway === 'card_delivery',
-  );
-  const stripeIndex = supportedMethods?.findIndex(
-    (item: any) => item?.gateway === 'stripe',
-  );
-  const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
+  const onSelectPaymethod = (paymethod: any) => {
     handlePaymethodClick(paymethod);
   };
 
@@ -132,57 +115,15 @@ const PaymentOptionsUI = (props: any) => {
         : orientationState?.dimensions?.height * 0.55,
   };
 
-  const propsOfItems = {
-    CASH_ID:
-      cashIndex !== -1
-        ? {
-          style: cardStyle,
-          title: t('CASH', 'Cash'),
-          description: t(
-            'GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER',
-            'Pay with cash in the front counter',
-          ),
-          bgImage: theme.images.general.cash,
-          callToActionText: t('LETS_GO', 'LETS_GO'),
-          VectorIcon: () => <AntIconDesign name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} />,
-          onClick: () =>
-            onSelectPaymethod(supportedMethods[cashIndex], false),
-          ...supportedMethods[cashIndex],
-        }
-        : null,
-
-    CARD_ON_DELIVERY_ID:
-      cardOnDeliveryIndex !== -1
-        ? {
-          style: cardStyle,
-          title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
-          description: t(
-            'WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD',
-            'We accept every debit or credit card',
-          ),
-          bgImage: theme.images.general.carddelivery,
-          callToActionText: t("LETS_GO", "Let's go"),
-          VectorIcon: () => <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
-          onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
-          ...supportedMethods[cardOnDeliveryIndex],
-        }
-        : null,
-    STRIPE:
-      stripeIndex !== -1
-        ? {
-          style: cardStyle,
-          title: t('STRIPE', supportedMethods[stripeIndex]?.name),
-          description: t('STRIPE', 'Stripe'),
-          bgImage: theme.images.general.carddelivery,
-          callToActionText: t('INSERT_INFO', 'Test info'),
-          VectorIcon: () => <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
-          onClick: () => {
-            onSelectPaymethod(supportedMethods[stripeIndex], false);
-            setIsOpenModal(true)
-          },
-          ...supportedMethods[stripeIndex],
-        }
-        : null,
+  const description = {
+    cash: t(
+      'GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER',
+      'Pay with cash in the front counter',
+    ),
+    card_delivery: t(
+      'WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD',
+      'We accept every debit or credit card',
+    ),
   };
 
   const goToBack = () => navigation?.goBack();
@@ -213,43 +154,36 @@ const PaymentOptionsUI = (props: any) => {
             </View>
 
             <GridContainer style={{ justifyContent: 'space-between' }}>
-              {propsOfItems.CARD_ON_DELIVERY_ID && (
-                <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
-                  <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke />
-                </View>
-              )}
+              {supportedMethods?.map((paymethod: any, i: number) => (
+                <>
+                  <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
+                    <OptionCard
+                      {...{
+                        style: cardStyle,
+                        title: t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
+                        description: description[paymethod.gateway] ?? t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
+                        bgImage: paymethod.name === 'Cash' ? theme.images.general.cash : theme.images.general.carddelivery,
+                        callToActionText: paymethod.name === 'Cash' ? t('LETS_GO', 'LETS_GO') : t('INSERT_INFO', 'Test info'),
+                        VectorIcon: () => paymethod.name === 'Cash' ? <AntIconDesign name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} /> : <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
+                        onClick: () => onSelectPaymethod(paymethod, false),
+                      }}
+                    />
+                  </View>
 
-              <View
-                style={{
-                  width:
-                    orientationState?.orientation === LANDSCAPE
-                      ? orientationState?.dimensions?.width * 0.0016
-                      : 1,
-                  height:
-                    orientationState?.orientation === PORTRAIT
-                      ? orientationState?.dimensions?.height * 0.018
-                      : 1,
-                }}
-              />
-
-              {propsOfItems?.CASH_ID && <OptionCard {...propsOfItems?.CASH_ID} />}
-
-              <View
-                style={{
-                  width:
-                    orientationState?.orientation === LANDSCAPE
-                      ? orientationState?.dimensions?.width * 0.0016
-                      : 1,
-                  height:
-                    orientationState?.orientation === PORTRAIT
-                      ? orientationState?.dimensions?.height * 0.018
-                      : 1,
-                }}
-              />
-
-              {propsOfItems.STRIPE && (
-                <OptionCard {...propsOfItems?.STRIPE} />
-              )}
+                  <View
+                    style={{
+                      width:
+                        orientationState?.orientation === LANDSCAPE
+                          ? orientationState?.dimensions?.width * 0.0016
+                          : 1,
+                      height:
+                        orientationState?.orientation === PORTRAIT
+                          ? orientationState?.dimensions?.height * 0.018
+                          : 1,
+                    }}
+                  />
+                </>
+              ))}
             </GridContainer>
           </>
         )}
