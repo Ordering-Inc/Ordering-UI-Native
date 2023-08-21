@@ -46,8 +46,6 @@ const PaymentOptionsUI = (props: any) => {
   const paymethodSelected = paySelected || props.paymethodSelected || isOpenMethod.paymethod;
   const includePaymethods = ['cash', 'card_delivery'];
 
-  console.log('paymethodsList', paymethodsList)
-
   useEffect(() => {
     if (paymethodsList?.paymethods?.length === 1) {
       handlePaymethodClick &&
