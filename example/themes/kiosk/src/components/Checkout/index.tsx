@@ -31,7 +31,8 @@ const CheckoutUI = (props: any) => {
     paymethodSelected,
     handlePaymethodChange,
     handlerClickPlaceOrder,
-    onNavigationRedirect
+    onNavigationRedirect,
+    isKiosk
   } = props
 
   const [errorCash, setErrorCash] = useState(false);
@@ -68,6 +69,7 @@ const CheckoutUI = (props: any) => {
         isLoading={cartState.loading || businessDetails.loading}
         paymethods={businessDetails?.business?.paymethods}
         setErrorCash={setErrorCash}
+        isKiosk={isKiosk}
       />
     </>
   )
@@ -84,7 +86,7 @@ export const Checkout = (props: any) => {
   const [, { showToast }] = useToast();
   const [{ token }] = useSession();
   const [ordering] = useApi();
-  const [,{ confirmCart }] = useOrder();
+  const [, { confirmCart }] = useOrder();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
 
@@ -109,7 +111,7 @@ export const Checkout = (props: any) => {
           const confirmCartRes = await confirmCart(cartUuid)
           if (confirmCartRes.error) {
             showToast(ToastType.Error, confirmCartRes.error.message)
-          }getOrder
+          } getOrder
           getOrder
           if (confirmCartRes.result.order?.uuid) {
             onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
