@@ -36,7 +36,8 @@ const StripeElementsFormUI = (props: any) => {
 		cartTotal,
 		publicKeyAddCard,
 		urlScheme,
-		androidAppId
+		androidAppId,
+		businessNames
 	} = props;
 
 	const theme = useTheme();
@@ -228,6 +229,7 @@ const StripeElementsFormUI = (props: any) => {
 										methodPaySupported={methodPaySupported}
 										setPlaceByMethodPay={setPlaceByMethodPay}
 										androidAppId={androidAppId}
+										businessNames={businessNames}
 									/>
 								) : (
 									<CardField

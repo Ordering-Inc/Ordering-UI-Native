@@ -17,7 +17,8 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     methodPaySupported,
     setPlaceByMethodPay,
     cartTotal,
-    androidAppId
+    androidAppId,
+    businessNames
   } = props
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
@@ -152,7 +153,8 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
     const { error, paymentMethod } = await presentApplePay({
       cartItems: [{
-        label: t('CART_APPLE_PAY_LABEL', 'Cart'),
+        label: businessNames ? `${businessNames.join(', ')} ${t('VIA_CHEW_APP', 'via Chew App')}`
+        : `${cart?.business?.name} ${t('VIA_CHEW_APP', 'via Chew App')}`,
         amount: cartTotal?.toString?.() ?? cart?.balance?.toString() ?? cart?.total?.toString?.(),
         paymentType: 'Immediate'
       }],
