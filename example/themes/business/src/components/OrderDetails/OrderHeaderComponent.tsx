@@ -22,6 +22,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   useLanguage,
   useUtils,
+  useConfig
 } from 'ordering-components/native';
 
 interface OrderHeader {
@@ -49,8 +50,10 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   } = props
   const theme = useTheme();
   const [, t] = useLanguage();
+  const [configState] = useConfig()
   const [{ parseDate, parsePrice }] = useUtils();
   const paymethodsLength = order?.payment_events?.filter((item: any) => item.event === 'payment')?.length
+  const showExternalId = configState?.configs?.change_order_id?.value === '1'
 
   const styles = StyleSheet.create({
     icons: {
@@ -270,7 +273,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
 
         <OText numberOfLines={2} size={20} weight="600">
           <>
-            {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id} `}
+            {`${t('INVOICE_ORDER_NO', 'Order No.')} ${showExternalId ? order?.external_id || order?.id : order?.id} `}
             {!order?.isLogistic && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
               <>
                 {t('IS', 'is')}{' '}
@@ -284,7 +287,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
           </>
         </OText>
-        {order?.external_id && (
+        {order?.external_id && !showExternalId && (
           <OText size={13}>
             <OText size={13} weight='bold'>{`${t('EXTERNAL_ID', 'External ID :')} `}</OText>
             {order?.external_id}

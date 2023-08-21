@@ -125,6 +125,8 @@ export const OrderItem = React.memo((props: any) => {
     restHours = restHours < 10 ? '0' + restHours : restHours
     restMins = restMins < 10 ? '0' + restMins : restMins
 
+    console.log(day)
+
     const finalTaget = sign + day + restHours + ':' + restMins
     return finalTaget
   }
@@ -191,23 +193,24 @@ export const OrderItem = React.memo((props: any) => {
                 {order?.external_id ?? t('NO_EXTERNAL_ID', 'No external Id ') + t('NO', 'Order No.') + order?.id}
               </OText>
             )}
-            <OText
+            {!showExternalId && <OText
               style={styles.date}
               color={theme.colors.unselectText}
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              {(!showExternalId && ((!!order?.order_group_id && order?.order_group && isLogisticOrder
+              {((!!order?.order_group_id && order?.order_group && isLogisticOrder
                 ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
                 : (t('NO', 'Order No.') + order?.id)
-              ) + ' · '))}
+              ) + ' · ')}
               {order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
+            }
             {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
               <>
-                <OText> · </OText>
+                {!showExternalId && <OText> · </OText>}
                 <OText
                   style={styles.date}
                   color={
