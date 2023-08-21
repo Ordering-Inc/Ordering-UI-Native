@@ -46,6 +46,8 @@ const PaymentOptionsUI = (props: any) => {
   const paymethodSelected = paySelected || props.paymethodSelected || isOpenMethod.paymethod;
   const includePaymethods = ['cash', 'card_delivery'];
 
+  console.log('paymethodsList', paymethodsList)
+
   useEffect(() => {
     if (paymethodsList?.paymethods?.length === 1) {
       handlePaymethodClick &&
@@ -80,7 +82,7 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [isOpenMethod.paymethod, placing, isLoading, paySelected]);
 
-  const supportedMethods = paymethodsList.paymethods.filter((p: any) =>
+  const supportedMethods = paymethodsList?.paymethods?.filter((p: any) =>
     includePaymethods.includes(p.gateway),
   );
 
@@ -133,60 +135,62 @@ const PaymentOptionsUI = (props: any) => {
       <Spinner visible={isLoading || placing || paymethodsList?.loading} />
 
       <Container nestedScrollEnabled>
-        {supportedMethods?.length > 0 && (
-          <>
-            <NavBar
-              title={t('PAYMENT_METHODS', 'Payment methods')}
-              onActionLeft={goToBack}
-              btnStyle={{ paddingLeft: 0 }}
-            />
+        <NavBar
+          title={t('PAYMENT_METHODS', 'Payment methods')}
+          onActionLeft={goToBack}
+          btnStyle={{ paddingLeft: 0 }}
+        />
 
-            <View
-              style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
-              <OText size={orientationState?.dimensions?.width * 0.048}>
-                {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
-                <OText
-                  size={orientationState?.dimensions?.width * 0.048}
-                  weight={'700'}>
-                  {`${t('LIKE_TO_PAY', 'like to pay')}?`}
-                </OText>
-              </OText>
-            </View>
+        <View
+          style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
+          <OText size={orientationState?.dimensions?.width * 0.048}>
+            {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
+            <OText
+              size={orientationState?.dimensions?.width * 0.048}
+              weight={'700'}>
+              {`${t('LIKE_TO_PAY', 'like to pay')}?`}
+            </OText>
+          </OText>
+        </View>
 
-            <GridContainer style={{ justifyContent: 'space-between' }}>
-              {supportedMethods?.map((paymethod: any, i: number) => (
-                <>
-                  <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
-                    <OptionCard
-                      {...{
-                        style: cardStyle,
-                        title: t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
-                        description: description[paymethod.gateway] ?? t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
-                        bgImage: paymethod.name === 'Cash' ? theme.images.general.cash : theme.images.general.carddelivery,
-                        callToActionText: paymethod.name === 'Cash' ? t('LETS_GO', 'LETS_GO') : t('INSERT_INFO', 'Test info'),
-                        VectorIcon: () => paymethod.name === 'Cash' ? <AntIconDesign name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} /> : <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
-                        onClick: () => onSelectPaymethod(paymethod, false),
-                      }}
-                    />
-                  </View>
+        <GridContainer style={{ justifyContent: 'space-between' }}>
+          {supportedMethods?.length > 0 ? (supportedMethods?.map((paymethod: any, i: number) => (
+            <>
+              <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
+                <OptionCard
+                  {...{
+                    style: cardStyle,
+                    title: t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
+                    description: description[paymethod.gateway] ?? t(`${paymethod.gateway.toUpperCase().replace(/\s/g, '_')}`, paymethod.name),
+                    bgImage: paymethod.name === 'Cash' ? theme.images.general.cash : theme.images.general.carddelivery,
+                    callToActionText: paymethod.name === 'Cash' ? t('LETS_GO', 'LETS_GO') : t('INSERT_INFO', 'Test info'),
+                    VectorIcon: () => paymethod.name === 'Cash' ? <AntIconDesign name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} /> : <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
+                    onClick: () => onSelectPaymethod(paymethod, false),
+                  }}
+                />
+              </View>
 
-                  <View
-                    style={{
-                      width:
-                        orientationState?.orientation === LANDSCAPE
-                          ? orientationState?.dimensions?.width * 0.0016
-                          : 1,
-                      height:
-                        orientationState?.orientation === PORTRAIT
-                          ? orientationState?.dimensions?.height * 0.018
-                          : 1,
-                    }}
-                  />
-                </>
-              ))}
-            </GridContainer>
-          </>
-        )}
+              <View
+                style={{
+                  width:
+                    orientationState?.orientation === LANDSCAPE
+                      ? orientationState?.dimensions?.width * 0.0016
+                      : 1,
+                  height:
+                    orientationState?.orientation === PORTRAIT
+                      ? orientationState?.dimensions?.height * 0.018
+                      : 1,
+                }}
+              />
+            </>
+          ))) : (
+            <OText
+              size={orientationState?.dimensions?.width * 0.048}
+              weight={'700'}>
+              {`${t('NO_PAYMETHODS_AVAILABLES', 'No paymethods availables')}`}
+            </OText>
+          )}
+        </GridContainer>
         <View style={{ height: orientationState?.dimensions?.height * 0.05 }} />
         <OModal
           open={isOpenModal}
