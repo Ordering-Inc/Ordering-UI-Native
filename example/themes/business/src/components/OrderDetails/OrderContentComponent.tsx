@@ -417,7 +417,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             )}
           </View>
         )}
-        {!order?.user_review && pastOrderStatuses.includes(order?.status) && (
+        {!order?.user_review && pastOrderStatuses.includes(order?.status) && order?.customer_id && (
           <OButton
             style={styles.btnReview}
             textStyle={{ color: theme.colors.white }}
