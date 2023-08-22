@@ -270,7 +270,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       title: t('DRIVER', 'Driver'),
       icon:
         order?.driver?.photo ||
-        'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
+        theme?.images?.general?.driverPng,
     },
     {
       ...order?.business?.location,
