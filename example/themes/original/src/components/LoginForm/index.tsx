@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Keyboard, Modal } from 'react-native';
+import { StyleSheet, View, Keyboard, Modal, Platform } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
@@ -108,7 +108,7 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+	const appleLoginEnabled = Platform.OS === 'ios' && configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
