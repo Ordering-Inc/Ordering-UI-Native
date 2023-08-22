@@ -273,7 +273,7 @@ const ProfileUI = (props: ProfileParams) => {
           }
           image={theme.images.general.notFound}
           conditioned={false}
-          onClickButton={() => loadOriginalValidationFields(true)}
+          onClickButton={() => loadOriginalValidationFields({ forceLoading: true })}
           btnTitle={t('REFRESH_PROFILE', 'Refresh profile')}
         />
       )}
