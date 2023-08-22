@@ -49,9 +49,6 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     },
   });
 
-  console.log('_languages', _languages);
-
-
   return (
     <Container style={{ backgroundColor: theme.colors.inputChat }}>
       {languagesState?.languages && (
