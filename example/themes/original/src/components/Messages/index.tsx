@@ -127,12 +127,12 @@ const MessagesUI = (props: MessagesParams) => {
 		return message.change?.attribute !== 'driver_id'
 			?
 			`${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute)
-        ? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
-        : `${message.change?.attribute !== 'logistic_status'
-          ? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
-          : message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
-            ? t(ORDER_STATUS[parseInt(message.change.new, 10)])
-            : getLogisticTag(message.change.new)}`
+				? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
+				: `${message.change?.attribute !== 'logistic_status'
+					? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
+					: message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
+						? t(ORDER_STATUS[parseInt(message.change.new, 10)])
+						: getLogisticTag(message.change.new)}`
 			}`
 			: message.change.new
 				?
@@ -503,6 +503,7 @@ const MessagesUI = (props: MessagesParams) => {
 					scrollToBottom
 					renderAvatarOnTop
 					renderUsernameOnMessage
+					renderAvatar={() => null}
 					renderInputToolbar={renderInputToolbar}
 					renderComposer={renderComposer}
 					renderSend={renderSend}
