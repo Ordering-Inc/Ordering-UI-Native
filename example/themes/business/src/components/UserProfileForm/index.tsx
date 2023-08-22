@@ -11,7 +11,8 @@ import {
   useToast,
   useLanguage,
   useUtils,
-  useConfig
+  useConfig,
+  useValidationFields
 } from 'ordering-components/native';
 import {
   CenterView,
@@ -57,7 +58,8 @@ const ProfileUI = (props: ProfileParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const [{ optimizeImage }] = useUtils();
-  const [{ configs }] = useConfig()
+  const [{ configs }] = useConfig();
+  const [{ loading }, { loadOriginalValidationFields }] = useValidationFields()
   const { errors } = useForm();
   const theme = useTheme();
 
@@ -262,15 +264,17 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      {validationFields?.error && (
+      {validationFields?.error && !loading && (
         <NotFoundSource
           content={
-            validationFields?.error[0] ||
-            validationFields?.error[0]?.message ||
+            validationFields?.error?.[0] ||
+            validationFields?.error?.[0]?.message ||
             t('NETWORK_ERROR', 'Network Error')
           }
           image={theme.images.general.notFound}
           conditioned={false}
+          onClickButton={() => loadOriginalValidationFields({ forceLoading: true })}
+          btnTitle={t('REFRESH_PROFILE', 'Refresh profile')}
         />
       )}
 
