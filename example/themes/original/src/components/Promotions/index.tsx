@@ -182,7 +182,7 @@ const PromotionsUI = (props: PromotionParams) => {
           title={``}
           onClose={() => setOpenModal(false)}
         >
-          <View style={{ padding: 20 }}>
+          <ScrollView style={{ padding: 20 }}>
             <OText style={{ alignSelf: 'center', fontWeight: '700' }} mBottom={20}>
               {offerSelected?.name} / {t('VALUE_OF_OFFER', 'Value of offer')}: {offerSelected?.rate_type === 1 ? `${offerSelected?.rate}%` : `${parsePrice(offerSelected?.rate)}`}
             </OText>
@@ -210,10 +210,7 @@ const PromotionsUI = (props: PromotionParams) => {
             <OText style={{ marginTop: 10, marginBottom: 10 }}>
               {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}:
             </OText>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ height: '68%' }}
-            >
+            <View style={{ marginBottom: 70 }}>
               {offerSelected?.businesses?.map((business: any) => {
                 return (
                   <SingleBusinessOffer key={business.id}>
@@ -244,8 +241,8 @@ const PromotionsUI = (props: PromotionParams) => {
                   </SingleBusinessOffer>
                 )
               })}
-            </ScrollView>
-          </View>
+            </View>
+          </ScrollView>
         </OModal>
       </PromotionsContainer>
     </Container>
