@@ -620,13 +620,15 @@ const CheckoutUI = (props: any) => {
 											<OButton
 												text={t('SIGN_UP', 'Sign up')}
 												textStyle={{ color: theme.colors.white }}
+												bgColor={theme.colors.primary}
+												borderColor={theme.colors.primary}
 												style={{ borderRadius: 7.6, marginTop: 20 }}
 												onClick={() => setOpenModal({ ...openModal, signup: true })}
 											/>
 											<OButton
 												text={t('LOGIN', 'Login')}
-												textStyle={{ color: theme.colors.primary }}
-												bgColor={theme.colors.white}
+												textStyle={{ color: theme.colors.white }}
+												bgColor={theme.colors.primary}
 												borderColor={theme.colors.primary}
 												style={{ borderRadius: 7.6, marginTop: 20 }}
 												onClick={() => setOpenModal({ ...openModal, login: true })}
