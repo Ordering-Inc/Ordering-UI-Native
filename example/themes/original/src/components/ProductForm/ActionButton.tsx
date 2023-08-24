@@ -5,7 +5,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { OButton, OText } from '../shared';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 
-export const ActionButton = (props : any) => {
+export const ActionButton = (props: any) => {
     const {
         navigation,
         isHaveWeight,
@@ -23,18 +23,20 @@ export const ActionButton = (props : any) => {
         handleUpdateGuest,
         actionStatus
     } = props
-    const [,t] = useLanguage()
+    const [, t] = useLanguage()
     const [{ auth }] = useSession()
     const [orderState] = useOrder()
     const theme = useTheme()
-	const [{ configs }] = useConfig()
+    const [{ configs }] = useConfig()
     const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
-	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
-
+    const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
     const saveErrors =
-		orderState.loading ||
-		maxProductQuantity === 0 ||
-		Object.keys(errors)?.length > 0;
+        orderState.loading ||
+        maxProductQuantity === 0 ||
+        Object.keys(errors)?.length > 0;
+    const buttonColor = saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order))
+
+
 
     return (
         <View
@@ -60,9 +62,9 @@ export const ActionButton = (props : any) => {
                             color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
                             fontSize: orderState.loading || editMode ? 10 : 14
                         }}
+                        bgColor={buttonColor ? theme.colors.lightGray : theme.colors.primary}
+                        borderColor={!buttonColor ? theme.colors.white : theme.colors.primary}
                         style={{
-                            backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
-                            borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
                             opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
                             borderRadius: 7.6,
                             height: 44,

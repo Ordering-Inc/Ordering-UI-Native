@@ -20,7 +20,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { UpsellingLayout } from './UpsellingLayout';
 
-export const UpsellingContent = (props : any) => {
+export const UpsellingContent = (props: any) => {
     const {
         onGoBack,
         handleUpsellingPage,
@@ -44,12 +44,10 @@ export const UpsellingContent = (props : any) => {
     const commentDelayTime = isChewLayout ? 500 : null
 
     const cartList = (carts && Object.values(carts).filter((_cart: any) => _cart?.products?.length > 0 && _cart.uuid !== cart?.uuid)) || []
-    
+
     const styles = StyleSheet.create({
         closeUpsellingButton: {
             borderRadius: 7.6,
-            borderColor: theme.colors.primary,
-            backgroundColor: theme.colors.primary,
             borderWidth: 1,
             alignSelf: 'center',
             height: 44,
@@ -160,8 +158,10 @@ export const UpsellingContent = (props : any) => {
                 <OButton
                     imgRightSrc=''
                     text={t('CHECKOUT', 'Checkout')}
-                    style={{ ...styles.closeUpsellingButton }}
                     textStyle={{ color: theme.colors.white, fontSize: 14 }}
+                    bgColor={theme.colors.primary}
+                    borderColor={theme.colors.primary}
+                    style={{ ...styles.closeUpsellingButton }}
                     onClick={() => handleUpsellingPage(cart)}
                 />
             </View>
