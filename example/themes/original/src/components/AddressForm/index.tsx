@@ -859,8 +859,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 						) : (
 							<OButton
 								text={t('CANCEL', 'Cancel')}
-								bgColor={theme.colors.white}
-								borderColor={theme.colors.primary}
+								bgColor={theme.colors.secundary}
+								borderColor={theme.colors.secundary}
+								textStyle={{ color: theme.colors.black }}
 								style={{ borderRadius: 7.6, borderWidth: 1, shadowOpacity: 0 }}
 								onClick={() => navigation?.canGoBack() && navigation.goBack()}
 							/>
@@ -887,6 +888,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 						<OButton
 							text={t('SAVE', 'Save')}
 							textStyle={{ color: theme.colors.white }}
+							bgColor={theme.colors.primary}
+							borderColor={theme.colors.primary}
 							imgRightSrc={null}
 							style={{ marginHorizontal: 30, marginBottom: 10 }}
 							onClick={() => setSaveMapLocation(true)}
