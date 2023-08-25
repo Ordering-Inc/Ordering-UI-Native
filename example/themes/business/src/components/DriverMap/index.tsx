@@ -69,11 +69,20 @@ export const DriverMap = (props: GoogleMapsParams) => {
     stopFollowUserLocation,
   } = useLocation();
 
-  const origin = {
-    latitude: initialPosition.latitude,
-    longitude: initialPosition.longitude,
+  const destination = {
+    latitude: typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat || 0,
+    longitude: typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng || 0
   };
-  const destination = { latitude: location.lat, longitude: location.lng };
+
+  const parsedInitialPosition = {
+    latitude: typeof initialPosition.latitude === 'string' ? parseFloat(initialPosition.latitude) || 0 : initialPosition.latitude || 0,
+    longitude: typeof initialPosition.longitude === 'string' ? parseFloat(initialPosition.longitude) || 0 : initialPosition.longitude || 0,
+  }
+
+  const parsedUserLocation = {
+    latitude: typeof userLocation?.latitude === 'string' ? parseFloat(userLocation?.latitude) || 0 : userLocation?.latitude || 0,
+    longitude: typeof userLocation?.longitude === 'string' ? parseFloat(userLocation?.longitude) || 0 : userLocation?.longitude || 0
+  }
 
   useEffect(() => {
     if (isToFollow) {
@@ -161,7 +170,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     if (driverUpdateLocation.error) return;
 
     calculateDistance(
-      { lat: userLocation.latitude, lng: userLocation.longitude },
+      { lat: parsedUserLocation.latitude, lng: parsedUserLocation.longitude },
       destination,
     );
     // geocodePosition(userLocation);
@@ -169,13 +178,13 @@ export const DriverMap = (props: GoogleMapsParams) => {
     if (!following.current) return;
     fitCoordinates();
 
-    const { latitude, longitude } = userLocation;
+    const { latitude, longitude } = parsedUserLocation;
 
     mapRef.current?.animateCamera({
       center: { latitude, longitude },
     });
 
-  }, [userLocation]);
+  }, [parsedUserLocation]);
 
   const handleArrowBack: any = () => {
     setDriverUpdateLocation?.({
@@ -241,8 +250,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
         [
           { latitude: location.lat, longitude: location.lng },
           {
-            latitude: initialPosition.latitude,
-            longitude: initialPosition.longitude,
+            latitude: parsedInitialPosition.latitude,
+            longitude: parsedInitialPosition.longitude,
           },
         ],
         {
@@ -255,7 +264,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (initialPosition.latitude !== 0 && autoFit.current) {
+      if (parsedInitialPosition.latitude !== 0 && autoFit.current) {
         if (mapRef.current) {
           fitCoordinates();
           autoFit.current = false;
@@ -263,7 +272,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [initialPosition]);
+  }, [parsedInitialPosition]);
 
   const fitCoordinatesZoom = () => {
     following.current = false;
@@ -346,8 +355,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ref={mapRef}
             provider={PROVIDER_GOOGLE}
             initialRegion={{
-              latitude: initialPosition.latitude,
-              longitude: initialPosition.longitude,
+              latitude: parsedInitialPosition.latitude,
+              longitude: parsedInitialPosition.longitude,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001 * ASPECT_RATIO,
             }}
@@ -369,8 +378,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
               <>
                 <Marker
                   coordinate={{
-                    latitude: location.lat,
-                    longitude: location.lng,
+                    latitude: destination.latitude,
+                    longitude: destination.longitude
                   }}
                   title={location.title}>
                   <Icon
@@ -387,7 +396,10 @@ export const DriverMap = (props: GoogleMapsParams) => {
                     />
                   </View>
                 </Marker>
-                <Marker coordinate={userLocation}>
+                <Marker coordinate={{
+                  latitude: parsedUserLocation.latitude,
+                  longitude: parsedUserLocation.longitude
+                }}>
                   <View style={styles.driverIcon}>
                     <OIcon
                       style={styles.image}
@@ -401,8 +413,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: userLocation.latitude,
-                  longitude: userLocation.longitude,
+                  latitude: parsedUserLocation.latitude,
+                  longitude: parsedUserLocation.longitude
                 }}
                 title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
               />
@@ -516,8 +528,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             options={{
               latitude: destination.latitude,
               longitude: destination.longitude,
-              sourceLatitude: userLocation.latitude,
-              sourceLongitude: userLocation.longitude,
+              sourceLatitude: parsedUserLocation.latitude,
+              sourceLongitude: parsedUserLocation.longitude,
               naverCallerName: 'com.deliveryapp',
               dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
               dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
@@ -539,7 +551,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
             secondButton={true}
             firstColorCustom={theme.colors.red}
             secondColorCustom={theme.colors.green}
-            widthButton={isHideRejectButtons ? '100%': '45%'}
+            widthButton={isHideRejectButtons ? '100%' : '45%'}
             isPadding
             isHideRejectButtons={isHideRejectButtons}
           />

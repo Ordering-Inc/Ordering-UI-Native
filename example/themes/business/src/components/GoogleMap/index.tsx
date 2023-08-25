@@ -50,12 +50,16 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const ASPECT_RATIO = width / height;
   const [isMapReady, setIsMapReady] = useState(false);
   const [markerPosition, setMarkerPosition] = useState({
-    latitude: locations ? locations[locations.length - 1].lat : location.lat,
-    longitude: locations ? locations[locations.length - 1].lng : location.lng,
+    latitude: locations 
+      ? typeof locations[locations.length - 1].lat === 'string' ? parseFloat(locations[locations.length - 1].lat) || 0 : locations[locations.length - 1].lat || 0
+      : typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat || 0,
+    longitude: locations 
+      ? typeof locations[locations.length - 1].lng === 'string' ? parseFloat(locations[locations.length - 1].lng) || 0 : locations[locations.length - 1].lng || 0
+      : typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng || 0,
   });
   const [region, setRegion] = useState({
-    latitude: location.lat,
-    longitude: location.lng,
+    latitude: typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat || 0,
+    longitude: typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng || 0,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001 * ASPECT_RATIO,
   });
@@ -78,12 +82,15 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   let MARKERS =
     locations &&
     locations.map((location: { lat: number; lng: number; level: number }) => {
-      return location.level === 4 && driverLocation?.lat
+      return location.level === 4 && driverLocation?.lat && driverLocation?.lng
         ? {
-          latitude: driverLocation?.lat,
-          longitude: driverLocation?.lng,
+          latitude: typeof driverLocation?.lat === 'string' ? parseFloat(driverLocation?.lat) || 0 : driverLocation?.lat,
+          longitude: typeof driverLocation?.lng === 'string' ? parseFloat(driverLocation?.lng) || 0 : driverLocation?.lng,
         }
-        : { latitude: location.lat, longitude: location.lng };
+        : {
+          latitude: typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat,
+          longitude: typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng
+        };
     });
 
   const handleArrowBack: any = () => {
