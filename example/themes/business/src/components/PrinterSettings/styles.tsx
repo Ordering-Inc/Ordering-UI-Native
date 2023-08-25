@@ -1,6 +1,10 @@
 import styled from "styled-components/native";
 
 export const Container = styled.View`
+  margin-bottom: 50px;
+`
+
+export const ContainerList = styled.View`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
@@ -13,5 +17,5 @@ export const EnabledAutoPrint = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 30px 10px;
+  padding: 20px 0px 10px;
 `;

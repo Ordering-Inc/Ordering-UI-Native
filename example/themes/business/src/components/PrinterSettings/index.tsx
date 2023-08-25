@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
-import { useForm, Controller } from 'react-hook-form';
+import { StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import FAIcons from 'react-native-vector-icons/FontAwesome'
 import { useTheme } from 'styled-components/native'
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useLanguage } from 'ordering-components/native'
 
 import { _setStoreData, _retrieveStoreData } from '../../providers/StoreUtil'
-import { Container, EnabledAutoPrint } from './styles'
-import { OText, OInput} from '../shared'
+import { Container, ContainerList, EnabledAutoPrint } from './styles'
+import { OText, OIcon, OModal } from '../shared'
+import { PrinterEdition } from '../PrinterEdition'
 
 export const PrinterSettings = (props: any) => {
-  const { onClose } = props
+  const { navigation, onClose } = props
 
-  const [currentPrinter, setCurrentPrinter] = useState<any>(null)
+  const [printers, setPrinters] = useState<any>({ list: [] })
   const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
-  const [layoutWidth, setLayoutWidth] = useState<any>({ actionsBtns: 0 })
+  const [openModal, setOpenModal] = useState({ open: false, data: null })
 
   const WIDTH_SCREEN = Dimensions.get('window').width
 
   const [, t] = useLanguage()
   const theme = useTheme()
-  const { handleSubmit, control, setValue, watch } = useForm();
-
-  const watchIp = watch('ip')
-  const isErrorIp = !/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i.test(watchIp)
 
   const styles = StyleSheet.create({
     icons: {
@@ -45,7 +40,7 @@ export const PrinterSettings = (props: any) => {
     wIconContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      width: WIDTH_SCREEN - 60 - 40
+      width: WIDTH_SCREEN - 60 - 10 - 26
     },
     wrapperContainer: {
       flexDirection: 'column',
@@ -62,6 +57,22 @@ export const PrinterSettings = (props: any) => {
     },
     label: {
       color: theme.colors.textGray
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    titleGroups: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      minHeight: 33,
     },
   })
 
@@ -89,32 +100,32 @@ export const PrinterSettings = (props: any) => {
     { model: 'SM-T400i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT400i', type: 1, ip: '', printMode: 'append' },
   ]
 
-  const handleClick = async (item: any, type?: number, ip?: string) => {
+  const goToBack = () => navigation?.canGoBack() && navigation.goBack()
+
+  const handleClick = async ({ item, type, ip, edit }: any) => {
     let _item = item
-    if (_item) {
+    let _printers = printers.list
+    const idx = _printers.findIndex((p: any) => p.model === _item.model)
+
+    if (idx !== -1 && !edit) {
+      _printers.splice(idx, 1);
+    } else {
+      const _currentPrinter = _printers.find((p: any) => p.model === _item?.model)
       _item = {
-        ...currentPrinter,
+        ..._currentPrinter,
         ...item,
-        type: type ?? currentPrinter?.type,
-        ip: ip ?? currentPrinter?.ip ?? '',
-        portName: (type ?? currentPrinter?.type) === 1 || !ip
-          ? item.portName1 ?? currentPrinter?.portName1
+        type: type ?? _currentPrinter?.type ?? 1,
+        ip: ip ?? _currentPrinter?.ip ?? '',
+        portName: (type ?? _currentPrinter?.type) === 1 || !ip
+          ? item.portName1 ?? _currentPrinter?.portName1
           : `TCP:${ip}`
       }
+      edit ? (_printers[idx] = _item) : _printers.push(_item)
     }
-    setCurrentPrinter(_item)
-    await _setStoreData('printer', _item)
+
+    setPrinters({ list: _printers })
+    await _setStoreData('printers', _printers)
     type === 1 && onClose && onClose()
-  }
-
-  const onLayout = (event: any, type: string) => {
-    const { width } = event.nativeEvent.layout;
-    setLayoutWidth({ ...layoutWidth, [type]: width })
-  };
-
-  const onSubmit = ({ ip }: any) => {
-    handleClick(currentPrinter, 2, ip)
-    onClose && onClose()
   }
 
   const handleAutoPrint = async () => {
@@ -124,24 +135,23 @@ export const PrinterSettings = (props: any) => {
 
   useEffect(() => {
     const getStorageData = async () => {
-      const printer = await _retrieveStoreData('printer')
+      const printers = await _retrieveStoreData('printers')
       const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
-      setCurrentPrinter(printer)
+      setPrinters({ list: printers ?? [] })
       setAutoPrintEnabled(!!autoPrint)
     }
 
     getStorageData()
   }, [])
 
-  useEffect(() => {
-    currentPrinter?.ip && !isErrorIp && setValue('ip', currentPrinter?.ip)
-  }, [currentPrinter?.type])
-
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-    >
-      <OText size={24} style={{ paddingLeft: 30 }}>
+    <Container>
+      <View style={styles.titleGroups}>
+        <TouchableOpacity onPress={() => goToBack()} style={styles.btnBackArrow}>
+          <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+        </TouchableOpacity>
+      </View>
+      <OText size={24} style={{ paddingTop: 0 }}>
         {t('PRINTER_SETTINGS', 'Printer Settings')}
       </OText>
       <EnabledAutoPrint>
@@ -162,118 +172,85 @@ export const PrinterSettings = (props: any) => {
           animationSpeed={200}
         />
       </EnabledAutoPrint>
-      <View style={{ paddingHorizontal: 30 }}>
+      <View>
         {printerList.map((item: any, i: number) => (
-          <Container
+          <ContainerList
             key={i}
             activeOpacity={1}
-            onPress={() => handleClick(item)}
+            onPress={() => handleClick({ item })}
           >
             <View style={styles.wrapperContainer}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <MCIcons
+                  name={printers.list.find((p: any) => p?.model === item.model) ? "checkbox-marked" : "checkbox-blank-outline"}
+                  size={26}
+                  color={theme.colors.primary}
+                  onPress={() => handleClick({ item })}
+                />
                 <TouchableOpacity
                   activeOpacity={1}
                   style={styles.wIconContainer}
-                  onPress={() => handleClick(item)}
+                  onPress={() => handleClick({ item })}
                 >
                   <SimpleLineIcons
                     name='printer'
                     color={theme.colors.textGray}
                     size={18}
-                    style={{ ...styles.icons, color: currentPrinter?.model === item.model ? theme.colors.primary : theme.colors.textGray }}
+                    style={{
+                      ...styles.icons,
+                      color: printers.list.find((p: any) => p?.model === item.model)
+                        ? theme.colors.primary
+                        : theme.colors.textGray
+                    }}
                   />
                   <OText
                     size={18}
-                    color={currentPrinter?.model === item.model ? theme.colors.primary : theme.colors.textGray}
+                    color={printers.list.find((p: any) => p?.model === item.model)
+                      ? theme.colors.primary
+                      : theme.colors.textGray
+                    }
                   >
                     {item.model}
                   </OText>
                 </TouchableOpacity>
-                {currentPrinter?.model === item.model && (
+                {!!printers.list.find((p: any) => p?.model === item.model) && (
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => handleClick(null)}
+                    onPress={() => setOpenModal({
+                      open: true,
+                      data: printers.list.find((p: any) => p?.model === item.model)
+                    })}
                     style={{ width: 40 }}
                   >
                     <FeatherIcon
-                      name='x-circle'
-                      color={theme.colors.danger500}
+                      name='edit'
                       size={20}
                       style={styles.icons}
                     />
                   </TouchableOpacity>
                 )}
               </View>
-              <View
-                style={styles.wrapperIcons}
-              >
-                <View style={styles.wrapperIcons} onLayout={(e) => onLayout(e, 'actionsBtns')}>
-                  <FAIcons
-                    name='bluetooth'
-                    size={20}
-                    {...(currentPrinter?.type === 1 && currentPrinter?.model === item.model ? { color: theme.colors.primary } : {})}
-                    style={{ ...styles.optionIcons, borderColor: currentPrinter?.type === 1 && currentPrinter?.model === item.model ? theme.colors.primary : theme.colors.textGray }}
-                    onPress={() => handleClick(item, 1)}
-                  />
-                  <MCIcons
-                    name='access-point-network'
-                    size={20}
-                    {...(currentPrinter?.type === 2 && currentPrinter?.model === item.model ? { color: theme.colors.primary } : {})}
-                    style={{ ...styles.optionIcons, borderColor: currentPrinter?.type === 2 && currentPrinter?.model === item.model ? theme.colors.primary : theme.colors.textGray }}
-                    onPress={() => handleClick(item, 2)}
-                  />
-                </View>
-                {currentPrinter?.type === 2 && currentPrinter?.model === item.model && (
-                  <View style={{ flexDirection: 'row', width: WIDTH_SCREEN - 60 - layoutWidth.actionsBtns }}>
-                    <Controller
-                      control={control}
-                      name={'ip'}
-                      rules={{
-                        required: t('VALIDATION_ERROR_IP_ADDRESS_REQUIRED', 'Ip address is required'),
-                        pattern: {
-                          value: /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i,
-                          message: t('INVALID_ERROR_IP_ADDRESS', 'Invalid ip address')
-                        }
-                      }}
-                      defaultValue={currentPrinter?.ip ?? ''}
-                      render={() => (
-                        <OInput
-                          placeholder={t('IP_ADDRESS', 'Ip address')}
-                          placeholderTextColor={theme.colors.arrowColor}
-                          style={{ ...styles.inputStyle, borderColor: isErrorIp ? theme.colors.danger500 : theme.colors.tabBar }}
-                          value={currentPrinter?.ip ?? ''}
-                          selectionColor={theme.colors.primary}
-                          color={theme.colors.textGray}
-                          onChange={(value: any) => {
-                            setValue('ip', value)
-                            setCurrentPrinter({
-                              ...currentPrinter,
-                              ip: value
-                            })
-                          }}
-                        />
-                      )}
-                    />
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      disabled={isErrorIp}
-                      onPress={handleSubmit(onSubmit)}
-                      style={{ width: 40 }}
-                    >
-                      <FeatherIcon
-                        name='save'
-                        size={20}
-                        color={isErrorIp ? theme.colors.tabBar : theme.colors.primary }
-                        style={styles.icons}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
             </View>
-          </Container>
+          </ContainerList>
         ))}
       </View>
-    </ScrollView>
+      <OModal
+        hideIcons
+        entireModal
+        customClose
+        open={openModal.open}
+        style={{
+          paddingTop: 0,
+          marginTop: 0
+        }}
+        onClose={() => setOpenModal({ open: false, data: null })}
+      >
+        <PrinterEdition
+          printer={openModal.data}
+          handleChangePrinter={handleClick}
+          onClose={() => setOpenModal({ open: false, data: null })}
+        />
+      </OModal>
+    </Container>
   )
 }

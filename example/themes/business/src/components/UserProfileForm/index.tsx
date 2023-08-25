@@ -63,7 +63,7 @@ const ProfileUI = (props: ProfileParams) => {
   const { errors } = useForm();
   const theme = useTheme();
 
-  const [phoneInputData, setPhoneInputData] = useState({
+  const [phoneInputData, setPhoneInputData] = useState<any>({
     error: '',
     phone: {
       country_phone_code: null,
@@ -517,7 +517,7 @@ const ProfileUI = (props: ProfileParams) => {
               }} />
             </Pressable>
           ) : (
-            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+            <Pressable style={{ marginBottom: 10 }} onPress={() => navigation.navigate('PrinterSetup')}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <OText size={16}>{t('PRINTER_SETTINGS', 'Printer Settings')}</OText>
                 <AntDesignIcon size={18} name='right' />
@@ -551,9 +551,7 @@ const ProfileUI = (props: ProfileParams) => {
             entireModal
             hideIcons
           >
-            {props.isBusinessApp ? (
-              <PrinterSettings onClose={() => setOpenModal(false)} />
-            ) : (
+            {!props.isBusinessApp && (
               <DriverSchedule schedule={user?.schedule} />
             )}
           </OModal>
