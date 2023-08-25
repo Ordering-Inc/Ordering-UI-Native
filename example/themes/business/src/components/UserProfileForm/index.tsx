@@ -63,7 +63,7 @@ const ProfileUI = (props: ProfileParams) => {
   const { errors } = useForm();
   const theme = useTheme();
 
-  const [phoneInputData, setPhoneInputData] = useState({
+  const [phoneInputData, setPhoneInputData] = useState<any>({
     error: '',
     phone: {
       country_phone_code: null,
@@ -78,11 +78,8 @@ const ProfileUI = (props: ProfileParams) => {
   const allowDriverUpdateData = user?.level !== 4 || configs?.allow_driver_update_data?.value === "1"
   useEffect(() => {
     if (phoneInputData.phone.cellphone) {
-      const codeNumberPhone = phoneInputData.phone.cellphone.slice(0, 3);
-      const numberPhone = phoneInputData.phone.cellphone.slice(
-        3,
-        phoneInputData.phone.cellphone?.length,
-      );
+      const codeNumberPhone = phoneInputData.phone.country_phone_code
+      const numberPhone = phoneInputData.phone.cellphone
       setPhoneToShow(`(${codeNumberPhone}) ${numberPhone}`);
     }
   }, [phoneInputData.phone.cellphone]);
@@ -467,7 +464,6 @@ const ProfileUI = (props: ProfileParams) => {
                     />
 
                     <OText style={styles.label}>{t('PHONE', 'Phone')}</OText>
-
                     <OInput
                       isSecured={true}
                       placeholder={
@@ -520,7 +516,7 @@ const ProfileUI = (props: ProfileParams) => {
               }} />
             </Pressable>
           ) : (
-            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+            <Pressable style={{ marginBottom: 10 }} onPress={() => navigation.navigate('PrinterSetup')}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <OText size={16}>{t('PRINTER_SETTINGS', 'Printer Settings')}</OText>
                 <AntDesignIcon size={18} name='right' />
@@ -554,9 +550,7 @@ const ProfileUI = (props: ProfileParams) => {
             entireModal
             hideIcons
           >
-            {props.isBusinessApp ? (
-              <PrinterSettings onClose={() => setOpenModal(false)} />
-            ) : (
+            {!props.isBusinessApp && (
               <DriverSchedule schedule={user?.schedule} />
             )}
           </OModal>

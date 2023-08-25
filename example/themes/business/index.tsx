@@ -29,6 +29,7 @@ import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
 import { PreviousMessages } from './src/components/PreviousMessages';
 import { PreviousOrders } from './src/components/PreviousOrders';
+import { PrinterSettings } from './src/components/PrinterSettings';
 import { ProductItemAccordion } from './src/components/ProductItemAccordion';
 import { ReviewCustomer } from './src/components/ReviewCustomer'
 import { SearchBar } from './src/components/SearchBar';
@@ -103,6 +104,7 @@ export {
   PhoneInputNumber,
   PreviousMessages,
   PreviousOrders,
+  PrinterSettings,
   ProductItemAccordion,
   ReviewCustomer,
   SafeAreaContainerLayout,

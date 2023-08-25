@@ -26,7 +26,6 @@ import {
 	SocialListWrapper
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-const types = ['food', 'laundry', 'alcohol', 'groceries'];
 
 let BusinessInformation: null | React.ElementType = null
 let BusinessReviews: null | React.ElementType = null
@@ -36,6 +35,7 @@ export const BusinessBasicInformation = (
 ) => {
 	const { navigation, businessState, isBusinessInfoShow, logo, header, isPreOrder } = props;
 	const { business, loading } = businessState;
+	const types = business?.types && business?.types?.filter(({ enabled }) => (enabled)).map(({ name }) => (name))
 
 	const theme = useTheme();
 	const [orderState] = useOrder();
@@ -146,14 +146,11 @@ export const BusinessBasicInformation = (
 	}
 
 	const getBusinessType = () => {
-		if (Object.keys(business || {}).length <= 0) return t('GENERAL', 'General');
+		if (!types) return t('GENERAL', 'General');
 		const _types: any = [];
 		types.forEach(
-			(type) =>
-				business[type] &&
-				_types.push(
-					t(`BUSINESS_TYPE_${type?.replace(/\s/g, '_')?.toUpperCase()}`, type),
-				),
+			(type: any) =>
+				_types.push(type)
 		);
 		return _types.join(', ');
 	};
