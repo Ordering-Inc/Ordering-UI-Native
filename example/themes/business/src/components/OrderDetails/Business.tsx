@@ -309,24 +309,26 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setOpenModalForAccept(true);
   };
 
-  const printAction = async (printerSettings: any, commands: any) => {
+  const printAction = async (printerSettings: any, commands: any, showAlert: boolean = true) => {
     try {
       var printResult = await StarPRNT.print(printerSettings?.emulation, commands, printerSettings?.portName);
-      showToast(ToastType.Info, t('ORDER_PRINTED_SUCCESS', 'Order printed'), 1000)
+      showAlert && showToast(ToastType.Info, t('ORDER_PRINTED_SUCCESS', 'Order printed'), 1000)
     } catch (e) {
-      showToast(ToastType.Error, t('ORDER_PRINTED_FAILED', 'Order not printed, connection failed'), 1000)
+      showAlert && showToast(ToastType.Error, t('ORDER_PRINTED_FAILED', 'Order not printed, connection failed'), 1000)
     }
   }
 
   const handleViewSummaryOrder = () => {
     if (printerSettings) {
-      const commands: any = generateCommands({
-        ...order,
-        orderStatus: getOrderStatus(order?.status, t)?.value
-      }, printerSettings?.printMode)
-      commands.push({ appendCutPaper: StarPRNT.CutPaperAction.PartialCutWithFeed })
+      printerSettings.map((printer: any, idx: number) => {
+        const commands: any = generateCommands({
+          ...order,
+          orderStatus: getOrderStatus(order?.status, t)?.value
+        }, printer?.printMode)
+        commands.push({ appendCutPaper: StarPRNT.CutPaperAction.PartialCutWithFeed })
 
-      printAction(printerSettings, commands)
+        printAction(printer, commands, idx === printerSettings.length - 1)
+      })
       return
     }
     navigation?.navigate &&
@@ -411,9 +413,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     const getStorageData = async () => {
-    const printer = await _retrieveStoreData('printer')
+    const printers = await _retrieveStoreData('printers')
       const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
-      setPrinterSettings(printer)
+      setPrinterSettings(printers?.length && printers)
       setAutoPrintEnabled(!!autoPrint)
     }
 
