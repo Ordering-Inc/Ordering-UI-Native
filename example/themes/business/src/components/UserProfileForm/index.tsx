@@ -78,11 +78,8 @@ const ProfileUI = (props: ProfileParams) => {
   const allowDriverUpdateData = user?.level !== 4 || configs?.allow_driver_update_data?.value === "1"
   useEffect(() => {
     if (phoneInputData.phone.cellphone) {
-      const codeNumberPhone = phoneInputData.phone.cellphone.slice(0, 3);
-      const numberPhone = phoneInputData.phone.cellphone.slice(
-        3,
-        phoneInputData.phone.cellphone?.length,
-      );
+      const codeNumberPhone = phoneInputData.phone.country_phone_code
+      const numberPhone = phoneInputData.phone.cellphone
       setPhoneToShow(`(${codeNumberPhone}) ${numberPhone}`);
     }
   }, [phoneInputData.phone.cellphone]);
@@ -467,7 +464,6 @@ const ProfileUI = (props: ProfileParams) => {
                     />
 
                     <OText style={styles.label}>{t('PHONE', 'Phone')}</OText>
-
                     <OInput
                       isSecured={true}
                       placeholder={
