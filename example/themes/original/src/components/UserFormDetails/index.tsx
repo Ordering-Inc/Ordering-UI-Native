@@ -307,7 +307,7 @@ export const UserFormDetailsUI = (props: any) => {
 								(item: any) => {
 									const field = item?.validation_field || item
 									return (showField &&
-										showField(field.code) && ((requiredFields && requiredFields.includes(field.code)) || !requiredFields) && (
+										showField(field.code) && ((requiredFields && requiredFields?.includes?.(field.code)) || !requiredFields) && (
 											<React.Fragment key={field.id}>
 												<Controller
 													key={field.id}
