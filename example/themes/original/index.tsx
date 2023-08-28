@@ -106,6 +106,8 @@ import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/Orde
 import { FormInput, FormSide, ButtonsWrapper, LoginWith, OTab, OTabs } from './src/components/LoginForm/styles';
 import { OSItem, OSItemContent, OSItemActions } from './src/components/PaymentOptionStripe/styles';
 
+import { orderTypeList } from './src/utils'
+
 import Alert from './src/providers/AlertProvider'
 
 import {
@@ -343,6 +345,7 @@ export {
 	_setStoreData,
 	_removeStoreData,
 	_clearStoreData,
+	orderTypeList,
 
 	// Date Picker
 	DatePickerUI
