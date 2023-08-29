@@ -103,7 +103,8 @@ const CheckoutUI = (props: any) => {
 		setPlaceSpotNumber,
 		maxDate,
 		androidAppId,
-		urlscheme
+		urlscheme,
+		checkoutFieldsState
 	} = props
 
 	const theme = useTheme();
@@ -178,6 +179,7 @@ const CheckoutUI = (props: any) => {
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const businessConfigs = businessDetails?.business?.configs ?? []
@@ -270,7 +272,7 @@ const CheckoutUI = (props: any) => {
 			return
 		}
 
-		if (!userErrors.length && (!requiredFields?.length || allowedGuest) || forcePlace) {
+		if (!userErrors.length && (!requiredFields?.length) || forcePlace) {
 			vibrateApp()
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, { isNative: true }, confirmPayment, NativeStripeSdk?.dismissPlatformPay)
 			return
@@ -310,7 +312,6 @@ const CheckoutUI = (props: any) => {
 	const checkValidationFields = () => {
 		setUserErrors([])
 		const errors = []
-		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
@@ -338,6 +339,27 @@ const CheckoutUI = (props: any) => {
 		setUserErrors(errors)
 	}
 
+	const checkGuestValidationFields = () => {
+		const userSelected = user
+		const _requiredFields = checkoutFieldsState?.fields
+			.filter((field: any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required &&
+				!notFields.includes(field?.validation_field?.code) &&
+				userSelected && !userSelected[field?.validation_field?.code])
+			.map((item: any) => item?.validation_field?.code)
+		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+
+		if (
+			userSelected &&
+			!userSelected?.cellphone &&
+			((guestCheckoutCellPhone?.enabled &&
+				guestCheckoutCellPhone?.required) ||
+				configs?.verification_phone_required?.value === '1')
+		) {
+			_requiredFields.push('cellphone')
+		}
+		setRequiredFields(_requiredFields)
+	}
+
 	const togglePhoneUpdate = (val: boolean) => {
 		setPhoneUpdate(val)
 	}
@@ -347,10 +369,15 @@ const CheckoutUI = (props: any) => {
 	}
 
 	useEffect(() => {
-		if (validationFields && validationFields?.fields?.checkout) {
+		if (validationFields && validationFields?.fields?.checkout && !user?.guest_id) {
 			checkValidationFields()
 		}
 	}, [validationFields, user])
+
+	useEffect(() => {
+		if (checkoutFieldsState?.loading || !user?.guest_id) return
+		checkGuestValidationFields()
+	}, [user, checkoutFieldsState])
 
 	useEffect(() => {
 		if (errors) {
