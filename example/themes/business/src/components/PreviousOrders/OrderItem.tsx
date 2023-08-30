@@ -191,13 +191,13 @@ export const OrderItem = React.memo((props: any) => {
                 {order?.external_id ?? t('NO_EXTERNAL_ID', 'No external Id ') + t('NO', 'Order No.') + order?.id}
               </OText>
             )}
-            {!showExternalId && <OText
+            <OText
               style={styles.date}
               color={theme.colors.unselectText}
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              {((!!order?.order_group_id && order?.order_group && isLogisticOrder
+              {!showExternalId && ((!!order?.order_group_id && order?.order_group && isLogisticOrder
                 ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
                 : (t('NO', 'Order No.') + order?.id)
               ) + ' · ')}
@@ -205,7 +205,6 @@ export const OrderItem = React.memo((props: any) => {
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
-            }
             {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
               <>
                 {!showExternalId && <OText> · </OText>}
