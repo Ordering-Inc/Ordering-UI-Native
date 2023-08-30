@@ -19,3 +19,12 @@ export const EnabledAutoPrint = styled.View`
   align-items: center;
   padding: 20px 0px 10px;
 `;
+
+export const NoPrintersContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  height: 100%;
+  flex: 1;
+`
