@@ -15,7 +15,7 @@ const LogoutButtonUI = (props: any) => {
     const data = await _retrieveStoreData('notification_state');
     const res = await handleLogoutClick(data);
     if (res) {
-      _clearStoreData({ excludedKeys: ['isTutorial'] });
+      _clearStoreData({ excludedKeys: ['isTutorial', 'language'] });
     }
   };
 
