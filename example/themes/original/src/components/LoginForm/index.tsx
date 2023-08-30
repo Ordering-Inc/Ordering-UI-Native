@@ -108,7 +108,7 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-	const appleLoginEnabled = Platform.OS === 'ios' && configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+	const appleLoginEnabled = Platform.OS === 'ios' && (configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled)
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
@@ -802,7 +802,7 @@ const LoginFormUI = (props: LoginParams) => {
 											handleSuccessGoogleLogin={handleSuccessFacebook}
 										/>
 									)}
-									{(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && appleLoginEnabled && (
+									{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled && (
 										<AppleLogin
 											notificationState={notificationState}
 											handleErrors={(err: any) => { showToast(ToastType.Error, err), vibrateApp() }}
