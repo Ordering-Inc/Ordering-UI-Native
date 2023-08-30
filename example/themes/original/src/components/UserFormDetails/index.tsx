@@ -381,7 +381,7 @@ export const UserFormDetailsUI = (props: any) => {
 										))
 								},
 							)}
-							{showInputBirthday && (
+							{showInputBirthday && ((requiredFields && requiredFields?.includes?.('birthdate')) || !requiredFields) && (
 								<>
 									<WrapperBirthdate>
 										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
@@ -396,7 +396,7 @@ export const UserFormDetailsUI = (props: any) => {
 									<DatePickerUI open={showDatePicker} birthdate={birthdate} onConfirm={_handleChangeDate} onCancel={() => setShowDatePicker(false)} />
 								</>
 							)}
-							{!!showInputPhoneNumber && ((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
+							{!!showInputPhoneNumber && ((requiredFields && requiredFields?.includes?.('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
 									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
 									<PhoneInputNumber
@@ -523,10 +523,10 @@ export const UserFormDetailsUI = (props: any) => {
 						borderColor: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.white : theme.colors.primary,
 						opacity: !user?.guest_id && (formState.loading || !isValid) ? 0.3 : 1,
 					}}
-					onClick={!user?.guest_id ? handleSubmit(onSubmit) : () => setIsModalOpen(true)}
+					onClick={handleSubmit(onSubmit)}
 				/>
 			)}
-			{isCheckout && !!user?.guest_id && (
+			{isCheckout && !!user?.guest_id && !requiredFields && (
 				<TouchableOpacity style={{ marginTop: 10 }} onPress={() => handlePlaceOrderAsGuest()}>
 					<OText color={theme.colors.primary} style={{ textAlign: 'center' }}>{t('PLACE_ORDER_AS_GUEST', 'Place order as guest')}</OText>
 				</TouchableOpacity>
