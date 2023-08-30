@@ -66,7 +66,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 		isFromProductsList,
 		hasAddressDefault,
 		afterSignup,
-		businessSlug
+		businessSlug,
+		isFromCheckout
 	} = props;
 
 	const theme = useTheme();
@@ -383,9 +384,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 			auth &&
 			!afterSignup
 		) {
-			!isFromProductsList
-				? navigation.navigate('BottomTab')
-				: navigation.navigate('Business');
+			isFromCheckout
+				? navigation.goBack()
+				: !isFromProductsList
+					? navigation.navigate('BottomTab')
+					: navigation.navigate('Business');
 		}
 	}, [orderState?.options?.address]);
 

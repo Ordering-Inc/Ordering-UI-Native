@@ -217,7 +217,8 @@ const AddressListUI = (props: AddressListParams) => {
 													onSaveAddress: handleSaveAddress,
 													isSelectedAfterAdd: true,
 													isFromProductsList: isFromProductsList,
-													hasAddressDefault: !!orderState.options?.address?.location
+													hasAddressDefault: !!orderState.options?.address?.location,
+													isFromCheckout: route?.params?.isFromCheckout
 												}
 											) : onNavigationRedirect(
 												'AddressFormInitial',
@@ -228,7 +229,8 @@ const AddressListUI = (props: AddressListParams) => {
 													onSaveAddress: handleSaveAddress,
 													isSelectedAfterAdd: true,
 													isFromProductsList: isFromProductsList,
-													hasAddressDefault: !!orderState.options?.address?.location
+													hasAddressDefault: !!orderState.options?.address?.location,
+													isFromCheckout: route?.params?.isFromCheckout
 												})}
 										>
 											<OIcon src={theme.images.general.pencil} width={16} style={{ marginHorizontal: 4 }} />
@@ -305,7 +307,8 @@ const AddressListUI = (props: AddressListParams) => {
 										addressesList: addressList?.addresses,
 										nopadding: true,
 										isSelectedAfterAdd: true,
-										hasAddressDefault: !!orderState.options?.address?.location
+										hasAddressDefault: !!orderState.options?.address?.location,
+										isFromCheckout: route?.params?.isFromCheckout
 									}) : onNavigationRedirect(
 										'AddressFormInitial',
 										{
@@ -314,7 +317,8 @@ const AddressListUI = (props: AddressListParams) => {
 											addressesList: addressList?.addresses,
 											nopadding: true,
 											isSelectedAfterAdd: true,
-											hasAddressDefault: !!orderState.options?.address?.location
+											hasAddressDefault: !!orderState.options?.address?.location,
+											isFormCheckout: route?.params?.isFromCheckout
 										})}
 							/>
 						</>
