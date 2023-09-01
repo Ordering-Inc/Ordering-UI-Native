@@ -48,6 +48,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 	const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
+	const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 	const hideProductLogo = viewString
 		? theme?.[viewString]?.components?.cart?.components?.products?.image?.hidden
 		: theme?.business_view?.components?.products?.components?.product?.components?.image?.hidden
@@ -283,7 +284,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									</OText>
 								</RibbonBox>
 							)}
-							{!hideProductLogo && (
+							{(!hideProductLogo && (product?.images || !hideProductDummyLogo)) && (
 								<FastImage
 									style={styles.productStyle}
 									source={product?.images ? {
