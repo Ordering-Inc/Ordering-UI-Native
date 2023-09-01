@@ -231,11 +231,6 @@ const MapViewComponent = (props: MapViewParams) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <View>
-          <OText>
-              {`Locations: lat: ${userLocation?.latitude}, lng: ${userLocation?.longitude}`}
-          </OText>
-        </View>
         {!isLoadingBusinessMarkers && isFocused && (
           <View style={{ flex: 1 }}>
             <MapView
