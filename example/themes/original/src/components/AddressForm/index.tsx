@@ -542,6 +542,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 					style={{ marginTop: Platform.OS === 'ios' ? 0 : 10 }}
 					titleWrapStyle={{ paddingHorizontal: 0, width: '100%' }}
 					titleStyle={{ marginRight: 0, marginLeft: 0, paddingRight: 5 }}
+          buttonProps={{
+						bgColor: theme.colors.white,
+						borderColor: theme.colors.white,
+						textStyle: { color: theme.colors.btnFont }
+					}}
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>

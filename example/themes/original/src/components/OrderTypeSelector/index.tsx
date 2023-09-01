@@ -103,6 +103,11 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 						title={t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will your order type?')}
 						titleAlign={'center'}
 						noMargin
+            buttonProps={{
+              bgColor: theme.colors.white,
+              borderColor: theme.colors.white,
+              textStyle: { color: theme.colors.btnFont }
+            }}
 					/>
 					{
 						items.length > 0 && (

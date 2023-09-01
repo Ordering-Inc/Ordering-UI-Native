@@ -49,6 +49,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						onClick={loadMoreOrders}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
 						imgRightSrc={null}
+						bgColor={theme.colors.primary}
+						borderColor={theme.colors.primary}
 						textStyle={{ color: theme.colors.white }}
 						style={{ borderRadius: 7.6, shadowOpacity: 0, marginTop: 20 }}
 					/>
