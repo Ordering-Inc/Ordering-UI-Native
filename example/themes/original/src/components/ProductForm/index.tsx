@@ -88,6 +88,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [events] = useEvent()
 	const commentRef = useRef()
 	const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+	const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -487,114 +488,118 @@ export const ProductOptionsUI = (props: any) => {
 							</View>
 						) : (
 							<>
-								<Swiper
-									loop={false}
-									ref={swiperRef}
-									showsButtons={true}
-									style={styles.mainSwiper}
-									showsPagination={false}
-									onIndexChanged={(index : any) => handleChangeMainIndex(index)}
-									prevButton={
-										<View style={styles.swiperButton}>
-											<IconAntDesign
-												name="caretleft"
-												color={theme.colors.white}
-												size={13}
-											// style={styles.starIcon}
-											/>
-										</View>
-									}
-									nextButton={
-										<View style={styles.swiperButton}>
-											<IconAntDesign
-												name="caretright"
-												color={theme.colors.white}
-												size={13}
-											// style={styles.starIcon}
-											/>
-										</View>
-									}
-								>
-									{gallery && gallery?.length > 0 && gallery.map((img : any, i: number) => (
-										<View
-											style={styles.slide1}
-											key={i}
+								{(product?.images || !hideProductDummyLogo) && (
+									<>
+										<Swiper
+											loop={false}
+											ref={swiperRef}
+											showsButtons={true}
+											style={styles.mainSwiper}
+											showsPagination={false}
+											onIndexChanged={(index : any) => handleChangeMainIndex(index)}
+											prevButton={
+												<View style={styles.swiperButton}>
+													<IconAntDesign
+														name="caretleft"
+														color={theme.colors.white}
+														size={13}
+													// style={styles.starIcon}
+													/>
+												</View>
+											}
+											nextButton={
+												<View style={styles.swiperButton}>
+													<IconAntDesign
+														name="caretright"
+														color={theme.colors.white}
+														size={13}
+													// style={styles.starIcon}
+													/>
+												</View>
+											}
 										>
-											{(String(img).includes('http') || typeof img === 'number') ? (
-												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 16 / 9 }}
-													source={typeof img !== 'number' ? {
-														uri: optimizeImage(img, 'h_1024,c_limit'),
-														priority: FastImage.priority.normal,
-													} : img}
-												/>
-											) : (
-												<>
-													<YoutubePlayer
-														height={'100%'}
-														width={'100%'}
-														play={playing}
-														videoId={img}
-														onChangeState={onStateChange}
-													/>
-													<Button title={playing ? "pause" : "play"} onPress={togglePlaying} />
-												</>
-											)}
-										</View>
-									))}
-								</Swiper>
-								<ScrollView
-									horizontal
-									contentContainerStyle={{
-										paddingHorizontal: 20,
-										paddingVertical: 15
-									}}
-								>
-									{gallery?.length > 1 && gallery.map((img: any, index: number) => (
-										<TouchableOpacity
-											key={index}
-											onPress={() => handleClickThumb(index)}
+											{gallery && gallery?.length > 0 && gallery.map((img : any, i: number) => (
+												<View
+													style={styles.slide1}
+													key={i}
+												>
+													{(String(img).includes('http') || typeof img === 'number') ? (
+														<FastImage
+															style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1, aspectRatio: 16 / 9 }}
+															source={typeof img !== 'number' ? {
+																uri: optimizeImage(img, 'h_1024,c_limit'),
+																priority: FastImage.priority.normal,
+															} : img}
+														/>
+													) : (
+														<>
+															<YoutubePlayer
+																height={'100%'}
+																width={'100%'}
+																play={playing}
+																videoId={img}
+																onChangeState={onStateChange}
+															/>
+															<Button title={playing ? "pause" : "play"} onPress={togglePlaying} />
+														</>
+													)}
+												</View>
+											))}
+										</Swiper>
+										<ScrollView
+											horizontal
+											contentContainerStyle={{
+												paddingHorizontal: 20,
+												paddingVertical: 15
+											}}
 										>
-											<View
-												style={{
-													height: 56,
-													borderRadius: 8,
-													margin: 8,
-													opacity: index === thumbsSwiper ? 1 : 0.8
-												}}
-											>
-												{String(img).includes('http') ? (
-													<OIcon
-														url={img}
+											{gallery?.length > 1 && gallery.map((img: any, index: number) => (
+												<TouchableOpacity
+													key={index}
+													onPress={() => handleClickThumb(index)}
+												>
+													<View
 														style={{
-															borderColor: theme.colors.lightGray,
+															height: 56,
 															borderRadius: 8,
-															minHeight: '100%',
-															opacity: isSoldOut ? 0.5 : 1
+															margin: 8,
+															opacity: index === thumbsSwiper ? 1 : 0.8
 														}}
-														width={56}
-														height={56}
-														cover
-													/>
-												) : (
-													<OIcon
-														url={'https://img.youtube.com/vi/' + img + '/0.jpg'}
-														style={{
-															borderColor: theme.colors.lightGray,
-															borderRadius: 8,
-															minHeight: '100%',
-															opacity: isSoldOut ? 0.5 : 1
-														}}
-														width={56}
-														height={56}
-														cover
-													/>
-												)}
-											</View>
-										</TouchableOpacity>
+													>
+														{String(img).includes('http') ? (
+															<OIcon
+																url={img}
+																style={{
+																	borderColor: theme.colors.lightGray,
+																	borderRadius: 8,
+																	minHeight: '100%',
+																	opacity: isSoldOut ? 0.5 : 1
+																}}
+																width={56}
+																height={56}
+																cover
+															/>
+														) : (
+															<OIcon
+																url={'https://img.youtube.com/vi/' + img + '/0.jpg'}
+																style={{
+																	borderColor: theme.colors.lightGray,
+																	borderRadius: 8,
+																	minHeight: '100%',
+																	opacity: isSoldOut ? 0.5 : 1
+																}}
+																width={56}
+																height={56}
+																cover
+															/>
+														)}
+													</View>
+												</TouchableOpacity>
 
-									))}
-								</ScrollView>
+											))}
+										</ScrollView>
+									</>
+								)}
 							</>
 						)}
 					</WrapHeader>
