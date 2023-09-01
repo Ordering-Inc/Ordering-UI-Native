@@ -102,6 +102,11 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 						titleAlign={'center'}
 						titleStyle={{ fontSize: 14 }}
 						noMargin
+            buttonProps={{
+              bgColor: theme.colors.white,
+              borderColor: theme.colors.white,
+              textStyle: { color: theme.colors.btnFont }
+            }}
 					/>
 					{
 						items.length > 0 && (

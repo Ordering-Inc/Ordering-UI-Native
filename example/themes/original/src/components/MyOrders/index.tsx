@@ -101,6 +101,11 @@ export const MyOrders = (props: any) => {
               showCall={false}
               paddingTop={30}
               btnStyle={{ paddingLeft: 0 }}
+              buttonProps={{
+                bgColor: theme.colors.white,
+                borderColor: theme.colors.white,
+                textStyle: { color: theme.colors.btnFont }
+              }}
             />
           )}
         </View>

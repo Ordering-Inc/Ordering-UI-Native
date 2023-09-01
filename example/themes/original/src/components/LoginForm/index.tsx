@@ -412,6 +412,11 @@ const LoginFormUI = (props: LoginParams) => {
 					btnStyle={{ paddingLeft: 0 }}
 					titleWrapStyle={{ paddingHorizontal: 0 }}
 					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+					buttonProps={{
+						bgColor: theme.colors.white,
+						borderColor: theme.colors.white,
+						textStyle: { color: theme.colors.btnFont }
+					}}
 				/>
 			)}
 			<FormSide>

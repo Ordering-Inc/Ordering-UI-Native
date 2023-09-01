@@ -47,6 +47,7 @@ interface Props {
 	isVertical?: boolean,
 	noMargin?: any
 	hideArrowLeft?: boolean
+	buttonProps?: any
 }
 
 const NavBar = (props: Props) => {
@@ -67,6 +68,7 @@ const NavBar = (props: Props) => {
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			{!props.hideArrowLeft && (
 				<OButton
+					{...props.buttonProps}
 					iconProps={{
 						name: 'arrowleft',
 						size: 26
