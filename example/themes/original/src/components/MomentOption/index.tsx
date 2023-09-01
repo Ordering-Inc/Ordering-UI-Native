@@ -474,7 +474,16 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			</Container>
 			{!isCart && !cateringPreorder && (
 				<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 20, backgroundColor: 'white', width: '100%' }}>
-					<OButton onClick={() => handleChangeMoment()} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }} textStyle={{ color: 'white', fontSize: 14 }} showNextIcon />
+					<OButton
+						onClick={() => handleChangeMoment()}
+						bgColor={theme.colors.primary}
+						borderColor={theme.colors.primary}
+						isDisabled={!selectedTime}
+						text={t('CONTINUE', 'Continue')}
+						style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }}
+						textStyle={{ color: 'white', fontSize: 14 }}
+						showNextIcon
+					/>
 				</View>
 			)}
 		</>
