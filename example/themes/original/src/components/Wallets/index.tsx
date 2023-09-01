@@ -141,6 +141,11 @@ const WalletsUI = (props: any) => {
               btnStyle={{ paddingLeft: 0 }}
               isVertical={!hideWalletsTheme}
               hideArrowLeft={!hideWalletsTheme}
+              buttonProps={{
+                bgColor: theme.colors.white,
+                borderColor: theme.colors.white,
+                textStyle: { color: theme.colors.btnFont }
+              }}
             />
             {isChewLayout && !openHistory && (
               <OButton
