@@ -287,6 +287,11 @@ const ProfileUI = (props: ProfileParams) => {
 					onActionLeft={() => navigation.goBack()}
 					showCall={false}
 					btnStyle={{ paddingLeft: 0 }}
+          buttonProps={{
+            bgColor: theme.colors.white,
+            borderColor: theme.colors.white,
+            textStyle: { color: theme.colors.btnFont }
+          }}
 				/>
 				<CenterView>
 					<View style={styles.photo}>

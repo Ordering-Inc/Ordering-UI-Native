@@ -125,6 +125,11 @@ const ForgotPasswordUI = (props: any) => {
 				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleStyle={{ width: '100%', marginLeft: 0, paddingLeft: 0 }}
 				titleWrapStyle={{ paddingHorizontal: 0, paddingStart: 0, flex: 1 }}
+        buttonProps={{
+          bgColor: theme.colors.white,
+          borderColor: theme.colors.white,
+          textStyle: { color: theme.colors.btnFont }
+        }}
 			/>
 			<FormSide>
 				<OText

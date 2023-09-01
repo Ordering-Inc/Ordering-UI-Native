@@ -119,7 +119,7 @@ const OButton = (props: Props): React.ReactElement => {
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
 			disabled={props.isDisabledWithSameStyles}
 		>
-			<StyledButton style={{ ...props.style, backgroundColor: props.bgColor ?? theme?.general?.components?.buttons?.color, borderColor: props.borderColor ?? theme?.general?.components?.buttons?.color, borderRadius: parseInt(theme?.general?.components?.buttons?.borderRadius) || props.style?.borderRadius }}>
+			<StyledButton style={{ ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor, borderRadius: props.style?.borderRadius }}>
 				{props.icon ? (
 					<props.icon {...props.iconProps} />
 				) : null}
@@ -127,7 +127,7 @@ const OButton = (props: Props): React.ReactElement => {
 					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} color={theme.colors.textNormal} />
 				) : null}
 				{props.text ? (
-					<StyledText style={{ ...props.textStyle, color: props?.textStyle?.color ?? theme?.general?.components?.buttons?.buttonTextColor }}>{props.text}</StyledText>
+					<StyledText style={{ ...props.textStyle, color: props?.textStyle?.color }}>{props.text}</StyledText>
 				) : null}
 				{props.imgRightSrc ? (
 					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />

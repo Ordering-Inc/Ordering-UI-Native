@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTheme } from 'styled-components/native';
 import { Platform, RefreshControl } from 'react-native'
 import { HelpParams } from '../../types'
 import { useLanguage } from 'ordering-components/native'
@@ -17,6 +18,7 @@ export const Help = (props: HelpParams) => {
     navigation
   } = props
   const [, t] = useLanguage()
+  const theme = useTheme()
   const [refreshing] = useState(false);
   const [refresh, setRefresh] = useState(false)
 
@@ -46,6 +48,11 @@ export const Help = (props: HelpParams) => {
         onActionLeft={goToBack}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
+        buttonProps={{
+          bgColor: theme.colors.white,
+          borderColor: theme.colors.white,
+          textStyle: { color: theme.colors.btnFont }
+        }}
       />
       <HelpSubItem
         onPress={() => onRedirect('HelpOrder')}

@@ -192,6 +192,11 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
+          buttonProps={{
+            bgColor: theme.colors.white,
+            borderColor: theme.colors.white,
+            textStyle: { color: theme.colors.btnFont }
+          }}
         />
         <DriverPhotoContainer>
           <View

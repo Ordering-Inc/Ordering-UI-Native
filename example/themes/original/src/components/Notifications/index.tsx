@@ -75,6 +75,11 @@ const NotificationsUI = (props: any) => {
 				showCall={false}
 				style={{ paddingVertical: 0 }}
 				btnStyle={{ paddingLeft: 0 }}
+        buttonProps={{
+          bgColor: theme.colors.white,
+          borderColor: theme.colors.white,
+          textStyle: { color: theme.colors.btnFont }
+        }}
 			/>
 			{showCustomerPromotions && showNotifications && (
 				<>

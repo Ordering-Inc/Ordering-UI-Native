@@ -39,6 +39,11 @@ export const HelpOrder = (props: HelpOrderParams) => {
         onActionLeft={goToBack}
         btnStyle={{ paddingLeft: 0 }}
         showCall={false}
+        buttonProps={{
+          bgColor: theme.colors.white,
+          borderColor: theme.colors.white,
+          textStyle: { color: theme.colors.btnFont }
+        }}
       />
       <Content>
         <OText mBottom={20}>
