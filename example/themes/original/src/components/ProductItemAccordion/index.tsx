@@ -43,6 +43,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		? theme?.checkout?.components?.cart?.components?.product?.components?.image?.hidden
 		: theme?.confirmation?.components?.cart?.components?.products?.components?.photo?.hidden
 
+	const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 	const hideProductCommentHide = isFromCheckout && theme?.checkout?.components?.cart?.components?.product?.components?.comments?.hidden
 
 	const pickerStyle = StyleSheet.create({
@@ -159,7 +160,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
 						<ContentInfo>
-							{(product?.images || theme?.images?.dummies?.product) && !hideProductImage && (
+							{(product?.images || (!hideProductDummyLogo && theme?.images?.dummies?.product)) && !hideProductImage && (
 								<ProductImage>
 									{isFromCheckout ? (
 										product?.images ? (
