@@ -25,6 +25,9 @@ export const UpsellingLayout = (props : any) => {
     const [{ parsePrice }] = useUtils()
     const [, t] = useLanguage()
 
+    const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
+
+
     const styles = StyleSheet.create({
         imageStyle: {
             width: 73,
@@ -66,9 +69,11 @@ export const UpsellingLayout = (props : any) => {
                                                     <OText size={10} color={theme.colors.primary}>{t('ADD', 'Add')}</OText>
                                                 </AddButton>
                                             </View>
-                                            <View>
-                                                <OIcon url={product?.images || theme?.images?.dummies?.product} style={styles.imageStyle} />
-                                            </View>
+                                            {(product?.images || !hideProductDummyLogo) && (
+                                                <View>
+                                                    <OIcon url={product?.images || theme?.images?.dummies?.product} style={styles.imageStyle} />
+                                                </View>
+                                            )}
                                         </Item>
                                     )) : (
                                         <OText>
