@@ -55,10 +55,13 @@ const MapViewComponent = (props: MapViewParams) => {
     if (mapRef.current) {
       mapRef.current.fitToCoordinates(
         [
-          { latitude: location.latitude ?? 0, longitude: location.longitude ?? 0},
           {
-            latitude: userLocation?.latitude,
-            longitude: userLocation?.longitude,
+            latitude: typeof location?.latitude !== 'object' ? location?.latitude : 0,
+            longitude: typeof location?.longitude !== 'object' ? location?.latitude : 0
+          },
+          {
+            latitude: typeof userLocation?.latitude !== 'object' ? userLocation?.latitude : 0,
+            longitude: typeof userLocation?.longitude !== 'object' ? userLocation?.latitude : 0
           },
         ],
         {
@@ -133,8 +136,8 @@ const MapViewComponent = (props: MapViewParams) => {
   const RenderMarker = ({ marker, customer, orderIds }: { marker: any, customer?: boolean, orderIds?: Array<number> }) => {
     const markerRef = useRef<any>()
 
-    let coordinateLat = (customer ? marker?.customer?.location?.lat : marker?.business?.location?.lat) ?? initialPosition?.latitude
-    let coordinateLng = (customer ? marker?.customer?.location?.lng : marker?.business?.location?.lng) ?? initialPosition?.longitude
+    let coordinateLat = (customer ? marker?.customer?.location?.lat || 0 : marker?.business?.location?.lat || 0) ?? (initialPosition?.latitude || 0)
+    let coordinateLng = (customer ? marker?.customer?.location?.lng || 0 : marker?.business?.location?.lng || 0) ?? (initialPosition?.longitude || 0)
 
     useEffect(() => {
       if (
