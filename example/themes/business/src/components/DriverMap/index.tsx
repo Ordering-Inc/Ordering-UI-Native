@@ -378,8 +378,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
               <>
                 <Marker
                   coordinate={{
-                    latitude: destination.latitude,
-                    longitude: destination.longitude
+                    latitude: typeof destination?.latitude !== 'object' ? destination?.latitude : 0,
+                    longitude: typeof destination?.longitude !== 'object' ? destination?.latitude : 0
                   }}
                   title={location.title}>
                   <Icon
@@ -397,8 +397,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
                   </View>
                 </Marker>
                 <Marker coordinate={{
-                  latitude: parsedUserLocation.latitude,
-                  longitude: parsedUserLocation.longitude
+                  latitude: typeof parsedUserLocation?.latitude !== 'object' ? parsedUserLocation?.latitude : 0,
+                  longitude: typeof parsedUserLocation?.longitude !== 'object' ? parsedUserLocation?.latitude : 0
                 }}>
                   <View style={styles.driverIcon}>
                     <OIcon
@@ -413,8 +413,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: parsedUserLocation.latitude,
-                  longitude: parsedUserLocation.longitude
+                  latitude: typeof parsedUserLocation?.latitude !== 'object' ? parsedUserLocation?.latitude : 0,
+                  longitude: typeof parsedUserLocation?.longitude !== 'object' ? parsedUserLocation?.latitude : 0
                 }}
                 title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
               />
