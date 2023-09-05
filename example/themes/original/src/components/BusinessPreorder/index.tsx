@@ -528,6 +528,8 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
           textStyle={{ color: 'white' }}
+          bgColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
           style={{ borderRadius: 7.6, marginBottom: 20, marginTop: 30 }}
           onClick={() => handleClickBusiness()}
           isDisabled={isAsap || !(dateSelected && timeSelected)}
