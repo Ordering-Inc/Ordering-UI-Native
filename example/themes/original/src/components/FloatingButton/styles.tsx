@@ -15,3 +15,12 @@ export const Container = styled.View`
   z-index: 20001;
   justify-content: space-between;
 `
+
+export const Button = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  border-radius: 7.6px;
+  height: 44px;
+  max-height: 44px;
+  padding-horizontal: 20px;
+`
