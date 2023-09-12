@@ -136,8 +136,20 @@ const MapViewComponent = (props: MapViewParams) => {
   const RenderMarker = ({ marker, customer, orderIds }: { marker: any, customer?: boolean, orderIds?: Array<number> }) => {
     const markerRef = useRef<any>()
 
-    let coordinateLat = (customer ? marker?.customer?.location?.lat || 0 : marker?.business?.location?.lat || 0) ?? (initialPosition?.latitude || 0)
-    let coordinateLng = (customer ? marker?.customer?.location?.lng || 0 : marker?.business?.location?.lng || 0) ?? (initialPosition?.longitude || 0)
+    let coordinateLat = (customer
+      ? typeof marker?.customer?.location?.lat === 'number' && !Number.isNaN(marker?.customer?.location?.lat)
+        ? marker?.customer?.location?.lat
+        : 0
+      : typeof marker?.business?.location?.lat === 'number' && !Number.isNaN(marker?.business?.location?.lat)
+        ? marker?.business?.location?.lat
+        : 0) ?? (initialPosition?.latitude || 0)
+    let coordinateLng = (customer
+      ? typeof marker?.customer?.location?.lng === 'number' && !Number.isNaN(marker?.customer?.location?.lng)
+        ? marker?.customer?.location?.lng
+        : 0
+      : typeof marker?.business?.location?.lng === 'number' && !Number.isNaN(marker?.business?.location?.lng)
+        ? marker?.business?.location?.lng
+        : 0) ?? (initialPosition?.longitude || 0)
 
     useEffect(() => {
       if (
@@ -157,8 +169,8 @@ const MapViewComponent = (props: MapViewParams) => {
         }}
         onPress={() =>
           setLocationSelected({
-            latitude: customer ? marker?.customer?.location?.lat : marker?.business?.location?.lat,
-            longitude: customer ? marker?.customer?.location?.lng : marker?.business?.location?.lng
+            latitude: coordinateLat,
+            longitude: coordinateLng
           })
         }
         ref={(ref) => markerRef.current = ref}
@@ -238,8 +250,8 @@ const MapViewComponent = (props: MapViewParams) => {
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
               initialRegion={{
-                latitude: initialPosition?.latitude,
-                longitude: initialPosition?.longitude,
+                latitude: initialPosition?.latitude || 0,
+                longitude: initialPosition?.longitude || 0,
                 latitudeDelta: haveOrders ? 0.01 : 0.1,
                 longitudeDelta: haveOrders ? 0.01 * ASPECT_RATIO : 0.1 * ASPECT_RATIO,
               }}
@@ -269,8 +281,8 @@ const MapViewComponent = (props: MapViewParams) => {
                 ))}
                 <Marker
                   coordinate={{
-                    latitude: location.lat,
-                    longitude: location.lng,
+                    latitude: typeof location.lat === 'number' && !Number.isNaN(location.lat) ? location.lat : 0,
+                    longitude: typeof location.lng === 'number' && !Number.isNaN(location.lng) ? location.lng : 0,
                   }}
                   title={t('YOUR_LOCATION', 'Your Location')}
                 >
