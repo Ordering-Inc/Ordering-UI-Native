@@ -58,12 +58,10 @@ const PurchaseGiftCardUI = (props: any) => {
             borderWidth: 0,
             width: 26,
             height: 26,
-            backgroundColor: '#FFF',
-            borderColor: '#FFF',
-            shadowColor: '#FFF',
             paddingLeft: 0,
             paddingRight: 0,
           }}
+          useArrow
           onClick={onClose}
           icon={AntDesignIcon}
           iconProps={{

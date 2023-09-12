@@ -309,13 +309,11 @@ const WalletsUI = (props: any) => {
                 borderWidth: 0,
                 width: 26,
                 height: 26,
-                backgroundColor: '#FFF',
-                borderColor: '#FFF',
-                shadowColor: '#FFF',
                 paddingLeft: 0,
                 paddingRight: 0,
                 marginBottom: 10
               }}
+              useArrow
               onClick={() => setOpenHistory(false)}
               icon={AntDesignIcon}
               iconProps={{

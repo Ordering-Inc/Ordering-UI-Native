@@ -31,9 +31,9 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
-	const orderTypeTitle = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.title
-	const orderTypeDescription = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.description
-	const orderTypeCallAction = (type : string) => theme?.header?.components?.order_types?.components?.[type]?.components?.call_to_action
+	const orderTypeTitle = (type: string) => theme?.header?.components?.order_types?.components?.[type]?.components?.title
+	const orderTypeDescription = (type: string) => theme?.header?.components?.order_types?.components?.[type]?.components?.description
+	const orderTypeCallAction = (type: string) => theme?.header?.components?.order_types?.components?.[type]?.components?.call_to_action
 	const items = _orderTypes.map((type) => {
 		return {
 			value: type.value,
@@ -103,11 +103,6 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 						title={t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will your order type?')}
 						titleAlign={'center'}
 						noMargin
-            buttonProps={{
-              bgColor: theme.colors.white,
-              borderColor: theme.colors.white,
-              textStyle: { color: theme.colors.btnFont }
-            }}
 					/>
 					{
 						items.length > 0 && (

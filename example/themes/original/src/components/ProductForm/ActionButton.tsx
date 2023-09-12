@@ -96,7 +96,7 @@ export const ActionButton = (props: any) => {
                             : t('LOGIN_SIGNUP', 'Login / Sign Up')
                     }
                     imgRightSrc=""
-                    textStyle={{ color: theme.colors.primary, fontSize: 13, textAlign: 'center' }}
+                    textStyle={{ fontSize: 13, textAlign: 'center' }}
                     style={{
                         height: 42,
                         borderColor: theme.colors.primary,

@@ -215,11 +215,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
-          buttonProps={{
-            bgColor: theme.colors.white,
-            borderColor: theme.colors.white,
-            textStyle: { color: theme.colors.btnFont }
-          }}
         />
         <BusinessLogo isMulti={order?.business?.length > 1}>
           {typeof order?.logo === 'string' || !order?.logo ? (
@@ -232,7 +227,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             </View>
           ) : (
             <MultiLogosContainer>
-              {order?.logo?.map((logo : string, i : number) => (
+              {order?.logo?.map((logo: string, i: number) => (
                 <React.Fragment key={logo}>
                   <View style={styles.logoWrapper}>
                     <OIcon

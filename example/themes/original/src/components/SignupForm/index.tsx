@@ -488,11 +488,6 @@ const SignupFormUI = (props: SignupParams) => {
 					btnStyle={{ paddingLeft: 0 }}
 					titleWrapStyle={{ paddingHorizontal: 0 }}
 					titleStyle={{ marginLeft: 0, marginRight: 0 }}
-          buttonProps={{
-						bgColor: theme.colors.white,
-						borderColor: theme.colors.white,
-						textStyle: { color: theme.colors.btnFont }
-					}}
 				/>
 			)}
 			<FormSide>

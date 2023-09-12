@@ -343,11 +343,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							titleAlign={'center'}
 							titleStyle={{ fontSize: 20, marginRight: 0, marginLeft: 0 }}
 							titleWrapStyle={{ paddingHorizontal: 0 }}
-              buttonProps={{
-                bgColor: theme.colors.white,
-                borderColor: theme.colors.white,
-                textStyle: { color: theme.colors.btnFont }
-              }}
 						/>
 					)}
 					{(preorderMinimumDays === 0 && preorderLeadTime === 0) || !cateringPreorder && (

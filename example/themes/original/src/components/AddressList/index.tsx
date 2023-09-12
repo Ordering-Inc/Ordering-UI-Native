@@ -152,11 +152,6 @@ const AddressListUI = (props: AddressListParams) => {
 							showCall={false}
 							paddingTop={10}
 							btnStyle={{ paddingLeft: 0 }}
-              buttonProps={{
-                bgColor: theme.colors.white,
-                borderColor: theme.colors.white,
-                textStyle: { color: theme.colors.btnFont }
-              }}
 						/>
 					)}
 					{
@@ -178,11 +173,6 @@ const AddressListUI = (props: AddressListParams) => {
 								style={{ marginTop: 0 }}
 								titleWrapStyle={{ paddingHorizontal: 0 }}
 								titleStyle={{ marginLeft: 0, marginRight: 0 }}
-                buttonProps={{
-                  bgColor: theme.colors.white,
-                  borderColor: theme.colors.white,
-                  textStyle: { color: theme.colors.btnFont }
-                }}
 							/>
 						)}
 					{addressList.loading && addressList?.addresses?.length === 0 && (

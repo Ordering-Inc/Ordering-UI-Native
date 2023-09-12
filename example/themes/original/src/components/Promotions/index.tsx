@@ -113,11 +113,6 @@ const PromotionsUI = (props: PromotionParams) => {
         paddingTop={Platform.OS === 'ios' ? 20 : 10}
         style={{ paddingVertical: 0 }}
         btnStyle={{ paddingLeft: 0 }}
-        buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
       />
       <PromotionsContainer>
         <SearchBarContainer>

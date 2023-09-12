@@ -72,11 +72,6 @@ export const SessionsUI = (props: SessionsParams) => {
         showCall={false}
         paddingTop={10}
         btnStyle={{ paddingLeft: 0 }}
-        buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
       />
       {user?.session_strategy === 'jwt_session' ? (
         <>

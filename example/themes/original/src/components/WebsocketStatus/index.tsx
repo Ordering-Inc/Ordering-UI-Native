@@ -148,10 +148,8 @@ const SocketStatusUI = (props: any) => {
                 style={{ borderRadius: 8, height: 48 }}
                 text={t('CLOSE', 'Close')}
               />
-               <OButton
+              <OButton
                 onClick={() => RNRestart.Restart()}
-                borderColor={theme.colors.primary}
-                textStyle={{ color: theme.colors.white }}
                 style={{ borderRadius: 8, marginLeft: 16, height: 48 }}
                 text={t('UPDATE', 'Update')}
               />
