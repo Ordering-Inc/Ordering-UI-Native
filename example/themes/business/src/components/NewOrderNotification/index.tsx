@@ -44,17 +44,25 @@ const SoundPlayerComponent = (props: any) => {
     const id = setInterval(() => setCount(count + 1), 2500)
 
     const playSound = async () => {
-      SoundPlayer.playUrl(URL_SOUND)
-      await new Promise(resolve => setTimeout(resolve, DELAY_SOUND))
-      SoundPlayer.stop()
+      try {
+        SoundPlayer.playUrl(URL_SOUND)
+        await new Promise(resolve => setTimeout(resolve, DELAY_SOUND))
+        SoundPlayer.stop()
+      } catch (err: any) {
+        console.log('Sound Error - ', err.message)
+      }
     }
     if (NativeModules?.RNSoundPlayer?.playUrl && typeof URL_SOUND === 'string' && isEnabledReadStorage) {
       playSound()
     }
 
     return () => {
-      SoundPlayer.stop()
       clearInterval(id);
+      try {
+        SoundPlayer.stop()
+      } catch (err: any) {
+        console.log('Sound Error - ', err.message)
+      }
     }
   }, [count, isEnabledReadStorage])
 
