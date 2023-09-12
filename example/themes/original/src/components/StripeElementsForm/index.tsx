@@ -37,7 +37,8 @@ const StripeElementsFormUI = (props: any) => {
 		publicKeyAddCard,
 		urlScheme,
 		androidAppId,
-		businessNames
+		businessNames,
+		setNewCardAdded
 	} = props;
 
 	const theme = useTheme();
@@ -150,6 +151,7 @@ const StripeElementsFormUI = (props: any) => {
 						const _isNewCard = index === 0
 						stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId, _isNewCard);
 					})
+					setNewCardAdded(card)
 				} else {
 					stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
 				}
