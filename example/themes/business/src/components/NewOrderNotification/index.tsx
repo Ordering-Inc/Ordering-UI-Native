@@ -75,7 +75,7 @@ const SoundPlayerComponent = (props: any) => {
         setIsEnabledReadStorage(true)
       }
     }
-    checkSoundMedia()
+    // checkSoundMedia()
 
   }, [])
   return (
