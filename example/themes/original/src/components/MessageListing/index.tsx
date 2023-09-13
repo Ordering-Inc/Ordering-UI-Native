@@ -266,11 +266,6 @@ export const MessageListing = (props: MessageListingParams) => {
 				showCall={false}
 				paddingTop={Platform.OS === 'ios' ? 20 : 10}
 				btnStyle={{ paddingLeft: 0 }}
-				buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
 			/>
 			<OrderListing
 				ordersLength={{ activeOrdersLength: 0, previousOrdersLength: 0 }}

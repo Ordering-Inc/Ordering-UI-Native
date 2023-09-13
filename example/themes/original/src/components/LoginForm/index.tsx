@@ -412,11 +412,6 @@ const LoginFormUI = (props: LoginParams) => {
 					btnStyle={{ paddingLeft: 0 }}
 					titleWrapStyle={{ paddingHorizontal: 0 }}
 					titleStyle={{ marginRight: 0, marginLeft: 0 }}
-					buttonProps={{
-						bgColor: theme.colors.white,
-						borderColor: theme.colors.white,
-						textStyle: { color: theme.colors.btnFont }
-					}}
 				/>
 			)}
 			<FormSide>
@@ -711,9 +706,6 @@ const LoginFormUI = (props: LoginParams) => {
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={loginTab !== 'otp' ? loginButtonText : t('GET_VERIFY_CODE', 'Get verify code')}
-							bgColor={theme.colors.primary}
-							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isLoading={formState.loading}
 							style={{ borderRadius: 7.6, marginTop: 10, marginBottom: 25 }}
@@ -752,7 +744,6 @@ const LoginFormUI = (props: LoginParams) => {
 								<OButton
 									onClick={handleVerifyCodeClick}
 									text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-									borderColor={theme.colors.primary}
 									style={loginStyle.btnOutline}
 									imgRightSrc={null}
 									isLoading={isLoadingVerifyModal}

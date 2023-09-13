@@ -64,7 +64,7 @@ const ForgotPasswordUI = (props: any) => {
 		handleReCaptcha(null)
 		if (reCaptchaValue) return
 
-	  if (!recaptchaConfig?.siteKey) {
+		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
 			return
 		}
@@ -73,7 +73,7 @@ const ForgotPasswordUI = (props: any) => {
 			return
 		}
 		recaptchaRef.current.open()
-  	}
+	}
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
@@ -92,8 +92,8 @@ const ForgotPasswordUI = (props: any) => {
 				formState.result?.result && showToast(
 					ToastType.Error,
 					typeof formState.result?.result === 'string'
-          ? formState.result?.result
-          : formState.result?.result[0]
+						? formState.result?.result
+						: formState.result?.result[0]
 				)
 				return
 			}
@@ -125,11 +125,6 @@ const ForgotPasswordUI = (props: any) => {
 				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleStyle={{ width: '100%', marginLeft: 0, paddingLeft: 0 }}
 				titleWrapStyle={{ paddingHorizontal: 0, paddingStart: 0, flex: 1 }}
-        buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
 			/>
 			<FormSide>
 				<OText
@@ -213,7 +208,6 @@ const ForgotPasswordUI = (props: any) => {
 
 					<OButton
 						text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
-						textStyle={{ color: 'white' }}
 						bgColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
 						borderColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
 						isLoading={formState.loading}

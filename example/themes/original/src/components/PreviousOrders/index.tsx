@@ -27,7 +27,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
 	const [, t] = useLanguage();
 
-  const pastOrders = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
+	const pastOrders = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
 
 	return (
 		<View style={{ marginBottom: 30 }}>
@@ -49,9 +49,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						onClick={loadMoreOrders}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
 						imgRightSrc={null}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
-						textStyle={{ color: theme.colors.white }}
 						style={{ borderRadius: 7.6, shadowOpacity: 0, marginTop: 20 }}
 					/>
 				</WrappButton>

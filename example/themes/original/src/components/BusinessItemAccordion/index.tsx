@@ -57,6 +57,8 @@ export const BusinessItemAccordion = (props: any) => {
 		return acc = acc
 	}, cart?.subtotal)
 
+	const bgStyle = (subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary
+
 	useEffect(() => {
 		if (isActive && !isFromUpselling) {
 			if (cart?.uuid !== viewedCart?.uuid) {
@@ -156,8 +158,8 @@ export const BusinessItemAccordion = (props: any) => {
 							textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
 							style={{ width: 180, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
 							text={t('CHECKOUT', 'Checkout')}
-							bgColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
-							borderColor={theme.colors.primary}
+							bgColor={bgStyle}
+							borderColor={bgStyle}
 							isDisabled={checkoutButtonDisabled}
 						/>
 					)}

@@ -58,12 +58,10 @@ const PurchaseGiftCardUI = (props: any) => {
             borderWidth: 0,
             width: 26,
             height: 26,
-            backgroundColor: '#FFF',
-            borderColor: '#FFF',
-            shadowColor: '#FFF',
             paddingLeft: 0,
             paddingRight: 0,
           }}
+          useArrow
           onClick={onClose}
           icon={AntDesignIcon}
           iconProps={{
@@ -113,9 +111,7 @@ const PurchaseGiftCardUI = (props: any) => {
       <OButton
         onClick={() => handleAccept()}
         text={t('ACCEPT', 'Accept')}
-        bgColor={theme.colors.primary}
-        borderColor={theme.colors.primary}
-        textStyle={{ color: 'white', fontSize: 13 }}
+        textStyle={{ fontSize: 13 }}
         imgRightSrc={null}
         style={style.btnStyle}
         isDisabled={!selectedProduct}

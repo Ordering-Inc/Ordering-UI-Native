@@ -326,7 +326,6 @@ const PaymentOptionsUI = (props: any) => {
 					<OButton
 						text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
 						bgColor={theme.colors.white}
-						borderColor={theme.colors.primary}
 						style={styles.btnAddStyle}
 						textStyle={{ color: theme.colors.primary, fontSize: 12 }}
 						imgRightSrc={null}
@@ -426,7 +425,6 @@ const PaymentOptionsUI = (props: any) => {
 					<OButton
 						text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
 						bgColor={theme.colors.white}
-						borderColor={theme.colors.primary}
 						style={styles.btnAddStyle}
 						textStyle={{ color: theme.colors.primary, fontSize: 12 }}
 						imgRightSrc={null}

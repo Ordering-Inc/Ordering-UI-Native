@@ -69,10 +69,7 @@ export const CitiesControl = (props: any) => {
       </View>
       <OButton
         text={t('CONTINUE', 'Continue')}
-        bgColor={theme.colors.primary}
-        borderColor={theme.colors.primary}
         style={styles.btnStyle}
-        textStyle={{ color: 'white' }}
         onClick={() => handleClick()}
       />
     </Container>

@@ -44,7 +44,6 @@ interface Props {
 	isVertical?: boolean,
 	noMargin?: any
 	hideArrowLeft?: boolean
-	buttonProps?: any
 }
 
 const NavBar = (props: Props) => {
@@ -65,7 +64,7 @@ const NavBar = (props: Props) => {
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			{!props.hideArrowLeft && (
 				<OButton
-					{...props.buttonProps}
+					useArrow
 					iconProps={{
 						name: 'arrowleft',
 						size: 26
@@ -116,8 +115,6 @@ const NavBar = (props: Props) => {
 			{props.showCall
 				? (<OButton
 					isCircle={true}
-					bgColor={theme.colors.primary}
-					borderColor={theme.colors.primary}
 					imgRightSrc={null}
 					imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
 					imgLeftSrc={theme.images.general.support}

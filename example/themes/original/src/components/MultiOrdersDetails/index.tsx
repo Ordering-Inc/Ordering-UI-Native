@@ -101,6 +101,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
           style={styles.btnBackArrow}
           onClick={() => handleArrowBack()}
           icon={AntDesignIcon}
+          useArrow
           iconProps={{
             name: 'arrowleft',
             size: 26

@@ -230,7 +230,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                 </BusinessInfoItem>
                 <OButton
                   onClick={() => onBusinessClick(business)}
-                  textStyle={{ color: theme.colors.primary, fontSize: 10 }}
+                  textStyle={{ fontSize: 10 }}
                   text={t('GO_TO_STORE', 'Go to store')}
                   style={{
                     borderRadius: 23,
@@ -238,7 +238,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                     paddingRight: 10,
                     height: 23,
                     shadowOpacity: 0,
-                    backgroundColor: theme.colors.primaryContrast,
                     borderWidth: 0
                   }}
                 />

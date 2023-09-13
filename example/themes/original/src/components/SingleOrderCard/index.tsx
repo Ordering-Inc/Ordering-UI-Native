@@ -82,7 +82,6 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
       elevation: 3
     },
     buttonText: {
-      color: theme.colors.primary,
       fontSize: 10,
       marginLeft: 2,
       marginRight: 2,

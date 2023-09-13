@@ -158,9 +158,7 @@ export const UpsellingContent = (props: any) => {
                 <OButton
                     imgRightSrc=''
                     text={t('CHECKOUT', 'Checkout')}
-                    textStyle={{ color: theme.colors.white, fontSize: 14 }}
-                    bgColor={theme.colors.primary}
-                    borderColor={theme.colors.primary}
+                    textStyle={{ fontSize: 14 }}
                     style={{ ...styles.closeUpsellingButton }}
                     onClick={() => handleUpsellingPage(cart)}
                 />

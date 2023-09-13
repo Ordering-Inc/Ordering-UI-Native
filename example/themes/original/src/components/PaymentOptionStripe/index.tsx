@@ -131,7 +131,6 @@ const PaymentOptionStripeUI = (props: any) => {
 						bgColor={theme.colors.backgroundGray}
 						borderColor={theme.colors.backgroundGray}
 						style={styles.btnAddStyle}
-						textStyle={{ color: 'white' }}
 						imgRightSrc={null}
 						onClick={() => setAddCardOpen(true)}
 					/>
@@ -141,7 +140,6 @@ const PaymentOptionStripeUI = (props: any) => {
 								text={t('CANCEL', 'Cancel')}
 								bgColor={theme.colors.backgroundGray}
 								borderColor={theme.colors.backgroundGray}
-								textStyle={{ color: 'white' }}
 								style={styles.btnAction}
 								imgRightSrc={null}
 								onClick={() => onCancel()}
@@ -150,9 +148,6 @@ const PaymentOptionStripeUI = (props: any) => {
 						<View style={{ width: '48%' }}>
 							<OButton
 								text={t('ACCEPT', 'Accept')}
-								bgColor={theme.colors.primary}
-								borderColor={theme.colors.primary}
-								textStyle={{ color: 'white' }}
 								style={styles.btnAction}
 								imgRightSrc={null}
 								isDisabled={!cardSelected || cardsList?.cards?.length === 0}

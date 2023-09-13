@@ -73,11 +73,6 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
-          buttonProps={{
-            bgColor: theme.colors.white,
-            borderColor: theme.colors.white,
-            textStyle: { color: theme.colors.btnFont }
-          }}
         />
         {order?.products && order.products.length > 0 && order?.products.map(productsOrder => (
           productsOrder?.length ? productsOrder?.map((product: any, i: any) => !product?.deleted ?
@@ -109,7 +104,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={order?.driver && !order?.user_review ? t('CONTINUE', 'Continue') : t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}

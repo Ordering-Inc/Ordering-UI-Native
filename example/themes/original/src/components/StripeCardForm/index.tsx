@@ -65,9 +65,6 @@ const StripeCardFormUI = (props: any) => {
 					<OButton
 						text={loading ? t('LOADING', 'Loading...') : t('ADD', 'Add')}
 						isDisabled={!cardState?.valid || loading}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
-						textStyle={{ color: 'white' }}
 						imgRightSrc={null}
 						onClick={handleSubmit}
 					/>
