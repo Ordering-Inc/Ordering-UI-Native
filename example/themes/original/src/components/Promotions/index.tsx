@@ -113,11 +113,6 @@ const PromotionsUI = (props: PromotionParams) => {
         paddingTop={Platform.OS === 'ios' ? 20 : 10}
         style={{ paddingVertical: 0 }}
         btnStyle={{ paddingLeft: 0 }}
-        buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
       />
       <PromotionsContainer>
         <SearchBarContainer>
@@ -176,7 +171,7 @@ const PromotionsUI = (props: PromotionParams) => {
                 onClick={() => handleClickOffer(offer)}
                 text={t('VIEW', 'View')}
                 style={styles.buttonStyle}
-                textStyle={{ fontSize: 14, color: '#fff', flexWrap: 'nowrap' }}
+                textStyle={{ fontSize: 14, flexWrap: 'nowrap' }}
               />
             </WrapperSingleOffer>
           ))}
@@ -240,7 +235,7 @@ const PromotionsUI = (props: PromotionParams) => {
                         onClick={() => handleBusinessClick(business)}
                         text={t('GO_TO_BUSINESSS', 'Go to business')}
                         style={styles.modalButtonStyle}
-                        textStyle={{ fontSize: 10, color: '#fff' }}
+                        textStyle={{ fontSize: 10 }}
                       />
                     </BusinessInfo>
                   </SingleBusinessOffer>

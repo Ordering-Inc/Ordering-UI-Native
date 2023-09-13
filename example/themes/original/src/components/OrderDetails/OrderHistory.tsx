@@ -145,10 +145,10 @@ export const OrderHistory = (props: any) => {
                     </>
                   )
                     : message.change?.attribute === 'prepared_in' ? (
-                    <>
-                      {t('TIME_ADDED_BY_BUSINESS', 'Time added by business')}{'\n'}
-                      {formatSeconds(parseInt(message.change.new, 10))}
-                    </>
+                      <>
+                        {t('TIME_ADDED_BY_BUSINESS', 'Time added by business')}{'\n'}
+                        {formatSeconds(parseInt(message.change.new, 10))}
+                      </>
                     ) : t(ORDER_STATUS[parseInt(message.change.new, 10)])
                 }
               </OText>
@@ -170,11 +170,9 @@ export const OrderHistory = (props: any) => {
       ))}
       <OButton
         text={enableReview ? t('REVIEW_ORDER', 'Review order') : t('CONTINUE', 'Continue')}
-        textStyle={{ fontSize: 14, color: theme.colors.white }}
+        textStyle={{ fontSize: 14 }}
         imgRightSrc={theme.images.general.arrow_right}
         imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-        borderColor='transparent'
-        bgColor={theme.colors.primary}
         style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginBottom: 30, marginTop: 20 }}
         onClick={() => handleReview()}
       />

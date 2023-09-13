@@ -138,9 +138,6 @@ const StripeRedirectFormUI = (props: any) => {
 			<OButton
 				// text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
 				text={t('OK', 'OK')}
-				bgColor={theme.colors.primary}
-				borderColor={theme.colors.primary}
-				textStyle={{ color: 'white' }}
 				imgRightSrc={null}
 				// isDisabled={formState.isSubmitting}
 				// onClick={() => handleSubmit(onSubmit)}

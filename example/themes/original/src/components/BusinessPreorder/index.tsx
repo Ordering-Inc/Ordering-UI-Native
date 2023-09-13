@@ -527,9 +527,6 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         )}
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
-          textStyle={{ color: 'white' }}
-          bgColor={theme.colors.primary}
-          borderColor={theme.colors.primary}
           style={{ borderRadius: 7.6, marginBottom: 20, marginTop: 30 }}
           onClick={() => handleClickBusiness()}
           isDisabled={isAsap || !(dateSelected && timeSelected)}
@@ -555,21 +552,21 @@ export const BusinessPreorder = (props: any) => {
   currentDate.setMinutes(59)
 
   const cateringTypeString = orderState?.options?.type === 7
-  ? 'catering_delivery'
-  : orderState?.options?.type === 8
-    ? 'catering_pickup'
-    : null
+    ? 'catering_delivery'
+    : orderState?.options?.type === 8
+      ? 'catering_pickup'
+      : null
 
-const splitCateringValue = (configName : string) =>
-  Object.values(props?.business?.configs || {})
-    ?.find(config => config?.key === configName)
-    ?.value?.split('|')
-    ?.find(val => val.includes(cateringTypeString || ''))?.split(',')[1]
-const preorderSlotInterval = parseInt(splitCateringValue('preorder_slot_interval'))
-const preorderLeadTime = parseInt(splitCateringValue('preorder_lead_time'))
-const preorderTimeRange = parseInt(splitCateringValue('preorder_time_range'))
-const preorderMaximumDays = parseInt(splitCateringValue('preorder_maximum_days'))
-const preorderMinimumDays = parseInt(splitCateringValue('preorder_minimum_days'))
+  const splitCateringValue = (configName: string) =>
+    Object.values(props?.business?.configs || {})
+      ?.find(config => config?.key === configName)
+      ?.value?.split('|')
+      ?.find(val => val.includes(cateringTypeString || ''))?.split(',')[1]
+  const preorderSlotInterval = parseInt(splitCateringValue('preorder_slot_interval'))
+  const preorderLeadTime = parseInt(splitCateringValue('preorder_lead_time'))
+  const preorderTimeRange = parseInt(splitCateringValue('preorder_time_range'))
+  const preorderMaximumDays = parseInt(splitCateringValue('preorder_maximum_days'))
+  const preorderMinimumDays = parseInt(splitCateringValue('preorder_minimum_days'))
 
   const businessPreorderProps = {
     ...props,

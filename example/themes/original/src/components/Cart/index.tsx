@@ -558,9 +558,8 @@ const CartUI = (props: any) => {
                   )}
                   bgColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
                   isDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
-                  borderColor={theme.colors.primary}
                   imgRightSrc={null}
-                  textStyle={{ color: '#fff', textAlign: 'center', flex: 1 }}
+                  textStyle={{ textAlign: 'center', flex: 1 }}
                   onClick={() => handleClickCheckout()}
                   style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
                 />

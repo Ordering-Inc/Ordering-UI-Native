@@ -145,9 +145,6 @@ export const Otp = (props: otpParams) => {
         </TouchableOpacity>
         <OButton
           onClick={() => handleCloseOtp()}
-          bgColor={theme.colors.white}
-          borderColor={theme.colors.primary}
-          textStyle={{ color: theme.colors.primary }}
           style={{ borderRadius: 8, width: '100%' }}
           text={t('CANCEL', 'Cancel')}
         />

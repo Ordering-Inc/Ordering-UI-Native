@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useLanguage, GiftCardOrdersList as GiftCardOrdersListController } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
-	Placeholder,
-	PlaceholderLine,
-	Fade
+  Placeholder,
+  PlaceholderLine,
+  Fade
 } from 'rn-placeholder';
 import { SingleGiftCard } from '../SingleGiftCard';
 import { OButton, OText } from '../../shared';
@@ -24,7 +24,7 @@ const VerticalGiftCardOrdersLayoutUI = (props: any) => {
     onNavigationRedirect
   } = props
 
-	const theme = useTheme();
+  const theme = useTheme();
   const [, t] = useLanguage()
 
   useEffect(() => {
@@ -40,8 +40,8 @@ const VerticalGiftCardOrdersLayoutUI = (props: any) => {
             <PlaceholderLine width={30} height={16} />
           </Placeholder>
         ) : giftCards.list?.length > 0 && (
-        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={24} style={{ marginTop: 24 }}>{title}</OText>
-      )}
+          <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={24} style={{ marginTop: 24 }}>{title}</OText>
+        )}
       {giftCards.list.map(card => (
         <SingleGiftCardWrapper key={card.id}>
           <SingleGiftCard
@@ -62,12 +62,11 @@ const VerticalGiftCardOrdersLayoutUI = (props: any) => {
       {paginationProps.totalPages && paginationProps.currentPage < paginationProps.totalPages && (
         <WrappButton>
           <OButton
-						onClick={loadMoreOrders}
-						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-						imgRightSrc={null}
-						textStyle={{ color: theme.colors.white }}
-						style={{ borderRadius: 7.6, shadowOpacity: 0 }}
-					/>
+            onClick={loadMoreOrders}
+            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+            imgRightSrc={null}
+            style={{ borderRadius: 7.6, shadowOpacity: 0 }}
+          />
         </WrappButton>
       )}
     </ProductsListContainer>

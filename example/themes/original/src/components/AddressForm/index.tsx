@@ -542,11 +542,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 					style={{ marginTop: Platform.OS === 'ios' ? 0 : 10 }}
 					titleWrapStyle={{ paddingHorizontal: 0, width: '100%' }}
 					titleStyle={{ marginRight: 0, marginLeft: 0, paddingRight: 5 }}
-          buttonProps={{
-						bgColor: theme.colors.white,
-						borderColor: theme.colors.white,
-						textStyle: { color: theme.colors.btnFont }
-					}}
 				/>
 			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -857,9 +852,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 										: t('LOADING', 'Loading')
 								}
 								onClick={handleSubmit(onSubmit)}
-								bgColor={theme.colors.primary}
-								borderColor={theme.colors.primary}
-								textStyle={{ color: theme.colors.white }}
 								isDisabled={formState.loading}
 								style={{ borderRadius: 7.6, shadowOpacity: 0 }}
 								showNextIcon
@@ -895,9 +887,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 						)}
 						<OButton
 							text={t('SAVE', 'Save')}
-							textStyle={{ color: theme.colors.white }}
-							bgColor={theme.colors.primary}
-							borderColor={theme.colors.primary}
 							imgRightSrc={null}
 							style={{ marginHorizontal: 30, marginBottom: 10 }}
 							onClick={() => setSaveMapLocation(true)}

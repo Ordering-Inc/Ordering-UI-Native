@@ -45,14 +45,9 @@ export const NetworkError = (props: NoNetworkParams) => {
         />
         <OButton
           text={t('REFRESH', 'Refresh')}
-          bgColor={theme.colors.primary}
-          borderColor={theme.colors.primary}
           style={{
             borderRadius: 8,
             marginTop: 45
-          }}
-          textStyle={{
-            color: theme.colors.white
           }}
           onClick={() => RNRestart.Restart()}
         />

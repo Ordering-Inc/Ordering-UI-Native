@@ -236,9 +236,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
           <View style={{ alignItems: 'flex-start' }}>
             <OButton
               onClick={() => onChangeSpot()}
-              bgColor={theme.colors.primary}
-              borderColor={theme.colors.primary}
-              textStyle={{ color: 'white', fontSize: 12 }}
+              textStyle={{ fontSize: 12 }}
               imgRightSrc={null}
               text={t('UPDATE_SPOT_NUMBER', 'Update')}
               isDisabled={(!spotNumber && !Object.values(vehicle).every(e => e))}

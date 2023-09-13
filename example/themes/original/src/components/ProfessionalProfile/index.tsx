@@ -233,7 +233,7 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
           <CalendarWrapper>
             {(timeList?.length > 0 && isEnabled) ? (
               <SelectDropdown
-                ref={dropdownRef} 
+                ref={dropdownRef}
                 data={timeList}
                 onSelect={(selectedItem, index) => {
                   console.log(selectedItem.value)
@@ -244,7 +244,7 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
                 rowTextForSelection={(item, index) => {
                   return item.text
                 }}
-                buttonStyle={{borderRadius: 7.6, ...styles.selectOption}}
+                buttonStyle={{ borderRadius: 7.6, ...styles.selectOption }}
                 buttonTextStyle={{
                   color: theme.colors.disabled,
                   fontSize: 14,
@@ -267,7 +267,7 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
                 }}
                 renderCustomizedRowChild={(item, index) => {
                   return (
-                    <Text style={[styles.dropDownRow, { color: isBusyTime(professional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary } ]}>
+                    <Text style={[styles.dropDownRow, { color: isBusyTime(professional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary }]}>
                       {item.text}
                     </Text>
                   )
@@ -326,11 +326,10 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
       </ScheduleWrapper>
       <ButtonWrapper>
         <OButton
-          bgColor={theme.colors.primary}
           onClick={() => handleSelectProfessional()}
           text={t('BOOK', 'Book')}
           style={styles.buttonStyle}
-          textStyle={{ fontSize: 14, color: theme.colors.white }}
+          textStyle={{ fontSize: 14 }}
         />
       </ButtonWrapper>
     </Container>

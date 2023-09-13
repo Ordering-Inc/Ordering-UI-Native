@@ -284,7 +284,6 @@ const StripeElementsFormUI = (props: any) => {
 					bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
 					borderColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
 					style={styles.btnAddStyle}
-					textStyle={{ color: 'white' }}
 					imgRightSrc={null}
 					onClick={() => handleSaveCard()}
 					isDisabled={!isCompleted}

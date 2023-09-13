@@ -488,11 +488,6 @@ const SignupFormUI = (props: SignupParams) => {
 					btnStyle={{ paddingLeft: 0 }}
 					titleWrapStyle={{ paddingHorizontal: 0 }}
 					titleStyle={{ marginLeft: 0, marginRight: 0 }}
-          buttonProps={{
-						bgColor: theme.colors.white,
-						borderColor: theme.colors.white,
-						textStyle: { color: theme.colors.btnFont }
-					}}
 				/>
 			)}
 			<FormSide>
@@ -794,9 +789,9 @@ const SignupFormUI = (props: SignupParams) => {
 										<OButton
 											imgRightSrc={null}
 											text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
-											bgColor='#FFF'
-											borderColor='#FFF'
-											style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
+											bgColor={theme.colors.white}
+											borderColor={theme.colors.white}
+											style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: theme.colors.white }}
 											textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
 											onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
 										/>
@@ -881,9 +876,7 @@ const SignupFormUI = (props: SignupParams) => {
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-							borderColor={theme.colors.primary}
 							imgRightSrc={null}
-							textStyle={{ color: 'white' }}
 							isLoading={isLoadingVerifyModal}
 							indicatorColor={theme.colors.white}
 							style={{ borderRadius: 7.6, marginTop: 6 }}
@@ -892,9 +885,6 @@ const SignupFormUI = (props: SignupParams) => {
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={signupButtonText}
-							bgColor={theme.colors.primary}
-							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
 							style={{ borderRadius: 7.6, marginTop: 6, shadowOpacity: 0 }}

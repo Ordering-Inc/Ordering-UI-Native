@@ -643,7 +643,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <OButton
                       text={t('GET_DIRECTIONS', 'Get Directions')}
                       imgRightSrc=''
-                      textStyle={{ color: theme.colors.white }}
                       style={{
                         alignSelf: 'center',
                         borderRadius: 10,
@@ -833,7 +832,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     text={t('YOUR_ORDERS', 'Your Orders')}
                     textStyle={{ fontSize: 14, color: theme.colors.primary }}
                     imgRightSrc={null}
-                    borderColor={theme.colors.primary}
                     bgColor={theme.colors.clear}
                     style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
                     parentStyle={{ marginTop: 29, marginEnd: 15 }}

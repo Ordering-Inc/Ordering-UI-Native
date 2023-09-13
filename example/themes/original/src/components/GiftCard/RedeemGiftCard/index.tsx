@@ -36,10 +36,10 @@ const RedeemGiftCardUI = (props: any) => {
       marginTop: 20
     },
     inputStyle: {
-			borderWidth: 1,
-			borderColor: theme.colors.border,
-			borderRadius: 7.6,
-		},
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 7.6,
+    },
   })
 
   const onSubmit = (values) => {
@@ -65,7 +65,7 @@ const RedeemGiftCardUI = (props: any) => {
         t('ERROR', 'Error'),
         stringError,
         [
-          { text: t('OK', 'oK'), onPress: () => {} }
+          { text: t('OK', 'oK'), onPress: () => { } }
         ]
       )
     }
@@ -85,7 +85,7 @@ const RedeemGiftCardUI = (props: any) => {
       t('ERROR', 'Error'),
       stringError,
       [
-        { text: t('OK', 'oK'), onPress: () => {} }
+        { text: t('OK', 'oK'), onPress: () => { } }
       ]
     )
   }, [actionState.error])
@@ -108,12 +108,10 @@ const RedeemGiftCardUI = (props: any) => {
                 borderWidth: 0,
                 width: 26,
                 height: 26,
-                backgroundColor: '#FFF',
-                borderColor: '#FFF',
-                shadowColor: '#FFF',
                 paddingLeft: 0,
                 paddingRight: 0,
               }}
+              useArrow
               onClick={onClose}
               icon={AntDesignIcon}
               iconProps={{
@@ -124,25 +122,25 @@ const RedeemGiftCardUI = (props: any) => {
                 }
               }}
             />
-              <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('REDEEM_GIFT_CARD', 'Redeem a gift card')}</OText>
+            <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('REDEEM_GIFT_CARD', 'Redeem a gift card')}</OText>
           </View>
           <FormController>
             <OText color={theme.colors.textNormal} size={14} mBottom={10}>{t('GIFT_CARD_CODE', 'Gift card code')}</OText>
             <Controller
               control={control}
               render={({ onChange, value }: any) => (
-              <OInput
-                placeholder='XXXX-XXXX-XXXX-XXXX'
-                value={codeValue}
-                onChange={(val: any) => {
-                  onChange(val)
-                  handleChangeCode(val)
-                }}
-                autoCapitalize='characters'
-                autoCorrect={false}
-                blurOnSubmit={false}
-                style={style.inputStyle}
-              />
+                <OInput
+                  placeholder='XXXX-XXXX-XXXX-XXXX'
+                  value={codeValue}
+                  onChange={(val: any) => {
+                    onChange(val)
+                    handleChangeCode(val)
+                  }}
+                  autoCapitalize='characters'
+                  autoCorrect={false}
+                  blurOnSubmit={false}
+                  style={style.inputStyle}
+                />
               )}
               name='code'
               rules={{
@@ -178,9 +176,7 @@ const RedeemGiftCardUI = (props: any) => {
           <OButton
             onClick={handleSubmit(onSubmit)}
             text={actionState?.loading ? t('LOADING', 'Loading') : t('APPLY_TO_YOUR_BALANCE', 'Apply to your balance')}
-            bgColor={theme.colors.primary}
-            borderColor={theme.colors.primary}
-            textStyle={{ color: 'white', fontSize: 13 }}
+            textStyle={{ fontSize: 13 }}
             imgRightSrc={null}
             style={style.btnStyle}
             isDisabled={actionState.loading}
@@ -202,12 +198,10 @@ const RedeemGiftCardUI = (props: any) => {
                 borderWidth: 0,
                 width: 26,
                 height: 26,
-                backgroundColor: '#FFF',
-                borderColor: '#FFF',
-                shadowColor: '#FFF',
                 paddingLeft: 0,
                 paddingRight: 0,
               }}
+              useArrow
               onClick={onClose}
               icon={AntDesignIcon}
               iconProps={{
@@ -218,7 +212,7 @@ const RedeemGiftCardUI = (props: any) => {
                 }
               }}
             />
-              <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('GIFT_CARD', 'Gift card')}</OText>
+            <OText color={theme.colors.textNormal} weight='bold' size={20} mLeft={10}>{t('GIFT_CARD', 'Gift card')}</OText>
           </View>
           <View>
             <OText color={theme.colors.textNormal} size={14} mBottom={6}>{t('TYPE', 'Type')}: {redeemedGiftCard?.type}</OText>
@@ -232,9 +226,7 @@ const RedeemGiftCardUI = (props: any) => {
                 onClose()
               }}
               text={t('OK', 'Ok')}
-              bgColor={theme.colors.primary}
-              borderColor={theme.colors.primary}
-              textStyle={{ color: 'white', fontSize: 13 }}
+              textStyle={{ fontSize: 13 }}
               imgRightSrc={null}
               style={style.btnStyle}
             />

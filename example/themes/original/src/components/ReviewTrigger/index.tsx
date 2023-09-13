@@ -90,7 +90,7 @@ export const ReviewTrigger = (props: any) => {
             </View>
           ) : (
             <MultiLogosContainer>
-              {order?.logo?.map((logo : string, i : number) => (
+              {order?.logo?.map((logo: string, i: number) => (
                 <React.Fragment key={logo}>
                   <View style={styles.logoWrapper}>
                     <OIcon
@@ -122,7 +122,7 @@ export const ReviewTrigger = (props: any) => {
       <FloatingBottomContainer borderTopWidth={0} borderRadius={10}>
         <ActionContainer>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={t('GOTO_REVIEW', 'Go to review')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}

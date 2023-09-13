@@ -42,11 +42,8 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
 				<View style={{ marginTop: 10, width: '100%' }}>
 					<OButton
 						style={{ width: '100%', height: 50, ...btnStyle }}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
 						onClick={() => onClickButton()}
 						text={btnTitle}
-						textStyle={{ color: theme.colors.white }}
 					/>
 				</View>
 			)}
