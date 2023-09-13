@@ -343,11 +343,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							titleAlign={'center'}
 							titleStyle={{ fontSize: 20, marginRight: 0, marginLeft: 0 }}
 							titleWrapStyle={{ paddingHorizontal: 0 }}
-              buttonProps={{
-                bgColor: theme.colors.white,
-                borderColor: theme.colors.white,
-                textStyle: { color: theme.colors.btnFont }
-              }}
 						/>
 					)}
 					{(preorderMinimumDays === 0 && preorderLeadTime === 0) || !cateringPreorder && (
@@ -476,12 +471,10 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 20, backgroundColor: 'white', width: '100%' }}>
 					<OButton
 						onClick={() => handleChangeMoment()}
-						bgColor={theme.colors.primary}
-						borderColor={theme.colors.primary}
 						isDisabled={!selectedTime}
 						text={t('CONTINUE', 'Continue')}
 						style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }}
-						textStyle={{ color: 'white', fontSize: 14 }}
+						textStyle={{ fontSize: 14 }}
 						showNextIcon
 					/>
 				</View>

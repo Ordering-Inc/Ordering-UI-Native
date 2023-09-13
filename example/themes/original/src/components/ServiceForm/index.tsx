@@ -57,9 +57,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const [{ optimizeImage, parsePrice, parseDate }] = useUtils()
   const { top } = useSafeAreaInsets()
   const [{ configs }] = useConfig()
-	const [orderState] = useOrder()
-	const [{ auth }] = useSession()
-	const { product, loading, error } = productObject;
+  const [orderState] = useOrder()
+  const [{ auth }] = useSession()
+  const { product, loading, error } = productObject;
 
   const [selectDate, setSelectedDate] = useState<any>(new Date())
   const [timeList, setTimeList] = useState<any>([])
@@ -77,8 +77,8 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const styles = StyleSheet.create({
     photoStyle: {
       width: 45,
-			height: 45,
-			borderRadius: 7.6
+      height: 45,
+      borderRadius: 7.6
     },
     buttonStyle: {
       borderRadius: 7.6,
@@ -144,7 +144,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       return (moment.utc(item?.start).local().valueOf() <= moment(selectedMoment).valueOf() &&
         moment(selectedMoment).valueOf() < moment.utc(item?.end).local().valueOf()) ||
         (moment.utc(item?.start).local().valueOf() < moment(selectedMoment).add(duration, 'minutes').valueOf() &&
-        moment(selectedMoment).add(duration, 'minutes').valueOf() < moment.utc(item?.end).local().valueOf())
+          moment(selectedMoment).add(duration, 'minutes').valueOf() < moment.utc(item?.end).local().valueOf())
     })
     return valid
   }
@@ -166,9 +166,9 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   }
 
   const handleUpdateGuest = () => {
-		const guestToken = uuid.v4()
-		if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
-	}
+    const guestToken = uuid.v4()
+    if (guestToken) handleCreateGuestUser({ guest_token: guestToken })
+  }
 
   const customDayHeaderStylesCallback = () => {
     return {
@@ -193,11 +193,11 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   }
 
   const handleRedirectLogin = () => {
-		navigation && navigation.navigate('Login', {
-			store_slug: props.businessSlug
-		});
+    navigation && navigation.navigate('Login', {
+      store_slug: props.businessSlug
+    });
     onClose && onClose()
-	};
+  };
 
   const getTimes = (curdate: any, menu: any) => {
     validateSelectedDate(curdate, menu)
@@ -290,7 +290,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     setSelectedDate(moment.utc(productCart?.calendar_event?.start).local())
     setTimeSelected(moment.utc(productCart?.calendar_event?.start).local().format('HH:mm'))
   }, [productCart])
-  
+
   return (
     <>
       {loading && !error && (
@@ -450,7 +450,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               <CalendarWrapper>
                 {(timeList?.length > 0 && isEnabled) ? (
                   <SelectDropdown
-                    ref={dropdownRef} 
+                    ref={dropdownRef}
                     defaultValueByIndex={timeList.findIndex((item: any) => item.value === timeSelected)}
                     data={timeList}
                     onSelect={(selectedItem, index) => {
@@ -462,7 +462,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                     rowTextForSelection={(item, index) => {
                       return item.text
                     }}
-                    buttonStyle={{borderRadius: 7.6, ...styles.selectOption}}
+                    buttonStyle={{ borderRadius: 7.6, ...styles.selectOption }}
                     buttonTextStyle={{
                       color: theme.colors.disabled,
                       fontSize: 14,
@@ -485,7 +485,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                     }}
                     renderCustomizedRowChild={(item, index) => {
                       return (
-                        <Text style={[styles.dropDownRow, { color: isBusyTime(currentProfessional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary } ]}>
+                        <Text style={[styles.dropDownRow, { color: isBusyTime(currentProfessional, getMomentTime(item.value)) ? theme.colors.lightGray : theme.colors.primary }]}>
                           {item.text}
                         </Text>
                       )
@@ -553,7 +553,6 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               auth &&
               orderState.options?.address_id)) && (
                 <OButton
-                  bgColor={theme.colors.primary}
                   onClick={() => handleSaveService()}
                   text={orderState.loading
                     ? t('LOADING', 'Loading')
@@ -562,7 +561,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                       : t('BOOK', 'Book'))}
                   style={styles.buttonStyle}
                   isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected || isBusyTime(currentProfessional, dateSelected)}
-                  textStyle={{ fontSize: 14, color: theme.colors.white }}
+                  textStyle={{ fontSize: 14 }}
                 />
               )}
             {auth &&
@@ -577,45 +576,44 @@ const ServiceFormUI = (props: ServiceFormParams) => {
               ) : (
                 <OButton onClick={() => addressRedirect()} />
               ))}
-              {!auth && (
-                <OButton
-                  isDisabled={isSoldOut || maxProductQuantity <= 0}
-                  onClick={() => handleRedirectLogin()}
-                  text={
-                    isSoldOut || maxProductQuantity <= 0
-                      ? t('SOLD_OUT', 'Sold out')
-                      : t('LOGIN_SIGNUP', 'Login / Sign Up')
-                  }
-                  imgRightSrc=""
-                  textStyle={{ color: theme.colors.primary, fontSize: 14 }}
-                  style={{
-                    height: 44,
-                    borderColor: theme.colors.primary,
-                    backgroundColor: theme.colors.white,
-                  }}
-                />
-              )}
-              {!auth && guestCheckoutEnabled && orderTypeEnabled &&  (
-                <TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
-                  {actionStatus?.loading ? (
-                    <Placeholder Animation={Fade}>
-                      <PlaceholderLine width={60} height={20} />
-                    </Placeholder>
-                  ) : (
-                    <OText color={theme.colors.primary} size={13}>{t('AS_GUEST_USER', 'As guest user')}</OText>
-                  )}
-                </TouchableOpacity>
-              )}
+            {!auth && (
+              <OButton
+                isDisabled={isSoldOut || maxProductQuantity <= 0}
+                onClick={() => handleRedirectLogin()}
+                text={
+                  isSoldOut || maxProductQuantity <= 0
+                    ? t('SOLD_OUT', 'Sold out')
+                    : t('LOGIN_SIGNUP', 'Login / Sign Up')
+                }
+                imgRightSrc=""
+                textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+                style={{
+                  height: 44,
+                  backgroundColor: theme.colors.white,
+                }}
+              />
+            )}
+            {!auth && guestCheckoutEnabled && orderTypeEnabled && (
+              <TouchableOpacity style={{ marginTop: 10 }} onPress={handleUpdateGuest}>
+                {actionStatus?.loading ? (
+                  <Placeholder Animation={Fade}>
+                    <PlaceholderLine width={60} height={20} />
+                  </Placeholder>
+                ) : (
+                  <OText color={theme.colors.primary} size={13}>{t('AS_GUEST_USER', 'As guest user')}</OText>
+                )}
+              </TouchableOpacity>
+            )}
           </ButtonWrapper>
         </Container>
       )}
 
       <OModal
-				open={isOpen}
-				onClose={() => setIsOpen(false)}
-				entireModal
-			>
-				<ScrollView contentContainerStyle={styles.professionalList}>
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        entireModal
+      >
+        <ScrollView contentContainerStyle={styles.professionalList}>
           <View style={{ paddingVertical: 11 }}>
             <OText
               size={14}
@@ -671,7 +669,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-			</OModal>
+      </OModal>
     </>
   )
 }

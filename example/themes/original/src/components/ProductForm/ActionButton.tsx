@@ -59,11 +59,11 @@ export const ActionButton = (props: any) => {
                             }`}
                         isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order))}
                         textStyle={{
-                            color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
+                            color: theme.colors.white,
                             fontSize: orderState.loading || editMode ? 10 : 14
                         }}
                         bgColor={buttonColor ? theme.colors.lightGray : theme.colors.primary}
-                        borderColor={!buttonColor ? theme.colors.white : theme.colors.primary}
+                        borderColor={buttonColor ? theme.colors.lightGray : theme.colors.primary}
                         style={{
                             opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
                             borderRadius: 7.6,
@@ -96,10 +96,9 @@ export const ActionButton = (props: any) => {
                             : t('LOGIN_SIGNUP', 'Login / Sign Up')
                     }
                     imgRightSrc=""
-                    textStyle={{ color: theme.colors.primary, fontSize: 13, textAlign: 'center' }}
+                    textStyle={{ fontSize: 13, textAlign: 'center', color: theme.colors.primary }}
                     style={{
                         height: 42,
-                        borderColor: theme.colors.primary,
                         backgroundColor: theme.colors.white,
                         paddingLeft: 0,
                         paddingRight: 0

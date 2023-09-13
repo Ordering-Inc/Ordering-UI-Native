@@ -394,7 +394,6 @@ const MultiCheckoutUI = (props: any) => {
                   </OText>
                   <OButton
                     text={t('SIGN_UP', 'Sign up')}
-                    textStyle={{ color: theme.colors.white }}
                     style={{ borderRadius: 7.6, marginTop: 20 }}
                     onClick={() => setOpenModal({ ...openModal, signup: true })}
                   />

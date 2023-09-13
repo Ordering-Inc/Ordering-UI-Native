@@ -85,6 +85,7 @@ interface Props {
 	isDisabledWithSameStyles?: boolean;
 	icon?: any;
 	iconProps?: any
+	useArrow?: boolean;
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -119,7 +120,7 @@ const OButton = (props: Props): React.ReactElement => {
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
 			disabled={props.isDisabledWithSameStyles}
 		>
-			<StyledButton style={{ ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor, borderRadius: props.style?.borderRadius }}>
+			<StyledButton style={{ ...props.style, backgroundColor: props.useArrow ? theme.colors.white : props.bgColor ?? theme.colors.primary, borderColor: props.useArrow ? theme.colors.white : props.borderColor ?? theme.colors.primary, borderRadius: props.style?.borderRadius }}>
 				{props.icon ? (
 					<props.icon {...props.iconProps} />
 				) : null}
@@ -127,7 +128,7 @@ const OButton = (props: Props): React.ReactElement => {
 					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} color={theme.colors.textNormal} />
 				) : null}
 				{props.text ? (
-					<StyledText style={{ ...props.textStyle, color: props?.textStyle?.color }}>{props.text}</StyledText>
+					<StyledText style={{ ...props.textStyle, color: props.useArrow ? theme.colors.btnFont : props?.textStyle?.color ?? theme.colors.white }}>{props.text}</StyledText>
 				) : null}
 				{props.imgRightSrc ? (
 					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />

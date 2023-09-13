@@ -484,9 +484,7 @@ export const UserFormDetailsUI = (props: any) => {
 										? t('UPDATING', 'Updating...')
 										: t('UPDATE', 'Update')
 								}
-								bgColor={theme.colors.primary}
-								textStyle={{ color: theme.colors.white, fontSize: 14 }}
-								borderColor={theme.colors.primary}
+								textStyle={{ fontSize: 14 }}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
 								style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20, marginBottom: 20 }}
@@ -504,12 +502,10 @@ export const UserFormDetailsUI = (props: any) => {
 								? t('SIGN_UP_AND_PLACE_ORDER', 'Sign up and place order')
 								: t('CONTINUE', 'Continue'))
 					}
-					bgColor={theme.colors.primary}
 					textStyle={{
 						color: !user?.guest_id && (formState.loading || !isValid) ? theme.colors.primary : theme.colors.white,
 						fontSize: 14
 					}}
-					borderColor={theme.colors.primary}
 					isDisabled={!user?.guest_id && (formState.loading || !isValid)}
 					imgRightSrc={null}
 					style={{

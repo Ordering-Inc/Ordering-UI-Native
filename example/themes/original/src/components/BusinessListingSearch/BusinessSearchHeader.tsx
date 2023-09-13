@@ -47,13 +47,11 @@ export const BusinessSearchHeader = (props: any) => {
                             borderWidth: 0,
                             width: 26,
                             height: 26,
-                            backgroundColor: '#FFF',
-                            borderColor: '#FFF',
-                            shadowColor: '#FFF',
                             paddingLeft: 0,
                             paddingRight: 0,
                             marginTop: 50,
                         }}
+                        useArrow
                         onClick={() => props.navigation.goBack()}
                         icon={AntDesignIcon}
                         iconProps={{

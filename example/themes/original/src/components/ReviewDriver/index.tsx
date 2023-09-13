@@ -192,11 +192,6 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
           style={{ flexDirection: 'column', alignItems: 'flex-start' }}
           titleWrapStyle={{ paddingHorizontal: 0 }}
           titleStyle={{ marginRight: 0, marginLeft: 0 }}
-          buttonProps={{
-            bgColor: theme.colors.white,
-            borderColor: theme.colors.white,
-            textStyle: { color: theme.colors.btnFont }
-          }}
         />
         <DriverPhotoContainer>
           <View
@@ -298,7 +293,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}

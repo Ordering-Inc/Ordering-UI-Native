@@ -175,9 +175,8 @@ export const CartContent = (props: any) => {
 											text={t('CHECKOUT', 'Checkout')}
 											bgColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
 											isDisabled={!cartsAvailable.length}
-											borderColor={theme.colors.primary}
+											borderColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
 											imgRightSrc={null}
-											textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
 											onClick={() => handleCheckoutRedirect()}
 											style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
 										/>

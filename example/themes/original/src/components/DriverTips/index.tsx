@@ -125,9 +125,7 @@ const DriverTipsUI = (props: any) => {
 						/>
 						<OButton
 							text={t('APPLY_TIP', 'Apply Tip')}
-							bgColor={theme.colors.primary}
-							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white', fontSize: 14 }}
+							textStyle={{ fontSize: 14 }}
 							imgRightSrc={null}
 							style={{ borderRadius: 5, height: 44 }}
 							isDisabled={parseFloat(value || '0') < 0 || parseFloat(value || '0') === driverTip || value === ''}

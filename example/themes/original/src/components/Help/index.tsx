@@ -48,11 +48,6 @@ export const Help = (props: HelpParams) => {
         onActionLeft={goToBack}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
-        buttonProps={{
-          bgColor: theme.colors.white,
-          borderColor: theme.colors.white,
-          textStyle: { color: theme.colors.btnFont }
-        }}
       />
       <HelpSubItem
         onPress={() => onRedirect('HelpOrder')}
