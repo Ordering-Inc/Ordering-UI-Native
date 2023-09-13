@@ -104,7 +104,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={order?.driver && !order?.user_review ? t('CONTINUE', 'Continue') : t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}

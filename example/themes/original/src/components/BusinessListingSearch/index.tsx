@@ -238,7 +238,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                     paddingRight: 10,
                     height: 23,
                     shadowOpacity: 0,
-                    backgroundColor: theme.colors.primaryContrast,
                     borderWidth: 0
                   }}
                 />

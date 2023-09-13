@@ -852,9 +852,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 										: t('LOADING', 'Loading')
 								}
 								onClick={handleSubmit(onSubmit)}
-								bgColor={theme.colors.primary}
-								borderColor={theme.colors.primary}
-								textStyle={{ color: theme.colors.white }}
 								isDisabled={formState.loading}
 								style={{ borderRadius: 7.6, shadowOpacity: 0 }}
 								showNextIcon
@@ -890,9 +887,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 						)}
 						<OButton
 							text={t('SAVE', 'Save')}
-							textStyle={{ color: theme.colors.white }}
-							bgColor={theme.colors.primary}
-							borderColor={theme.colors.primary}
 							imgRightSrc={null}
 							style={{ marginHorizontal: 30, marginBottom: 10 }}
 							onClick={() => setSaveMapLocation(true)}

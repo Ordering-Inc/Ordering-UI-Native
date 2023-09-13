@@ -293,7 +293,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}

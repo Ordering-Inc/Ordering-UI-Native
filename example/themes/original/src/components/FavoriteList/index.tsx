@@ -270,7 +270,6 @@ const FavoriteListUI = (props: FavoriteParams) => {
             onClick={() => getFavoriteList(pagination?.currentPage + 1)}
             text={t('LOAD_MORE_ITEMS', 'Load more items')}
             imgRightSrc={null}
-            textStyle={{ color: theme.colors.white }}
             style={{ borderRadius: 7.6, shadowOpacity: 0, marginTop: 20 }}
           />
         </WrappButton>

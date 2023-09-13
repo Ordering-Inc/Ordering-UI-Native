@@ -115,8 +115,6 @@ const NavBar = (props: Props) => {
 			{props.showCall
 				? (<OButton
 					isCircle={true}
-					bgColor={theme.colors.primary}
-					borderColor={theme.colors.primary}
 					imgRightSrc={null}
 					imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
 					imgLeftSrc={theme.images.general.support}

@@ -143,7 +143,6 @@ const SocketStatusUI = (props: any) => {
               <OButton
                 onClick={() => setOpenModal(false)}
                 bgColor={theme.colors.white}
-                borderColor={theme.colors.primary}
                 textStyle={{ color: theme.colors.primary }}
                 style={{ borderRadius: 8, height: 48 }}
                 text={t('CLOSE', 'Close')}

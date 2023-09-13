@@ -111,9 +111,7 @@ const PurchaseGiftCardUI = (props: any) => {
       <OButton
         onClick={() => handleAccept()}
         text={t('ACCEPT', 'Accept')}
-        bgColor={theme.colors.primary}
-        borderColor={theme.colors.primary}
-        textStyle={{ color: 'white', fontSize: 13 }}
+        textStyle={{ fontSize: 13 }}
         imgRightSrc={null}
         style={style.btnStyle}
         isDisabled={!selectedProduct}

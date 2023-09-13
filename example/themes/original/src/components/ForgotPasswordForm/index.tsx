@@ -208,7 +208,6 @@ const ForgotPasswordUI = (props: any) => {
 
 					<OButton
 						text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
-						textStyle={{ color: 'white' }}
 						bgColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
 						borderColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
 						isLoading={formState.loading}

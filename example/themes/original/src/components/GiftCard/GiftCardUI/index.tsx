@@ -12,7 +12,7 @@ import {
   Container
 } from './styles'
 
-export const GiftCardUI =  React.memo((props: any) => {
+export const GiftCardUI = React.memo((props: any) => {
   const {
     navigation
   } = props
@@ -57,9 +57,7 @@ export const GiftCardUI =  React.memo((props: any) => {
         <OButton
           onClick={() => setOpenModal('purchase')}
           text={t('PURCHASE', 'Purchase')}
-          bgColor={theme.colors.primary}
-          borderColor={theme.colors.primary}
-          textStyle={{ color: 'white', fontSize: 13 }}
+          textStyle={{ fontSize: 13 }}
           imgRightSrc={null}
           style={{ ...style.btnStyle, marginRight: 14 }}
         />
@@ -76,26 +74,26 @@ export const GiftCardUI =  React.memo((props: any) => {
       </View>
 
       <OModal
-				open={openModal === 'purchase'}
-				onClose={() => setOpenModal(null)}
-				entireModal
+        open={openModal === 'purchase'}
+        onClose={() => setOpenModal(null)}
+        entireModal
         customClose
-			>
-				<PurchaseGiftCard
+      >
+        <PurchaseGiftCard
           handleCustomGoToCheckout={handleCustomGoToCheckout}
           onClose={() => setOpenModal(null)}
         />
-			</OModal>
+      </OModal>
       <OModal
-				open={openModal === 'redeem'}
-				onClose={() => setOpenModal(null)}
-				entireModal
+        open={openModal === 'redeem'}
+        onClose={() => setOpenModal(null)}
+        entireModal
         customClose
-			>
-				<RedeemGiftCard
+      >
+        <RedeemGiftCard
           onClose={() => setOpenModal(null)}
         />
-			</OModal>
+      </OModal>
     </Container>
   )
 })

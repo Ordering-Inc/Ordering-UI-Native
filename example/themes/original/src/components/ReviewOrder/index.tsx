@@ -333,7 +333,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
-            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            textStyle={{ paddingRight: 10 }}
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}

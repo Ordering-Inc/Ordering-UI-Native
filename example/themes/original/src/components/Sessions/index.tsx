@@ -111,14 +111,14 @@ export const SessionsUI = (props: SessionsParams) => {
                 <OButton
                   text={t('DELETE_ALL_SESSIONS', 'Delete all sessions')}
                   isDisabled={actionState.loading}
-                  textStyle={{ color: theme.colors.white, fontSize: 14 }}
+                  textStyle={{ fontSize: 14 }}
                   onClick={() => onDeleteAllSessions(false, true)}
                   style={{ borderRadius: 7.6, marginTop: 30 }}
                 />
                 <OButton
                   text={t('DELETE_ALL_SESSIONS_EXCEPT_CURRENT', 'Delete all sessions except current')}
                   isDisabled={actionState.loading}
-                  textStyle={{ color: theme.colors.white, fontSize: 14 }}
+                  textStyle={{ fontSize: 14 }}
                   onClick={() => onDeleteAllSessions(false, false)}
                   style={{ borderRadius: 7.6, marginTop: 20 }}
                 />
@@ -136,7 +136,7 @@ export const SessionsUI = (props: SessionsParams) => {
           <OButton
             text={t('ACTIVE_SESSIONS', 'Active sessions')}
             isDisabled={actionState.loading}
-            textStyle={{ color: theme.colors.white, fontSize: 14 }}
+            textStyle={{ fontSize: 14 }}
             onClick={() => onDeleteAllSessions(true, false)}
             style={{ borderRadius: 7.6, marginTop: 20 }}
           />

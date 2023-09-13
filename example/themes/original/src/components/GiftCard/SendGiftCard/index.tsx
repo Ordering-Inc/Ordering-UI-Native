@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Platform, Alert } from 'react-native';
-import { useLanguage, SendGiftCard as SendGiftCardController  } from 'ordering-components/native';
+import { useLanguage, SendGiftCard as SendGiftCardController } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OText, OButton, OInput } from '../../shared';
 import { useForm, Controller } from 'react-hook-form'
@@ -29,10 +29,10 @@ const SendGiftCardUI = (props: any) => {
       marginTop: 20
     },
     inputStyle: {
-			borderWidth: 1,
-			borderColor: theme.colors.border,
-			borderRadius: 7.6,
-		},
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 7.6,
+    },
   })
 
   const onSubmit = (values) => {
@@ -50,7 +50,7 @@ const SendGiftCardUI = (props: any) => {
         t('ERROR', 'Error'),
         stringError,
         [
-          { text: t('OK', 'oK'), onPress: () => {} }
+          { text: t('OK', 'oK'), onPress: () => { } }
         ]
       )
     }
@@ -144,9 +144,7 @@ const SendGiftCardUI = (props: any) => {
       <OButton
         onClick={handleSubmit(onSubmit)}
         text={actionState?.loading ? t('LOADING', 'Loading') : t('SEND_GIFT_CARD', 'Send gift card')}
-        bgColor={theme.colors.primary}
-        borderColor={theme.colors.primary}
-        textStyle={{ color: 'white', fontSize: 13 }}
+        textStyle={{ fontSize: 13 }}
         imgRightSrc={null}
         style={style.btnStyle}
         isDisabled={actionState.loading}

@@ -295,10 +295,7 @@ const AddressListUI = (props: AddressListParams) => {
 							<OButton
 								text={t('ADD_NEW_ADDRESS', 'Add new Address')}
 								imgRightSrc=''
-								bgColor={theme.colors.primary}
-								textStyle={{ color: theme.colors.white }}
 								style={styles.button}
-								borderColor={theme.colors.primary}
 								onClick={() => !afterSignup ? onNavigationRedirect(
 									'AddressForm',
 									{
