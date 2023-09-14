@@ -348,7 +348,6 @@ const CheckoutUI = (props: any) => {
 				userSelected && !userSelected[field?.validation_field?.code])
 		const requiredFieldsCode = _requiredFields.map((item: any) => item?.validation_field?.code)
 		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
-		console.log(_requiredFields)
 		if (
 			userSelected &&
 			!userSelected?.cellphone &&
