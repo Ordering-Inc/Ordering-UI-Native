@@ -156,7 +156,7 @@ const NewOrderNotificationUI = (props: any) => {
         setCurrentEvent({ evt: 2, orderId: value?.id ?? value?.order_id })
       }
     }
-    if (!orderStatus.includes(value.status) || value?.author_id === user.id) return
+    if ((!orderStatus.includes(value.status) && evtType !== 1) || value?.author_id === user.id) return
     setCurrentEvent({
       evt: evtType,
       orderId: value?.driver
