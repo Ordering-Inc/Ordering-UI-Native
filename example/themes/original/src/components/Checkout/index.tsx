@@ -168,6 +168,7 @@ const CheckoutUI = (props: any) => {
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
+	const [orderTypeValidationFields, setOrderTypeValidationFields] = useState<any>([])
 	const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
 	const [allowedGuest, setAllowedGuest] = useState(false)
 	const [placeByMethodPay, setPlaceByMethodPay] = useState(false)
@@ -179,7 +180,7 @@ const CheckoutUI = (props: any) => {
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
-	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
+	const notFields = ['coupon', 'mobile_phone', 'address', 'zipcode', 'address_notes']
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const businessConfigs = businessDetails?.business?.configs ?? []
@@ -342,22 +343,23 @@ const CheckoutUI = (props: any) => {
 	const checkGuestValidationFields = () => {
 		const userSelected = user
 		const _requiredFields = checkoutFieldsState?.fields
-			.filter((field: any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required &&
+			.filter((field: any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
 				!notFields.includes(field?.validation_field?.code) &&
 				userSelected && !userSelected[field?.validation_field?.code])
-			.map((item: any) => item?.validation_field?.code)
+		const requiredFieldsCode = _requiredFields.map((item: any) => item?.validation_field?.code)
 		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
-
+		console.log(_requiredFields)
 		if (
 			userSelected &&
 			!userSelected?.cellphone &&
 			((guestCheckoutCellPhone?.enabled &&
-				guestCheckoutCellPhone?.required) ||
+				guestCheckoutCellPhone?.required_with_guest) ||
 				configs?.verification_phone_required?.value === '1')
 		) {
-			_requiredFields.push('cellphone')
+			requiredFieldsCode.push('cellphone')
 		}
-		setRequiredFields(_requiredFields)
+		setRequiredFields(requiredFieldsCode)
+		setOrderTypeValidationFields(_requiredFields)
 	}
 
 	const togglePhoneUpdate = (val: boolean) => {
@@ -1045,8 +1047,10 @@ const CheckoutUI = (props: any) => {
 								phoneUpdate={phoneUpdate}
 								togglePhoneUpdate={togglePhoneUpdate}
 								requiredFields={requiredFields}
+								orderTypeValidationFields={orderTypeValidationFields}
 								hideUpdateButton
 								handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+								isGuest={!!user?.guest_id}
 								onClose={() => {
 									setIsOpen(false)
 									if (paymethodClicked) {
