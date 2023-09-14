@@ -151,7 +151,10 @@ const StripeElementsFormUI = (props: any) => {
 						const _isNewCard = index === 0
 						stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId, _isNewCard);
 					})
-					setNewCardAdded(card)
+					setNewCardAdded?.({
+						...card,
+						id: setupIntent?.paymentMethodId
+					})
 				} else {
 					stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
 				}
