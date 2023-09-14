@@ -31,7 +31,9 @@ export const StripeCardsListUI = (props: any) => {
 		handleCardClick,
 		onOpen,
 		gateway,
-		paySelected
+		paySelected,
+		newCardAdded,
+		addNewCardAsDefault
 	} = props;
 
 	const theme = useTheme();
@@ -54,6 +56,12 @@ export const StripeCardsListUI = (props: any) => {
 			onOpen && onOpen();
 		}
 	}, [cardsList?.loading])
+
+	useEffect(() => {
+		if (newCardAdded && addNewCardAsDefault){	
+			handleCardSelected(newCardAdded)
+		}
+	}, [JSON.stringify(newCardAdded)])
 
 	return (
 		<>
