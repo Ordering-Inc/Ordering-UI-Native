@@ -80,7 +80,7 @@ export const ActionButton = (props: any) => {
                         textStyle={{ fontSize: 10 }}
                     />
                 ) : (
-                    <OButton onClick={navigation.navigate('AddressList')} />
+                    <OButton onClick={() => navigation.navigate('AddressList')} />
                 ))}
             {!auth && (
                 <OButton

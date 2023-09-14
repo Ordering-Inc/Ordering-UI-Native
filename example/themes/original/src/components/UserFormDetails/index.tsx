@@ -38,7 +38,9 @@ export const UserFormDetailsUI = (props: any) => {
 		isCheckout,
 		setIsOpen,
 		handleRemoveAccount,
-		isProfile
+		isProfile,
+		isGuest,
+		orderTypeValidationFields
 	} = props;
 
 	const theme = useTheme();
@@ -310,16 +312,16 @@ export const UserFormDetailsUI = (props: any) => {
 		<>
 			<UDForm>
 				{!validationFields?.loading &&
-					sortInputFields({ values: validationFields?.fields?.checkout })
+					sortInputFields({ values: isGuest ? orderTypeValidationFields : validationFields?.fields?.checkout })
 						.length > 0 && (
 						<UDWrapper>
 							{sortInputFields({
-								values: validationFields.fields?.checkout,
+								values: isGuest ? orderTypeValidationFields : validationFields?.fields?.checkout,
 							}).map(
 								(item: any) => {
 									const field = item?.validation_field || item
-									return (showField &&
-										showField(field.code) && ((requiredFields && requiredFields?.includes?.(field.code)) || !requiredFields) && (
+									return (
+										(isGuest ? item?.enabled : showField && showField(field.code)) && ((requiredFields && requiredFields?.includes?.(field.code)) || !requiredFields) && (
 											<React.Fragment key={field.id}>
 												<Controller
 													key={field.id}
