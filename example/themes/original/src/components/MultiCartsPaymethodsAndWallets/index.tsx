@@ -224,6 +224,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
             clientSecret={props.clientSecret}
             onPaymentChange={handlePaymethodDataChange}
             newCardAdded={newCardAdded}
+            addNewCardAsDefault
           />
         </View>
       )}
