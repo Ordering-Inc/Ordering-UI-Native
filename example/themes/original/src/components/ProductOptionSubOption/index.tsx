@@ -35,7 +35,8 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		disabled,
 		setIsScrollAvailable,
 		image,
-		enableIntersection
+		enableIntersection,
+		onChange
 	} = props
 
 	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max || state.quantity === suboption?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
@@ -87,6 +88,12 @@ export const ProductOptionSubOptionUI = (props: any) => {
 			setShowMessage(false)
 		}
 	}, [balance])
+
+	useEffect(() => {
+		if (!suboption?.preselected || !option?.respect_to) return
+		const newState = { ...state, selected: suboption?.preselected, quantity: state.selected ? 0 : 1 }
+		onChange(newState, suboption, option)
+	}, [suboption, option])
 
 	return (
 		<InView onChange={(inView: boolean) => handleChangeInterSection(inView)} triggerOnce={true}>
