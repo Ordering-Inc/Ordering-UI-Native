@@ -597,6 +597,7 @@ export interface AcceptOrRejectOrderParams {
   isPage?: boolean
   navigation?: any
   route?: any
+  isLoadingOrder?: boolean
 }
 
 export interface MapViewParams {
