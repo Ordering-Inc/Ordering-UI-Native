@@ -106,7 +106,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       geocodePosition(curPos)
       setMarkerPosition(curPos)
       if (!autoCompleteAddress) {
-        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos.latitudeDelta || 0.0010, longitudeDelta: curPos.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos?.latitudeDelta || 0.0010, longitudeDelta: curPos?.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
       } else {
         setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
       }
@@ -116,12 +116,12 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     const _maxLimitLocation = typeof maxLimitLocation === 'string' ? parseInt(maxLimitLocation, 10) : maxLimitLocation
 
     if (distance <= _maxLimitLocation) {
-      if (!aproxEqual(curPos.latitude, center.lat) || !aproxEqual(curPos.longitude, center.lng)) {
+      if (!aproxEqual(curPos?.latitude, center.lat) || !aproxEqual(curPos?.longitude, center.lng)) {
         geocodePosition(curPos, true)
       }
       setMarkerPosition(curPos)
       if (!autoCompleteAddress) {
-        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos.latitudeDelta || 0.0010, longitudeDelta: curPos.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos?.latitudeDelta || 0.0010, longitudeDelta: curPos?.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
       } else {
         setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
       }
