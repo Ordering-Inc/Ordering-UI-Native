@@ -21,7 +21,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     locations,
     isIntGeoCoder,
     businessZones,
-    delta
+    delta,
+    autoCompleteAddress,
+    setAutoCompleteAddress
   } = props
 
   const [, t] = useLanguage()
@@ -95,7 +97,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     })
   }
 
-  const validateResult = (curPos: { latitude: number, longitude: number, latitudeDelta: number, longitudeDelta: number }) => {
+  console.log('region', region)
+
+  const validateResult = (curPos: any) => {
     const loc1 = center
     const loc2 = curPos
     const distance = calculateDistance(loc1, loc2)
@@ -103,7 +107,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     if (!maxLimitLocation) {
       geocodePosition(curPos)
       setMarkerPosition(curPos)
-      setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+      if (!autoCompleteAddress) {
+        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+      } else {
+        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+      }
       return
     }
 
@@ -114,7 +122,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         geocodePosition(curPos, true)
       }
       setMarkerPosition(curPos)
-      setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+      if (!autoCompleteAddress) {
+        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+      } else {
+        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+      }
     } else {
       setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION')
       setMarkerPosition({ latitude: center.lat, longitude: center.lng })
@@ -182,11 +194,20 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [isIntGeoCoder])
 
   useEffect(() => {
-    mapRef.current.animateToRegion({
-      ...region,
-      latitude: location?.lat,
-      longitude: location?.lng,
-    })
+    if (!autoCompleteAddress) {
+      mapRef.current.animateToRegion({
+        ...region,
+        latitude: location?.lat,
+        longitude: location?.lng,
+      })
+    } else {
+      mapRef.current.animateToRegion({
+        latitude: location?.lat,
+        longitude: location?.lng,
+        latitudeDelta: delta ?? 0.0010,
+        longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
+      })
+    }
   }, [location])
 
   useEffect(() => {
@@ -213,7 +234,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         provider={PROVIDER_GOOGLE}
         initialRegion={region}
         style={styles.map}
-        onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
+        onPanDrag={() => { setAutoCompleteAddress && setAutoCompleteAddress(false) }}
+        onRegionChangeComplete={!readOnly ? (coordinates) => { handleChangeRegion(coordinates) } : () => { }}
         zoomTapEnabled
         zoomEnabled
         zoomControlEnabled
