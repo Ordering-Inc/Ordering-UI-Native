@@ -133,6 +133,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const [configState] = useConfig();
 	const [orderState] = useOrder();
 	const { handleSubmit, errors, control, setValue } = useForm();
+	const [autoCompleteAddress, setAutoCompleteAddress] = useState(false)
 
 	const [toggleMap, setToggleMap] = useState(false);
 	const [alertState, setAlertState] = useState<{
@@ -572,6 +573,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 											placeholder={t('ADD_ADDRESS', 'Add a address')}
 											onPress={(data, details: any) => {
 												handleChangeAddress(data, details);
+												setAutoCompleteAddress(true);
 											}}
 											query={{
 												key: googleMapsApiKey,
@@ -586,6 +588,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 															target: { name: 'address', value: text },
 														});
 														setValue('address', text);
+														setAutoCompleteAddress(true)
 													}
 													setIsFirstTime(false);
 													setAddressEditing(text.length == 0);
@@ -673,6 +676,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 											setSaveLocation={setSaveMapLocation}
 											handleToggleMap={handleToggleMap}
 											isIntGeoCoder
+											setAutoCompleteAddress={setAutoCompleteAddress}
+											autoCompleteAddress={autoCompleteAddress}
 										/>
 									</GoogleMapContainer>
 								</View>
