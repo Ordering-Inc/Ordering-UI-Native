@@ -207,6 +207,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         latitudeDelta: delta ?? 0.0010,
         longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
       })
+      setAutoCompleteAddress && setAutoCompleteAddress(false)
     }
   }, [location])
 
@@ -234,7 +235,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         provider={PROVIDER_GOOGLE}
         initialRegion={region}
         style={styles.map}
-        onPanDrag={() => { setAutoCompleteAddress && setAutoCompleteAddress(false) }}
         onRegionChangeComplete={!readOnly ? (coordinates) => { handleChangeRegion(coordinates) } : () => { }}
         zoomTapEnabled
         zoomEnabled
