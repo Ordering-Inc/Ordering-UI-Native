@@ -21,7 +21,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     locations,
     isIntGeoCoder,
     businessZones,
-    delta
+    delta,
+    autoCompleteAddress,
+    setAutoCompleteAddress
   } = props
 
   const [, t] = useLanguage()
@@ -59,7 +61,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     strokeWidth: 2
   }
 
-  const geocodePosition = (pos: { latitude: number, longitude: number }, isMovingRegion ?: boolean) => {
+  const geocodePosition = (pos: { latitude: number, longitude: number }, isMovingRegion?: boolean) => {
     Geocoder.from({
       latitude: pos.latitude,
       longitude: pos.longitude
@@ -84,7 +86,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         }
         handleChangeAddressMap && handleChangeAddressMap(address, details)
         setSaveLocation && setSaveLocation(false)
-        if(!isMovingRegion){
+        if (!isMovingRegion) {
           handleToggleMap && handleToggleMap()
         }
       } else {
@@ -95,7 +97,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     })
   }
 
-  const validateResult = (curPos: { latitude: number, longitude: number }) => {
+  const validateResult = (curPos: any) => {
     const loc1 = center
     const loc2 = curPos
     const distance = calculateDistance(loc1, loc2)
@@ -103,25 +105,33 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     if (!maxLimitLocation) {
       geocodePosition(curPos)
       setMarkerPosition(curPos)
-      setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
+      if (!autoCompleteAddress) {
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos?.latitudeDelta || 0.0010, longitudeDelta: curPos?.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
+      } else {
+        setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+      }
       return
     }
 
     const _maxLimitLocation = typeof maxLimitLocation === 'string' ? parseInt(maxLimitLocation, 10) : maxLimitLocation
 
     if (distance <= _maxLimitLocation) {
-      if (!aproxEqual(curPos.latitude, center.lat) || !aproxEqual(curPos.longitude, center.lng)){
+      if (!aproxEqual(curPos?.latitude, center.lat) || !aproxEqual(curPos?.longitude, center.lng)) {
         geocodePosition(curPos, true)
       }
       setMarkerPosition(curPos)
-      setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
+      if (!autoCompleteAddress) {
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos?.latitudeDelta || 0.0010, longitudeDelta: curPos?.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
+      } else {
+        setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+      }
     } else {
       setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION')
       setMarkerPosition({ latitude: center.lat, longitude: center.lng })
     }
   }
 
-  const aproxEqual = (n1 : number, n2 : number, epsilon = 0.000001) => {
+  const aproxEqual = (n1: number, n2: number, epsilon = 0.000001) => {
     return Math.abs(n1 - n2) < epsilon
   }
 
@@ -182,11 +192,21 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [isIntGeoCoder])
 
   useEffect(() => {
-    mapRef.current.animateToRegion({
-      ...region,
+    const regionConfig = {
       latitude: location?.lat,
       longitude: location?.lng,
-    })
+      latitudeDelta: delta ?? 0.0010,
+      longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
+    }
+
+    mapRef.current.animateToRegion(autoCompleteAddress
+      ? regionConfig
+      : { ...region, ...regionConfig }
+    )
+
+    if (autoCompleteAddress) {
+      setAutoCompleteAddress && setAutoCompleteAddress(false)
+    }
   }, [location])
 
   useEffect(() => {
@@ -213,7 +233,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         provider={PROVIDER_GOOGLE}
         initialRegion={region}
         style={styles.map}
-        onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
+        onRegionChangeComplete={!readOnly ? (coordinates) => { handleChangeRegion(coordinates) } : () => { }}
         zoomTapEnabled
         zoomEnabled
         zoomControlEnabled
@@ -249,7 +269,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           <React.Fragment key={i}>
             {businessZone?.type === 2 && Array.isArray(businessZone?.data) && (
               <Polygon
-                coordinates={businessZone?.data.map((item: any) => ({ latitude: item.lat, longitude: item.lng}))}
+                coordinates={businessZone?.data.map((item: any) => ({ latitude: item.lat, longitude: item.lng }))}
                 fillColor={fillStyles.fillColor}
                 strokeColor={fillStyles.strokeColor}
                 strokeWidth={fillStyles.strokeWidth}
@@ -257,7 +277,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             )}
             {(businessZone.type === 1 && businessZone?.data?.center && businessZone?.data?.radio) && (
               <Circle
-                center={{ latitude: businessZone?.data?.center.lat, longitude: businessZone?.data?.center.lng}}
+                center={{ latitude: businessZone?.data?.center.lat, longitude: businessZone?.data?.center.lng }}
                 radius={businessZone?.data.radio * 1000}
                 fillColor={fillStyles.fillColor}
                 strokeColor={fillStyles.strokeColor}
@@ -266,7 +286,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             )}
             {(businessZone.type === 5 && businessZone?.data?.distance) && (
               <Circle
-                center={{ latitude: center.lat, longitude: center.lng}}
+                center={{ latitude: center.lat, longitude: center.lng }}
                 radius={businessZone?.data.distance * units[businessZone?.data?.unit]}
                 fillColor={fillStyles.fillColor}
                 strokeColor={fillStyles.strokeColor}
@@ -275,7 +295,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             )}
           </React.Fragment>
         ))}
-      </MapView>
+      </MapView >
       <Alert
         open={alertState.open}
         onAccept={closeAlert}
