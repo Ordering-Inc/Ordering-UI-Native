@@ -230,7 +230,7 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
         {!!order?.business?.location && order?.customer?.location && (
           <OText>
-            {t('DISTANCE_TO_THE_BUSINESS', 'Distance to the business')}: {transformDistance(calculateDistance(order?.business?.location, { latitude: order?.customer?.location?.lat, longitude: order?.customer?.location?.lng }), distanceUnit)} {t(distanceUnit.toUpperCase(), distanceUnit)}
+            {t('DISTANCE_TO_THE_BUSINESS', 'Distance to the business')}: {transformDistance(calculateDistance(order?.business?.location, { latitude: order?.customer?.location?.lat, longitude: order?.customer?.location?.lng }), distanceUnit)} {t(distanceUnit?.toUpperCase?.(), distanceUnit)}
           </OText>
         )}
         {!!order?.business?.address_notes && (
@@ -412,7 +412,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
               <OText>
-                {t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}
+                {t(order?.delivery_option?.name?.toUpperCase?.()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>
             )}
           </View>
@@ -474,7 +474,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -520,7 +520,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={tax.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(tax?.name?.toUpperCase()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {t(tax?.name?.toUpperCase?.()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
               </OSRow>
@@ -533,7 +533,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={fee.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(fee?.name?.toUpperCase()?.replace(/ /g, '_'), fee?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {t(fee?.name?.toUpperCase?.()?.replace(/ /g, '_'), fee?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   ({fee?.fixed > 0 && `${parsePrice(fee?.fixed, { currency: order?.currency })} + `}{fee.percentage}%){' '}
                 </OText>
               </OSRow>
@@ -546,7 +546,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -574,7 +574,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <Table key={offer.id}>
               <OSRow>
                 <OText mBottom={4}>
-                  {t(offer.name?.toUpperCase()?.replace(/ /g, '_'), offer.name)}
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                   )}
@@ -643,9 +643,9 @@ export const OrderContentComponent = (props: OrderContent) => {
                       {event?.wallet_event
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
                         : event?.paymethod?.gateway
-                          ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+                          ? t(event?.paymethod?.gateway?.toUpperCase?.(), event?.paymethod?.name)
                           : order?.paymethod?.id === event?.paymethod_id
-                            ? t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)
+                            ? t(order?.paymethod?.gateway?.toUpperCase?.(), order?.paymethod?.name)
                             : ''}
                     </OText>
                   </View>

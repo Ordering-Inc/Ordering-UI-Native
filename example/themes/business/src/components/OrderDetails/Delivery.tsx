@@ -428,6 +428,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     forceUpdate && handleViewActionOrder && handleViewActionOrder(forceUpdate === 9 ? 'forcePickUp' : 'forceDelivery')
   }, [forceUpdate])
 
+  useEffect(() => {
+    if (!!props.order?.error || props.order?.error?.length > 0) {
+      showToast(ToastType.Error,
+        props.order?.error?.[0] ||
+        props.order?.error ||
+        t('NETWORK_ERROR', 'Network Error'),
+        5000)
+    }
+  }, [props.order?.error])
+
   const styles = StyleSheet.create({
     btnPickUp: {
       borderWidth: 0,
@@ -478,7 +488,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           isOrderGroup={isOrderGroup}
           lastOrder={lastOrder}
         />
-        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
+        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && !props.order?.loading && (
           <Pickup>
             <OButton
               style={styles.btnPickUp}
@@ -491,7 +501,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           </Pickup>
         )}
-        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && (
+        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -613,6 +623,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )}
                 {showFloatButtonsAcceptOrReject[order?.status] && (
                   <FloatingButton
+                    disabled={props.order?.loading}
                     btnText={t('REJECT', 'Reject')}
                     isSecondaryBtn={false}
                     secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
@@ -687,6 +698,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   actions={actions}
                   orderTitle={orderTitle}
                   appTitle={appTitle}
+                  isLoadingOrder={props.order?.loading}
                 />
               </OModal>
             )}
