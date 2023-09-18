@@ -192,19 +192,19 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [isIntGeoCoder])
 
   useEffect(() => {
-    if (!autoCompleteAddress) {
-      mapRef.current.animateToRegion({
-        ...region,
-        latitude: location?.lat,
-        longitude: location?.lng,
-      })
-    } else {
-      mapRef.current.animateToRegion({
-        latitude: location?.lat,
-        longitude: location?.lng,
-        latitudeDelta: delta ?? 0.0010,
-        longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
-      })
+    const regionConfig = {
+      latitude: location?.lat,
+      longitude: location?.lng,
+      latitudeDelta: delta ?? 0.0010,
+      longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
+    }
+
+    mapRef.current.animateToRegion(autoCompleteAddress
+      ? regionConfig
+      : { ...region, ...regionConfig }
+    )
+
+    if (autoCompleteAddress) {
       setAutoCompleteAddress && setAutoCompleteAddress(false)
     }
   }, [location])
