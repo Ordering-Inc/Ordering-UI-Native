@@ -31,6 +31,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     notShowCustomerPhone,
     orderTitle,
     appTitle,
+    isLoadingOrder
   } = props;
 
   const [, t] = useLanguage();
@@ -277,7 +278,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     bodyToSend.id = orderId;
-    handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
+    handleUpdateOrder?.(bodyToSend.status, bodyToSend);
   };
 
   useEffect(() => {
@@ -517,7 +518,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             ...styles.bottomParent,
             marginBottom: Platform.OS === 'ios'
               ? 30 : (keyboardState.height === 0)
-                ? isPage ? 0 : 30
+                ? isPage ? 0 : 40
                 : keyboardState.height - (isPage ? 20 : -10)
           }}
         >
@@ -529,7 +530,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             style={{ borderRadius: 7, height: 45 }}
             parentStyle={{ width: '100%' }}
             textStyle={{ color: '#FFF', fontSize: 18 }}
-            isDisabled={showTextArea && !comments}
+            isDisabled={(showTextArea && !comments) || isLoadingOrder}
             onClick={() => handleAcceptOrReject()}
           />
         </View>
