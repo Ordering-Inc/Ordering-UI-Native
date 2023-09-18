@@ -97,8 +97,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     })
   }
 
-  console.log('region', region)
-
   const validateResult = (curPos: any) => {
     const loc1 = center
     const loc2 = curPos
