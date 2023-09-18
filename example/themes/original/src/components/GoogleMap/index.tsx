@@ -106,9 +106,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       geocodePosition(curPos)
       setMarkerPosition(curPos)
       if (!autoCompleteAddress) {
-        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos.latitudeDelta || 0.0010, longitudeDelta: curPos.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
       } else {
-        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+        setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
       }
       return
     }
@@ -121,9 +121,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       }
       setMarkerPosition(curPos)
       if (!autoCompleteAddress) {
-        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: curPos.latitudeDelta, longitudeDelta: curPos.longitudeDelta })
+        setRegion({ longitude: curPos?.longitude || 0, latitude: curPos?.latitude || 0, latitudeDelta: curPos.latitudeDelta || 0.0010, longitudeDelta: curPos.longitudeDelta || (delta ?? 0.0010) * ASPECT_RATIO })
       } else {
-        setRegion({ longitude: curPos.longitude, latitude: curPos.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
+        setRegion({ longitude: curPos?.longitude, latitude: curPos?.latitude, latitudeDelta: delta ?? 0.0010, longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO })
       }
     } else {
       setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION')
