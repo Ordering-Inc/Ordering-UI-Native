@@ -835,6 +835,7 @@ const SignupFormUI = (props: SignupParams) => {
 														/>
 													)
 												}
+												autoCapitalize='none'
 												value={value}
 												onChange={(val: any) => onChange(val)}
 												returnKeyType="done"
