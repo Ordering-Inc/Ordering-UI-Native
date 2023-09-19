@@ -630,6 +630,7 @@ const LoginFormUI = (props: LoginParams) => {
 												/>
 											)
 										}
+										autoCapitalize='none'
 										value={value}
 										forwardRef={passwordRef}
 										onChange={(val: any) => onChange(val)}
