@@ -29,7 +29,7 @@ import {
 	TimeItem
 } from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { locale, monthsEnum } from '../../utils';
+import { monthsEnum, setLocalMoment } from '../../utils';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -323,6 +323,10 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		}
 	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), cateringPreorder, JSON.stringify(business)])
 
+	useEffect(() => {
+		setLocalMoment(moment, t)
+	}, [])
+
 	return (
 		<>
 			<Container
@@ -394,7 +398,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								<View style={{ flex: 1 }}>
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
-											locale={locale}
 											scrollable
 											style={styles.calendar}
 											calendarHeaderContainerStyle={styles.calendarHeaderContainer}
