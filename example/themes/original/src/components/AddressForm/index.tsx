@@ -67,7 +67,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 		hasAddressDefault,
 		afterSignup,
 		businessSlug,
-		isFromCheckout
+		isFromCheckout,
+		onNavigationRedirect
 	} = props;
 
 	const theme = useTheme();
@@ -173,6 +174,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const isHideMap = theme?.address?.components?.map?.hidden
 	const isHideIcons = theme?.address?.components?.icons?.hidden
 	const continueAsGuest = () => navigation.navigate(!!businessSlug ? 'Business' : 'BusinessList', { isGuestUser: true });
+	const unaddressedTypes = configState?.configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
 	const getAddressFormatted = (address: any) => {
@@ -526,6 +529,12 @@ const AddressFormUI = (props: AddressFormParams) => {
 		}
 		setIsSignUpEffect(true);
 	}, [orderState.loading]);
+
+	useEffect(() => {
+		if (isAllowUnaddressOrderType) {
+			onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList')
+		}
+	}, [isAllowUnaddressOrderType])
 
 	return (
 		<ScrollView
