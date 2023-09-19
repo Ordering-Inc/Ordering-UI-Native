@@ -532,7 +532,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 	useEffect(() => {
 		if (isAllowUnaddressOrderType) {
-			onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList')
+			onNavigationRedirect && onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList')
 		}
 	}, [isAllowUnaddressOrderType])
 
