@@ -18,12 +18,6 @@ export const Home = (props: any) => {
 	const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 	const isAllowUnaddressOrderType = unaddressedTypes.includes(orderState?.options?.type)
 
-	useEffect(() => {
-		if (isAllowUnaddressOrderType) {
-			onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList')
-		}
-	}, [isAllowUnaddressOrderType])
-
 	return (
 		<View style={styles.container}>
 			<View>
@@ -66,7 +60,7 @@ export const Home = (props: any) => {
 				<TouchableOpacity
 					style={{ ...styles.textLink, marginTop: 12 }}
 					onPress={() =>
-						orderState?.options?.address?.address
+						orderState?.options?.address?.address || isAllowUnaddressOrderType
 							? onNavigationRedirect(!!businessSlug ? 'Business' : 'BusinessList', { isGuestUser: true })
 							: onNavigationRedirect('AddressForm', { isGuestUser: true })
 					}>
