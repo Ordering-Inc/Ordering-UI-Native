@@ -639,6 +639,7 @@ export interface GoogleMapsParams {
 	delta?: number
 	setAutoCompleteAddress?: (val: boolean) => void,
 	autoCompleteAddress?: boolean,
+	manualZoom?: boolean
 }
 
 export interface HelpParams {
