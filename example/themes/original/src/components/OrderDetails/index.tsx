@@ -749,6 +749,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           }
                           locations={parsedLocations}
                           readOnly
+                          manualZoom
                         />
                       </Map>
                     )}
