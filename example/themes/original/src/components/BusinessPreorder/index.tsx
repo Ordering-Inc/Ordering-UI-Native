@@ -11,6 +11,8 @@ import { BusinessMenuList } from '../BusinessMenuList'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessPreorderParams } from '../../types'
 import moment from 'moment'
+import { setLocalMoment } from '../../utils';
+
 import SelectDropdown from 'react-native-select-dropdown'
 import {
   PreOrderContainer,
@@ -310,6 +312,10 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       setSelectedDate(_dateSelected)
     }
   }, [dateSelected])
+
+  useEffect(() => {
+		setLocalMoment(moment, t)
+	}, [])
 
   useFocusEffect(
     React.useCallback(() => {
