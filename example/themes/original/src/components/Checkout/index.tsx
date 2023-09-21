@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, I18nManager, ScrollView, Keyboard, BackHandler, SafeAreaView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import NativeStripeSdk from '@stripe/stripe-react-native/src/NativeStripeSdk'
@@ -180,7 +180,11 @@ const CheckoutUI = (props: any) => {
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
-	const notFields = ['coupon', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
+
+	const guestCheckoutDriveTip = checkoutFieldsState?.fields?.find(field => field.order_type_id === 1 && field?.validation_field?.code === 'driver_tip')
+	const guestCheckoutComment = useMemo(() => checkoutFieldsState?.fields?.find(field => field.order_type_id === options?.type && field?.validation_field?.code === 'comments'), [checkoutFieldsState, options])
+
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const businessConfigs = businessDetails?.business?.configs ?? []
@@ -205,7 +209,9 @@ const CheckoutUI = (props: any) => {
 		return acc = acc
 	}, cart?.subtotal)
 
-	const validateCommentsCartField = validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required && (cart?.comment === null || cart?.comment?.trim().length === 0)
+	const validateCommentsCartField = (!user?.guest_id ? (validationFields?.fields?.checkout?.comments?.enabled && validationFields?.fields?.checkout?.comments?.required) : (guestCheckoutComment?.enabled && guestCheckoutComment?.required_with_guest)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
+	const validateDriverTipField = options.type === 1 && (!user?.guest_id ? (validationFields?.fields?.checkout?.driver_tip?.enabled && validationFields?.fields?.checkout?.driver_tip?.required) : (guestCheckoutDriveTip?.enabled && guestCheckoutDriveTip?.required_with_guest)) && (Number(cart?.driver_tip) <= 0)
+
 	const validateZipcodeCard = validationFields?.fields?.card?.zipcode?.enabled &&
 		validationFields?.fields?.card?.zipcode?.required &&
 		paymethodSelected?.data?.card &&
@@ -220,8 +226,9 @@ const CheckoutUI = (props: any) => {
 			validationFields?.fields?.checkout?.driver_tip?.required &&
 			(Number(cart?.driver_tip) <= 0)) ||
 		(validateCommentsCartField) ||
-		(validateZipcodeCard)
-		|| (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
+		(validateDriverTipField && !isGiftCardCart) ||
+		(validateZipcodeCard) ||
+		(methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading))
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -1004,7 +1011,15 @@ const CheckoutUI = (props: any) => {
 											{t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
 										</OText>
 									)}
-
+								{validateDriverTipField && !isGiftCardCart &&
+									(
+										<OText
+											color={theme.colors.error}
+											size={12}
+										>
+											{t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
+										</OText>
+									)}
 								{validateCommentsCartField && (
 									<OText
 										color={theme.colors.error}
