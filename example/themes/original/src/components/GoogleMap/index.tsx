@@ -8,7 +8,6 @@ import Alert from '../../../../../src/providers/AlertProvider'
 import { OIcon } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
-
   const {
     location,
     handleChangeAddressMap,
@@ -23,7 +22,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     businessZones,
     delta,
     autoCompleteAddress,
-    setAutoCompleteAddress
+    setAutoCompleteAddress,
+    manualZoom
   } = props
 
   const [, t] = useLanguage()
@@ -217,11 +217,12 @@ export const GoogleMap = (props: GoogleMapsParams) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (mapRef.current && locations) {
+      if (mapRef.current && locations && !manualZoom) {
         fitAllMarkers()
       }
     }, 1000)
     if (locations) {
+      fitAllMarkers()
       SETMARKERS(locations)
     }
     return () => clearInterval(interval)
