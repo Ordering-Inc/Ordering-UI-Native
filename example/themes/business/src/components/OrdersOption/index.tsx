@@ -380,18 +380,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   }
 
   useEffect(() => {
-    scrollRefTab.current?.scrollTo({ animated: true });
-    scrollListRef.current?.scrollTo({ animated: true });
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRefTab.current?.scrollTo();
+    scrollListRef.current?.scrollTo();
+    scrollRef.current?.scrollTo();
     setTags({ values: [] })
   }, [currentTabSelected])
 
 	useEffect(() => {
 		const unsubcribe = navigation.addListener('focus', () => {
-      currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })
+      currentTabSelected === 'logisticOrders' && loadLogisticOrders()
 		})
 		return unsubcribe
-	}, [navigation, loadOrders, loadLogisticOrders])
+	}, [navigation, loadLogisticOrders])
 
   return (
     <>
