@@ -50,6 +50,7 @@ export interface ProfileParams {
 	removeAccountState?: any;
 	handleChangePromotions?: any;
 	notificationsGroup?: any;
+	appVersion?: string
 }
 
 export interface AddressListParams {
