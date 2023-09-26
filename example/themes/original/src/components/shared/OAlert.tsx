@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components/native'
-import { Alert } from 'react-native'
+import { Alert, Vibration } from 'react-native'
 import { useLanguage } from 'ordering-components/native'
 
 const Wrapper = styled.TouchableOpacity`
@@ -41,6 +41,7 @@ const OAlert = (props: Props) => {
   }
 
   const handleClick = () => {
+    Vibration.vibrate(100)
     props.onClick && props.onClick()
     createTwoButtonAlert()
   }

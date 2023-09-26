@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent, BackHandler, ScrollView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView, Keyboard, KeyboardEvent, BackHandler, ScrollView, Vibration } from 'react-native'
 import { IOScrollView } from 'react-native-intersection-observer'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native';
@@ -687,7 +687,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
               btnRightValue={parsePrice(currentCart?.total)}
               disabled={subtotalWithTaxes < currentCart?.minimum || openUpselling}
-              handleClick={() => setOpenUpselling(true)}
+              handleClick={() => {
+                Vibration.vibrate(100)
+                setOpenUpselling(true)
+              }}
             />
           </View>
         )}

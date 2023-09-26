@@ -19,7 +19,7 @@ import { CouponControl } from '../CouponControl';
 import { OButton, OInput, OModal, OText } from '../shared';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View, Vibration } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { CartStoresListing } from '../CartStoresListing';
@@ -197,6 +197,7 @@ const CartUI = (props: any) => {
   }, cart?.subtotal)
 
   const handleClickCheckout = () => {
+    Vibration.vibrate(100)
     if (cart?.business_id) {
       setOpenUpselling(true)
     } else {
@@ -243,7 +244,10 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
-        handleChangeStore={() => setOpenChangeStore(true)}
+        handleChangeStore={() => {
+          Vibration.vibrate(100)
+          setOpenChangeStore(true)
+        }}
         handleClickCheckout={() => handleClickCheckout()}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
         isMultiCheckout={isMultiCheckout}
