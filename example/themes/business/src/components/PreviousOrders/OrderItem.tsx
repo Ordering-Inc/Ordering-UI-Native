@@ -77,7 +77,6 @@ export const OrderItem = React.memo((props: any) => {
       marginLeft: 3,
     },
     title: {
-      marginBottom: showExternalId ? 0 : 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
@@ -85,7 +84,6 @@ export const OrderItem = React.memo((props: any) => {
       color: theme.colors.textGray,
     },
     date: {
-      marginBottom: showExternalId ? 0 : 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -180,7 +178,7 @@ export const OrderItem = React.memo((props: any) => {
               />
             </NotificationIcon>
           )}
-          <View style={{ flexDirection: `${showExternalId ? 'column' : 'row'}`, flexWrap: 'wrap' }}>
+          <View>
             {!order?.order_group_id && showExternalId && !order?.order_group && (
               <OText
                 style={styles.date}
@@ -188,26 +186,28 @@ export const OrderItem = React.memo((props: any) => {
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >
-                {order?.external_id ?? t('NO_EXTERNAL_ID', 'No external Id ') + t('NO', 'Order No.') + order?.id}
+                {`${order?.external_id ?? t('NO_EXTERNAL_ID', 'No external Id ') + t('NO', 'Order No.') + order?.id}` + ' · ' + `${order?.delivery_datetime_utc
+                  ? parseDate(order?.delivery_datetime_utc)
+                  : parseDate(order?.delivery_datetime, { utc: false })
+                  }`}
               </OText>
             )}
-            <OText
+            {!showExternalId && (<OText
               style={styles.date}
               color={theme.colors.unselectText}
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              {!showExternalId && ((!!order?.order_group_id && order?.order_group && isLogisticOrder
+              {((!!order?.order_group_id && order?.order_group && isLogisticOrder
                 ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}`
                 : (t('NO', 'Order No.') + order?.id)
-              ) + ' · ')}
-              {order?.delivery_datetime_utc
+              ) + ' · ' + `${order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })}
+                : parseDate(order?.delivery_datetime, { utc: false })}`)}
             </OText>
+            )}
             {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
               <>
-                {!showExternalId && <OText> · </OText>}
                 <OText
                   style={styles.date}
                   color={
