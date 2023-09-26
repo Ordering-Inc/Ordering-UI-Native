@@ -44,6 +44,7 @@ const ProfileListUI = (props: ProfileParams) => {
 		handleRemoveAccount,
 		removeAccountState,
 		handleChangePromotions,
+		appVersion
 	} = props;
 
 	const theme = useTheme();
@@ -151,7 +152,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const detailProps = {
 		goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
 		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
-		handleRemoveAccount
+		handleRemoveAccount,
 	}
 
 	useEffect(() => {
@@ -271,6 +272,13 @@ const ProfileListUI = (props: ProfileParams) => {
 				</Actions>
 			</ListWrap>
 			<WebsocketStatus />
+			{appVersion && (
+				<View
+					style={{ alignItems: 'center' }}
+				>
+					<OText>v{appVersion}</OText>
+				</View>
+			)}
 			<OAlert
 				open={confirm.open}
 				title={confirm.title}

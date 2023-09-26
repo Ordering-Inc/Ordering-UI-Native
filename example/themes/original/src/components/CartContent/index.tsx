@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Vibration, View } from 'react-native';
 import { useLanguage, useConfig, useUtils, useOrder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { CCContainer, CCNotCarts, CCList, CheckoutAction, ChCartsTotal } from './styles';
@@ -39,6 +39,7 @@ export const CartContent = (props: any) => {
 		?.filter((cart: any) => cart?.status !== 1 && cart?.valid && cart?.products?.length)
 		?.reduce((total: any, cart: any) => { return total + (cart?.delivery_price_with_discount) }, 0)
 	const handleCheckoutRedirect = () => {
+		Vibration.vibrate(100)
 		if (cartsAvailable.length === 1) {
 			onNavigationRedirect('CheckoutNavigator', {
 				screen: 'CheckoutPage',
