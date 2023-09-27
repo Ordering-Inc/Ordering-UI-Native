@@ -53,7 +53,7 @@ export const StripeElementsForm = (props: any) => {
       const result = await fetch(`${ordering.root}/payments/stripe/cards`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${user?.session?.access_token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
