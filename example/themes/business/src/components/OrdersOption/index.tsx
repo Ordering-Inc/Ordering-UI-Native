@@ -6,12 +6,14 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import RNRestart from 'react-native-restart'
 
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
 import { WebsocketStatus } from '../WebsocketStatus'
+import { _retrieveStoreData, _setStoreData } from '../../providers/StoreUtil'
 
 import { OText, OButton, OModal, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -53,6 +55,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     navigation,
     setCurrentFilters,
     tabs,
+    isNetConnected,
     currentTabSelected,
     setCurrentTabSelected,
     ordersGroup,
@@ -69,7 +72,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     logisticOrders,
     loadLogisticOrders,
     isLogisticActivated,
-    isAlsea,
     handleChangeOrderStatus,
     handleSendCustomerReview
   } = props;
@@ -95,6 +97,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils()
   const [configState] = useConfig()
+
   const [orientationState] = useDeviceOrientation();
   const [openSearchModal, setOpenSearchModal] = useState(false)
   const [openSLASettingModal, setOpenSLASettingModal] = useState(false)
@@ -127,9 +130,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1'
   const [selectedTabStatus, setSelectedTabStatus] = useState<any>(deliveryStatus)
   const [openedSelect, setOpenedSelect] = useState('')
+  const [lastDateConnection, setLastDateConnection] = useState(null)
+  const [internetLoading, setInternetLoading] = useState(!isNetConnected && isNetConnected !== null)
 
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+  const showTagsList = !props.isAlsea && !props.isDriverApp && currentTabSelected !== 'logisticOrders'
 
   const preorderTypeList = [
     { key: null, name: t('SLA', 'SLA\'s') },
@@ -393,6 +399,56 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		return unsubcribe
 	}, [navigation, loadLogisticOrders])
 
+  useEffect(() => {
+    const orderStatuses = ['active', 'pending', 'inProgress', 'completed', 'cancelled']
+
+    const manageStoragedOrders = async () => {
+      setInternetLoading(true)
+      let lastConnection = await _retrieveStoreData('last_date_connection');
+      let ordersStoraged: any = {}
+      for (const status of orderStatuses) {
+        ordersStoraged[status] = await _retrieveStoreData(`${status}_orders`) ?? []
+      }
+
+      if (!lastConnection) {
+        const formattedDate = parseDate(new Date())
+        lastConnection = formattedDate
+        _setStoreData('last_date_connection', formattedDate);
+      }
+
+      lastConnection && setLastDateConnection(lastConnection)
+
+      if (Object.values(ordersStoraged).every((key: any) => Array.isArray(key) && !key?.length)) {
+        for (const status of orderStatuses) {
+          ordersStoraged[status] = ordersGroup[status]?.orders
+          _setStoreData(`${status}_orders`, ordersGroup[status]?.orders);
+        }
+      }
+
+      if (Object.values(ordersStoraged).some((key: any) => Array.isArray(key) && key?.length)) {
+        let newOrderGroup = {
+          ...ordersGroup
+        }
+        for (const status of orderStatuses) {
+          newOrderGroup[status] = {
+            ...ordersGroup[status],
+            error: null,
+            orders: ordersStoraged[status]
+          }
+        }
+        setOrdersGroup(newOrderGroup)
+      }
+      setInternetLoading(false)
+    };
+
+    if (isNetConnected) {
+      _setStoreData('last_date_connection', null);
+      orderStatuses.forEach((key: any) => _setStoreData(`${key}_orders`, null))
+    } else if (isNetConnected === false) {
+      manageStoragedOrders()
+    }
+  }, [isNetConnected]);
+
   return (
     <>
       <View style={styles.header}>
@@ -416,57 +472,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      {configState?.configs?.order_deadlines_enabled?.value === '1' && (
-        <View style={styles.SLAwrapper}>
-          {/* <View style={{ flex: 0.5 }}>
-            <OButton
-              text={t('SLA_SETTING', 'SLA’s Settings')}
-              textStyle={{ color: theme.colors.backArrow }}
-              imgRightSrc={null}
-              style={{
-                backgroundColor: theme.colors.inputChat,
-                borderRadius: 7.6,
-                zIndex: 10,
-                borderWidth: 0,
-                minHeight: 40
-              }}
-              onClick={onClickSetting}
-            />
-          </View> */}
-          {/* <View style={{ width: 10, height: '100%' }} /> */}
-          {/* <View style={{ flex: 0.5, justifyContent: 'center' }}>
-            <SelectDropdown
-              defaultButtonText={t('SLA', 'SLA\'s')}
-              data={preorderTypeList}
-              onSelect={(selectedItem, index) => {
-                onFiltered && onFiltered({ ...search, timeStatus: selectedItem?.key })
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem.name
-              }}
-              rowTextForSelection={(item, index) => {
-                return item.key
-              }}
-              buttonStyle={styles.selectOption}
-              buttonTextStyle={styles.buttonTextStyle}
-              renderDropdownIcon={isOpened => {
-                return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-              }}
-              dropdownStyle={styles.dropdownStyle}
-              dropdownOverlayColor='transparent'
-              rowStyle={styles.rowStyle}
-              renderCustomizedRowChild={(item, index) => {
-                return (
-                  <SlaOption>
-                    {index !== 0 && <OrderStatus timeState={item?.key} />}
-                    <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
-                  </SlaOption>
-                );
-              }}
-            />
-          </View> */}
-        </View>
-      )}
       <FiltersTab>
         <ScrollView
           ref={scrollRefTab}
@@ -521,7 +526,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </FiltersTab>
       <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 450 }}>
-        {currentTabSelected !== 'logisticOrders' && !isAlsea && (
+        {showTagsList && (
           <View
             style={{
               display: 'flex',
@@ -588,6 +593,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             </ScrollView>
           </View>
         )}
+        {isNetConnected === false && lastDateConnection && (
+          <View
+            style={{
+              borderRadius: 8,
+              paddingVertical: 3,
+              backgroundColor: theme.colors.danger500,
+              marginBottom: 10
+            }}
+          >
+            <OText
+              style={{ color: 'white', textAlign: 'center' }}
+            >
+              {`${t('LAST_UPDATE', 'Last Update')}: ${lastDateConnection}`}
+            </OText>
+          </View>
+        )}
         <ScrollView
           ref={scrollListRef}
           showsVerticalScrollIndicator={false}
@@ -596,7 +617,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={() => { currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }) }}
+              onRefresh={() => { isNetConnected && (currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })) }}
             />
           }
         >
@@ -633,42 +654,48 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               />
             )
           }
-          {((currentOrdersGroup?.loading ||
-            currentOrdersGroup?.pagination?.total === null) ||
-            (logisticOrders?.loading)) &&
+          {(
             (
-              <>
-                <View>
-                  {[...Array(5)].map((_, i) => (
-                    <Placeholder key={i} Animation={Fade}>
-                      <View
-                        style={{
-                          width: '100%',
-                          flexDirection: 'row',
-                          marginBottom: 10,
-                        }}>
-                        <PlaceholderLine
-                          width={IS_PORTRAIT ? 22 : 11}
-                          height={74}
-                          style={{
-                            marginRight: 20,
-                            marginBottom: 20,
-                            borderRadius: 7.6,
-                          }}
-                        />
-                        <Placeholder>
-                          <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                          <PlaceholderLine width={50} />
-                          <PlaceholderLine width={20} />
-                        </Placeholder>
-                      </View>
+              (
+                currentOrdersGroup?.loading ||
+                (currentOrdersGroup?.pagination?.total === null && isNetConnected) ||
+                logisticOrders?.loading
+              ) &&
+              !currentOrdersGroup?.error?.length &&
+              !currentOrdersGroup?.orders?.length
+            ) || internetLoading
+          ) && (
+            <View>
+              {[...Array(5)].map((_, i) => (
+                <Placeholder key={i} Animation={Fade}>
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      marginBottom: 10,
+                    }}>
+                    <PlaceholderLine
+                      width={IS_PORTRAIT ? 22 : 11}
+                      height={74}
+                      style={{
+                        marginRight: 20,
+                        marginBottom: 20,
+                        borderRadius: 7.6,
+                      }}
+                    />
+                    <Placeholder>
+                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                      <PlaceholderLine width={50} />
+                      <PlaceholderLine width={20} />
                     </Placeholder>
-                  ))}
-                </View>
-              </>
-            )}
+                  </View>
+                </Placeholder>
+              ))}
+            </View>
+          )}
 
-          {!currentOrdersGroup?.error?.length &&
+          {isNetConnected &&
+            !currentOrdersGroup?.error?.length &&
             !currentOrdersGroup?.loading &&
             currentOrdersGroup?.pagination?.totalPages &&
             currentOrdersGroup?.pagination?.currentPage < currentOrdersGroup?.pagination?.totalPages &&
@@ -685,7 +712,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               />
             )}
 
-          {((!currentOrdersGroup?.loading &&
+          {!internetLoading &&
+            ((!currentOrdersGroup?.loading &&
             (currentOrdersGroup?.error?.length ||
               currentOrdersGroup?.orders?.length === 0)) ||
             (currentTabSelected === 'logisticOrders' &&
@@ -694,6 +722,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             (
               <NotFoundSource
                 content={
+                  !isNetConnected ? t('NETWORK_ERROR', 'Network Error') :
                   ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
                     (currentTabSelected === 'logisticOrders' && (!logisticOrders?.error?.length || (logisticOrders?.orders?.length > 0 && !logisticOrders?.orders?.some(order => !order?.expired)))))
                     ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
@@ -704,6 +733,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 }
                 image={theme.images.general.notFound}
                 conditioned={false}
+                btnTitle={!isNetConnected && t('REFRESH', 'Refresh')}
+                onClickButton={!isNetConnected && (() => RNRestart.Restart())}
               />
             )}
         </ScrollView>
@@ -724,39 +755,41 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             {openSearchModal && (
               <SearchModalContent>
                 <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
-                <InputContainer style={{ marginBottom: 24 }}>
-                  <SelectDropdown
-                    defaultButtonText={search?.timeStatus
-                      ? preorderTypeList.find(type => type.key === search?.timeStatus)?.name
-                      : t('SLA', 'SLA\'s')}
-                    data={preorderTypeList}
-                    onSelect={(selectedItem, index) => {
-                      setSearch({ ...search, timeStatus: selectedItem?.key })
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                      return selectedItem.name
-                    }}
-                    rowTextForSelection={(item, index) => {
-                      return item.key
-                    }}
-                    buttonStyle={styles.selectOption}
-                    buttonTextStyle={styles.buttonTextStyle}
-                    renderDropdownIcon={isOpened => {
-                      return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                    }}
-                    dropdownStyle={styles.dropdownStyle}
-                    dropdownOverlayColor='transparent'
-                    rowStyle={styles.rowStyle}
-                    renderCustomizedRowChild={(item, index) => {
-                      return (
-                        <SlaOption>
-                          {index !== 0 && <OrderStatus timeState={item?.key} />}
-                          <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
-                        </SlaOption>
-                      );
-                    }}
-                  />
-                </InputContainer>
+                {configState?.configs?.order_deadlines_enabled?.value === '1' && (
+                  <InputContainer style={{ marginBottom: 24 }}>
+                    <SelectDropdown
+                      defaultButtonText={search?.timeStatus
+                        ? preorderTypeList.find(type => type.key === search?.timeStatus)?.name
+                        : t('SLA', 'SLA\'s')}
+                      data={preorderTypeList}
+                      onSelect={(selectedItem, index) => {
+                        setSearch({ ...search, timeStatus: selectedItem?.key })
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem.name
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item.key
+                      }}
+                      buttonStyle={styles.selectOption}
+                      buttonTextStyle={styles.buttonTextStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                      }}
+                      dropdownStyle={styles.dropdownStyle}
+                      dropdownOverlayColor='transparent'
+                      rowStyle={styles.rowStyle}
+                      renderCustomizedRowChild={(item, index) => {
+                        return (
+                          <SlaOption>
+                            {index !== 0 && <OrderStatus timeState={item?.key} />}
+                            <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
+                          </SlaOption>
+                        );
+                      }}
+                    />
+                  </InputContainer>
+                )}
                 <InputContainer>
                   <OInput
                     value={search.id}
