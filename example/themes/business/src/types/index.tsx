@@ -311,9 +311,9 @@ export interface OrdersOptionParams {
     cancelled?: Array<number>;
   };
   isBusinessApp?: boolean;
-  handleClickLogisticOrder: (status: number, orderId: number) => void,
-  logisticOrders: { orders: Array<any>, loading: boolean, error: Array<string> | string },
-  loadLogisticOrders: () => void;
+  handleClickLogisticOrder?: (status: number, orderId: number) => void,
+  logisticOrders?: { orders: Array<any>, loading: boolean, error: Array<string> | string },
+  loadLogisticOrders?: () => void;
   isLogisticActivated?: boolean;
   isAlsea?: boolean;
   checkNotification?: boolean;
@@ -321,6 +321,8 @@ export interface OrdersOptionParams {
   handleChangeOrderStatus?: () => void;
   handleSendCustomerReview?: () => void;
   orderDetailsProps?: any;
+  isNetConnected?: boolean;
+  isDriverApp?: boolean;
 }
 export interface ActiveOrdersParams {
   orders?: any;
