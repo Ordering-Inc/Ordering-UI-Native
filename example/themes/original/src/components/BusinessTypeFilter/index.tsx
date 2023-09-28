@@ -26,9 +26,9 @@ import { BusinessTypeFilterParams } from '../../types';
 const windowWidth = Dimensions.get('window').width;
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
-	const { 
-		typesState, 
-		currentTypeSelected, 
+	const {
+		typesState,
+		currentTypeSelected,
 		handleChangeBusinessType,
 		setBusinessTypes,
 		isAppoint
@@ -38,13 +38,13 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 
 	const theme = useTheme();
 	const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
-	const defaultImage = (name : string) => theme.images?.categories?.[name.toLowerCase().replace(' ', '')]
+	const defaultImage = (name: string) => theme.images?.categories?.[name.toLowerCase().replace(' ', '')]
 
 	useEffect(() => {
-		if(typesState?.types?.length > 0){
-		  setBusinessTypes && setBusinessTypes(typesState?.types)
+		if (typesState?.types?.length > 0) {
+			setBusinessTypes && setBusinessTypes(typesState?.types)
 		}
-	  }, [typesState])
+	}, [typesState])
 
 	const handleChangeServiceType = (serviceId: any) => {
 		if (serviceId === currentTypeSelected) {
@@ -119,10 +119,11 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									<OButton
 										key={i}
 										bgColor={(currentTypeSelected === businessType?.id) ? theme.colors.primary : theme.colors.backgroundGray200}
+										borderColor={(currentTypeSelected === businessType?.id) ? theme.colors.primary : theme.colors.backgroundGray200}
 										onClick={() => handleChangeServiceType(businessType?.id)}
 										text={`${businessType?.name} ${(currentTypeSelected === businessType?.id) ? ' X' : ''}`}
 										style={styles.businessType}
-										textStyle={{ fontSize: 10, color: (currentTypeSelected === businessType?.id) ? theme.colors.backgroundLight : theme.colors.textNormal }}
+										textStyle={{ fontSize: 10, color: (currentTypeSelected === businessType?.id) ? theme.colors.white : theme.colors.textNormal }}
 									/>
 								))}
 							</ServiceWrapper>

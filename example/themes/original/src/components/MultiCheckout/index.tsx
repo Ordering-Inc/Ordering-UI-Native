@@ -399,9 +399,6 @@ const MultiCheckoutUI = (props: any) => {
                   />
                   <OButton
                     text={t('LOGIN', 'Login')}
-                    textStyle={{ color: theme.colors.primary }}
-                    bgColor={theme.colors.white}
-                    borderColor={theme.colors.primary}
                     style={{ borderRadius: 7.6, marginTop: 20 }}
                     onClick={() => setOpenModal({ ...openModal, login: true })}
                   />

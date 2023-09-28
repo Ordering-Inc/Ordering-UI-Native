@@ -243,7 +243,7 @@ export const BusinessSearchFooter = (props: any) => {
                                     onClick={() => handleChangePriceRange(price?.level)}
                                     text={`${price.content} ${(filters?.price_level === price?.level) ? ' X' : ''}`}
                                     style={styles.priceItem}
-                                    textStyle={{ fontSize: 10, color: (filters?.price_level === price?.level) ? theme.colors.backgroundLight : theme.colors.textNormal }}
+                                    textStyle={{ fontSize: 10, color: (filters?.price_level === price?.level) ? theme.colors.white : theme.colors.textNormal }}
                                 />
                             ))}
                         </View>
@@ -284,7 +284,7 @@ export const BusinessSearchFooter = (props: any) => {
                                         onClick={() => handleChangeActiveBusinessType(type)}
                                         text={`${t(`BUSINESS_TYPE_${type.name.replace(/\s/g, '_').toUpperCase()}`, type.name)} ${filters?.business_types?.includes(type?.id) ? 'X' : ''}`}
                                         style={styles.categoryStyle}
-                                        textStyle={{ fontSize: 10, color: (filters?.business_types?.includes(type?.id) || (type?.id === null && filters?.business_types?.length === 0)) ? '#fff' : theme.colors.textNormal }}
+                                        textStyle={{ fontSize: 10, color: (filters?.business_types?.includes(type?.id) || (type?.id === null && filters?.business_types?.length === 0)) ? theme.colors.white : theme.colors.textNormal }}
                                     />
                                 ))}
                             </View>
@@ -296,7 +296,6 @@ export const BusinessSearchFooter = (props: any) => {
                         <OButton
                             text={t('APPLY', 'Apply')}
                             parentStyle={styles.applyButton}
-                            textStyle={{ color: '#fff' }}
                             onClick={() => handleApplyFilters()}
                         />
                     </View>
