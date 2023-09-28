@@ -608,7 +608,7 @@ export interface UpsellingProductsParams {
 	business?: any;
 	businessId?: number;
 	cartProducts?: Array<any>;
-	handleUpsellingPage: (cart ?: any) => void;
+	handleUpsellingPage: (cart?: any) => void;
 	openUpselling: boolean;
 	canOpenUpselling?: boolean;
 	setCanOpenUpselling?: (value: any) => void;
@@ -639,6 +639,8 @@ export interface GoogleMapsParams {
 	businessZones?: any
 	delta?: number,
 	manualZoom?: boolean
+	autoCompleteAddress?: boolean,
+	setAutoCompleteAddress?: (val: boolean) => void,
 }
 
 export interface HelpParams {
