@@ -58,6 +58,7 @@ export const BusinessItemAccordion = (props: any) => {
 	}, cart?.subtotal)
 
 	const bgStyle = (subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary
+	const textStyles = (subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.black : theme.colors.white
 
 	useEffect(() => {
 		if (isActive && !isFromUpselling) {
@@ -155,7 +156,7 @@ export const BusinessItemAccordion = (props: any) => {
 					{cart?.valid_products && (
 						<OButton
 							onClick={handleClickCheckout}
-							textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+							textStyle={{ color: textStyles, textAlign: 'center', flex: 1 }}
 							style={{ width: 180, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
 							text={t('CHECKOUT', 'Checkout')}
 							bgColor={bgStyle}

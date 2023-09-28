@@ -392,10 +392,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							<OButton
 								key={i}
 								bgColor={(priceLevelSelected === price?.level) ? theme.colors.primary : theme.colors.backgroundGray200}
+								borderColor={(priceLevelSelected === price?.level) ? theme.colors.primary : theme.colors.backgroundGray200}
 								onClick={() => handleChangePriceLevel(price?.level)}
 								text={`${price.content} ${(priceLevelSelected === price?.level) ? ' X' : ''}`}
 								style={styles.priceLevel}
-								textStyle={{ fontSize: 10, color: (priceLevelSelected === price?.level) ? theme.colors.backgroundLight : theme.colors.textNormal }}
+								textStyle={{ fontSize: 10, color: (priceLevelSelected === price?.level) ? theme.colors.backgroundLight : theme.colors.black }}
 							/>
 						))}
 					</ScrollView>

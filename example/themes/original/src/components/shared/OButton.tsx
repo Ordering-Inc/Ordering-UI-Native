@@ -95,8 +95,8 @@ const OButton = (props: Props): React.ReactElement => {
 	if (props.isDisabled) {
 		return (
 			<View style={props.parentStyle}>
-				<StyledButtonDisabled style={props.style}>
-					<StyledTextDisabled style={props.textStyle}>
+				<StyledButtonDisabled style={{ ...props.style, backgroundColor: theme.colors.disabled }}>
+					<StyledTextDisabled style={{ ...props.textStyle, color: theme.colors.backgroundGray200 }}>
 						{props.text}
 					</StyledTextDisabled>
 				</StyledButtonDisabled>

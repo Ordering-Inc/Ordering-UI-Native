@@ -214,11 +214,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           text={t('VIEW_MORE', 'View more')}
                           parentStyle={{ padding: 0 }}
                           onClick={() => setOpenDescription(category)}
-                          bgColor='transparent'
+                          bgColor={theme.colors.white}
+                          borderColor={theme.colors.primary}
                           textStyle={{
                             fontSize: 12,
                             borderBottomWidth: 1,
-                            borderBottomColor: theme.colors.primary,
                             color: theme.colors.primary
                           }}
                         />

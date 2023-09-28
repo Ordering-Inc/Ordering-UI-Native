@@ -832,8 +832,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OButton
                     text={t('YOUR_ORDERS', 'Your Orders')}
                     textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                    bgColor={theme.colors.white}
                     imgRightSrc={null}
-                    bgColor={theme.colors.clear}
                     style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
                     parentStyle={{ marginTop: 29, marginEnd: 15 }}
                     onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
