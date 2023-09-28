@@ -174,9 +174,7 @@ export const CartContent = (props: any) => {
 									<CheckoutAction style={{ marginTop: 0 }}>
 										<OButton
 											text={t('CHECKOUT', 'Checkout')}
-											bgColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
 											isDisabled={!cartsAvailable.length}
-											borderColor={!cartsAvailable.length ? theme.colors.secundary : theme.colors.primary}
 											imgRightSrc={null}
 											onClick={() => handleCheckoutRedirect()}
 											style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}

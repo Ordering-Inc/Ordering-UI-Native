@@ -16,7 +16,7 @@ interface SubcategoriesComponentParams {
     onClickSubcategory: any
 }
 
-const SubcategoriesComponent = (props : SubcategoriesComponentParams) => {
+const SubcategoriesComponent = (props: SubcategoriesComponentParams) => {
     const {
         subcategoriesSelected,
         category,
@@ -56,10 +56,10 @@ const SubcategoriesComponent = (props : SubcategoriesComponentParams) => {
             >
                 <OButton
                     onClick={() => onClickSubcategory(null, category)}
-                    bgColor={allsubcategorySelected ? theme.colors.primary : theme.colors.backgroundGray}
                     text={`${t('ALL', 'All')} ${allsubcategorySelected ? 'X' : ''}`}
                     style={bpStyles.categoryButtonStyle}
-                    textStyle={{ color: allsubcategorySelected ? theme.colors.white : theme.colors.textNormal, fontSize: 12 }}
+                    textStyle={{ fontSize: 12 }}
+                    isDisabled={!allsubcategorySelected}
                 />
             </ContainerButton>
             {category?.subcategories?.map((subcategory: any) => {
@@ -71,10 +71,10 @@ const SubcategoriesComponent = (props : SubcategoriesComponentParams) => {
                     >
                         <OButton
                             onClick={() => onClickSubcategory(subcategory, category)}
-                            bgColor={isSubcategorySelected ? theme.colors.primary : theme.colors.backgroundGray}
                             text={`${subcategory?.name} ${isSubcategorySelected ? 'X' : ''}`}
                             style={bpStyles.categoryButtonStyle}
-                            textStyle={{ color: isSubcategorySelected ? theme.colors.white : theme.colors.textNormal, fontSize: 12 }}
+                            textStyle={{ fontSize: 12 }}
+                            isDisabled={!allsubcategorySelected}
                         />
                     </ContainerButton>
                 )

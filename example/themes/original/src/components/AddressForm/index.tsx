@@ -867,7 +867,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								text={t('CANCEL', 'Cancel')}
 								bgColor={theme.colors.secundary}
 								borderColor={theme.colors.secundary}
-								textStyle={{ color: theme.colors.black }}
+								textStyle={{ color: theme.colors.textNormal }}
 								style={{ borderRadius: 7.6, borderWidth: 1, shadowOpacity: 0 }}
 								onClick={() => navigation?.canGoBack() && navigation.goBack()}
 							/>

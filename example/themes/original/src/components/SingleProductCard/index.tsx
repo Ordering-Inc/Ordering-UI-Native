@@ -314,9 +314,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								height: 40
 
 							}}
-							bgColor={isSoldOut ? '#B8B8B8' : theme?.colors?.white}
-							borderColor={isSoldOut ? '#B8B8B8' : theme?.colors?.white}
-							textStyle={{ color: isSoldOut ? theme?.colors?.white : theme?.colors?.primary }}
+							isDisabled={isSoldOut}
 							text={t('ADD', 'Add')}
 						/>
 					)}
