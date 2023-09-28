@@ -640,6 +640,8 @@ export interface GoogleMapsParams {
 	setAutoCompleteAddress?: (val: boolean) => void,
 	autoCompleteAddress?: boolean,
 	manualZoom?: boolean
+	autoCompleteAddress?: boolean,
+	setAutoCompleteAddress?: (val: boolean) => void,
 }
 
 export interface HelpParams {

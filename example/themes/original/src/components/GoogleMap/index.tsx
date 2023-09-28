@@ -195,8 +195,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     const regionConfig = {
       latitude: location?.lat,
       longitude: location?.lng,
-      latitudeDelta: delta ?? 0.0010,
-      longitudeDelta: (delta ?? 0.0010) * ASPECT_RATIO
+      latitudeDelta: region?.latitudeDelta ?? delta ?? 0.0010,
+      longitudeDelta: region?.longitudeDelta ?? (delta ?? 0.0010) * ASPECT_RATIO
     }
 
     mapRef.current.animateToRegion(autoCompleteAddress

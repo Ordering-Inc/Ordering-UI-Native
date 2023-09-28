@@ -356,9 +356,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 			map_data: { library: 'google', place_id: data.place_id },
 			zip_code: data?.zip_code || null,
 		};
-		if (googleInput?.current) {
-			googleInput?.current?.setAddressText(addressSelected.address);
-		}
 		updateChanges(addressSelected);
 	};
 
