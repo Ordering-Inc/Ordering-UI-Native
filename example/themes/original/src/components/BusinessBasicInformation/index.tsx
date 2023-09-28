@@ -452,7 +452,7 @@ export const BusinessBasicInformation = (
 							</BusinessInfoItem>
 						</View>
 						<WrapReviews>
-							{!isBusinessInfoShow && (
+							{!isBusinessInfoShow && !loading && (
 								<>
 									{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
 										<>
