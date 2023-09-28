@@ -1163,3 +1163,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     )}
   </>);
 };
+
+OrdersOption.defaultProps = {
+  isNetConnected: true
+}
