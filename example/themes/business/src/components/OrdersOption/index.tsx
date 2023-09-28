@@ -394,7 +394,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useEffect(() => {
 		const unsubcribe = navigation.addListener('focus', () => {
-      currentTabSelected === 'logisticOrders' && loadLogisticOrders()
+      currentTabSelected === 'logisticOrders' && loadLogisticOrders && loadLogisticOrders()
 		})
 		return unsubcribe
 	}, [navigation, loadLogisticOrders])
@@ -457,13 +457,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <View style={{ marginRight: 10 }}>
             <WebsocketStatus />
           </View>
-          <FeatherIcon
-            name='refresh-cw'
-            color={theme.colors.backgroundDark}
-            size={24}
-            onPress={() => { currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }) }}
-            style={{ marginRight: 20 }}
-          />
+          {isNetConnected && (
+            <FeatherIcon
+              name='refresh-cw'
+              color={theme.colors.backgroundDark}
+              size={24}
+              onPress={() => { currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }) }}
+              style={{ marginRight: 20 }}
+            />
+          )}
           <FontistoIcon
             name='search'
             color={theme.colors.backgroundDark}
@@ -617,7 +619,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={() => { isNetConnected && (currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })) }}
+              onRefresh={() => { isNetConnected && (currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })) }}
             />
           }
         >
