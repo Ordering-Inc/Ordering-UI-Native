@@ -43,9 +43,9 @@ export const ActionButton = (props: any) => {
             style={{
                 width: isHaveWeight ? '100%' : ((isSoldOut || maxProductQuantity <= 0) ? '60%' : '40%'),
             }}>
-            {((productCart &&
+            {(productCart &&
                 auth &&
-                (orderState.options?.address_id || isAllowUnaddressOrderType)) || (isSoldOut || maxProductQuantity <= 0)) && (
+                ((orderState.options?.address_id || isAllowUnaddressOrderType) || (isSoldOut || maxProductQuantity <= 0))) && (
                     <OButton
                         onClick={() => handleSaveProduct()}
                         imgRightSrc=""
@@ -57,15 +57,11 @@ export const ActionButton = (props: any) => {
                                     ? t('UPDATE', 'Update')
                                     : t('ADD', 'Add')
                             }`}
-                        isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && ((productCart?.quantity + productAddedToCartLength) < product?.minimum_per_order)) || (product?.maximum_per_order && ((productCart?.quantity + productAddedToCartLength) > product?.maximum_per_order))}
+                        isDisabled={buttonColor}
                         textStyle={{
-                            color: theme.colors.white,
                             fontSize: orderState.loading || editMode ? 10 : 14
                         }}
-                        bgColor={buttonColor ? theme.colors.lightGray : theme.colors.primary}
-                        borderColor={buttonColor ? theme.colors.lightGray : theme.colors.primary}
                         style={{
-                            opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
                             borderRadius: 7.6,
                             height: 44,
                             shadowOpacity: 0,
@@ -96,12 +92,12 @@ export const ActionButton = (props: any) => {
                             : t('LOGIN_SIGNUP', 'Login / Sign Up')
                     }
                     imgRightSrc=""
-                    textStyle={{ fontSize: 13, textAlign: 'center', color: theme.colors.primary }}
+                    textStyle={{ fontSize: 13, textAlign: 'center' }}
                     style={{
                         height: 42,
-                        backgroundColor: theme.colors.white,
                         paddingLeft: 0,
-                        paddingRight: 0
+                        paddingRight: 0,
+                        borderRadius: 7.6
                     }}
                 />
             )}

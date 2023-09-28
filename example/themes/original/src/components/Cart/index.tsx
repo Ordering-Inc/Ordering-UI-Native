@@ -557,6 +557,7 @@ const CartUI = (props: any) => {
                     `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                   )}
                   bgColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+                  borderColor={(subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
                   isDisabled={(openUpselling && !canOpenUpselling) || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
                   imgRightSrc={null}
                   textStyle={{ textAlign: 'center', flex: 1 }}
