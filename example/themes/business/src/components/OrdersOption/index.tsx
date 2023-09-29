@@ -55,6 +55,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     navigation,
     setCurrentFilters,
     tabs,
+    combineTabs,
+    setCombineTabsState,
     isNetConnected,
     currentTabSelected,
     setCurrentTabSelected,
@@ -127,7 +129,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       backColor: '#E63757'
     }
   ]
-  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1'
   const [selectedTabStatus, setSelectedTabStatus] = useState<any>(deliveryStatus)
   const [openedSelect, setOpenedSelect] = useState('')
   const [lastDateConnection, setLastDateConnection] = useState(null)
@@ -405,9 +406,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     const manageStoragedOrders = async () => {
       setInternetLoading(true)
       let lastConnection = await _retrieveStoreData('last_date_connection');
+      let _combineTabs = await _retrieveStoreData('combine_pending_and_progress_orders')
       let ordersStoraged: any = {}
       for (const status of orderStatuses) {
         ordersStoraged[status] = await _retrieveStoreData(`${status}_orders`) ?? []
+      }
+
+      if (!_combineTabs && combineTabs) {
+        setCombineTabsState(combineTabs)
+        _setStoreData('combine_pending_and_progress_orders', combineTabs);
       }
 
       if (!lastConnection) {
@@ -443,11 +450,16 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     if (isNetConnected) {
       _setStoreData('last_date_connection', null);
+      _setStoreData('combine_pending_and_progress_orders', null);
       orderStatuses.forEach((key: any) => _setStoreData(`${key}_orders`, null))
     } else if (isNetConnected === false) {
       manageStoragedOrders()
     }
   }, [isNetConnected]);
+
+  useEffect(() => {
+    setCombineTabsState(combineTabs)
+  }, [combineTabs])
 
   return (
     <>
@@ -1026,6 +1038,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     UIComponent: OrdersOptionUI,
     useDefualtSessionManager: true,
     asDashboard: true,
+    combineTabs,
     isIos: Platform.OS === 'ios',
     orderStatus: [
       { key: 0, text: t('PENDING', 'Pending') },

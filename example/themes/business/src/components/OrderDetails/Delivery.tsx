@@ -545,18 +545,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             ))}
           </View>
         )}
-
-      {(!!props.order?.error || props.order?.error?.length > 0) && (
-        <NotFoundSource
-          btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
-          content={
-            props.order.error[0] ||
-            props.order.error ||
-            t('NETWORK_ERROR', 'Network Error')
-          }
-          onClickButton={() => navigation.navigate('Orders')}
-        />
-      )}
       {!((!order || Object.keys(order).length === 0) &&
         (props.order?.error?.length < 1 || !props.order?.error)) && (
           <View style={{ flex: 1 }}>
@@ -704,6 +692,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             )}
           </View>
         )}
+
+      {(!!props.order?.error || props.order?.error?.length > 0) && (
+        <NotFoundSource
+          btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
+          content={
+            props.order.error[0] ||
+            props.order.error ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
+          onClickButton={() => navigation.navigate('Orders')}
+        />
+      )}
       {alertState?.open && (
         <Alert
           open={alertState.open}
