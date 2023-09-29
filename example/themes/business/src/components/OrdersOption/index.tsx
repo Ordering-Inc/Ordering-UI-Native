@@ -412,9 +412,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         ordersStoraged[status] = await _retrieveStoreData(`${status}_orders`) ?? []
       }
 
-      if (!_combineTabs && combineTabs) {
-        setCombineTabsState(combineTabs)
-        _setStoreData('combine_pending_and_progress_orders', combineTabs);
+      if (_combineTabs || !_combineTabs && combineTabs) {
+        _combineTabs && setCombineTabsState(_combineTabs)
+        _setStoreData('combine_pending_and_progress_orders', _combineTabs || combineTabs);
       }
 
       if (!lastConnection) {
@@ -456,10 +456,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       manageStoragedOrders()
     }
   }, [isNetConnected]);
-
-  useEffect(() => {
-    setCombineTabsState(combineTabs)
-  }, [combineTabs])
 
   return (
     <>
@@ -1032,7 +1028,10 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [configState] = useConfig()
   const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
-  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1'
+
+  const getCombineTabsStoraged = async () => await _retrieveStoreData('combine_pending_and_progress_orders')
+  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1' || getCombineTabsStoraged()
+
   const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
