@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Vibration } from 'react-native';
 import { useOrder, useLanguage, useUtils, useConfig, useEvent } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -69,6 +69,11 @@ export const BusinessItemAccordion = (props: any) => {
 		}
 	}, [isActive, viewedCart])
 
+	const handleGoToStore = () => {
+		Vibration.vibrate(100)
+		props.onNavigationRedirect('Business', { store: cart?.business?.slug })
+	}
+
 	return (
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
@@ -82,7 +87,7 @@ export const BusinessItemAccordion = (props: any) => {
 						<View style={{ flexDirection: 'row' }}>
 							{props.onNavigationRedirect && !isClosed && !isGiftCart && (
 								<>
-									<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}>
+									<TouchableOpacity onPress={() => handleGoToStore()}>
 										<OText color={theme.colors.primary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
 									</TouchableOpacity>
 								</>

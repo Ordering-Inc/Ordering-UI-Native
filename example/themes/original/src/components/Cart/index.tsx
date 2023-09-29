@@ -114,6 +114,7 @@ const CartUI = (props: any) => {
   }
 
   const handleUpsellingPage = (individualCart: any) => {
+    Vibration.vibrate(100)
     const isProductCartParam = !!individualCart?.products?.length
     setOpenUpselling(false)
     setCanOpenUpselling(false)
