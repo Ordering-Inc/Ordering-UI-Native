@@ -323,6 +323,8 @@ export interface OrdersOptionParams {
   orderDetailsProps?: any;
   isNetConnected?: boolean;
   isDriverApp?: boolean;
+  combineTabs?: boolean;
+  setCombineTabsState?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
