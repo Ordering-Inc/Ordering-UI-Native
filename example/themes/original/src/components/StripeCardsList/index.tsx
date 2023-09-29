@@ -26,7 +26,6 @@ export const StripeCardsListUI = (props: any) => {
 	const {
 		onSelectCard,
 		deleteCard,
-		cardSelected,
 		cardsList,
 		handleCardClick,
 		onOpen,
@@ -58,7 +57,7 @@ export const StripeCardsListUI = (props: any) => {
 	}, [cardsList?.loading])
 
 	useEffect(() => {
-		if (newCardAdded && addNewCardAsDefault){	
+		if (newCardAdded && addNewCardAsDefault) {
 			handleCardSelected(newCardAdded)
 		}
 	}, [JSON.stringify(newCardAdded)])
@@ -104,7 +103,7 @@ export const StripeCardsListUI = (props: any) => {
 						<OSItem key={card.id} isUnique={cardsList.cards.length} isInvalid={!card?.zipcode && validateZipcodeCard}>
 							<OSItemContent onPress={() => handleCardSelected(card)}>
 								<View style={styles.viewStyle}>
-									{(card.id === cardSelected?.id || card.id === paySelected?.data?.id) ? (
+									{(card.id === paySelected?.data?.id) ? (
 										<OIcon
 											src={theme.images.general.radio_act}
 											width={16}
