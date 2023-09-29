@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View, Vibration } from 'react-native'
 import {
     useLanguage,
     useOrder,
@@ -90,6 +90,11 @@ export const UpsellingContent = (props: any) => {
         setShowTitle(contentOffset.y > 30)
     }
 
+    const handleClickCheckout = () => {
+        Vibration.vibrate(100)
+        handleUpsellingPage(cart)
+    }
+
     return (
         <>
             <View style={styles.wrapperNavbar}>
@@ -160,7 +165,7 @@ export const UpsellingContent = (props: any) => {
                     text={t('CHECKOUT', 'Checkout')}
                     textStyle={{ fontSize: 14 }}
                     style={{ ...styles.closeUpsellingButton }}
-                    onClick={() => handleUpsellingPage(cart)}
+                    onClick={() => handleClickCheckout()}
                 />
             </View>
         </>
