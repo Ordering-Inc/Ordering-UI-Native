@@ -39,7 +39,8 @@ export const getTraduction = (key: string, t: any) => {
     ERROR_USER_UPDATE_YOU_HAVE_ASSIGNED_ORDERS:
       "You can't because you have assigned orders",
     ERROR_INVALID_OFFER: 'The offer doesn\'t exist',
-    ERROR_AUTH_DRIVER_LOGIN_VALIDATION: 'Error auth driver login validation'
+    ERROR_AUTH_DRIVER_LOGIN_VALIDATION: 'Error auth driver login validation',
+    ERROR_DRIVER_UPDATE_SCHEDULE: 'Error driver update schedule',
   };
 
   return keyList[key] ? t(key, keyList[key]) : t(key);
