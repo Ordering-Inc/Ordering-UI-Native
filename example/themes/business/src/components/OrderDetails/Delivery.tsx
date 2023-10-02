@@ -546,7 +546,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
       {!((!order || Object.keys(order).length === 0) &&
-        (props.order?.error?.length < 1 || !props.order?.error)) && (
+        (props.order?.error?.length < 1 || !props.order?.error)) && order?.id && (
           <View style={{ flex: 1 }}>
             <OrderHeaderComponent
               order={order}
