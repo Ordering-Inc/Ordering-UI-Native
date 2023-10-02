@@ -1030,7 +1030,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
 
   const getCombineTabsStoraged = async () => await _retrieveStoreData('combine_pending_and_progress_orders')
-  const combineTabs = configState?.configs?.combine_pending_and_progress_orders?.value === '1' || getCombineTabsStoraged()
+  const combineTabs = typeof configState?.configs?.combine_pending_and_progress_orders === 'object' ? configState?.configs?.combine_pending_and_progress_orders?.value === '1' : getCombineTabsStoraged()
 
   const ordersProps = {
     ...props,
