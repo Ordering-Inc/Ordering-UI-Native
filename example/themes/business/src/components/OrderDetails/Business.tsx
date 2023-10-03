@@ -53,6 +53,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     actions,
     orderTitle,
     appTitle,
+    loadMessages
   } = props;
 
   const theme = useTheme();
@@ -77,7 +78,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [printerSettings, setPrinterSettings] = useState<any>('')
   const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
 
-  const orderToComplete = [4,20,21]
+  const orderToComplete = [4, 7, 14, 20, 21]
 
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
@@ -297,7 +298,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true);
-    readMessages && readMessages();
+    readMessages && readMessages()
+    loadMessages && loadMessages()
     setUnreadAlert({ ...unreadAlert, business: false });
   };
 
@@ -379,7 +381,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
     {
       ...order?.customer?.location,
-      title: order?.customer?.name ??  t('CUSTOMER', 'Customer'),
+      title: order?.customer?.name ?? t('CUSTOMER', 'Customer'),
       address: {
         addressName: order?.customer?.address,
         zipcode: order?.customer?.zipcode
@@ -413,7 +415,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     const getStorageData = async () => {
-    const printers = await _retrieveStoreData('printers')
+      const printers = await _retrieveStoreData('printers')
       const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
       setPrinterSettings(printers?.length && printers)
       setAutoPrintEnabled(!!autoPrint)
@@ -482,6 +484,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             handleCopyClipboard={handleCopyClipboard}
             handleArrowBack={handleArrowBack}
             isCustomView={props.isCustomView}
+            messages={messages}
           />
           <OrderDetailsContainer
             keyboardShouldPersistTaps="handled"
@@ -668,7 +671,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButtonClick={() => handleChangeOrderStatus?.(15)}
               firstButtonClick={() => handleChangeOrderStatus?.(17)}
               secondBtnText={t(
-                'PICKUP_COMPLETED_BY_CUSTOMER',
+                'ORDER_PICKUP_COMPLETED_BY_CUSTOMER',
                 'Pickup completed by customer',
               )}
               secondButton={true}

@@ -3,7 +3,9 @@ import React from 'react';
 //Styles
 import {
   Actions,
+  Dot,
   Header,
+  Messages,
   OrderHeader,
 } from './styles';
 
@@ -35,6 +37,7 @@ interface OrderHeader {
   handleViewSummaryOrder?: any;
   handleCopyClipboard?: any
   isCustomView?: any
+  messages?: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -46,7 +49,8 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     getOrderStatus,
     logisticOrderStatus,
     handleViewSummaryOrder,
-    handleCopyClipboard
+    handleCopyClipboard,
+    messages,
   } = props
   const theme = useTheme();
   const [, t] = useLanguage();
@@ -191,18 +195,20 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 style={styles.icons}
                 onClick={() => handleOpenMapView()}
               />
-
-              <OIconButton
-                icon={theme.images.general.messages}
-                iconStyle={{
-                  width: 20,
-                  height: 20,
-                  tintColor: theme.colors.textGray,
-                }}
-                borderColor={theme.colors.clear}
-                style={styles.icons}
-                onClick={() => handleOpenMessagesForBusiness()}
-              />
+              <Messages>
+                {messages?.messages?.filter((message: any) => !message?.read)?.length > 0 && <Dot />}
+                <OIconButton
+                  icon={theme.images.general.messages}
+                  iconStyle={{
+                    width: 20,
+                    height: 20,
+                    tintColor: theme.colors.textGray,
+                  }}
+                  borderColor={theme.colors.clear}
+                  style={styles.icons}
+                  onClick={() => handleOpenMessagesForBusiness()}
+                />
+              </Messages>
             </Actions>
           )}
         </Header>
@@ -254,7 +260,6 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                   style={styles.icons}
                   onClick={() => handleOpenMapView()}
                 />
-
                 <OIconButton
                   icon={theme.images.general.messages}
                   iconStyle={{

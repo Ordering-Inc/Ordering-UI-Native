@@ -428,13 +428,19 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             {action === 'accept' && (
               <View style={{ height: 300, justifyContent: 'center' }}>
                 <Timer onPress={() => openTimerIOnput()}>
-                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                    {hour}
-                  </OText>
-                  {hour.length > 0 && <OText size={55}>:</OText>}
-                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                    {min}
-                  </OText>
+                  <View>
+                    <OText weight="600" size={55}>
+                      {hour}
+                    </OText>
+                    <OText style={{ marginLeft: 10 }}>{t('HOURS', 'Hours')}</OText>
+                  </View>
+                  {hour.length > 0 && <OText size={55} style={{ marginBottom: 30 }}>:</OText>}
+                  <View>
+                    <OText weight="600" size={55}>
+                      {min}
+                    </OText>
+                    <OText style={{ marginLeft: 10 }}>{t('MINUTES', 'Minutes')}</OText>
+                  </View>
                 </Timer>
               </View>
             )}
