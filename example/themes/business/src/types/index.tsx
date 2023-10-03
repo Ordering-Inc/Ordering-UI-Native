@@ -415,6 +415,7 @@ export interface OrderDetailsParams {
   orderTitle?: any;
   forceUpdate?: number;
   getPermissions?: any
+  loadMessages?: any
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
