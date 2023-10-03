@@ -13,6 +13,7 @@ import {
   OrderBill,
   Total,
   OSRow,
+  OrderVehicle,
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -449,7 +450,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           ))}
       </OrderProducts>
 
-      <OrderBill>
+      <OrderBill vehicleExists={!!order?.vehicle}>
         <Table>
           <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
           <OText mBottom={4}>
@@ -659,7 +660,51 @@ export const OrderContentComponent = (props: OrderContent) => {
             </View>
           </View>
         )}
+
       </OrderBill >
+      {!!order?.vehicle && (
+        <OrderVehicle>
+          <OText
+            style={{ marginBottom: 5 }}
+            size={16}
+            weight="600"
+            color={theme.colors.textGray}>
+            {t('VEHICLE', 'Vehicle')}
+          </OText>
+          <Table>
+            <OText style={{ marginBottom: 5 }}>
+              {t('CAR_REGISTRATION', 'Car registration')}
+            </OText>
+            <OText style={{ marginBottom: 5 }}>
+              {order?.vehicle?.car_registration}
+            </OText>
+          </Table>
+          <Table>
+            <OText style={{ marginBottom: 5 }}>
+              {t('COLOR', 'Color')}
+            </OText>
+            <OText style={{ marginBottom: 5 }}>
+              {order?.vehicle?.color}
+            </OText>
+          </Table>
+          <Table>
+            <OText style={{ marginBottom: 5 }}>
+              {t('MODEL', 'Model')}
+            </OText>
+            <OText style={{ marginBottom: 5 }}>
+              {order?.vehicle?.model}
+            </OText>
+          </Table>
+          <Table>
+            <OText style={{ marginBottom: 5 }}>
+              {t('TYPE', 'Type')}
+            </OText>
+            <OText style={{ marginBottom: 5 }}>
+              {order?.vehicle?.type}
+            </OText>
+          </Table>
+        </OrderVehicle>
+      )}
       <OModal
         open={openReviewModal}
         onClose={() => setOpenReviewModal(false)}

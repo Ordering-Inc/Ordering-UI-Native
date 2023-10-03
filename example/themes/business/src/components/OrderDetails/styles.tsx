@@ -25,13 +25,13 @@ export const Logo = styled.View`
 
 export const OrderContent = styled.View`
   flex: 1;
-  ${(props : any) => props.isOrderGroup && css`
+  ${(props: any) => props.isOrderGroup && css`
     border-color: rgba(0, 0, 0, 0.2);
     border-width: 1px;
     padding: 10px;
   `
   }
-  ${(props : any) => props.lastOrder && css`
+  ${(props: any) => props.lastOrder && css`
     margin-bottom: 50px;
   `}
 `;
@@ -68,7 +68,18 @@ export const Table = styled.View`
 
 export const OrderBill = styled.View`
   padding-vertical: 20px;
-  padding-bottom: 30px;
+  ${(props: any) => !props.vehicleExists && css`
+    padding-bottom: 50px;
+  `
+  }
+  flex: 1;
+`;
+
+export const OrderVehicle = styled.View`
+  border-top-width: 1px;
+  border-top-color: ${(props: any) => props.theme.colors.borderTops};
+  padding-vertical: 20px;
+  padding-bottom: 50px;
   flex: 1;
 `;
 
@@ -98,3 +109,18 @@ export const OSRow = styled.View`
   width: 70%;
   flex-wrap: wrap;
 `
+
+export const Messages = styled.View`
+position: relative;
+`;
+
+export const Dot = styled.View`
+position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: ${(props: any) => props.theme.colors.red};
+  top: 10;
+  right: 10;
+  z-index: 99;
+`;
