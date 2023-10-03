@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.22.78",
+  "version": "0.22.79",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -102,7 +102,6 @@
     "react-native-phone-number-input": "^2.0.0",
     "react-native-picker-select": "^8.0.4",
     "react-native-print": "^0.9.0",
-    "react-native-reanimated": "^1.13.1",
     "react-native-recaptcha-that-works": "^1.2.0",
     "react-native-restart": "^0.0.22",
     "react-native-safe-area-context": "^3.1.8",
