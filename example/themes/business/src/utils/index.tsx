@@ -344,6 +344,18 @@ export const getOrderStatus = (s: string, t: any) => {
       value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
       slug: 'ORDER_DRIVER_ON_WAY',
       percentage: 45
+    },
+    {
+      key: 24,
+      value: t('ORDER_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order'),
+      slug: 'ORDER_DRIVER_WAITING_FOR_ORDER',
+      percentage: 25
+    },
+    {
+      key: 25,
+      value: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company'),
+      slug: 'ORDER_ACCEPTED_BY_DRIVER_COMPANY',
+      percentage: 25
     }
   ];
 

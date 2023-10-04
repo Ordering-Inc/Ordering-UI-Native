@@ -393,12 +393,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setTags({ values: [] })
   }, [currentTabSelected])
 
-	useEffect(() => {
-		const unsubcribe = navigation.addListener('focus', () => {
+  useEffect(() => {
+    const unsubcribe = navigation.addListener('focus', () => {
       currentTabSelected === 'logisticOrders' && loadLogisticOrders && loadLogisticOrders()
-		})
-		return unsubcribe
-	}, [navigation, loadLogisticOrders])
+    })
+    return unsubcribe
+  }, [navigation, loadLogisticOrders])
 
   useEffect(() => {
     const orderStatuses = ['active', 'pending', 'inProgress', 'completed', 'cancelled']
@@ -675,34 +675,34 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               !currentOrdersGroup?.orders?.length
             ) || internetLoading
           ) && (
-            <View>
-              {[...Array(5)].map((_, i) => (
-                <Placeholder key={i} Animation={Fade}>
-                  <View
-                    style={{
-                      width: '100%',
-                      flexDirection: 'row',
-                      marginBottom: 10,
-                    }}>
-                    <PlaceholderLine
-                      width={IS_PORTRAIT ? 22 : 11}
-                      height={74}
+              <View>
+                {[...Array(5)].map((_, i) => (
+                  <Placeholder key={i} Animation={Fade}>
+                    <View
                       style={{
-                        marginRight: 20,
-                        marginBottom: 20,
-                        borderRadius: 7.6,
-                      }}
-                    />
-                    <Placeholder>
-                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                      <PlaceholderLine width={50} />
-                      <PlaceholderLine width={20} />
-                    </Placeholder>
-                  </View>
-                </Placeholder>
-              ))}
-            </View>
-          )}
+                        width: '100%',
+                        flexDirection: 'row',
+                        marginBottom: 10,
+                      }}>
+                      <PlaceholderLine
+                        width={IS_PORTRAIT ? 22 : 11}
+                        height={74}
+                        style={{
+                          marginRight: 20,
+                          marginBottom: 20,
+                          borderRadius: 7.6,
+                        }}
+                      />
+                      <Placeholder>
+                        <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                        <PlaceholderLine width={50} />
+                        <PlaceholderLine width={20} />
+                      </Placeholder>
+                    </View>
+                  </Placeholder>
+                ))}
+              </View>
+            )}
 
           {isNetConnected &&
             !currentOrdersGroup?.error?.length &&
@@ -724,22 +724,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
           {!internetLoading &&
             ((!currentOrdersGroup?.loading &&
-            (currentOrdersGroup?.error?.length ||
-              currentOrdersGroup?.orders?.length === 0)) ||
-            (currentTabSelected === 'logisticOrders' &&
-              (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
-          ) &&
+              (currentOrdersGroup?.error?.length ||
+                currentOrdersGroup?.orders?.length === 0)) ||
+              (currentTabSelected === 'logisticOrders' &&
+                (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
+            ) &&
             (
               <NotFoundSource
                 content={
                   !isNetConnected ? t('NETWORK_ERROR', 'Network Error') :
-                  ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
-                    (currentTabSelected === 'logisticOrders' && (!logisticOrders?.error?.length || (logisticOrders?.orders?.length > 0 && !logisticOrders?.orders?.some(order => !order?.expired)))))
-                    ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                    : currentOrdersGroup?.error?.[0]?.message ||
-                    currentOrdersGroup?.error?.[0] ||
-                    (currentTabSelected === 'logisticOrders' && logisticOrders?.error) ||
-                    t('NETWORK_ERROR', 'Network Error')
+                    ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
+                      (currentTabSelected === 'logisticOrders' && (!logisticOrders?.error?.length || (logisticOrders?.orders?.length > 0 && !logisticOrders?.orders?.some(order => !order?.expired)))))
+                      ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                      : currentOrdersGroup?.error?.[0]?.message ||
+                      currentOrdersGroup?.error?.[0] ||
+                      (currentTabSelected === 'logisticOrders' && logisticOrders?.error) ||
+                      t('NETWORK_ERROR', 'Network Error')
                 }
                 image={theme.images.general.notFound}
                 conditioned={false}
@@ -1117,13 +1117,21 @@ export const OrdersOption = (props: OrdersOptionParams) => {
       {
         key: 23,
         text: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
+      },
+      {
+        key: 24,
+        text: t('ORDER_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order')
+      },
+      {
+        key: 25,
+        text: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company')
       }
     ],
     tabs: combineTabs ? [
       {
         key: 0,
         text: t('ACTIVE', 'Active'),
-        tags: props?.orderGroupStatusCustom?.active ?? [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23],
+        tags: props?.orderGroupStatusCustom?.active ?? [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25],
         title: 'active',
       },
       {
@@ -1149,7 +1157,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
         {
           key: 1,
           text: t('IN_PROGRESS', 'In Progress'),
-          tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23],
+          tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23, 24, 25],
           title: 'inProgress',
         },
         {

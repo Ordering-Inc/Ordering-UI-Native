@@ -846,6 +846,14 @@ export const OrdersListManager = (props: OrdersOptionParams) => {
       {
         key: 23,
         text: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
+      },
+      {
+        key: 24,
+        text: t('ORDER_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order')
+      },
+      {
+        key: 25,
+        text: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company')
       }
     ],
     tabs: [
@@ -858,7 +866,7 @@ export const OrdersListManager = (props: OrdersOptionParams) => {
       {
         key: 1,
         text: t('IN_PROGRESS', 'In Progress'),
-        tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23],
+        tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23, 24, 25],
         title: 'inProgress',
       },
       {
