@@ -96,7 +96,9 @@ const ChatUI = (props: MessagesParams) => {
     20: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Order customer almost arrived to business'),
     21: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Order customer arrived to business'),
     22: t('ORDER_LOOKING_FOR_DRIVER', 'Order looking for driver'),
-    23: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
+    23: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
+    24: t('ORDER_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order'),
+    25: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company')
   }
 
   const getLogisticTag = (status: any) => {
