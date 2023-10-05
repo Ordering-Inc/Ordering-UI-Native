@@ -168,11 +168,21 @@ const NewOrderNotificationUI = (props: any) => {
   }
 
   useEffect(() => {
-    events.on('message_added_notification', (o: any) => handleEventNotification(1, o, orderStatus))
-    events.on('order_added_notification', (o: any) => handleEventNotification(2, o, orderStatus))
-    events.on('order_updated_notification', (o: any) => handleEventNotification(3, o, orderStatus))
-    events.on('request_register_notification', (o: any) => handleEventNotification(2, o, orderStatus))
-    events.on('request_update_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+    if (!events?._events?.message_added_notification || events?._events?.message_added_notification?.length < 2) {
+      events.on('message_added_notification', (o: any) => handleEventNotification(1, o, orderStatus))
+    }
+    if (!events?._events?.order_added_notification || events?._events?.order_added_notification?.length < 2) {
+      events.on('order_added_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+    }
+    if (!events?._events?.order_updated_notification || events?._events?.order_updated_notification?.length < 2) {
+      events.on('order_updated_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+    }
+    if (!events?._events?.request_register_notification || events?._events?.request_register_notification?.length < 2) {
+      events.on('request_register_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+    }
+    if (!events?._events?.request_update_notification || events?._events?.request_update_notification?.length < 2) {
+      events.on('request_update_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+    }
 
     return () => {
       events.off('message_added_notification', (o: any) => handleEventNotification(1, o))
@@ -181,7 +191,7 @@ const NewOrderNotificationUI = (props: any) => {
       events.off('request_register_notification', (o: any) => handleEventNotification(2, o))
       events.off('request_update_notification', (o: any) => handleEventNotification(3, o))
     }
-  }, [orderStatus])
+  }, [orderStatus, events])
 
   useEffect(() => {
     return () => setCurrentEvent(null)
