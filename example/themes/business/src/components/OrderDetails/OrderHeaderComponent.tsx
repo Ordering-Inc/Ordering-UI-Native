@@ -24,7 +24,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   useLanguage,
   useUtils,
-  useConfig
+  useConfig,
+  useSession
 } from 'ordering-components/native';
 
 interface OrderHeader {
@@ -38,6 +39,7 @@ interface OrderHeader {
   handleCopyClipboard?: any
   isCustomView?: any
   messages?: any
+  messagesReadList?: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -51,13 +53,18 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     handleViewSummaryOrder,
     handleCopyClipboard,
     messages,
+    messagesReadList
   } = props
   const theme = useTheme();
   const [, t] = useLanguage();
   const [configState] = useConfig()
+  const [{ user }] = useSession()
   const [{ parseDate, parsePrice }] = useUtils();
   const paymethodsLength = order?.payment_events?.filter((item: any) => item.event === 'payment')?.length
   const showExternalId = configState?.configs?.change_order_id?.value === '1'
+  const messagesReadIds = messagesReadList?.map((message: any) => message?.order_message_id)
+
+  const filteredMessages = messagesReadList?.length > 0 ? messages?.messages?.filter((message: any) => !messagesReadIds?.includes(message?.id)) : messages?.messages
 
   const styles = StyleSheet.create({
     icons: {
@@ -196,7 +203,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                 onClick={() => handleOpenMapView()}
               />
               <Messages>
-                {messages?.messages?.filter((message: any) => !message?.read)?.length > 0 && <Dot />}
+                {filteredMessages?.filter((message: any) => message?.author_id !== user?.id && !message?.read)?.length > 0 && <Dot />}
                 <OIconButton
                   icon={theme.images.general.messages}
                   iconStyle={{
