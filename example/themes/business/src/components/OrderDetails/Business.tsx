@@ -78,7 +78,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [printerSettings, setPrinterSettings] = useState<any>('')
   const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
 
-  const orderToComplete = [4, 7, 14, 20, 21]
+  const orderToComplete = [4, 20, 21]
+  const orderToReady = [7, 14]
 
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
@@ -341,6 +342,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleCloseModal = () => {
+    readMessages && readMessages()
+    loadMessages && loadMessages()
     setOpenModalForBusiness(false);
   };
 
@@ -485,6 +488,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             handleArrowBack={handleArrowBack}
             isCustomView={props.isCustomView}
             messages={messages}
+            messagesReadList={messagesReadList}
           />
           <OrderDetailsContainer
             keyboardShouldPersistTaps="handled"
@@ -633,7 +637,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             </>
             <View style={{ height: 30 }} />
           </OrderDetailsContainer>
-
           {order &&
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status, t)?.value ===
@@ -650,7 +653,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 widthButton={'45%'}
               />
             )}
-          {order?.status === 7 && (
+          {orderToReady.includes(order?.status) && (
             <FloatingButton
               btnText={t('READY_FOR_PICKUP', 'Ready for pickup')}
               colorTxt1={theme.colors.primary}
