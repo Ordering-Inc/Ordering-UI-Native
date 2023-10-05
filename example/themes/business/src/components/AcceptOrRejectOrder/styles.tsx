@@ -10,6 +10,7 @@ export const TopActions = styled.View`
 `
 
 export const Timer = styled.TouchableOpacity`
+  position: relative;
   padding: 40px;
   justify-content: center;
   flex-direction: row;
