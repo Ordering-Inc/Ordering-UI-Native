@@ -19,6 +19,7 @@ import { Favorite } from './src/components/Favorite';
 import { FavoriteList } from './src/components/FavoriteList';
 import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
+import { GPSButton } from './src/components/GPSButton';
 import { MomentOption } from './src/components/MomentOption';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderDetails } from './src/components/OrderDetails';
@@ -85,6 +86,7 @@ import { VerifyPhone } from './src/components/VerifyPhone';
 import { GoogleLogin } from './src/components/GoogleLogin';
 import { PreviousOrders } from './src/components/PreviousOrders';
 import { PaymentOptionCash } from './src/components/PaymentOptionCash';
+import { SendGiftCard } from './src/components/GiftCard/SendGiftCard';
 import { StripeElementsForm } from './src/components/StripeElementsForm';
 import { StripeCardsList } from './src/components/StripeCardsList';
 import { ProductIngredient } from './src/components/ProductIngredient';
@@ -96,8 +98,8 @@ import { LogoutButton } from './src/components/LogoutButton';
 import { UserFormDetailsUI } from './src/components/UserFormDetails';
 import { WalletTransactionItem } from './src/components/WalletTransactionItem';
 import { Promotions } from './src/components/Promotions'
-import { MultiCart } from './src/components/MultiCart'
 import { PageBanner } from './src/components/PageBanner'
+import { MultiCart } from './src/components/MultiCart'
 import { USER_TYPE, ORDER_TYPES } from './src/config/constants'
 import { DatePickerUI } from './src/components/DatePicker'
 import { WebsocketStatus } from './src/components/WebsocketStatus';
@@ -106,7 +108,7 @@ import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/Orde
 import { FormInput, FormSide, ButtonsWrapper, LoginWith, OTab, OTabs } from './src/components/LoginForm/styles';
 import { OSItem, OSItemContent, OSItemActions } from './src/components/PaymentOptionStripe/styles';
 
-import { orderTypeList } from './src/utils'
+import { orderTypeList, getTraduction, verifyDecimals, getOrderStatus, getOrderStatuPickUp } from './src/utils'
 
 import Alert from './src/providers/AlertProvider'
 
@@ -184,6 +186,7 @@ export {
 	Checkout,
 	Favorite,
 	FavoriteList,
+  GPSButton,
 	ForgotPasswordForm,
 	MomentOption,
 	OrdersOption,
@@ -258,6 +261,7 @@ export {
 	ProductIngredient,
 	ProductOption,
 	ProductOptionSubOption,
+  SendGiftCard,
 	Sessions,
 	SingleProductReview,
 	LogoutButton,
@@ -346,6 +350,10 @@ export {
 	_removeStoreData,
 	_clearStoreData,
 	orderTypeList,
+  getTraduction,
+  verifyDecimals,
+  getOrderStatus,
+  getOrderStatuPickUp,
 
 	// Date Picker
 	DatePickerUI
