@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity, Platform } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import { SearchBar } from '../SearchBar';
@@ -190,6 +190,7 @@ export const BusinessProductList = (props: any) => {
   const businessProductListProps = {
     ...props,
     UIComponent: BusinessProductListUI,
+    isIos: Platform.OS === 'ios'
   };
 
   return <StoreProductList {...businessProductListProps} />;
