@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.22.87",
+  "version": "0.22.88",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -91,7 +91,7 @@
     "react-native-image-picker": "^4.0.6",
     "react-native-intersection-observer": "^0.0.9",
     "react-native-lightbox": "^0.8.1",
-    "react-native-linear-gradient": "^2.5.6",
+    "react-native-linear-gradient": "2.7.3",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-map-link": "^2.8.2",
     "react-native-maps": "^0.28.0",
