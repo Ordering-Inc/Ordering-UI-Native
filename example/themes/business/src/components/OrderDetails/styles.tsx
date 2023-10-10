@@ -83,6 +83,16 @@ export const OrderVehicle = styled.View`
   flex: 1;
 `;
 
+export const OrderSpot = styled.View`
+  border-top-width: 1px;
+  border-top-color: ${(props: any) => props.theme.colors.borderTops};
+  padding-vertical: 20px;
+  ${(props: any) => !props.vehicleExists && css`
+    padding-bottom: 50px;
+  `}
+  flex: 1;
+`;
+
 export const Total = styled.View`
   border-top-width: 1px;
   border-top-color: ${(props: any) => props.theme.colors.borderTops};
