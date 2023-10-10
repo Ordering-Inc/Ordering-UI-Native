@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils, WebsocketStatus as WebsocketStatusController } from 'ordering-components/native'
-import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import { TouchableOpacity, View, StyleSheet, Platform } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'styled-components/native'
 import RNRestart from 'react-native-restart'
@@ -37,7 +37,7 @@ const SocketStatusUI = (props: any) => {
       paddingLeft: 0,
       paddingRight: 0,
       marginBottom: 30,
-      marginTop: 30
+      marginTop: Platform.OS === 'ios' ? 60 : 30
     },
   })
 
