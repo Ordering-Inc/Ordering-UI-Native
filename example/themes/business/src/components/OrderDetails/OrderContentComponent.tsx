@@ -14,6 +14,7 @@ import {
   Total,
   OSRow,
   OrderVehicle,
+  OrderSpot,
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -662,6 +663,20 @@ export const OrderContentComponent = (props: OrderContent) => {
         )}
 
       </OrderBill >
+
+      {!!order?.spot_number && (
+        <OrderSpot vehicleExists={!!order?.vehicle}>
+          <Table>
+            <OText style={{ marginBottom: 5 }}>
+              {t('SPOT_NUMBER', 'Spot number')}
+            </OText>
+            <OText style={{ marginBottom: 5 }}>
+              {order?.spot_number}
+            </OText>
+          </Table>
+        </OrderSpot>
+      )}
+
       {!!order?.vehicle && (
         <OrderVehicle>
           <OText
