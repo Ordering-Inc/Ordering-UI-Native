@@ -258,7 +258,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       paddingLeft: 0,
       paddingRight: 0,
       marginBottom: 30,
-      marginTop: 30
+      marginTop: Platform.OS === 'ios' ? 60 : 30
     },
     rowStyle: {
       display: 'flex',
