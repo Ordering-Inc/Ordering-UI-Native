@@ -157,7 +157,7 @@ const CartUI = (props: any) => {
   }
 
   const getIncludedTaxes = (isDeliveryFee?: boolean) => {
-    if (cart?.taxes === null) {
+    if (cart?.taxes === null || !cart?.taxes) {
       return cart?.business.tax_type === 1 ? cart?.tax : 0
     } else {
       return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
