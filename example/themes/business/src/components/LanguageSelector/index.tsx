@@ -49,7 +49,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     },
   });
 
-  return (
+  return !languagesState?.loading && languagesState?.languages?.length > 1 && (
     <Container style={{ backgroundColor: theme.colors.inputChat }}>
       {languagesState?.languages && (
         <CountryPicker
