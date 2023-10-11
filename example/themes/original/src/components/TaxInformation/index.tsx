@@ -14,7 +14,8 @@ interface taxInformationParams {
     percentage?: number,
     id: number,
     discounts?: any,
-    rate_type?: number
+    rate_type?: number,
+    target?: string
   },
   products: Array<any>,
   type: string
@@ -34,7 +35,7 @@ export const TaxInformation = (props: taxInformationParams) => {
   const offersHideArray = ['offer_target_2', 'offer_target_3']
   const hideProductsSectionOffers = offersHideArray.includes(type)
   const dataHideArray : Array<string | number> = ['platform', 'business']
-  const hideProductsSectionData = dataHideArray.includes(data.type)
+  const hideProductsSectionData = dataHideArray.includes(data.type) || data?.target === 'delivery_fee'
 
   const getFilterValidation = (product: any) => {
     return (

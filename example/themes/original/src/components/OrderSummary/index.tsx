@@ -72,12 +72,14 @@ const OrderSummaryUI = (props: any) => {
     }
   }
 
-  const getIncludedTaxes = () => {
+  const getIncludedTaxes = (isDeliveryFee?: boolean) => {
     if (cart?.taxes === null || !cart?.taxes) {
       return cart?.business?.tax_type === 1 ? cart?.tax : 0
     } else {
       return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
-        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+        return taxIncluded +
+          (((!isDeliveryFee && tax.type === 1 && tax.target === 'product') ||
+            (isDeliveryFee && tax.type === 1 && tax.target === 'delivery_fee')) ? tax.summary?.tax : 0)
       }, 0)
     }
   }
@@ -102,7 +104,7 @@ const OrderSummaryUI = (props: any) => {
   }
 
   const getIncludedTaxesDiscounts = () => {
-    return cart?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+    return cart?.taxes?.filter((tax: any) => (tax?.type === 1 && tax?.target === 'product'))?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
 
   const OfferAlert = ({ offerId }: any) => {
@@ -194,7 +196,7 @@ const OrderSummaryUI = (props: any) => {
                 </OSTable>
               )}
               {
-                cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any) => (
+                cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0 && tax?.target === 'product').map((tax: any, i: number) => (
                   <OSTable key={tax.id}>
                     <OSRow>
                       <OText size={12} numberOfLines={1} >
@@ -249,9 +251,25 @@ const OrderSummaryUI = (props: any) => {
               {orderState?.options?.type === 1 && !hideDeliveryFee && (
                 <OSTable>
                   <OText size={12}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText size={12}>{parsePrice(cart?.delivery_price_with_discount)}</OText>
+                  <OText size={12}>{parsePrice(cart?.delivery_price_with_discount + getIncludedTaxes(true))}</OText>
                 </OSTable>
               )}
+              {
+                cart?.taxes?.length > 0 && cart?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
+                  <OSTable key={`${tax.description}_${i}`}>
+                    <OSRow>
+                      <OText size={12} numberOfLines={1}>
+                        {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                        {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })}>
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+                  </OSTable>
+                ))
+              }
               {
                 cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
                   <OSTable key={offer.id}>

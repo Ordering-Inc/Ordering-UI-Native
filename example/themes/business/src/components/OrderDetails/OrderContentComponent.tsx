@@ -99,19 +99,21 @@ export const OrderContentComponent = (props: OrderContent) => {
     }
   })
 
-  const getIncludedTaxes = () => {
+  const getIncludedTaxes = (isDeliveryFee?: boolean) => {
     if (!order?.taxes) return 0
     if (order?.taxes?.length === 0) {
       return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
     } else {
       return order?.taxes.reduce((taxIncluded: number, tax: any) => {
-        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+        return taxIncluded +
+          (((!isDeliveryFee && tax.type === 1 && tax.target === 'product') ||
+            (isDeliveryFee && tax.type === 1 && tax.target === 'delivery_fee')) ? tax.summary?.tax : 0)
       }, 0)
     }
   }
 
   const getIncludedTaxesDiscounts = () => {
-    return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+    return order?.taxes?.filter((tax: any) => tax?.type === 1 && tax?.target === 'product')?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
 
   const containsOnlyNumbers = (str: string) => {
@@ -518,7 +520,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           )
         }
         {
-          order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+          order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'product').map((tax: any) => (
             <Table key={tax.id}>
               <OSRow>
                 <OText mBottom={4}>
@@ -566,10 +568,23 @@ export const OrderContentComponent = (props: OrderContent) => {
               </OText>
 
               <OText mBottom={4}>
-                {parsePrice(order?.summary?.delivery_price, { currency: order?.currency })}
+                {parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true), { currency: order?.currency })}
               </OText>
             </Table>
           )
+        }
+        {
+          order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
+            <Table key={`${tax.description}_${i}`}>
+              <OSRow>
+                <OText size={12} lineHeight={18} numberOfLines={1}>
+                  {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}
+                </OText>
+              </OSRow>
+              <OText size={12} lineHeight={18}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+            </Table>
+          ))
         }
         {
           order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (

@@ -185,18 +185,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     navigation.navigate('BottomTab');
   };
 
-  const getIncludedTaxes = () => {
+  const getIncludedTaxes = (isDeliveryFee?: boolean) => {
     if (order?.taxes?.length === 0 || !order?.taxes) {
       return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
     } else {
       return order?.taxes.reduce((taxIncluded: number, tax: any) => {
-        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+        return taxIncluded + (((!isDeliveryFee && tax.type === 1 && tax.target === 'product') || (isDeliveryFee && tax.type === 1 && tax.target === 'delivery_fee')) ? tax.summary?.tax : 0)
       }, 0)
     }
   }
 
   const getIncludedTaxesDiscounts = () => {
-    return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+    return order?.taxes?.filter((tax: any) => tax?.type === 1 && tax?.target === 'product')?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
   }
 
   const handleClickOrderReview = (order: any) => {
@@ -933,7 +933,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   )
                 }
                 {
-                  order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+                  order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'product').map((tax: any) => (
                     <Table key={tax.id}>
                       <OSRow>
                         <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
@@ -985,9 +985,27 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 {typeof order?.summary?.delivery_price === 'number' && (
                   <Table>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price)}</OText>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price) + getIncludedTaxes(true)}</OText>
                   </Table>
                 )}
+                {
+                  order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
+                    <Table key={`${tax?.description}_${i}`}>
+                      <OSRow>
+                        <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
+                          {t(tax?.name?.toUpperCase()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                          {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}
+                        </OText>
+                        {setOpenTaxModal && (
+                          <TouchableOpacity onClick={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })}>
+                            <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
+                          </TouchableOpacity>
+                        )}
+                      </OSRow>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+                    </Table>
+                  ))
+                }
                 {
                   order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
                     <Table key={offer.id}>
