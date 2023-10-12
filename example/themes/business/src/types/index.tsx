@@ -321,7 +321,7 @@ export interface OrdersOptionParams {
   handleChangeOrderStatus?: () => void;
   handleSendCustomerReview?: () => void;
   orderDetailsProps?: any;
-  isNetConnected?: boolean;
+  isNetConnected?: boolean | null;
   isDriverApp?: boolean;
   combineTabs?: boolean;
   setCombineTabsState?: any;
@@ -591,7 +591,7 @@ export interface AcceptOrRejectOrderParams {
   loading?: boolean;
   action: string;
   orderId?: number;
-  handleUpdateOrder?: (p1: any, p2: any) => {};
+  handleUpdateOrder?: (p1: any, p2: any, p3?: any) => {};
   notShowCustomerPhone?: boolean | undefined;
   actions?: any;
   titleAccept?: textTranslate;

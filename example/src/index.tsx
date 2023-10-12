@@ -94,6 +94,7 @@ import { StoreMethods } from './providers/StoreUtil';
 
 // contexts
 import { ThemeProvider, useTheme } from './context/Theme';
+import { OfflineActionsProvider, useOfflineActions } from './context/OfflineActions';
 
 // hooks
 import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
@@ -190,6 +191,8 @@ export {
   // contexts
   ThemeProvider,
   useTheme,
+  OfflineActionsProvider,
+  useOfflineActions,
   // hooks
   DeviceOrientationMethods,
   //types
