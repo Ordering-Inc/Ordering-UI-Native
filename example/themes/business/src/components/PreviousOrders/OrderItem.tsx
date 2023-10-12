@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Platform, PlatformIOSStatic, Pressable, StyleSheet, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useTheme } from 'styled-components/native';
-import { useLanguage, useUtils, useConfig } from 'ordering-components/native';
+import { useLanguage, useUtils, useConfig, useEvent } from 'ordering-components/native';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FastImage from 'react-native-fast-image'
 import moment from 'moment'
 
@@ -39,10 +40,12 @@ export const OrderItem = React.memo((props: any) => {
 
   const theme = useTheme()
   const [, t] = useLanguage()
+  const [events] = useEvent()
   const [configState] = useConfig()
-  const [{ parseDate, optimizeImage }] = useUtils();
+  const [{ parseDate }] = useUtils();
   const [orientationState] = useDeviceOrientation();
 
+  const [ordersOffUpdated, setOrdersOffUpdated] = useState<number[]>([])
   const [allowColumns, setAllowColumns] = useState({
     timer: configState?.configs?.order_deadlines_enabled?.value === '1',
     slaBar: configState?.configs?.order_deadlines_enabled?.value === '1',
@@ -136,6 +139,17 @@ export const OrderItem = React.memo((props: any) => {
     })
   }, [configState.loading])
 
+  useEffect(() => {
+    const handleOfflineOrder = (ids: any) => {
+      ids && setOrdersOffUpdated(ids)
+    }
+
+    events.on('offline_order_updated', handleOfflineOrder)
+    return () => {
+      events.off('offline_order_updated', handleOfflineOrder)
+    }
+  }, [])
+
   return (
     <Pressable
       disabled={order?.locked && isLogisticOrder}
@@ -164,11 +178,25 @@ export const OrderItem = React.memo((props: any) => {
               <OText>{(t('INVOICE_GROUP_NO', 'Group No.') + order?.order_group_id)}</OText>
             </OText>
           )}
-          {!!order.business?.name && (
-            <OText numberOfLines={1} style={styles.title}>
-              {order.business?.name}
-            </OText>
-          )}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            {!!order.business?.name && (
+              <OText numberOfLines={1} style={styles.title}>
+                {order.business?.name}
+              </OText>
+            )}
+            {order?.unsync && !ordersOffUpdated?.includes(order?.id) && (
+              <MCIcon
+                name={'cloud-sync'}
+                color={'#444'}
+                size={18}
+              />
+            )}
+          </View>
           {!!order?.showNotification && (
             <NotificationIcon>
               <EntypoIcon

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform, TouchableOpacity } from 'react-native';
-import { useLanguage, useUtils, useToast, OrderListGroups, useConfig } from 'ordering-components/native';
+import { useLanguage, useUtils, OrderListGroups, useConfig } from 'ordering-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -13,7 +13,8 @@ import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrienta
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
 import { WebsocketStatus } from '../WebsocketStatus'
-import { _retrieveStoreData, _setStoreData } from '../../providers/StoreUtil'
+import { _retrieveStoreData, _setStoreData, _removeStoreData } from '../../providers/StoreUtil'
+import { useOfflineActions } from '../../../../../src/context/OfflineActions'
 
 import { OText, OButton, OModal, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -99,6 +100,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils()
   const [configState] = useConfig()
+  const [offlineActionsState] = useOfflineActions()
 
   const [orientationState] = useDeviceOrientation();
   const [openSearchModal, setOpenSearchModal] = useState(false)
@@ -406,10 +408,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     const manageStoragedOrders = async () => {
       setInternetLoading(true)
       let lastConnection = await _retrieveStoreData('last_date_connection');
+      let allowSaveChangesOffline = await _retrieveStoreData('allow_save_changes_offline');
       let _combineTabs = await _retrieveStoreData('combine_pending_and_progress_orders')
+
+      if (allowSaveChangesOffline === false) {
+        setInternetLoading(false)
+        return
+      }
+
       let ordersStoraged: any = {}
       for (const status of orderStatuses) {
-        ordersStoraged[status] = await _retrieveStoreData(`${status}_orders`) ?? []
+        ordersStoraged[status] = offlineActionsState.orders?.[status] ?? await _retrieveStoreData(`${status}_orders`) ?? []
       }
 
       if (_combineTabs || !_combineTabs && combineTabs) {
@@ -427,8 +436,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
       if (Object.values(ordersStoraged).every((key: any) => Array.isArray(key) && !key?.length)) {
         for (const status of orderStatuses) {
-          ordersStoraged[status] = ordersGroup[status]?.orders
-          _setStoreData(`${status}_orders`, ordersGroup[status]?.orders);
+          const currentOrders = offlineActionsState.orders?.[status] ?? ordersGroup[status]?.orders
+          ordersStoraged[status] = currentOrders
+          _setStoreData(`${status}_orders`, currentOrders);
         }
       }
 
@@ -449,13 +459,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     };
 
     if (isNetConnected) {
-      _setStoreData('last_date_connection', null);
-      _setStoreData('combine_pending_and_progress_orders', null);
+      _removeStoreData('last_date_connection');
+      _removeStoreData('combine_pending_and_progress_orders');
+      _removeStoreData('allow_save_changes_offline');
       orderStatuses.forEach((key: any) => _setStoreData(`${key}_orders`, null))
     } else if (isNetConnected === false) {
       manageStoragedOrders()
     }
-  }, [isNetConnected]);
+  }, [isNetConnected, JSON.stringify(offlineActionsState.orders)]);
 
   return (
     <>
@@ -609,7 +620,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               borderRadius: 8,
               paddingVertical: 3,
               backgroundColor: theme.colors.danger500,
-              marginBottom: 10
+              marginBottom: 10,
+              flexDirection: 'column'
             }}
           >
             <OText
@@ -617,6 +629,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             >
               {`${t('LAST_UPDATE', 'Last Update')}: ${lastDateConnection}`}
             </OText>
+            {offlineActionsState?.actions?.length > 0 && (
+              <OText
+                style={{ color: 'white', textAlign: 'center' }}
+              >
+                {t('NUMBER_CHANGES_PENDING_SYNC', '_value_ changes pending sync').replace('_value_', offlineActionsState?.actions?.length)}
+              </OText>
+            )}
           </View>
         )}
         <ScrollView
@@ -652,7 +671,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               />
             )}
           {!logisticOrders?.error?.length &&
-            logisticOrders?.orders?.length > 0 &&
+            logisticOrders && logisticOrders?.orders?.length > 0 &&
             currentTabSelected === 'logisticOrders' && (
               <PreviousOrders
                 orders={logisticOrders?.orders?.filter((order: any) => !order?.expired).map((order: any) => ({ ...order, isLogistic: true }))}
@@ -727,7 +746,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               (currentOrdersGroup?.error?.length ||
                 currentOrdersGroup?.orders?.length === 0)) ||
               (currentTabSelected === 'logisticOrders' &&
-                (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
+                (logisticOrders && logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
             ) &&
             (
               <NotFoundSource
@@ -1025,10 +1044,38 @@ export const Timer = () => {
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [configState] = useConfig()
-  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
+  const [, offlineMethods] = useOfflineActions()
 
-  const getCombineTabsStoraged = async () => await _retrieveStoreData('combine_pending_and_progress_orders')
-  const combineTabs = typeof configState?.configs?.combine_pending_and_progress_orders === 'object' ? configState?.configs?.combine_pending_and_progress_orders?.value === '1' : getCombineTabsStoraged()
+  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
+  const [combineTabs, setCombineTabs] = useState(null)
+
+  useEffect(() => {
+    const getCombineTabsStoraged = async () => {
+      try {
+        const storagedValue = await _retrieveStoreData('combine_pending_and_progress_orders');
+        const saveChangesOffline = await _retrieveStoreData('allow_save_changes_offline');
+
+        const _combineTabs = typeof configState?.configs?.combine_pending_and_progress_orders === 'object'
+          ? configState?.configs?.combine_pending_and_progress_orders?.value === '1'
+          : storagedValue
+
+        const canSaveChangesOffline = typeof configState?.configs?.allow_save_changes_offline === 'object'
+          ? (configState?.configs?.allow_save_changes_offline?.value ?? '')?.toString() === 'true'
+          : saveChangesOffline
+
+        offlineMethods.setState((state: any) => ({
+          ...state,
+          isCombinedTabs: _combineTabs,
+          canSaveChangesOffline
+        }))
+        setCombineTabs(_combineTabs)
+        return _combineTabs;
+      } catch {
+        return null
+      }
+    }
+    getCombineTabsStoraged()
+  }, [])
 
   const ordersProps = {
     ...props,

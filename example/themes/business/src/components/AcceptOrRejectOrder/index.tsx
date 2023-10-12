@@ -16,7 +16,7 @@ import { useLanguage } from 'ordering-components/native';
 import { Content, Timer, TimeField, Header, Comments, CommentsButtonGroup, TopActions } from './styles';
 import { OText, OButton, OTextarea, OIcon } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
-
+import { useOfflineActions } from '../../../../../src/context/OfflineActions';
 import { orderCommentList } from '../../../../../src/utils'
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
@@ -36,6 +36,8 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const [, t] = useLanguage();
   const theme = useTheme();
+  const [{ isNetConnected, canSaveChangesOffline }, { applyOffAction, registerOffOrder }] = useOfflineActions()
+
   const scrollViewRef = useRef<any>(null);
   const viewRef = useRef<any>(null);
   const timerRef = useRef() as React.MutableRefObject<TextInput>;
@@ -201,7 +203,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
   };
 
-  const handleAcceptOrReject = () => {
+  const handleAcceptOrReject = async () => {
     handleFixTime();
     let minsToSend = min;
 
@@ -278,7 +280,27 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     bodyToSend.id = orderId;
-    handleUpdateOrder?.(bodyToSend.status, bodyToSend);
+
+    if (!isNetConnected && canSaveChangesOffline !== false) {
+      const body = Object.keys(bodyToSend || {}).length > 0
+        ? bodyToSend
+        : { status: bodyToSend.status }
+
+      const result = applyOffAction({
+        event: 'evt_off_change_order_status',
+        data: { orderId, body }
+      })
+
+      const orderUpdated = await handleUpdateOrder?.(
+        bodyToSend.status,
+        bodyToSend,
+        { dataToSave: { ...body, unsync: true } }
+      )
+      await registerOffOrder(orderUpdated)
+      closeModal && closeModal()
+    } else {
+      handleUpdateOrder?.(bodyToSend.status, bodyToSend);
+    }
   };
 
   useEffect(() => {
