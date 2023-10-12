@@ -1,12 +1,10 @@
-//React & React Native
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-// Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import Clipboard from '@react-native-clipboard/clipboard';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-//OrderingComponent
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -17,13 +15,12 @@ import {
   useConfig
 } from 'ordering-components/native';
 
-//Components
 import Alert from '../../providers/AlertProvider';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { DriverMap } from '../DriverMap';
-import { OButton } from '../shared';
+import { OButton, OText } from '../shared';
 import { OModal } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
@@ -32,7 +29,6 @@ import { NotFoundSource } from '../NotFoundSource';
 import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
-//Styles
 import { OrderDetailsContainer, Pickup } from './styles';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
@@ -56,8 +52,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     forceUpdate,
     getPermissions,
     orderAssingId,
-    isGrantedPermissions,
+    isGrantedPermissions
   } = props;
+
   const [, { showToast }] = useToast();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
@@ -548,6 +545,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {!((!order || Object.keys(order).length === 0) &&
         (props.order?.error?.length < 1 || !props.order?.error)) && order?.id && (
           <View style={{ flex: 1 }}>
+            {order?.unsync && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <MCIcon
+                  name={'cloud-sync'}
+                  color={'#444'}
+                  size={16}
+                />
+                <OText
+                  size={14}
+                  color={theme.colors.textGray}
+                  style={{ marginLeft: 5 }}
+                >
+                  {t('PENDING_SYNC_CHANGES', 'Pending sync changes')}
+                </OText>
+              </View>
+            )}
             <OrderHeaderComponent
               order={order}
               handleOpenMapView={handleOpenMapView}
@@ -612,16 +631,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 {showFloatButtonsAcceptOrReject[order?.status] && (
                   <FloatingButton
                     disabled={props.order?.loading}
-                    btnText={t('REJECT', 'Reject')}
-                    isSecondaryBtn={false}
-                    secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
-                    firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
-                    secondBtnText={t('ACCEPT', 'Accept')}
-                    secondButton={true}
-                    firstColorCustom={theme.colors.red}
-                    secondColorCustom={theme.colors.green}
                     widthButton={isHideRejectButtons ? '100%' : '45%'}
                     isHideRejectButtons={isHideRejectButtons}
+                    btnText={t('REJECT', 'Reject')}
+                    firstColorCustom={theme.colors.red}
+                    firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))
+                      ? handleRejectLogisticOrder()
+                      : handleViewActionOrder('reject')
+                    }
+                    isSecondaryBtn={false}
+                    secondButton={true}
+                    secondBtnText={t('ACCEPT', 'Accept')}
+                    secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
+                    secondColorCustom={theme.colors.green}
                   />
                 )}
               </>
