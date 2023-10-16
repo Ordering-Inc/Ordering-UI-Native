@@ -154,7 +154,11 @@ export const OrderItem = React.memo((props: any) => {
     <Pressable
       disabled={order?.locked && isLogisticOrder}
       style={styles.cardButton}
-      onPress={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
+      onPress={() => handlePressOrder({
+        ...order,
+        logistic_order_id: _order?.id,
+        unsync: order?.unsync && !ordersOffUpdated?.includes(order?.id)
+      })}
     >
       <Card key={order.id}>
         {!!allowColumns?.slaBar && (
