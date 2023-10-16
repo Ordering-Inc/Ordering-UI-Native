@@ -1060,7 +1060,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
           : storagedValue
 
         const canSaveChangesOffline = typeof configState?.configs?.allow_save_changes_offline === 'object'
-          ? (configState?.configs?.allow_save_changes_offline?.value ?? '')?.toString() === 'true'
+          ? (configState?.configs?.allow_save_changes_offline?.value ?? '')?.toString() === '1'
           : saveChangesOffline
 
         offlineMethods.setState((state: any) => ({
