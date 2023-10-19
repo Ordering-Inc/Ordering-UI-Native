@@ -7,7 +7,7 @@ import { OIcon, OText } from '../shared';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 const LogoutButtonUI = (props: any) => {
-  const { handleLogoutClick } = props;
+  const { handleLogoutClick, setRootState } = props;
   const [, t] = useLanguage();
   const theme = useTheme();
 
@@ -16,6 +16,7 @@ const LogoutButtonUI = (props: any) => {
     const res = await handleLogoutClick(data);
     if (res) {
       _clearStoreData({ excludedKeys: ['isTutorial', 'language'] });
+      setRootState && setRootState({ isAuth: false, token: null })
     }
   };
 

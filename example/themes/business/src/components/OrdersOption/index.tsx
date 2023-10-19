@@ -1080,7 +1080,6 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
-    useDefualtSessionManager: true,
     asDashboard: true,
     combineTabs,
     isIos: Platform.OS === 'ios',
