@@ -542,7 +542,7 @@ const ProfileUI = (props: ProfileParams) => {
           <Actions>
             <LanguageSelector />
 
-            <LogoutButton />
+            <LogoutButton setRootState={props.setRootState} />
           </Actions>
           <OModal
             open={openModal}
