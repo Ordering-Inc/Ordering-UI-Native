@@ -629,11 +629,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             >
               {`${t('LAST_UPDATE', 'Last Update')}: ${lastDateConnection}`}
             </OText>
-            {offlineActionsState?.actions?.length > 0 && (
+            {Object.keys(offlineActionsState?.actions)?.length > 0 && (
               <OText
                 style={{ color: 'white', textAlign: 'center' }}
               >
-                {t('NUMBER_CHANGES_PENDING_SYNC', '_value_ changes pending sync').replace('_value_', offlineActionsState?.actions?.length)}
+                {t('NUMBER_CHANGES_PENDING_SYNC', '_value_ changes pending sync').replace('_value_', Object.keys(offlineActionsState?.actions)?.length)}
               </OText>
             )}
           </View>

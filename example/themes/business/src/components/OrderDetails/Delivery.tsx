@@ -30,6 +30,7 @@ import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
 import { OrderDetailsContainer, Pickup } from './styles';
+import { useOfflineActions } from '../../../../../src/context/OfflineActions';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -38,7 +39,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setMessages,
     readMessages,
     messagesReadList,
-    handleChangeOrderStatus,
     permissions,
     askLocationPermission,
     driverLocation,
@@ -69,6 +69,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
+  const [{ isNetConnected, canSaveChangesOffline }, { applyOffAction, registerOffOrder }] = useOfflineActions()
+
   const [actionOrder, setActionOrder] = useState('');
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,
@@ -82,6 +84,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     content: Array<string>;
     key?: string | null;
   }>({ open: false, content: [], key: null });
+
+  const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
 
   const validStatusComplete = [9, 19, 23]
 
@@ -102,13 +106,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     14: true
   };
 
-  const marginContainer: any = {
-    0: true,
-    3: true,
-    7: true,
-    8: true,
-    9: true,
-  };
+  const handleChangeOrderStatus = async (status: number) => {
+    if (!isNetConnected && canSaveChangesOffline !== false) {
+      const result = applyOffAction({
+        event: 'evt_off_change_order_status',
+        data: { orderId: order?.id, body: { status } }
+      })
+    }
+
+    const dataToSave: any = !isNetConnected && canSaveChangesOffline !== false
+      ? { dataToSave: { status, unsync: true } }
+      : null
+    const orderUpdated = await props.handleChangeOrderStatus(status, {}, dataToSave)
+
+    if (!isNetConnected && canSaveChangesOffline !== false) {
+      await registerOffOrder(orderUpdated)
+    }
+  }
 
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true);
@@ -491,8 +505,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               style={styles.btnPickUp}
               textStyle={{ color: theme.colors.primary }}
               text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
+              isDisabled={disabledActionsByInternet}
               onClick={() =>
-                handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(3) : goToPermissionPage()
+                isGrantedPermissions ? handleChangeOrderStatus(3) : goToPermissionPage()
               }
               imgLeftStyle={{ tintColor: theme.colors.backArrow }}
             />
@@ -590,11 +605,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OrderDetailsContainer>
                 {showFloatButtonsPickUp[order?.status] && (
                   <FloatingButton
-                    disabled={props.order?.loading}
+                    disabled={props.order?.loading || disabledActionsByInternet}
                     btnText={t('PICKUP_FAILED', 'Pickup failed')}
                     isSecondaryBtn={false}
                     secondButtonClick={() =>
-                      handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(9) : goToPermissionPage()
+                      isGrantedPermissions ? handleChangeOrderStatus(9) : goToPermissionPage()
                     }
                     firstButtonClick={() =>
                       handleViewActionOrder && handleViewActionOrder('pickupFailed')
@@ -610,11 +625,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 {(validStatusComplete.includes(order?.status)) && (
                   <>
                     <FloatingButton
-                      disabled={props.order?.loading}
+                      disabled={props.order?.loading || disabledActionsByInternet}
                       btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
                       isSecondaryBtn={false}
                       secondButtonClick={() =>
-                        handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(11) : goToPermissionPage()
+                        isGrantedPermissions ? handleChangeOrderStatus(11) : goToPermissionPage()
                       }
                       firstButtonClick={() =>
                         handleViewActionOrder && handleViewActionOrder('deliveryFailed')
@@ -630,7 +645,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )}
                 {showFloatButtonsAcceptOrReject[order?.status] && (
                   <FloatingButton
-                    disabled={props.order?.loading}
+                    disabled={props.order?.loading || disabledActionsByInternet}
                     widthButton={isHideRejectButtons ? '100%' : '45%'}
                     isHideRejectButtons={isHideRejectButtons}
                     btnText={t('REJECT', 'Reject')}
@@ -642,7 +657,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     isSecondaryBtn={false}
                     secondButton={true}
                     secondBtnText={t('ACCEPT', 'Accept')}
-                    secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
+                    secondButtonClick={() => hideTimer
+                      ? handleChangeOrderStatus(8)
+                      : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)))
+                        ? handleAcceptLogisticOrder(order)
+                        : handleViewActionOrder('accept')}
                     secondColorCustom={theme.colors.green}
                   />
                 )}
@@ -698,7 +717,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 entireModal
                 customClose>
                 <AcceptOrRejectOrder
-                  handleUpdateOrder={handleChangeOrderStatus}
+                  handleUpdateOrder={props.handleChangeOrderStatus}
                   closeModal={setOpenModalForAccept}
                   customerCellphone={order?.customer?.cellphone}
                   loading={props.order?.loading}
