@@ -11,6 +11,7 @@ import { OrdersList } from './OrderList';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { ReviewCustomer } from '../ReviewCustomer';
 import { GoogleMap } from '../GoogleMap';
+import { useOfflineActions } from '../../../../../src/context/OfflineActions';
 
 export const PreviousOrders = (props: any) => {
   const {
@@ -32,7 +33,7 @@ export const PreviousOrders = (props: any) => {
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ configs }] = useConfig();
-
+  const [{ isNetConnected, canSaveChangesOffline }] = useOfflineActions()
 
   // const [, setCurrentTime] = useState()
   const [openModal, setOpenModal] = useState(false)
@@ -47,6 +48,7 @@ export const PreviousOrders = (props: any) => {
   const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1' && !isBusinessApp
   const isEnabledOrderNotReady = configs?.order_not_ready_enabled?.value === '1'
   const isEnabledFailedPickupDriver = configs?.failed_pickup_by_driver_enabled?.value === '1'
+  const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
@@ -172,7 +174,7 @@ export const PreviousOrders = (props: any) => {
                       }
                       )
                   }
-                  {_ordersGrouped[k][0]?.status === 0 && (
+                  {_ordersGrouped[k][0]?.status === 0 && !disabledActionsByInternet && (
                     <AcceptOrRejectOrderStyle>
                       {!isHideRejectButtons && (
                         <OButton
@@ -208,7 +210,7 @@ export const PreviousOrders = (props: any) => {
                       />
                     </AcceptOrRejectOrderStyle>
                   )}
-                  {_ordersGrouped[k][0]?.status === 7 && (
+                  {_ordersGrouped[k][0]?.status === 7 && !disabledActionsByInternet && (
                     <View>
                       <OButton
                         text={t('READY_FOR_PICKUP', 'Ready for pickup')}
@@ -226,7 +228,7 @@ export const PreviousOrders = (props: any) => {
                     </View>
                   )}
                   {(_ordersGrouped[k][0]?.status === 8 || _ordersGrouped[k][0]?.status === 18) &&
-                    _ordersGrouped[k][0]?.delivery_type === 1 &&
+                    _ordersGrouped[k][0]?.delivery_type === 1 && !disabledActionsByInternet &&
                     (
                       <AcceptOrRejectOrderStyle>
                         <OButton
@@ -245,6 +247,7 @@ export const PreviousOrders = (props: any) => {
                       </AcceptOrRejectOrderStyle>
                     )}
                   {_ordersGrouped[k][0]?.status === 3 && _ordersGrouped[k][0]?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady &&
+                    !disabledActionsByInternet &&
                     (
                       <AcceptOrRejectOrderStyle>
                         <OButton
@@ -282,6 +285,7 @@ export const PreviousOrders = (props: any) => {
                     )}
                   {_ordersGrouped[k][0]?.status === 4 &&
                     ![1].includes(_ordersGrouped[k][0]?.delivery_type) &&
+                    !disabledActionsByInternet &&
                     (
                       <AcceptOrRejectOrderStyle>
                         {!isHideRejectButtons && (
@@ -316,6 +320,7 @@ export const PreviousOrders = (props: any) => {
                     )}
                   {!_ordersGrouped[k][0]?.user_review &&
                     pastOrderStatuses.includes(_ordersGrouped[k][0]?.status) &&
+                    !disabledActionsByInternet &&
                     (
                       <OButton
                         text={t('REVIEW_CUSTOMER', 'Review customer')}
@@ -332,7 +337,8 @@ export const PreviousOrders = (props: any) => {
                         })}
                       />
                     )}
-                  {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && isEnabledFailedPickupDriver && (
+                  {!!deliveryPickupBtn && deliveryPickupBtn?.includes(_ordersGrouped[k][0]?.status) && isEnabledFailedPickupDriver &&
+                  !disabledActionsByInternet && (
                     <AcceptOrRejectOrderStyle>
                       {!isHideRejectButtons && isEnabledOrderNotReady && (
                         <OButton
@@ -366,7 +372,8 @@ export const PreviousOrders = (props: any) => {
                       />
                     </AcceptOrRejectOrderStyle>
                   )}
-                  {!!deliveryStatusCompleteBtn && deliveryStatusCompleteBtn.includes(_ordersGrouped[k][0]?.status) && (
+                  {!!deliveryStatusCompleteBtn && deliveryStatusCompleteBtn.includes(_ordersGrouped[k][0]?.status) &&
+                  !disabledActionsByInternet && (
                     <AcceptOrRejectOrderStyle>
                       {!isHideRejectButtons && (
                         <OButton
