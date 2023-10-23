@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
-import { useApi, useSession, useEvent } from 'ordering-components/native'
+import { useApi, useSession, useEvent, useWebsocket } from 'ordering-components/native'
 import { useNetInfo } from '@react-native-community/netinfo';
 
 import { _retrieveStoreData, _setStoreData, _removeStoreData } from '../../providers/StoreUtil'
@@ -8,7 +8,7 @@ type State = {
   isNetConnected: boolean | null
   isCombinedTabs: boolean | null
   canSaveChangesOffline: boolean | null
-  actions: Array<{ [key: string]: any }>
+  actions: { [key: string]: any }
   orders: { [key: string]: any } | null
 }
 
@@ -22,7 +22,7 @@ const defaultState = {
   isNetConnected: null,
   isCombinedTabs: null,
   canSaveChangesOffline: false,
-  actions: [],
+  actions: {},
   orders: null,
 }
 
@@ -41,6 +41,7 @@ export const OfflineActionsProvider = (props: any) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [events] = useEvent()
+  const socket = useWebsocket()
 
   const [state, setState] = useState<State>({
     isNetConnected: netInfo.isConnected,
@@ -77,7 +78,14 @@ export const OfflineActionsProvider = (props: any) => {
   const applyOffAction = async (changes: any) => {
     if (state.canSaveChangesOffline === false) return false
 
-    const actions = [...new Set([...state.actions, changes])]
+    let _actions: any = state.actions?.[changes?.data?.orderId] ?? []
+
+    if (state.actions?.[changes?.data?.orderId]) {
+      _actions.push(changes)
+    } else {
+      _actions = [changes]
+    }
+    const actions = { ...state.actions, [changes?.data?.orderId]: _actions }
 
     setState(state => ({ ...state, actions }))
     await _setStoreData('offline_actions_array', actions)
@@ -127,30 +135,40 @@ export const OfflineActionsProvider = (props: any) => {
   }
 
   const syncChanges = async (changes: any) => {
-    const data = []
-    for (const action of changes) {
-      const eventFunction = eventsDictiorary[action.event];
-      if (eventFunction) {
-        const id = await eventFunction(action.data);
-        id && data.push(id)
+    const ordersIdUpdated: any = []
+
+    Object.keys(changes).forEach(async (orderId) => {
+      const arr = changes[orderId]
+
+      const [lastChange, ...restOfChanges] = arr.reverse();
+
+      if (restOfChanges.length > 0) {
+        const ordersString = restOfChanges
+          .map((obj: any) => (
+            Object.entries(obj?.data?.body).map(([clave, valor]) => `${clave}: '${valor}'`).join(', ')
+          ))
+          .join(', ')
+        handleSendMessage({ message: ordersString, orderId })
       }
-    }
-    data.length && events.emit('offline_order_updated', data)
+      const id = await updateOrderStatus({ orderId, body: lastChange?.data?.body })
+      id && ordersIdUpdated.push(id);
+    });
+
+    ordersIdUpdated.length && events.emit('offline_order_updated', ordersIdUpdated)
     await _removeStoreData('offline_actions_array');
     setState(state => ({ ...state, actions: [] }));
   }
 
   const actionsFromStorage = async (isConnected: boolean) => {
     setState(state => ({ ...state, isNetConnected: isConnected }))
-    const _storedActions = await _retrieveStoreData('offline_actions_array');
-    const storedActions: any = [...new Set(_storedActions)]
+    const storedActions = await _retrieveStoreData('offline_actions_array');
 
-    if (isConnected && storedActions?.length) {
+    if (isConnected && Object.keys(storedActions)?.length) {
       syncChanges(storedActions)
       return
     }
 
-    storedActions?.length && setState(state => ({ ...state, actions: storedActions }));
+    Object.keys(storedActions)?.length && setState(state => ({ ...state, actions: storedActions }));
   }
 
   useEffect(() => {
@@ -172,6 +190,30 @@ export const OfflineActionsProvider = (props: any) => {
         .save(offlineData?.body)
 
       return error ? null : order?.id
+    } catch {
+      return null
+    }
+  }
+
+  const handleSendMessage = async (offlineData: any) => {
+    try {
+      const _canRead = [0, 2, 3, 4]
+      const body = {
+        comment: offlineData?.message,
+        type: 2,
+        can_see: _canRead.join(',')
+      }
+      const response = await fetch(`${ordering.root}/orders/${offlineData?.orderId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          'X-App-X': ordering.appId,
+          'X-Socket-Id-X': socket?.getId()
+        },
+        body: JSON.stringify(body)
+      })
+      const { error, result } = await response.json()
     } catch {
       return null
     }
