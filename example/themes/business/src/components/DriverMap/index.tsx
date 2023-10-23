@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Dimensions, Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import MapView, {
   PROVIDER_GOOGLE,
@@ -79,10 +79,12 @@ export const DriverMap = (props: GoogleMapsParams) => {
     longitude: typeof initialPosition.longitude === 'string' ? parseFloat(initialPosition.longitude) || 0 : initialPosition.longitude || 0,
   }
 
-  const parsedUserLocation = {
-    latitude: typeof userLocation?.latitude === 'string' ? parseFloat(userLocation?.latitude) || 0 : userLocation?.latitude || 0,
-    longitude: typeof userLocation?.longitude === 'string' ? parseFloat(userLocation?.longitude) || 0 : userLocation?.longitude || 0
-  }
+  const parsedUserLocation = useCallback(() => {
+    return {
+      latitude: typeof userLocation?.latitude === 'string' ? parseFloat(userLocation?.latitude) || 0 : userLocation?.latitude || 0,
+      longitude: typeof userLocation?.longitude === 'string' ? parseFloat(userLocation?.longitude) || 0 : userLocation?.longitude || 0
+    }
+  }, [JSON.stringify(userLocation)])
 
   useEffect(() => {
     if (isToFollow) {
@@ -170,7 +172,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     if (driverUpdateLocation.error) return;
 
     calculateDistance(
-      { lat: parsedUserLocation.latitude, lng: parsedUserLocation.longitude },
+      { lat: parsedUserLocation().latitude, lng: parsedUserLocation().longitude },
       destination,
     );
     // geocodePosition(userLocation);
@@ -178,13 +180,13 @@ export const DriverMap = (props: GoogleMapsParams) => {
     if (!following.current) return;
     fitCoordinates();
 
-    const { latitude, longitude } = parsedUserLocation;
+    const { latitude, longitude } = parsedUserLocation();
 
     mapRef.current?.animateCamera({
       center: { latitude, longitude },
     });
 
-  }, [parsedUserLocation]);
+  }, [JSON.stringify(userLocation)]);
 
   const handleArrowBack: any = () => {
     setDriverUpdateLocation?.({
@@ -397,8 +399,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
                   </View>
                 </Marker>
                 <Marker coordinate={{
-                  latitude: typeof parsedUserLocation?.latitude !== 'object' ? parsedUserLocation?.latitude : 0,
-                  longitude: typeof parsedUserLocation?.longitude !== 'object' ? parsedUserLocation?.latitude : 0
+                  latitude: userLocation?.latitude,
+                  longitude: userLocation?.longitude
                 }}>
                   <View style={styles.driverIcon}>
                     <OIcon
@@ -413,8 +415,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: typeof parsedUserLocation?.latitude !== 'object' ? parsedUserLocation?.latitude : 0,
-                  longitude: typeof parsedUserLocation?.longitude !== 'object' ? parsedUserLocation?.latitude : 0
+                  latitude: typeof parsedUserLocation()?.latitude !== 'object' ? parsedUserLocation()?.latitude : 0,
+                  longitude: typeof parsedUserLocation()?.longitude !== 'object' ? parsedUserLocation()?.latitude : 0
                 }}
                 title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
               />
@@ -528,8 +530,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             options={{
               latitude: destination.latitude,
               longitude: destination.longitude,
-              sourceLatitude: parsedUserLocation.latitude,
-              sourceLongitude: parsedUserLocation.longitude,
+              sourceLatitude: parsedUserLocation().latitude,
+              sourceLongitude: parsedUserLocation().longitude,
               naverCallerName: 'com.deliveryapp',
               dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
               dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
