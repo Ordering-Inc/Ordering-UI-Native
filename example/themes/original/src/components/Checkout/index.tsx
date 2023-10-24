@@ -745,6 +745,7 @@ const CheckoutUI = (props: any) => {
 									</Placeholder>
 								) : (
 									<AddressDetails
+										cart={cart}
 										navigation={navigation}
 										location={options?.address?.location}
 										businessLogo={businessDetails?.business?.logo}
