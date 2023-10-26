@@ -53,19 +53,23 @@ const MapViewComponent = (props: MapViewParams) => {
 
   const fitCoordinates = (location?: any) => {
     if (mapRef.current) {
-      mapRef.current.fitToCoordinates(
-        [
-          {
-            latitude: typeof location?.latitude !== 'object' ? location?.latitude : 0,
-            longitude: typeof location?.longitude !== 'object' ? location?.latitude : 0
-          },
-          {
-            latitude: typeof userLocation?.latitude !== 'object' ? userLocation?.latitude : 0,
-            longitude: typeof userLocation?.longitude !== 'object' ? userLocation?.latitude : 0
-          },
-        ],
+      const isSendCoordinates =
+        location &&
+        userLocation &&
+        location.latitude !== userLocation.latitude &&
+        location.longitude !== userLocation.longitude &&
+        location.latitude !== 0 &&
+        location.longitude !== 0 &&
+        userLocation.latitude !== 0 &&
+        userLocation.longitude !== 0
+
+      isSendCoordinates && mapRef.current.fitToCoordinates(
+        [location, userLocation].map(_location => ({
+          latitude: _location.latitude,
+          longitude: _location.longitude
+        })),
         {
-          edgePadding: { top: 120, right: 120, bottom: 120, left: 120 },
+          edgePadding: { top: 120, right: 120, bottom: 120, left: 120 }
         },
       );
     }
