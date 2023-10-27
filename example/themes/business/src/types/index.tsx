@@ -415,7 +415,8 @@ export interface OrderDetailsParams {
   orderTitle?: any;
   forceUpdate?: number;
   getPermissions?: any
-  loadMessages?: any
+  loadMessages?: any;
+  notificationApp?: string
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -451,6 +452,7 @@ export interface MessagesParams {
   sendMessage?: any;
   canRead?: any;
   setCanRead?: any;
+  notificationApp?: string
   handleSend?: () => {};
   setImage?: (image: string | null) => {};
   setMessage?: (comment: string) => {};
