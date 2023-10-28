@@ -376,6 +376,10 @@ const CheckoutUI = (props: any) => {
 		setShowTitle(contentOffset.y > 30)
 	}
 
+	const handleRedirect = () => {
+		props.fromProductsList ? navigation?.goBack() : onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)
+	}
+
 	useEffect(() => {
 		if (validationFields && validationFields?.fields?.checkout && !user?.guest_id) {
 			checkValidationFields()
@@ -491,7 +495,7 @@ const CheckoutUI = (props: any) => {
 			<SafeAreaView style={{ backgroundColor: theme.colors.backgroundPage }}>
 				<View style={styles.wrapperNavbar}>
 					<TopHeader>
-						<TopActions onPress={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}>
+						<TopActions onPress={() => handleRedirect()}>
 							<IconAntDesign
 								name='arrowleft'
 								size={26}
@@ -517,7 +521,7 @@ const CheckoutUI = (props: any) => {
 						hideArrowLeft
 						title={t('CHECKOUT', 'Checkout')}
 						titleAlign={'center'}
-						onActionLeft={() => onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)}
+						onActionLeft={() => handleRedirect()}
 						showCall={false}
 						btnStyle={{ paddingLeft: 0, paddingTop: Platform.OS == 'ios' ? 0 : 2 }}
 						titleWrapStyle={{ paddingHorizontal: 0 }}
