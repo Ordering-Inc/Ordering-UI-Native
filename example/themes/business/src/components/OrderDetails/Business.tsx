@@ -53,7 +53,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     actions,
     orderTitle,
     appTitle,
-    loadMessages
+    loadMessages,
+    notificationApp
   } = props;
 
   const theme = useTheme();
@@ -594,6 +595,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   messages={messages}
                   order={order}
                   setMessages={setMessages}
+                  notificationApp={notificationApp}
                 />
               </OModal>
 

@@ -69,15 +69,12 @@ export const DriverMap = (props: GoogleMapsParams) => {
     stopFollowUserLocation,
   } = useLocation();
 
-  const destination = {
-    latitude: typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat || 0,
-    longitude: typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng || 0
-  };
-
-  const parsedInitialPosition = {
-    latitude: typeof initialPosition.latitude === 'string' ? parseFloat(initialPosition.latitude) || 0 : initialPosition.latitude || 0,
-    longitude: typeof initialPosition.longitude === 'string' ? parseFloat(initialPosition.longitude) || 0 : initialPosition.longitude || 0,
-  }
+  const parsedInitialPosition = useCallback(() => {
+    return {
+      latitude: typeof initialPosition.latitude === 'string' ? parseFloat(initialPosition.latitude) || 0 : initialPosition.latitude || 0,
+      longitude: typeof initialPosition.longitude === 'string' ? parseFloat(initialPosition.longitude) || 0 : initialPosition.longitude || 0,
+    }
+  }, [JSON.stringify(initialPosition)])
 
   const parsedUserLocation = useCallback(() => {
     return {
@@ -85,6 +82,13 @@ export const DriverMap = (props: GoogleMapsParams) => {
       longitude: typeof userLocation?.longitude === 'string' ? parseFloat(userLocation?.longitude) || 0 : userLocation?.longitude || 0
     }
   }, [JSON.stringify(userLocation)])
+
+  const parsedDestination = useCallback(() => {
+    return {
+      latitude: typeof location?.lat === 'string' ? parseFloat(location?.lat) || 0 : location?.lat || 0,
+      longitude: typeof location?.lng === 'string' ? parseFloat(location?.lng) || 0 : location?.lng || 0
+    }
+  }, [JSON.stringify(location)])
 
   useEffect(() => {
     if (isToFollow) {
@@ -172,8 +176,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
     if (driverUpdateLocation.error) return;
 
     calculateDistance(
-      { lat: parsedUserLocation().latitude, lng: parsedUserLocation().longitude },
-      destination,
+      { lat: parsedUserLocation()?.latitude, lng: parsedUserLocation()?.longitude },
+      parsedDestination(),
     );
     // geocodePosition(userLocation);
 
@@ -252,8 +256,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
         [
           { latitude: location.lat, longitude: location.lng },
           {
-            latitude: parsedInitialPosition.latitude,
-            longitude: parsedInitialPosition.longitude,
+            latitude: parsedInitialPosition()?.latitude,
+            longitude: parsedInitialPosition()?.longitude,
           },
         ],
         {
@@ -266,7 +270,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (parsedInitialPosition.latitude !== 0 && autoFit.current) {
+      if (parsedInitialPosition()?.latitude !== 0 && autoFit.current) {
         if (mapRef.current) {
           fitCoordinates();
           autoFit.current = false;
@@ -274,7 +278,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [parsedInitialPosition]);
+  }, [parsedInitialPosition()]);
 
   const fitCoordinatesZoom = () => {
     following.current = false;
@@ -357,8 +361,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ref={mapRef}
             provider={PROVIDER_GOOGLE}
             initialRegion={{
-              latitude: parsedInitialPosition.latitude,
-              longitude: parsedInitialPosition.longitude,
+              latitude: parsedInitialPosition()?.latitude,
+              longitude: parsedInitialPosition()?.longitude,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001 * ASPECT_RATIO,
             }}
@@ -380,8 +384,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
               <>
                 <Marker
                   coordinate={{
-                    latitude: typeof destination?.latitude !== 'object' ? destination?.latitude : 0,
-                    longitude: typeof destination?.longitude !== 'object' ? destination?.latitude : 0
+                    latitude: parsedDestination()?.latitude,
+                    longitude: parsedDestination()?.longitude
                   }}
                   title={location.title}>
                   <Icon
@@ -415,8 +419,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: typeof parsedUserLocation()?.latitude !== 'object' ? parsedUserLocation()?.latitude : 0,
-                  longitude: typeof parsedUserLocation()?.longitude !== 'object' ? parsedUserLocation()?.latitude : 0
+                  latitude: parsedUserLocation()?.latitude,
+                  longitude: parsedUserLocation()?.longitude
                 }}
                 title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
               />
@@ -528,10 +532,10 @@ export const DriverMap = (props: GoogleMapsParams) => {
               animationIn: 'slideInUp'
             }}
             options={{
-              latitude: destination.latitude,
-              longitude: destination.longitude,
-              sourceLatitude: parsedUserLocation().latitude,
-              sourceLongitude: parsedUserLocation().longitude,
+              latitude: parsedDestination()?.latitude,
+              longitude: parsedDestination()?.longitude,
+              sourceLatitude: parsedUserLocation()?.latitude,
+              sourceLongitude: parsedUserLocation()?.longitude,
               naverCallerName: 'com.deliveryapp',
               dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
               dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
