@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { StarPRNT } from 'react-native-star-prnt';
+import { ActivityIndicator, Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
@@ -20,47 +21,36 @@ import {
 import { Container } from '../../layouts/Container'
 import { OText, OInput, OIcon, OButton } from '../shared'
 
-const printerList = [
-  { nickname: 'mPOP', model: 'mPOP', emulation: 'StarPRNT', portName1: 'BT:mPOP', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'FVP10', model: 'FVP10', emulation: 'StarLine', portName1: 'BT:FVP10', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'TSP100', model: 'TSP100', emulation: 'StarGraphic', portName1: 'BT:TSP100', type: 1, ip: '', printMode: 'appendBitmapText' },
-  { nickname: 'TSP100IV', model: 'TSP100IV', emulation: 'StarLine', portName1: 'BT:TSP100iv', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'TSP65011', model: 'TSP65011', emulation: 'StarLine', portName1: 'BT:TSP65011', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'TSP7001', model: 'TSP7001', emulation: 'StarLine', portName1: 'BT:TSP7001', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'TSP80011', model: 'TSP80011', emulation: 'StarLine', portName1: 'BT:TSP80011', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SP700', model: 'SP700', emulation: 'StarDotImpact', portName1: 'BT:SP700', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S210i', model: 'SM-S210i', emulation: 'EscPosMobile', portName1: 'BT:SMS210i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S220i', model: 'SM-S220i', emulation: 'EscPosMobile', portName1: 'BT:SMS220i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S230i', model: 'SM-S230i', emulation: 'EscosMobile', portName1: 'BT:SMS230i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-T300i/T300', model: 'SM-T300i/T300', emulation: 'EscPosMobile', portName1: 'BT:SMT300i/T300', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-T400i', model: 'SM-T400i', emulation: 'EscosMobile', portName1: 'BT:SMT400i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-L200', model: 'SM-L200', emulation: 'StarPRNT', portName1: 'BT:SML200', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-L300', model: 'SM-L300', emulation: 'StarPRNT', portName1: 'BT:SML300', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'BSC10', model: 'BSC10', emulation: 'EscPos', portName1: 'BT:BSC10', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S210i StarPRNT', model: 'SM-S210i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS210i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S220i StarPRNT', model: 'SM-S220i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS220i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-S230i StarPRNT', model: 'SM-S230i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMS230i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-T300i/T300 StarPRNT', model: 'SM-T300i/T300 StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT300i', type: 1, ip: '', printMode: 'append' },
-  { nickname: 'SM-T400i StarPRNT', model: 'SM-T400i StarPRNT', emulation: 'StarPRNT', portName1: 'BT:SMT400i', type: 1, ip: '', printMode: 'append' },
-]
+import { PRINTERS } from './printerList'
+import { MessageAlert } from './MessageAlert'
+
+const printerList = PRINTERS.map(printer => ({
+  ...printer,
+  ip: '',
+  type: 1,
+  nickname: printer.model,
+  portName1: `BT:${printer.model.split(' ')[0]}`,
+  bt: `BT:${printer.model.split(' ')[0]}`
+}))
 
 export const PrinterEdition = (props: any) => {
-  const {
-    printer,
-    onClose
-  } = props
+  const { printer, onClose } = props
 
   const HEIGHT_SCREEN = Dimensions.get('window').height
   const [, t] = useLanguage()
   const theme = useTheme()
-  const { handleSubmit, control, setValue, watch } = useForm();
-
-  const watchIp = watch('ip')
-  const watchNickname = watch('nickname')
-  const isErrorIp = !/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i.test(watchIp)
-  const isErrorNickname = watchNickname && !/^[a-zA-Z0-9\s]+$/i.test(watchNickname)
+  const { control, setValue, watch } = useForm()
 
   const [currentPrinter, setCurrentPrinter] = useState(printer)
+  const [discoverPort, setDiscoverPort] = useState({ loading: false, msg: null })
+
+  const watchIp = watch('ip')
+  const watchBt = watch('bt')
+  const watchNickname = watch('nickname')
+  const errorIP = !/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i.test(watchIp)
+  const errorBT = !/^[^\n]*$/i.test(watchBt) || !watchBt
+  const isErrorInput = currentPrinter?.type === 2 ? errorIP : errorBT
+  const isErrorNickname = watchNickname && !/^[^\n]*$/i.test(watchNickname)
 
   const styles = StyleSheet.create({
     icons: {
@@ -98,6 +88,36 @@ export const PrinterEdition = (props: any) => {
     })
   }
 
+  const portDiscovery = async () => {
+    try {
+      setDiscoverPort({ ...discoverPort, loading: true })
+      let printers = await StarPRNT.portDiscovery('Bluetooth');
+
+      if (printers?.length) {
+        setValue('bt', printers[0]?.portName)
+        setCurrentPrinter({
+          ...currentPrinter,
+          ['bt']: printers[0]?.portName
+        })
+      }
+      setTimeout(() => {
+        setDiscoverPort({
+          ...discoverPort,
+          loading: false,
+          msg: !printers?.length
+            ? t('NO_PRINTERS_FOUND', 'No printers found')
+            : null
+        })
+      }, 1000);
+    } catch (e) {
+      setValue('bt', currentPrinter?.portName)
+      setCurrentPrinter({
+        ...currentPrinter,
+        ['bt']: currentPrinter?.portName
+      })
+    }
+  }
+
   const onSubmit = () => {
     handleChangePrinter({ edit: !!printer, isAdd: !printer })
     onClose && onClose()
@@ -105,6 +125,7 @@ export const PrinterEdition = (props: any) => {
 
   useEffect(() => {
     currentPrinter?.ip && setValue('ip', currentPrinter?.ip)
+    currentPrinter?.bt && setValue('bt', currentPrinter?.bt)
     currentPrinter?.nickname && setValue('nickname', currentPrinter?.nickname)
   }, [currentPrinter?.type])
 
@@ -281,51 +302,93 @@ export const PrinterEdition = (props: any) => {
                 {t('CONNECTION_VIA_LAN', 'Via LAN')}
               </OText>
             </WrapperIcon>
-            {currentPrinter?.type === 2 && (
-              <>
-                <View style={{ flexDirection: 'row' }}>
-                  <Controller
-                    control={control}
-                    name={'ip'}
-                    rules={{
-                      required: t('VALIDATION_ERROR_IP_ADDRESS_REQUIRED', 'Ip address is required'),
-                      pattern: {
-                        value: /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i,
-                        message: t('INVALID_ERROR_IP_ADDRESS', 'Invalid ip address')
-                      }
-                    }}
-                    defaultValue={currentPrinter?.ip ?? ''}
-                    render={() => (
-                      <OInput
-                        placeholder={t('IP_ADDRESS', 'Ip address')}
-                        placeholderTextColor={theme.colors.arrowColor}
-                        style={{
-                          ...styles.inputStyle,
-                          borderColor: isErrorIp ? theme.colors.danger500 : theme.colors.tabBar
-                        }}
-                        value={currentPrinter?.ip ?? ''}
-                        selectionColor={theme.colors.primary}
-                        color={theme.colors.textGray}
-                        onChange={(value: any) => {
-                          setValue('ip', value)
-                          setCurrentPrinter({
-                            ...currentPrinter,
-                            ip: value
-                          })
-                        }}
-                      />
-                    )}
-                  />
-                </View>
+            <View style={{ flexDirection: 'column', marginTop: 30 }}>
+              {currentPrinter?.type === 1 && (
                 <OText
                   size={14}
-                  color={theme.colors.tabBar}
-                  style={{ paddingTop: 5, paddingLeft: 10 }}
+                  color={theme.colors.toastInfo}
+                  style={{ marginBottom: 10 }}
                 >
-                  {`${t('EXAMPLE_SHORT', 'Ex:')} 8.8.8.8`}
+                  {t('SEARCH_AVAILABLE_PRINTER_MESSAGE', 'Use the search icon to find an available printer')}
                 </OText>
-              </>
-            )}
+              )}
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Controller
+                  control={control}
+                  name={currentPrinter?.type === 2 ? 'ip' : 'bt'}
+                  rules={{
+                    required: currentPrinter?.type === 2
+                      ? t('VALIDATION_ERROR_IP_ADDRESS_REQUIRED', 'Ip address is required')
+                      : t('VALIDATION_ERROR_BLUETOOTH_PORN_REQUIRED', 'Bluetooth port name is required'),
+                    pattern: {
+                      value: currentPrinter?.type === 2
+                        ? /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i
+                        : /^[a-zA-Z0-9]+$/i,
+                      message: currentPrinter?.type === 2
+                        ? t('INVALID_ERROR_IP_ADDRESS', 'Invalid ip address')
+                        : t('INVALID_ERROR_BLUETOOTH_PORT_NAME', 'Invalid bluetooth port name')
+                    }
+                  }}
+                  defaultValue={currentPrinter?.type === 2 ? currentPrinter?.ip ?? '' : currentPrinter?.bt ?? ''}
+                  render={() => (
+                    <OInput
+                      placeholder={currentPrinter?.type === 2
+                        ? t('IP_ADDRESS', 'Ip address')
+                        : t('BLUETOOTH_PORT', 'Bluetooth port')
+                      }
+                      placeholderTextColor={theme.colors.arrowColor}
+                      style={{
+                        ...styles.inputStyle,
+                        borderColor: isErrorInput ? theme.colors.danger500 : theme.colors.tabBar
+                      }}
+                      value={currentPrinter?.type === 2 ? currentPrinter?.ip ?? '' : currentPrinter?.bt ?? ''}
+                      selectionColor={theme.colors.primary}
+                      color={theme.colors.textGray}
+                      onChange={(value: any) => {
+                        setValue(currentPrinter?.type === 2 ? 'ip' : 'bt', value)
+                        setCurrentPrinter({
+                          ...currentPrinter,
+                          [currentPrinter?.type === 2 ? 'ip' : 'bt']: value
+                        })
+                      }}
+                    />
+                  )}
+                />
+                {currentPrinter?.type === 1 && (
+                  <>
+                    {!discoverPort.loading ? (
+                      <FAIcons
+                        name='search'
+                        size={22}
+                        color={theme.colors.primary}
+                        style={{ marginLeft: 10 }}
+                        onPress={() => portDiscovery()}
+                      />
+                    ) : (
+                      <ActivityIndicator
+                        size="small"
+                        style={{ marginLeft: 10 }}
+                        color={theme.colors.primary}
+                      />
+                    )}
+                  </>
+                )}
+              </View>
+            </View>
+            <OText
+              size={14}
+              color={theme.colors.tabBar}
+              style={{ paddingTop: 5, paddingLeft: 10 }}
+            >
+              {discoverPort.msg ? (
+                <MessageAlert
+                  message={discoverPort.msg}
+                  resetMsg={() => setDiscoverPort({ ...discoverPort, msg: null })}
+                />
+              ) : (
+                `${t('EXAMPLE_SHORT', 'Ex:')} ${currentPrinter?.type === 2 ? '8.8.8.8' : currentPrinter?.portName1}`
+              )}
+            </OText>
           </WrapperIcons>
         )}
       </ContainerEdition>
@@ -341,6 +404,7 @@ export const PrinterEdition = (props: any) => {
         isDisabled={
           isErrorNickname ||
           !currentPrinter?.model ||
+          currentPrinter?.type === 1 && !currentPrinter?.bt ||
           currentPrinter?.type === 2 && !currentPrinter?.ip
         }
         onClick={() => onSubmit()}
