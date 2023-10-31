@@ -577,12 +577,12 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
             <Table key={`${tax.description}_${i}`}>
               <OSRow>
-                <OText size={12} lineHeight={18} numberOfLines={1}>
+                <OText mBottom={4}>
                   {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}
                 </OText>
               </OSRow>
-              <OText size={12} lineHeight={18}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
             </Table>
           ))
         }
