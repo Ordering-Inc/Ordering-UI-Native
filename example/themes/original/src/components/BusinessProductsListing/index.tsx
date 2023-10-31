@@ -225,8 +225,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         cartUuid: cart?.uuid,
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
-        cartTotal: cart?.total
-      }, true)
+        cartTotal: cart?.total,
+        fromProductsList: true
+      })
     } else {
       const groupKeys: any = {}
       cartsAvailable.forEach((_cart: any) => {

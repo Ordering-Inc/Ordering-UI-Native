@@ -377,7 +377,9 @@ const CheckoutUI = (props: any) => {
 	}
 
 	const handleRedirect = () => {
-		props.fromProductsList ? navigation?.goBack() : onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)
+		props.fromProductsList
+			? navigation?.goBack()
+			: onNavigationRedirect('BottomTab', { screen: 'Cart' }, !props.fromMulti)
 	}
 
 	useEffect(() => {
