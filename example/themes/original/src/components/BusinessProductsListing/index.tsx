@@ -243,12 +243,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           checkCarts: true
-        }, true)
+        })
       } else {
         props.onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           cartUuid: cartsAvailable[0]?.group?.uuid
-        }, true)
+        })
       }
     }
   }
