@@ -16,6 +16,8 @@ import { ListItem } from '../UserProfile/styles';
 import moment from 'moment';
 import { DatePickerUI } from '../DatePicker';
 
+const CONDITIONAL_CODES = ['PR']
+
 export const UserFormDetailsUI = (props: any) => {
 	const {
 		isEdit,
@@ -127,6 +129,16 @@ export const UserFormDetailsUI = (props: any) => {
 		return rules;
 	};
 
+  const cellphoneValue = () => {
+		let cellphone = user?.cellphone || null
+		if (cellphone && CONDITIONAL_CODES.includes(user?.country_code)) {
+			if (user?.country_code === 'PR') {
+				cellphone = user?.cellphone?.slice(3)
+			}
+		}
+		return cellphone
+	}
+
 	const setUserCellPhone = (isEdit = false) => {
 		if (userPhoneNumber && !userPhoneNumber.includes('null') && !isEdit) {
 			setUserPhoneNumber(userPhoneNumber);
@@ -144,7 +156,7 @@ export const UserFormDetailsUI = (props: any) => {
 				...phoneInputData,
 				phone: {
 					country_phone_code: user?.country_phone_code || null,
-					cellphone: user?.cellphone || null,
+					cellphone: cellphoneValue()
 				},
 			});
 			return;
@@ -403,7 +415,7 @@ export const UserFormDetailsUI = (props: any) => {
 										data={phoneInputData}
 										handleData={(val: any) => handleChangePhoneNumber(val)}
 										changeCountry={(val: any) => changeCountry(val)}
-										defaultValue={phoneUpdate ? '' : user?.cellphone}
+										defaultValue={phoneUpdate ? '' : cellphoneValue()}
 										defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
 										boxStyle={styles.phoneSelect}
 										inputStyle={styles.phoneInputStyle}
@@ -416,7 +428,7 @@ export const UserFormDetailsUI = (props: any) => {
 											color={theme.colors.error}
 											style={{ marginHorizontal: 10, textAlign: 'center' }}>
 											{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}:{' '}
-											{user?.cellphone}
+											{cellphoneValue()}
 										</OText>
 									)}
 								</WrapperPhone>
