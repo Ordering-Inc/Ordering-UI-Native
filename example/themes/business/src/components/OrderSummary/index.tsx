@@ -159,7 +159,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
           ${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}
           </br>
-          ${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: ${handlePaymethodsListString()}
+          ${t(paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD', paymethodsLength > 1 ? 'Payment methods' : 'Payment method')}: ${order?.payment_events?.length > 0 ? handlePaymethodsListString() : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}
         </p>
 
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
@@ -488,7 +488,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               {`${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}`}
             </OText>
 
-            <OText style={{ marginBottom: 5 }}>{`${t(`${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${handlePaymethodsListString()}`}</OText>
+            <OText style={{ marginBottom: 5 }}>
+              {`${t(`${paymethodsLength > 1? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${order?.payment_events?.length > 0 ? handlePaymethodsListString() : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}`}
+            </OText>
 
           </OrderHeader>
 
