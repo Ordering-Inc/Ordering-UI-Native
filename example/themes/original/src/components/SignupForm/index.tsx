@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking, Platform, TouchableOpacity } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Platform, TouchableOpacity, Modal } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,11 +32,9 @@ import {
 } from '../LoginForm/styles';
 
 import NavBar from '../NavBar';
-import { VerifyPhone } from '../VerifyPhone';
 
 import Alert from '../../../../../src/providers/AlertProvider'
 import { OText, OButton, OInput } from '../shared';
-import { OModal } from '../../../../../src/components/shared';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { GoogleLogin } from '../GoogleLogin';
@@ -141,6 +139,8 @@ const SignupFormUI = (props: SignupParams) => {
 	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 	const [tabLayouts, setTabLayouts] = useState<any>({})
+	const [isCheckingCode, setCheckingCode] = useState(false)
+	const [otpError, setOtpError] = useState(null)
 
 	const tabsRef = useRef<any>(null)
 	const nameRef = useRef<any>(null);
@@ -467,9 +467,16 @@ const SignupFormUI = (props: SignupParams) => {
 
 	useEffect(() => {
 		if (checkPhoneCodeState?.result?.error) {
-			setAlertState({
+			const titleText = (
+				typeof checkPhoneCodeState?.result?.result === 'string'
+					? checkPhoneCodeState?.result?.result
+					: checkPhoneCodeState?.result?.result[0].toString()
+			) || t('ERROR', 'Error')
+			setCheckingCode(false)
+			setOtpError(titleText)
+			checkPhoneCodeState?.generate && setAlertState({
 				open: true,
-				title: (typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0].toString()) || t('ERROR', 'Error'),
+				title: titleText,
 				content: []
 			})
 		}
@@ -967,13 +974,16 @@ const SignupFormUI = (props: SignupParams) => {
 					)
 				)}
 			</FormSide>
-			<OModal
-				open={willVerifyOtpState}
-				onClose={() => setWillVerifyOtpState && setWillVerifyOtpState(false)}
-				entireModal
-				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			<Modal
+				visible={willVerifyOtpState}
+				onDismiss={() => setWillVerifyOtpState && setWillVerifyOtpState(false)}
+				animationType='slide'
 			>
 				<Otp
+					isCheckingCode={isCheckingCode}
+					setCheckingCode={setCheckingCode}
+					otpError={otpError}
+					setOtpError={setOtpError}
 					pinCount={numOtpInputs || 6}
 					willVerifyOtpState={willVerifyOtpState || false}
 					setWillVerifyOtpState={() => setWillVerifyOtpState && setWillVerifyOtpState(false)}
@@ -981,7 +991,7 @@ const SignupFormUI = (props: SignupParams) => {
 					onSubmit={onSubmit}
 					setAlertState={setAlertState}
 				/>
-			</OModal>
+			</Modal>
 			<Spinner
 				visible={formState.loading || validationFields.loading || isFBLoading}
 			/>
