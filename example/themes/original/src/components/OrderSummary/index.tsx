@@ -47,7 +47,9 @@ const OrderSummaryUI = (props: any) => {
     cateringTypes,
     hideDeliveryFee,
     loyaltyRewardRate,
-    maxDate
+    maxDate,
+    hideCommentsByValidationCheckout,
+    hideCouponByValidationCheckout
   } = props;
 
   const theme = useTheme()
@@ -55,11 +57,10 @@ const OrderSummaryUI = (props: any) => {
   const [{ configs }] = useConfig();
   const [orderState] = useOrder();
   const [{ parsePrice, parseNumber }] = useUtils();
-  const [validationFields] = useValidationFields();
   const commentRef = useRef()
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
-  const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
-  const hideCartComments = !validationFields?.fields?.checkout?.comments?.enabled
+  const isCouponEnabled = hideCouponByValidationCheckout
+  const hideCartComments = hideCommentsByValidationCheckout
 
   const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
 
