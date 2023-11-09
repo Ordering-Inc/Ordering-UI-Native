@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   useLanguage,
   useConfig,
@@ -70,7 +70,8 @@ const MultiCheckoutUI = (props: any) => {
     walletState,
     onNavigationRedirectReplace,
     merchantId,
-    cartsInvalid
+    cartsInvalid,
+    checkoutFieldsState
   } = props
 
   const theme = useTheme();
@@ -96,8 +97,9 @@ const MultiCheckoutUI = (props: any) => {
   const [{ parsePrice, parseDate }] = useUtils();
   const [{ options, carts, loading }, { confirmCart }] = useOrder();
   const [validationFields] = useValidationFields();
-  const [{ user }, { login }] = useSession()
+  const [{ user, loading: userLoading }, { login }] = useSession()
 
+  const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
@@ -121,6 +123,7 @@ const MultiCheckoutUI = (props: any) => {
 
   const creditPointGeneralPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
   const loyalBusinessAvailable = creditPointGeneralPlan?.businesses?.filter((b: any) => b.accumulates) ?? []
+  const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field : any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
 
   const accumulationRateBusiness = (businessId: number) => {
     const value = loyalBusinessAvailable?.find((loyal: any) => loyal.business_id === businessId)?.accumulation_rate ?? 0
@@ -169,33 +172,53 @@ const MultiCheckoutUI = (props: any) => {
 
   const checkValidationFields = () => {
     setUserErrors([])
-    const errors = []
-    const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
-    const _requiredFields: any = []
-
-    Object.values(validationFields?.fields?.checkout).map((field: any) => {
-      if (field?.required && !notFields.includes(field.code)) {
-        if (!user[field?.code]) {
-          _requiredFields.push(field?.code)
+    const errors: Array<string> = []
+    const userSelected = user
+    const _requiredFields: Array<string> = []
+    Object.values(checkoutFieldsState?.fields).map((field: any) => {
+      if (options?.type === field?.order_type_id &&
+        field?.enabled &&
+        field?.required &&
+        !notFields.includes(field?.validation_field?.code)
+      ) {
+        if (userSelected && !userSelected[field?.validation_field?.code]) {
+          _requiredFields.push(field?.validation_field?.code)
         }
       }
     })
-
+    const mobilePhoneField: any = Object.values(checkoutFieldsState?.fields)?.find((field: any) => field?.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
     if (
-      !user?.cellphone &&
-      ((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
+      userSelected &&
+      !userSelected?.cellphone &&
+      ((mobilePhoneField?.enabled &&
+        mobilePhoneField?.required) ||
         configs?.verification_phone_required?.value === '1')
     ) {
       _requiredFields.push('cellphone')
     }
     setRequiredFields(_requiredFields)
 
-    if (phoneUpdate) {
-      errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
-    }
-
     setUserErrors(errors)
+  }
+
+  const checkGuestValidationFields = () => {
+    const userSelected = user
+    const _requiredFields = checkoutFieldsState?.fields
+      .filter((field) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
+        !notFields.includes(field?.validation_field?.code) &&
+        userSelected && !userSelected[field?.validation_field?.code])
+    const requiredFieldsCode = _requiredFields.map((item) => item?.validation_field?.code)
+    const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+    if (
+      userSelected &&
+      !userSelected?.cellphone &&
+      ((guestCheckoutCellPhone?.enabled &&
+        guestCheckoutCellPhone?.required_with_guest) ||
+        configs?.verification_phone_required?.value === '1')
+    ) {
+      requiredFieldsCode.push('cellphone')
+    }
+    setRequiredFields(requiredFieldsCode)
   }
 
   const togglePhoneUpdate = (val: boolean) => {
@@ -208,7 +231,7 @@ const MultiCheckoutUI = (props: any) => {
       return
     }
 
-    if (!userErrors.length && (!requiredFields?.length || allowedGuest)) {
+    if (!userErrors.length && !requiredFields?.length) {
       handleGroupPlaceOrder && handleGroupPlaceOrder(confirmPayment)
       return
     }
@@ -255,10 +278,13 @@ const MultiCheckoutUI = (props: any) => {
   }
 
   useEffect(() => {
-    if (validationFields && validationFields?.fields?.checkout) {
+    if (checkoutFieldsState?.loading || userLoading) return
+    if (user?.guest_id) {
+      checkGuestValidationFields()
+    } else {
       checkValidationFields()
     }
-  }, [validationFields, user])
+  }, [checkoutFieldsState, user, options?.type])
 
   useEffect(() => {
     if (cartsToShow?.length === 1) {
@@ -420,6 +446,9 @@ const MultiCheckoutUI = (props: any) => {
                   isCheckout
                   phoneUpdate={phoneUpdate}
                   togglePhoneUpdate={togglePhoneUpdate}
+                  isOrderTypeValidationField
+                  requiredFields={requiredFields}
+                  checkoutFields={checkoutFields}
                 />
               )}
             </ChUserDetails>
@@ -656,9 +685,12 @@ const MultiCheckoutUI = (props: any) => {
               isEdit
               phoneUpdate={phoneUpdate}
               togglePhoneUpdate={togglePhoneUpdate}
-              requiredFields={requiredFields}
               hideUpdateButton
               handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+              isCheckoutPlace
+              isOrderTypeValidationField
+              requiredFields={requiredFields}
+              checkoutFields={checkoutFields}
               onClose={() => {
                 setIsOpen(false)
                 handlePlaceOrder()

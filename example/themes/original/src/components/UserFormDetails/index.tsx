@@ -40,7 +40,9 @@ export const UserFormDetailsUI = (props: any) => {
 		handleRemoveAccount,
 		isProfile,
 		isGuest,
-		orderTypeValidationFields
+		isOrderTypeValidationField,
+		checkoutFields,
+		isCheckoutPlace
 	} = props;
 
 	const theme = useTheme();
@@ -99,8 +101,8 @@ export const UserFormDetailsUI = (props: any) => {
 	const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
 	const isAdmin = user?.level === 0
-	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
-	const showInputBirthday = validationFields?.fields?.checkout?.birthdate?.enabled ?? false
+	const showInputPhoneNumber = isOrderTypeValidationField ? checkoutFields?.find(field => field?.validation_field?.code === 'mobile_phone')?.enabled : (validationFields?.fields?.checkout?.cellphone?.enabled ?? false)
+	const showInputBirthday = isOrderTypeValidationField ? checkoutFields?.find(field => field?.validation_field?.code === 'birthdate')?.enabled : (validationFields?.fields?.checkout?.birthdate?.enabled ?? false)
 
 	const handleSuccessSignup = (user: any) => {
 		login({
@@ -121,7 +123,7 @@ export const UserFormDetailsUI = (props: any) => {
 		};
 		if (field.code && field.code === 'email') {
 			rules.pattern = {
-				value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+				value: /[&,()%";:ç?<>{}\\[\]\s]/g,
 				message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace(
 					'_attribute_',
 					t('EMAIL', 'Email'),
@@ -131,7 +133,7 @@ export const UserFormDetailsUI = (props: any) => {
 		return rules;
 	};
 
-  const cellphoneValue = () => {
+	const cellphoneValue = () => {
 		let cellphone = user?.cellphone || null
 		if (cellphone && CONDITIONAL_CODES.includes(user?.country_code)) {
 			if (user?.country_code === 'PR') {
@@ -167,8 +169,13 @@ export const UserFormDetailsUI = (props: any) => {
 	};
 
 	const onSubmit = () => {
+		let content = ''
+		if (requiredFields?.includes?.('birthdate') && !birthdate) {
+			content = content + `${t('VALIDATION_ERROR_BIRTHDATE_REQUIRED', 'Birthdate is required')}\n`
+		}
 		if (phoneInputData.error) {
-			showToast(ToastType.Error, phoneInputData.error);
+			content = content + `${phoneInputData.error}\n`
+			showToast(ToastType.Error, content);
 			return;
 		}
 		if (Object.keys(formState.changes).length > 0) {
@@ -178,14 +185,13 @@ export const UserFormDetailsUI = (props: any) => {
 					validationFields?.fields?.checkout?.cellphone?.required) ||
 					configs?.verification_phone_required?.value === '1')
 			) {
-				showToast(
-					ToastType.Error,
-					t(
-						'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
-						'The field Phone Number is required.',
-					),
-				);
+				content = content + `${t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.',)}\n`
+				showToast(ToastType.Error, content);
 				return;
+			}
+			if (content.length > 0) {
+				showToast(ToastType.Error, content);
+				return
 			}
 			let changes = null;
 			if (user?.cellphone && !userPhoneNumber) {
@@ -312,16 +318,16 @@ export const UserFormDetailsUI = (props: any) => {
 		<>
 			<UDForm>
 				{!validationFields?.loading &&
-					sortInputFields({ values: isGuest ? orderTypeValidationFields : validationFields?.fields?.checkout })
+					sortInputFields({ values: isOrderTypeValidationField ? checkoutFields : validationFields?.fields?.checkout })
 						.length > 0 && (
 						<UDWrapper>
 							{sortInputFields({
-								values: isGuest ? orderTypeValidationFields : validationFields?.fields?.checkout,
+								values: isOrderTypeValidationField ? checkoutFields : validationFields?.fields?.checkout,
 							}).map(
 								(item: any) => {
 									const field = item?.validation_field || item
 									return (
-										(isGuest ? item?.enabled : showField && showField(field.code)) && ((requiredFields && requiredFields?.includes?.(field.code)) || !requiredFields) && (
+										((isOrderTypeValidationField ? item?.enabled : (showField && showField(field.code))) && ((requiredFields && requiredFields?.includes?.(field.code)) || !requiredFields || !isCheckoutPlace)) && (
 											<React.Fragment key={field.id}>
 												<Controller
 													key={field.id}
@@ -395,46 +401,51 @@ export const UserFormDetailsUI = (props: any) => {
 										))
 								},
 							)}
-							{showInputBirthday && ((requiredFields && requiredFields?.includes?.('birthdate')) || !requiredFields) && (
-								<>
-									<WrapperBirthdate>
-										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-											{t('BIRTHDATE', 'Birthdate')}
-										</OText>
-										<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
-											<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ marginTop: 6 }}>
-												{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
+							{((!user?.guest_id && showInputBirthday) || (isOrderTypeValidationField || user?.guest_id)) &&
+								showInputBirthday &&
+								((requiredFields && requiredFields?.includes?.('birthdate')) || !requiredFields || !isCheckoutPlace) &&
+								(
+									<>
+										<WrapperBirthdate>
+											<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+												{t('BIRTHDATE', 'Birthdate')}
 											</OText>
-										</TouchableOpacity>
-									</WrapperBirthdate>
-									<DatePickerUI open={showDatePicker} birthdate={birthdate} onConfirm={_handleChangeDate} onCancel={() => setShowDatePicker(false)} />
-								</>
-							)}
-							{!!showInputPhoneNumber && ((requiredFields && requiredFields?.includes?.('cellphone')) || !requiredFields) && (
-								<WrapperPhone>
-									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
-									<PhoneInputNumber
-										data={phoneInputData}
-										handleData={(val: any) => handleChangePhoneNumber(val)}
-										changeCountry={(val: any) => changeCountry(val)}
-										defaultValue={phoneUpdate ? '' : cellphoneValue()}
-										defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
-										boxStyle={styles.phoneSelect}
-										inputStyle={styles.phoneInputStyle}
-										textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
-										noDropIcon
-									/>
-									{phoneUpdate && (
-										<OText
-											size={10}
-											color={theme.colors.error}
-											style={{ marginHorizontal: 10, textAlign: 'center' }}>
-											{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}:{' '}
-											{cellphoneValue()}
-										</OText>
-									)}
-								</WrapperPhone>
-							)}
+											<TouchableOpacity onPress={() => setShowDatePicker(!showDatePicker)}>
+												<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ marginTop: 6 }}>
+													{birthdate ? moment(birthdate).format('YYYY-MM-DD') : ''}
+												</OText>
+											</TouchableOpacity>
+										</WrapperBirthdate>
+										<DatePickerUI open={showDatePicker} birthdate={birthdate} onConfirm={_handleChangeDate} onCancel={() => setShowDatePicker(false)} />
+									</>
+								)}
+							{((!user?.guest_id && !!showInputPhoneNumber) || (isOrderTypeValidationField || user?.guest_id)) &&
+								((requiredFields && requiredFields?.includes?.('cellphone')) || !requiredFields || !isCheckoutPlace) &&
+								(
+									<WrapperPhone>
+										<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
+										<PhoneInputNumber
+											data={phoneInputData}
+											handleData={(val: any) => handleChangePhoneNumber(val)}
+											changeCountry={(val: any) => changeCountry(val)}
+											defaultValue={phoneUpdate ? '' : cellphoneValue()}
+											defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
+											boxStyle={styles.phoneSelect}
+											inputStyle={styles.phoneInputStyle}
+											textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
+											noDropIcon
+										/>
+										{phoneUpdate && (
+											<OText
+												size={10}
+												color={theme.colors.error}
+												style={{ marginHorizontal: 10, textAlign: 'center' }}>
+												{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}:{' '}
+												{cellphoneValue()}
+											</OText>
+										)}
+									</WrapperPhone>
+								)}
 							{!requiredFields && (
 								<Controller
 									control={control}
@@ -507,7 +518,7 @@ export const UserFormDetailsUI = (props: any) => {
 						)}
 				</>
 			)}
-			{requiredFields && (
+			{isCheckoutPlace && (
 				<OButton
 					text={
 						formState.loading
