@@ -35,7 +35,8 @@ const UserDetailsUI = (props: any) => {
 		handleSendVerifyCode,
 		verifyPhoneState,
 		setFormState,
-		setIsOpen
+		setIsOpen,
+		isCheckoutPlace
 	} = props
 
 	const theme = useTheme();
@@ -158,7 +159,7 @@ const UserDetailsUI = (props: any) => {
 								{t('CUSTOMER_DETAILS', 'Customer Details')}
 							</OText>
 						)}
-						{cartStatus !== 2 && !requiredFields && (
+						{cartStatus !== 2 && !isCheckoutPlace && (
 							!isEdit ? (
 								<EditBtn onPress={() => toggleIsEdit()} activeOpacity={0.7}>
 									<OIcon
