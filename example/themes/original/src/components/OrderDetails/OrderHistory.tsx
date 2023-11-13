@@ -62,7 +62,10 @@ export const OrderHistory = (props: any) => {
     20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
     21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
     22: 'ORDER_LOOKING_FOR_DRIVER',
-    23: 'ORDER_DRIVER_ON_WAY'
+    23: 'ORDER_DRIVER_ON_WAY',
+    24: 'ORDER_DRIVER_WAITING_FOR_ORDER',
+    25: 'ORDER_ACCEPTED_BY_DRIVER_COMPANY',
+    26: 'ORDER_DRIVER_ARRIVED_CUSTOMER'
   }
 
   const getLogisticTagStatus = (status: any) => {
