@@ -41,7 +41,7 @@ const OrderProgressUI = (props: any) => {
   const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
   const [initialLoaded, setInitialLoaded] = useState(false)
-  const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
+  const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
   const styles = StyleSheet.create({
     main: {
@@ -205,7 +205,7 @@ export const OrderProgress = (props: any) => {
   const orderProgressProps = {
     ...props,
     UIComponent: OrderProgressUI,
-    orderStatus: [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23],
+    orderStatus: [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26],
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,

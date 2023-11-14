@@ -87,7 +87,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
 
-  const validStatusComplete = [9, 19, 23]
+  const validStatusComplete = [9, 19, 23, 26]
 
   const pendingOrderStatus = [1, 4, 7, 13]
 
@@ -460,8 +460,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   let locationMarker: any;
   let isToFollow = false;
   let isBusinessMarker = false;
-
-  if (order?.status === 7 || order?.status === 8 || order?.status === 18) {
+  const customerStatusses = [3, 9, 19, 23, 26]
+  const businessStatusses = [7, 8, 18]
+  if (businessStatusses?.includes(order?.status)) {
     const markerBusiness = 'Business';
     isBusinessMarker = true;
     locationMarker = locations.find(
@@ -471,7 +472,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (order?.status === 8 || order?.status === 18) {
       isToFollow = true;
     }
-  } else if (order?.status === 3 || order?.status === 9 || order?.status === 19 || order?.status === 23) {
+  } else if (customerStatusses?.includes(order?.status)) {
     const markerCustomer = 'Customer';
     isToFollow = true;
     isBusinessMarker = false;
@@ -512,6 +513,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               imgLeftStyle={{ tintColor: theme.colors.backArrow }}
             />
           </Pickup>
+        )}
+
+        {(order?.status === 9 || order?.status === 19) && order?.delivery_type === 1 && !props.order?.loading && (
+          <View style={{ paddingVertical: 20, marginBottom: 20 }}>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.primary }}
+              text={t('ARRIVED_TO_CUSTOMER', 'Arrived to customer')}
+              isDisabled={disabledActionsByInternet}
+              onClick={() =>
+                isGrantedPermissions ? handleChangeOrderStatus(26) : goToPermissionPage()
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+            />
+          </View>
         )}
         {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
