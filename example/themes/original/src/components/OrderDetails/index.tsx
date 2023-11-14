@@ -129,10 +129,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [showTitle, setShowTitle] = useState(false)
 
   const { order, businessData } = props.order;
-  const mapValidStatuses = [9, 19, 23]
+  const mapValidStatuses = [9, 19, 23, 26]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
-  const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23]
+  const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
   const reorderStatus = [1, 2, 5, 6, 10, 11, 12]
   const [isPickup, setIsPickup] = useState(order?.delivery_type === 2)
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value

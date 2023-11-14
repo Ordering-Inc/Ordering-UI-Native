@@ -356,6 +356,12 @@ export const getOrderStatus = (s: string, t: any) => {
       value: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company'),
       slug: 'ORDER_ACCEPTED_BY_DRIVER_COMPANY',
       percentage: 25
+    },
+    {
+      key: 26,
+      value: t('ORDER_DRIVER_ARRIVED_CUSTOMER', 'Driver arrived to customer'),
+      slug: 'ORDER_DRIVER_ARRIVED_CUSTOMER',
+      percentage: 80
     }
   ];
 

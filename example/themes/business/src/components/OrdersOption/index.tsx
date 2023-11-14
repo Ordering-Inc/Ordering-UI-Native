@@ -1123,13 +1123,17 @@ export const OrdersOption = (props: OrdersOptionParams) => {
       {
         key: 25,
         text: t('ORDER_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company')
+      },
+      {
+        key: 26,
+        text: t('ORDER_DRIVER_ARRIVED_CUSTOMER', 'Driver arrived to customer')
       }
     ],
     tabs: combineTabs ? [
       {
         key: 0,
         text: t('ACTIVE', 'Active'),
-        tags: props?.orderGroupStatusCustom?.active ?? [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25],
+        tags: props?.orderGroupStatusCustom?.active ?? [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26],
         title: 'active',
       },
       {
@@ -1155,7 +1159,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
         {
           key: 1,
           text: t('IN_PROGRESS', 'In Progress'),
-          tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23, 24, 25],
+          tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26],
           title: 'inProgress',
         },
         {

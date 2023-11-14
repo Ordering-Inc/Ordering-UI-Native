@@ -1,12 +1,10 @@
-//React & React Native
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-// Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import Clipboard from '@react-native-clipboard/clipboard';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-//OrderingComponent
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -17,13 +15,12 @@ import {
   useConfig
 } from 'ordering-components/native';
 
-//Components
 import Alert from '../../providers/AlertProvider';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { DriverMap } from '../DriverMap';
-import { OButton } from '../shared';
+import { OButton, OText } from '../shared';
 import { OModal } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
@@ -32,8 +29,8 @@ import { NotFoundSource } from '../NotFoundSource';
 import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
-//Styles
 import { OrderDetailsContainer, Pickup } from './styles';
+import { useOfflineActions } from '../../../../../src/context/OfflineActions';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -42,7 +39,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setMessages,
     readMessages,
     messagesReadList,
-    handleChangeOrderStatus,
     permissions,
     askLocationPermission,
     driverLocation,
@@ -56,8 +52,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     forceUpdate,
     getPermissions,
     orderAssingId,
-    isGrantedPermissions,
+    isGrantedPermissions
   } = props;
+
   const [, { showToast }] = useToast();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
@@ -72,6 +69,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
+  const [{ isNetConnected, canSaveChangesOffline }, { applyOffAction, registerOffOrder }] = useOfflineActions()
+
   const [actionOrder, setActionOrder] = useState('');
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,
@@ -86,11 +85,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const validStatusComplete = [9, 19, 23]
+  const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
+
+  const validStatusComplete = [9, 19, 23, 26]
 
   const pendingOrderStatus = [1, 4, 7, 13]
 
   const logisticOrderStatus = [4, 6, 7]
+
+  const deliveryTypes = [1, 7]
 
   const showFloatButtonsPickUp: any = {
     8: !isHideRejectButtons,
@@ -105,13 +108,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     14: true
   };
 
-  const marginContainer: any = {
-    0: true,
-    3: true,
-    7: true,
-    8: true,
-    9: true,
-  };
+  const handleChangeOrderStatus = async (status: number) => {
+    if (!isNetConnected && canSaveChangesOffline !== false) {
+      const result = applyOffAction({
+        event: 'evt_off_change_order_status',
+        data: { orderId: order?.id, body: { status } }
+      })
+    }
+
+    const dataToSave: any = !isNetConnected && canSaveChangesOffline !== false
+      ? { dataToSave: { status, unsync: true } }
+      : null
+    const orderUpdated = await props.handleChangeOrderStatus(status, {}, dataToSave)
+
+    if (!isNetConnected && canSaveChangesOffline !== false) {
+      await registerOffOrder(orderUpdated)
+    }
+  }
 
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true);
@@ -222,7 +235,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             ? t('EAT_IN', 'Eat in')
             : order.delivery_type === 4
               ? t('CURBSIDE', 'Curbside')
-              : t('DRIVER_THRU', 'Driver thru')
+              : order.delivery_type === 5
+                ? t('DRIVER_THRU', 'Driver thru')
+                : order.delivery_type === 7
+                  ? t('CATERING_DELIVERY', 'Catering delivery')
+                  : order.delivery_type === 8
+                    ? t('CATERING_PICKUP', 'Catering pickup')
+                    : t('DELIVERY', 'Delivery')
       }\n`
       : '';
 
@@ -449,8 +468,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   let locationMarker: any;
   let isToFollow = false;
   let isBusinessMarker = false;
-
-  if (order?.status === 7 || order?.status === 8 || order?.status === 18) {
+  const customerStatusses = [3, 9, 19, 23, 26]
+  const businessStatusses = [7, 8, 18]
+  if (businessStatusses?.includes(order?.status)) {
     const markerBusiness = 'Business';
     isBusinessMarker = true;
     locationMarker = locations.find(
@@ -460,7 +480,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (order?.status === 8 || order?.status === 18) {
       isToFollow = true;
     }
-  } else if (order?.status === 3 || order?.status === 9 || order?.status === 19 || order?.status === 23) {
+  } else if (customerStatusses?.includes(order?.status)) {
     const markerCustomer = 'Customer';
     isToFollow = true;
     isBusinessMarker = false;
@@ -488,20 +508,36 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           isOrderGroup={isOrderGroup}
           lastOrder={lastOrder}
         />
-        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && !props.order?.loading && (
+        {(order?.status === 8 || order?.status === 18) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
           <Pickup>
             <OButton
               style={styles.btnPickUp}
               textStyle={{ color: theme.colors.primary }}
               text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
+              isDisabled={disabledActionsByInternet}
               onClick={() =>
-                handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(3) : goToPermissionPage()
+                isGrantedPermissions ? handleChangeOrderStatus(3) : goToPermissionPage()
               }
               imgLeftStyle={{ tintColor: theme.colors.backArrow }}
             />
           </Pickup>
         )}
-        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
+
+        {(order?.status === 9 || order?.status === 19) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
+          <View style={{ paddingVertical: 20, marginBottom: 20 }}>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.primary }}
+              text={t('ARRIVED_TO_CUSTOMER', 'Arrived to customer')}
+              isDisabled={disabledActionsByInternet}
+              onClick={() =>
+                isGrantedPermissions ? handleChangeOrderStatus(26) : goToPermissionPage()
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+            />
+          </View>
+        )}
+        {order?.status === 3 && deliveryTypes?.includes(order?.delivery_type) && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -518,7 +554,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <View
           style={{
             height:
-              order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+              order?.status === 8 && deliveryTypes?.includes(order?.delivery_type) ? 50 : 35,
           }}
         />
 
@@ -548,6 +584,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {!((!order || Object.keys(order).length === 0) &&
         (props.order?.error?.length < 1 || !props.order?.error)) && order?.id && (
           <View style={{ flex: 1 }}>
+            {order?.unsync && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <MCIcon
+                  name={'cloud-sync'}
+                  color={'#444'}
+                  size={16}
+                />
+                <OText
+                  size={14}
+                  color={theme.colors.textGray}
+                  style={{ marginLeft: 5 }}
+                >
+                  {t('PENDING_SYNC_CHANGES', 'Pending sync changes')}
+                </OText>
+              </View>
+            )}
             <OrderHeaderComponent
               order={order}
               handleOpenMapView={handleOpenMapView}
@@ -571,11 +629,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OrderDetailsContainer>
                 {showFloatButtonsPickUp[order?.status] && (
                   <FloatingButton
-                    disabled={props.order?.loading}
+                    disabled={props.order?.loading || disabledActionsByInternet}
                     btnText={t('PICKUP_FAILED', 'Pickup failed')}
                     isSecondaryBtn={false}
                     secondButtonClick={() =>
-                      handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(9) : goToPermissionPage()
+                      isGrantedPermissions ? handleChangeOrderStatus(9) : goToPermissionPage()
                     }
                     firstButtonClick={() =>
                       handleViewActionOrder && handleViewActionOrder('pickupFailed')
@@ -591,11 +649,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 {(validStatusComplete.includes(order?.status)) && (
                   <>
                     <FloatingButton
-                      disabled={props.order?.loading}
+                      disabled={props.order?.loading || disabledActionsByInternet}
                       btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
                       isSecondaryBtn={false}
                       secondButtonClick={() =>
-                        handleChangeOrderStatus && isGrantedPermissions ? handleChangeOrderStatus(11) : goToPermissionPage()
+                        isGrantedPermissions ? handleChangeOrderStatus(11) : goToPermissionPage()
                       }
                       firstButtonClick={() =>
                         handleViewActionOrder && handleViewActionOrder('deliveryFailed')
@@ -611,17 +669,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )}
                 {showFloatButtonsAcceptOrReject[order?.status] && (
                   <FloatingButton
-                    disabled={props.order?.loading}
-                    btnText={t('REJECT', 'Reject')}
-                    isSecondaryBtn={false}
-                    secondButtonClick={() => hideTimer ? handleChangeOrderStatus && handleChangeOrderStatus(8) : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
-                    firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
-                    secondBtnText={t('ACCEPT', 'Accept')}
-                    secondButton={true}
-                    firstColorCustom={theme.colors.red}
-                    secondColorCustom={theme.colors.green}
+                    disabled={props.order?.loading || disabledActionsByInternet}
                     widthButton={isHideRejectButtons ? '100%' : '45%'}
                     isHideRejectButtons={isHideRejectButtons}
+                    btnText={t('REJECT', 'Reject')}
+                    firstColorCustom={theme.colors.red}
+                    firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))
+                      ? handleRejectLogisticOrder()
+                      : handleViewActionOrder('reject')
+                    }
+                    isSecondaryBtn={false}
+                    secondButton={true}
+                    secondBtnText={t('ACCEPT', 'Accept')}
+                    secondButtonClick={() => hideTimer
+                      ? handleChangeOrderStatus(8)
+                      : (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)))
+                        ? handleAcceptLogisticOrder(order)
+                        : handleViewActionOrder('accept')}
+                    secondColorCustom={theme.colors.green}
                   />
                 )}
               </>
@@ -676,7 +741,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 entireModal
                 customClose>
                 <AcceptOrRejectOrder
-                  handleUpdateOrder={handleChangeOrderStatus}
+                  handleUpdateOrder={props.handleChangeOrderStatus}
                   closeModal={setOpenModalForAccept}
                   customerCellphone={order?.customer?.cellphone}
                   loading={props.order?.loading}
