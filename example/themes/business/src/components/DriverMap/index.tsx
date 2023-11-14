@@ -236,6 +236,11 @@ export const DriverMap = (props: GoogleMapsParams) => {
     19: theme.colors.statusOrderBlue,
     20: theme.colors.statusOrderBlue,
     21: theme.colors.statusOrderBlue,
+    22: theme.colors.statusOrderBlue,
+    23: theme.colors.statusOrderBlue,
+    24: theme.colors.statusOrderBlue,
+    25: theme.colors.statusOrderBlue,
+    26: theme.colors.statusOrderBlue,
     //GREEN
     1: theme.colors.statusOrderGreen,
     11: theme.colors.statusOrderGreen,

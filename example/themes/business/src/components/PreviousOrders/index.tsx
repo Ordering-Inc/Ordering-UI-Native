@@ -42,9 +42,9 @@ export const PreviousOrders = (props: any) => {
   const [orderUpdateStatus, setOrderUpdateStatus] = useState<any>({ action: '', ids: [], body: {}, order: {} })
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
-  const viewMapStatus = [9, 18, 19, 23]
+  const viewMapStatus = [9, 18, 19, 23, 26]
   const deliveryPickupBtn = props.appTitle?.text?.includes('Delivery') && [3, 8, 18]
-  const deliveryStatusCompleteBtn = props.appTitle?.text?.includes('Delivery') && [9, 19, 23]
+  const deliveryStatusCompleteBtn = props.appTitle?.text?.includes('Delivery') && [9, 19, 23, 26]
   const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1' && !isBusinessApp
   const isEnabledOrderNotReady = configs?.order_not_ready_enabled?.value === '1'
   const isEnabledFailedPickupDriver = configs?.failed_pickup_by_driver_enabled?.value === '1'
