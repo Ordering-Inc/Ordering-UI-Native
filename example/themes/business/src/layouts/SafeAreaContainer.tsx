@@ -50,7 +50,7 @@ export const SafeAreaContainerLayout = (props: any) => {
       <View
         style={{
           paddingHorizontal: 30,
-          paddingTop: 30,
+          paddingTop: 0,
           paddingBottom: 0,
           flex: 1,
         }}>
