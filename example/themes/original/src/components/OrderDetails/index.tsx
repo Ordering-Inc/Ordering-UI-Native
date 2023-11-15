@@ -982,7 +982,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     </Table>
                   ))
                 }
-                {typeof order?.summary?.delivery_price === 'number' && (
+                {typeof order?.summary?.delivery_price === 'number' && !isPickup && (
                   <Table>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price) + getIncludedTaxes(true)}</OText>
