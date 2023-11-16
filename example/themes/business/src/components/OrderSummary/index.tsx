@@ -566,7 +566,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               </OText>
             )}
 
-            {order?.customer?.address_notes && (
+            {!!order?.customer?.address_notes && (
               <OText style={{ marginBottom: 5 }}>
                 {`${t('NOTES', 'Notes')}: ${order?.customer?.address_notes}`}
               </OText>
@@ -665,7 +665,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               {t('ORDER_DETAILS', 'Order Details')}
             </OText>
 
-            {order?.comment && (
+            {!!order?.comment && (
               <OText style={{ marginBottom: 5 }}>
                 {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
               </OText>
