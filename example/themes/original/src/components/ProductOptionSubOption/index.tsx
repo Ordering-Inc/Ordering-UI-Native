@@ -36,10 +36,16 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		setIsScrollAvailable,
 		image,
 		enableIntersection,
-		onChange
+		usePizzaValidation,
+		pizzaState
 	} = props
 
-	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max || state.quantity === suboption?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
+	const disableIncrement =
+		option?.with_half_option
+			? pizzaState?.[`option:${option?.id}`]?.value === option?.max
+			: option?.limit_suboptions_by_max
+				? (balance === option?.max || state.quantity === suboption.max)
+				: state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
 	const theme = useTheme();
@@ -66,8 +72,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const handleSuboptionClick = () => {
 		toggleSelect()
 		setIsDirty(true)
+		const minMaxValidation = option?.with_half_option ? usePizzaValidation : (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1))
 
-		if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
+		if (!state.selected && minMaxValidation) {
 			setShowMessage(true)
 		}
 	}
@@ -87,13 +94,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		if (!(balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1))) {
 			setShowMessage(false)
 		}
-	}, [balance])
-
-	useEffect(() => {
-		if (!suboption?.preselected || !option?.respect_to) return
-		const newState = { ...state, selected: suboption?.preselected, quantity: state.selected ? 0 : 1 }
-		onChange(newState, suboption, option)
-	}, [suboption, option])
+	}, [balance, pizzaState?.[`option:${option?.id}`]?.value])
 
 	return (
 		<InView onChange={(inView: boolean) => handleChangeInterSection(inView)} triggerOnce={true}>
@@ -129,7 +130,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 							{suboption?.name}
 						</OText>
 					</IconControl>
-					{option?.allow_suboption_quantity && state?.selected && (
+					{!(option?.max === 1 && option?.min === 1) && option?.allow_suboption_quantity && state?.selected && (
 						<QuantityControl>
 							<>
 								<Checkbox disabled={disabled || state.quantity === 0} onPress={decrement}>
@@ -142,11 +143,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
 								<OText size={12}>
 									{state.quantity}
 								</OText>
-								<Checkbox disabled={disabled || disableIncrement} onPress={increment}>
+								<Checkbox disabled={disabled || disableIncrement || usePizzaValidation} onPress={increment}>
 									<IconAntDesign
 										name='pluscircleo'
 										size={iconsSize}
-										color={disableIncrement || disabled ? theme.colors.disabled : theme.colors.primary}
+										color={disableIncrement || disabled || usePizzaValidation ? theme.colors.disabled : theme.colors.primary}
 									/>
 								</Checkbox>
 							</>
@@ -164,7 +165,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 										style={styles.inverse}
 									/>
 								</Circle>
-								<Circle disabled={disabled} onPress={() => changePosition('whole')}>
+								<Circle disabled={disabled || (pizzaState?.[`option:${option?.id}`]?.value === option?.max)} onPress={() => changePosition('whole')}>
 									<OIcon
 										src={theme.images.general.half_f}
 										color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
