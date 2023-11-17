@@ -129,8 +129,9 @@ const CartUI = (props: any) => {
         cartUuid: cart?.uuid,
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
-        cartTotal: cart?.total
-      }, true)
+        cartTotal: cart?.total,
+        fromProductsList: isFromUpselling
+      })
     } else {
       const groupKeys: any = {}
       cartsAvailable.forEach((_cart: any) => {
@@ -146,12 +147,12 @@ const CartUI = (props: any) => {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           checkCarts: true
-        }, true)
+        })
       } else {
         onNavigationRedirect('CheckoutNavigator', {
           screen: 'MultiCheckout',
           cartUuid: cartsAvailable[0]?.group?.uuid
-        }, true)
+        })
       }
     }
   }
