@@ -63,9 +63,13 @@ export const PrinterEdition = (props: any) => {
       paddingRight: 10
     },
     inputStyle: {
-      height: 40,
       borderWidth: 1,
       borderRadius: 8,
+      color: theme.colors.arrowColor,
+      borderColor: theme.colors.inputSignup,
+      backgroundColor: theme.colors.transparent,
+      minHeight: 50,
+      maxHeight: 50
     },
     savePrinterBtnText: {
       color: theme.colors.white,
