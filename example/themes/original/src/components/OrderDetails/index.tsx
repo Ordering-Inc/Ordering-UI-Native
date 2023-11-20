@@ -134,6 +134,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const directionTypes = [2, 3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
   const reorderStatus = [1, 2, 5, 6, 10, 11, 12]
+  const cateringTypes = [7, 8]
   const [isPickup, setIsPickup] = useState(order?.delivery_type === 2)
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
@@ -361,7 +362,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [props?.order?.error, props?.order?.loading])
 
-
   useEffect(() => {
     if (!order?.delivery_type) return
     setIsPickup(order?.delivery_type === 2)
@@ -461,15 +461,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <NavBar
                 hideArrowLeft
                 title={`${t('ORDER', 'Order')} #${order?.id}`}
-                titleAlign={'center'}
+                titleAlign={'left'}
                 showCall={false}
                 btnStyle={{ paddingLeft: 0 }}
                 style={{ marginTop: Platform.OS === 'ios' ? 0 : 20 }}
                 titleWrapStyle={{ paddingHorizontal: 0 }}
-                titleStyle={{ marginRight: 0, marginLeft: 0 }}
+                titleStyle={{ marginRight: 0, marginLeft: 0, paddingHorizontal: 0 }}
                 subTitle={!hideDeliveryDate && <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
                   {activeStatus.includes(order?.status) ? (
-                    <OrderEta order={order} />
+                    <>
+                      {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
+                      {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} />
+                    </>
                   ) : (
                     parseDate(order?.reporting_data?.at[`status:${order.status}`])
                   )}
