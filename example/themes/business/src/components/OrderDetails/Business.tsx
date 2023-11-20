@@ -316,8 +316,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const printAction = async (printerSettings: any, commands: any, showAlert: boolean = true) => {
     try {
       var printResult = await StarPRNT.print(printerSettings?.emulation, commands, printerSettings?.portName);
+      Alert.alert(
+        'Print Result',
+        JSON.stringify(printResult),
+        [{ text: t('OK', 'Ok')}]
+      )
       showAlert && showToast(ToastType.Info, t('ORDER_PRINTED_SUCCESS', 'Order printed'), 1000)
     } catch (e) {
+      Alert.alert(
+        'Print Result',
+        JSON.stringify(e),
+        [{ text: t('OK', 'Ok')}]
+      )
       showAlert && showToast(ToastType.Error, t('ORDER_PRINTED_FAILED', 'Order not printed, connection failed'), 1000)
     }
   }
@@ -330,7 +340,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           orderStatus: getOrderStatus(order?.status, t)?.value
         }, printer?.printMode)
         commands.push({ appendCutPaper: StarPRNT.CutPaperAction.PartialCutWithFeed })
-
+        Alert.alert(
+          `Printer: ${printer?.model}`,
+          `Port name: ${printer?.portName}`,
+          [{ text: t('OK', 'Ok')}]
+        )
         printAction(printer, commands, idx === printerSettings.length - 1)
       })
       return
@@ -423,6 +437,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       const autoPrint = await _retrieveStoreData('auto_print_after_accept_order')
       setPrinterSettings(printers?.length && printers)
       setAutoPrintEnabled(!!autoPrint)
+      console.log('printers after', printers);
     }
 
     getStorageData()
