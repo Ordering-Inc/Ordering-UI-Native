@@ -171,7 +171,8 @@ export const OrderItem = React.memo((props: any) => {
             style={styles.icon}
             source={order.business?.logo?.includes('https') ? {
               uri: order.business?.logo,
-              priority: FastImage.priority.normal,
+              priority: FastImage.priority.high,
+              cache: FastImage.cacheControl.immutable
             } : order.business?.logo ?? theme?.images?.dummies?.businessLogo}
             resizeMode={FastImage.resizeMode.cover}
           />
