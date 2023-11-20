@@ -204,7 +204,7 @@ export const usePrinterCommands = () => {
       ...commands,
       ...appends.map((append: any) => {
         return append === '_separator_'
-          ? { [printMode]: `---------------------------------------${endLine}` }
+          ? { [printMode]: `-------------------------------------${endLine}` }
           : {
             [printMode]: replaceChars(append?.text ?? append),
             ...textProps,
