@@ -321,7 +321,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				}
 			}))
 		}
-	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), cateringPreorder, JSON.stringify(business)])
+	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), JSON.stringify(business)])
 
 	useEffect(() => {
 		setLocalMoment(moment, t)
