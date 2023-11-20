@@ -65,6 +65,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   const messagesReadIds = messagesReadList?.map((message: any) => message?.order_message_id)
 
   const filteredMessages = messagesReadList?.length > 0 ? messages?.messages?.filter((message: any) => !messagesReadIds?.includes(message?.id)) : messages?.messages
+  const cateringTypes = [7, 8]
 
   const styles = StyleSheet.create({
     icons: {
@@ -228,12 +229,18 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
       <OrderHeader>
         {!props.isCustomView ? (
           <OText size={13} style={{ marginBottom: 5 }}>
-            {deliveryDate()}
+            <>
+              {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
+              {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}: ` : ''}{deliveryDate()}
+            </>
           </OText>
         ) : (
           <Header style={{ alignItems: 'center' }}>
             <OText size={13} style={{ marginBottom: 5 }}>
-              {deliveryDate()}
+              <>
+                {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
+                {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}: ` : ''}{deliveryDate()}
+              </>
             </OText>
 
             {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
