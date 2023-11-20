@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
 import { Card, Logo, Information, Header, Badge } from './styles';
@@ -296,10 +297,14 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
               activeOpacity={1}>
               <Card key={order?.id}>
                 <Logo style={styles.logo}>
-                  <OIcon
-                    url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
-                    src={!order?.business?.logo && theme?.images?.dummies?.businessLogo}
+                  <FastImage
                     style={styles.icon}
+                    source={order.business?.logo?.includes('https') ? {
+                      uri: order.business?.logo,
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable
+                    } : order.business?.logo ?? theme?.images?.dummies?.businessLogo}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
                 </Logo>
                 <Information>

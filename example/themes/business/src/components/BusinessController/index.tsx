@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image'
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -99,10 +100,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
               onPress={() => navigation && business?.slug && navigation.navigate('BusinessProductListing', { slug: business?.slug })}
             >
               <Logo style={styles.logo}>
-                <OIcon
-                  url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                  src={!business?.logo && theme?.images?.dummies?.businessLogo}
+                <FastImage
                   style={styles.icon}
+                  source={business?.logo?.includes('https') ? {
+                    uri: business?.logo,
+                    priority: FastImage.priority.high,
+                    cache: FastImage.cacheControl.immutable
+                  } : business?.logo ?? theme?.images?.dummies?.businessLogo}
+                  resizeMode={FastImage.resizeMode.cover}
                 />
               </Logo>
               <Information>
