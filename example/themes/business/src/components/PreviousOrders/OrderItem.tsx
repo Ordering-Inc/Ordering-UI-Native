@@ -61,9 +61,14 @@ export const OrderItem = React.memo((props: any) => {
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      paddingVertical: (isIpad || isTablet) ? 20 : 0,
+      paddingVertical: (isIpad || isTablet) ? 20 : 5,
       marginBottom: IS_PORTRAIT ? 25 : 0,
       marginLeft: 3,
+      backgroundColor: order?.time_status === 'delayed' 
+        ? theme.colors.danger100
+        : order?.time_status === 'at_risk' 
+          ? theme.colors.warning100
+          : theme.colors.primaryContrast
     },
     icon: {
       borderRadius: 7.6,
@@ -239,7 +244,7 @@ export const OrderItem = React.memo((props: any) => {
                 : parseDate(order?.delivery_datetime, { utc: false })}`)}
             </OText>
             )}
-            {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
+            {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress' || currentTabSelected === 'active') && allowColumns?.timer) && (
               <>
                 <OText
                   style={styles.date}
