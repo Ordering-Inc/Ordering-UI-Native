@@ -155,7 +155,7 @@ export const usePrinterCommands = () => {
     const jumpLine = isAppendMode ? '\n' : ' '
     const endLine = isAppendMode ? '\n' : ''
 
-    const textProps = { fontSize: 22 }
+    const textProps = { fontSize: Platform.OS === 'ios' ? 12 : 22 }
 
     const appends: any = [
       { text: `${t('ORDER_NO', 'Order No.')} ${order.id}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 16 : 24 } },
