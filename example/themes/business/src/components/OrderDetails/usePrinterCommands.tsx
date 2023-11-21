@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import { useConfig, useUtils, useLanguage} from 'ordering-components/native'
 
 import { verifyDecimals, getProductPrice } from '../../utils';
@@ -70,14 +71,14 @@ export const usePrinterCommands = () => {
         list.push(`${product?.quantity}  ${product?.name} \t ${parsePrice(product.total ?? getProductPrice(product))}${endLine}`)
 
         if (product?.ingredients?.length) {
-          list.push({ text: `\t ${t('INGREDIENTS', 'Ingredients')}:${endLine}`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${t('INGREDIENTS', 'Ingredients')}:${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 10 : 18 } })
           product?.ingredients?.map((ingredient: any) => {
-            list.push({ text: `\t ${t('NO', 'No')} ${ingredient.name}${endLine}` , fontSize: 10 })
+            list.push({ text: `\t ${t('NO', 'No')} ${ingredient.name}${endLine}` , fontSize: Platform.OS === 'ios' ? 10 : 18 })
           })
         }
 
         product.options?.map((option: any) => {
-          list.push({ text: `\t ${option.name}${endLine}`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${option.name}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 10 : 18 } })
 
           option.suboptions?.map((suboption: any) => {
             const { quantity, name, position, price } = suboption
@@ -88,13 +89,13 @@ export const usePrinterCommands = () => {
                 : `${quantity} x ${name} +${parsePrice(price)}`
               : 'No'
 
-            list.push({ text: `\t\t ${string}${endLine}`, props: { fontSize: 10 } })
+            list.push({ text: `\t\t ${string}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 10 : 18 } })
           })
         })
 
         if (product.comment) {
-          list.push({ text: `\t ${t('COMMENT', 'Comment')}${endLine}`, props: { fontSize: 10 } })
-          list.push({ text: `\t\t ${product.comment}${endLine}`, props: { fontSize: 10 } })
+          list.push({ text: `\t ${t('COMMENT', 'Comment')}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 10 : 18 } })
+          list.push({ text: `\t\t ${product.comment}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 10 : 18 } })
         }
 
         list.push('_separator_')
@@ -154,18 +155,18 @@ export const usePrinterCommands = () => {
     const jumpLine = isAppendMode ? '\n' : ' '
     const endLine = isAppendMode ? '\n' : ''
 
-    const textProps = { fontSize: 18 }
+    const textProps = { fontSize: 22 }
 
     const appends: any = [
-      { text: `${t('ORDER_NO', 'Order No.')} ${order.id}${endLine}`, props: { fontSize: 16 } },
+      { text: `${t('ORDER_NO', 'Order No.')} ${order.id}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 16 : 24 } },
       jumpLine,
       `${order.orderStatus}${endLine}`,
-      { text: `${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]}${endLine}`, props: { fontSize: 14 } },
-      { text: `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}${endLine}`, props: { fontSize: 14 } },
-      `${!!order?.delivery_option ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}${endLine}` : ''}`,
-      `${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}${endLine}`,
+      { text: `${t('ORDER_TYPE', 'Order Type')}: ${deliveryStatus[order?.delivery_type]}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 22 } },
+      { text: `${t(`PAYMENT_METHOD${paymethodsLength(order) > 1 ? 'S' : ''}`, `Payment method${paymethodsLength(order) > 1 ? 's' : ''}`)}: ${handlePaymethodsListString(order)}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 22 } },
+      `${!!order?.delivery_option ? { text: `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 22 } } : ''}`,
+      { text: `${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 22 } },
       '_separator_',
-      { text: `${t('CUSTOMER_DETAILS', 'Customer details')}${endLine}`, props: { fontSize: 14 } },
+      { text: `${t('CUSTOMER_DETAILS', 'Customer details')}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 24 } },
       `${t('FULL_NAME', 'Full Name')}: ${customerName(order)}${endLine}`,
       `${t('EMAIL', 'Email')}: ${order?.customer?.email}${endLine}`,
       `${!!order?.customer?.cellphone ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}${endLine}` : ''}`,
@@ -174,7 +175,7 @@ export const usePrinterCommands = () => {
       `${!!order?.customer?.internal_number ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}${endLine}` : ''}`,
       `${!!order?.customer?.zipcode ? `${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}${endLine}` : ''}`,
       '_separator_',
-      { text: `${t('BUSINESS_DETAILS', 'Business details')}${endLine}`, props: { fontSize: 14 } },
+      { text: `${t('BUSINESS_DETAILS', 'Business details')}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 24 } },
       `${order?.business?.name}${endLine}`,
       `${order?.business?.email}${endLine}`,
       `${!!order?.business?.cellphone ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}${endLine}` : ''}`,
@@ -182,7 +183,7 @@ export const usePrinterCommands = () => {
       `${t('ADDRESS', 'Address')}: ${order?.business?.address}${endLine}`,
       `${!!order?.business?.address_notes ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${order?.business?.address_notes}${endLine}` : ''}`,
       '_separator_',
-      { text: `${t('ORDER_DETAILS', 'Order Details')}${endLine}`, props: { fontSize: 14 } },
+      { text: `${t('ORDER_DETAILS', 'Order Details')}${endLine}`, props: { fontSize: Platform.OS === 'ios' ? 14 : 24 } },
       `${!!order?.comment ? `${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}${endLine}` : ''}`,
       ...generateProductsText(order, { endLine }),
       `${t('SUBTOTAL', 'Subtotal')} \t\t ${parsePrice(order.tax_type === 1 ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0 : order?.summary?.subtotal ?? 0)}${endLine}`,
