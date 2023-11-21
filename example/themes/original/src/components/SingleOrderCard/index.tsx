@@ -3,7 +3,8 @@ import {
   SingleOrderCard as SingleOrderCardController,
   useUtils,
   useOrder,
-  useLanguage
+  useLanguage,
+  useConfig
 } from 'ordering-components/native';
 import FastImage from 'react-native-fast-image'
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -45,6 +46,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
   const [, t] = useLanguage();
   const [{ carts }] = useOrder()
+  const [{ configs }] = useConfig()
   const theme = useTheme();
   const isFocused = useIsFocused();
 
@@ -54,6 +56,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12, 15];
   const isGiftCardOrder = !order?.business_id
+  const changeIdToExternalId = configs?.change_order_id?.value === '1'
 
   const styles = StyleSheet.create({
     container: {
@@ -333,7 +336,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         lineHeight={15}
                         numberOfLines={1}
                       >
-                        {order?.business?.length > 1 ? order?.business?.length : (t('ORDER_NO', 'Order No') + '.')}
+                        {order?.business?.length > 1 ? order?.business?.length : !(changeIdToExternalId && order?.external_id) && (t('ORDER_NO', 'Order No') + '.')}
                       </OText>
                       <OText
                         size={10}
@@ -342,7 +345,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                         lineHeight={15}
                         numberOfLines={1}
                       >
-                        {order?.business?.length > 1 ? t('ORDERS', 'orders') + ' \u2022 ' : order.id + ` \u2022 `}
+                        {order?.business?.length > 1 ? t('ORDERS', 'orders') + ' \u2022 ' : ((changeIdToExternalId && order?.external_id) || order.id) + ` \u2022 `}
                       </OText>
                     </>
                   )}
