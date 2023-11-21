@@ -148,6 +148,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const hideDriverMessages = theme?.confirmation?.components?.driver?.components?.messages?.hidden
   const hideCustomerPhone = theme?.confirmation?.components?.customer?.components?.phone?.hidden
   const hideCustomerAddress = theme?.confirmation?.components?.customer?.components?.address?.hidden
+  const changeIdToExternalId = configs?.change_order_id?.value === '1'
+
   const progressBarObjt = isPickup ? getOrderStatuPickUp : getOrderStatus
   const walletName: any = {
     cash: {
@@ -386,7 +388,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 numberOfLines={2}
                 ellipsizeMode='tail'
               >
-                {`${t('ORDER', 'Order')} #${order?.id}`}
+                {`${t('ORDER', 'Order')} ${(changeIdToExternalId && order?.external_id) || `#${order?.id}`}`}
               </OText>
             )}
           </>
@@ -460,8 +462,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <Header>
               <NavBar
                 hideArrowLeft
-                title={`${t('ORDER', 'Order')} #${order?.id}`}
-                titleAlign={'center'}
+                title={`${t('ORDER', 'Order')} ${(changeIdToExternalId && order?.external_id) || `#${order?.id}`}`}
+                titleAlign={'left'}
                 showCall={false}
                 btnStyle={{ paddingLeft: 0 }}
                 style={{ marginTop: Platform.OS === 'ios' ? 0 : 20 }}

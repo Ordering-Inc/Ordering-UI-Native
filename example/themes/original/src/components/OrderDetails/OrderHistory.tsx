@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTheme } from 'styled-components/native'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { useLanguage, useUtils } from 'ordering-components/native'
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { OText, OButton } from '../shared'
 import { formatSeconds } from '../../utils'
@@ -17,7 +17,9 @@ export const OrderHistory = (props: any) => {
 
   const [, t] = useLanguage()
   const [{ parseDate }] = useUtils()
+  const [{ configs }] = useConfig();
   const theme = useTheme()
+  const changeIdToExternalId = configs?.change_order_id?.value === '1'
 
   const styles = StyleSheet.create({
     historyItem: {
@@ -90,7 +92,7 @@ export const OrderHistory = (props: any) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <OText size={20} style={{ alignSelf: 'center', textAlign: 'center' }} mBottom={10}>
-        {t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', ` # ${order?.id}`)}
+        {t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', (changeIdToExternalId && order?.external_id) || `# ${order?.id}`)}
       </OText>
       {!messages?.loading && order && (
         <View style={styles.historyItem}>
