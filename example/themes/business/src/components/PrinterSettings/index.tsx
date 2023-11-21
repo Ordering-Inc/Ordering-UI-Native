@@ -102,7 +102,7 @@ export const PrinterSettings = (props: any) => {
         type: type ?? _currentPrinter?.type ?? 1,
         ip: ip ?? _currentPrinter?.ip ?? '',
         portName: (type ?? _currentPrinter?.type) === 1 || !ip
-          ? item.portName1 ?? _currentPrinter?.portName1
+          ? item?.bt ?? item.portName1 ?? _currentPrinter?.portName1
           : `TCP:${ip}`
       }
       edit ? (_printers[idx] = _item) : _printers.push(_item)
