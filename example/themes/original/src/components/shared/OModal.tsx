@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import styled from 'styled-components/native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-
+import { Toast } from '../../../../../src/components/shared/OToast'
 interface Props {
 	open?: boolean;
 	title?: string;
@@ -22,6 +22,7 @@ interface Props {
 	styleCloseButton?: any,
 	isAvoidKeyBoardView?: boolean;
 	styleContainerCloseButton?: any;
+	showToastInsideModal?: boolean;
 }
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -47,7 +48,8 @@ const OModal = (props: Props): React.ReactElement => {
 		style,
 		styleCloseButton,
 		styleContainerCloseButton,
-		isAvoidKeyBoardView
+		isAvoidKeyBoardView,
+		showToastInsideModal
 	} = props
 
 	const renderSafeAreaView = () => (
@@ -94,6 +96,9 @@ const OModal = (props: Props): React.ReactElement => {
 			onRequestClose={() => onClose && onClose()}
 			style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
 		>
+			{showToastInsideModal && (
+				<Toast />
+			)}
 			{isAvoidKeyBoardView ? (
 				<KeyboardView
 					enabled

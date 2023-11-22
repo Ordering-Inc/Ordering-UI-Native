@@ -168,28 +168,38 @@ const NewOrderNotificationUI = (props: any) => {
   }
 
   useEffect(() => {
+    const handleEventTypeOne = (o: any) => {
+      handleEventNotification(1, o, orderStatus)
+    }
+    const handleEventTypeTwo = (o: any) => {
+      handleEventNotification(2, o, orderStatus)
+    }
+    const handleEventTypeThree = (o: any) => {
+      handleEventNotification(3, o, orderStatus)
+    }
+
     if (!events?._events?.message_added_notification || events?._events?.message_added_notification?.length < 2) {
-      events.on('message_added_notification', (o: any) => handleEventNotification(1, o, orderStatus))
+      events.on('message_added_notification', handleEventTypeOne)
     }
     if (!events?._events?.order_added_notification || events?._events?.order_added_notification?.length < 2) {
-      events.on('order_added_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+      events.on('order_added_notification', handleEventTypeTwo)
     }
     if (!events?._events?.order_updated_notification || events?._events?.order_updated_notification?.length < 2) {
-      events.on('order_updated_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+      events.on('order_updated_notification', handleEventTypeThree)
     }
     if (!events?._events?.request_register_notification || events?._events?.request_register_notification?.length < 2) {
-      events.on('request_register_notification', (o: any) => handleEventNotification(2, o, orderStatus))
+      events.on('request_register_notification', handleEventTypeTwo)
     }
     if (!events?._events?.request_update_notification || events?._events?.request_update_notification?.length < 2) {
-      events.on('request_update_notification', (o: any) => handleEventNotification(3, o, orderStatus))
+      events.on('request_update_notification', handleEventTypeThree)
     }
 
     return () => {
-      events.off('message_added_notification', (o: any) => handleEventNotification(1, o))
-      events.off('order_added_notification', (o: any) => handleEventNotification(2, o))
-      events.off('order_updated_notification', (o: any) => handleEventNotification(3, o))
-      events.off('request_register_notification', (o: any) => handleEventNotification(2, o))
-      events.off('request_update_notification', (o: any) => handleEventNotification(3, o))
+      events.off('message_added_notification', handleEventTypeOne)
+      events.off('order_added_notification', handleEventTypeTwo)
+      events.off('order_updated_notification', handleEventTypeThree)
+      events.off('request_register_notification', handleEventTypeTwo)
+      events.off('request_update_notification', handleEventTypeThree)
     }
   }, [orderStatus, events])
 
