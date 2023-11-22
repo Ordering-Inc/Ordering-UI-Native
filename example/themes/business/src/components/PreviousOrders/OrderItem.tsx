@@ -61,8 +61,8 @@ export const OrderItem = React.memo((props: any) => {
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      paddingVertical: (isIpad || isTablet) ? 20 : 5,
-      marginBottom: IS_PORTRAIT ? 25 : 0,
+      paddingVertical: (isIpad || isTablet) ? 20 : 15,
+      marginBottom: IS_PORTRAIT ? 15 : 0,
       marginLeft: 3,
       backgroundColor: order?.time_status === 'delayed' 
         ? theme.colors.danger100
