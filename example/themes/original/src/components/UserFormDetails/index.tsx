@@ -123,7 +123,7 @@ export const UserFormDetailsUI = (props: any) => {
 		};
 		if (field.code && field.code === 'email') {
 			rules.pattern = {
-				value: /[&,()%";:ç?<>{}\\[\]\s]/g,
+				value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
 				message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace(
 					'_attribute_',
 					t('EMAIL', 'Email'),

@@ -1047,6 +1047,7 @@ const CheckoutUI = (props: any) => {
 					<OModal
 						open={isOpen}
 						onClose={() => setIsOpen(false)}
+						showToastInsideModal
 					>
 						<View style={styles.detailWrapper}>
 							<UserDetails
