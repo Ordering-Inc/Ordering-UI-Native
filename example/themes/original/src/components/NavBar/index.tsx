@@ -133,8 +133,9 @@ NavBar.defaultProps = {
 	textAlign: 'center'
 };
 
-const areEqual = (prevProps: { route?: any; }, nextProps: { route?: any; }) => {
-	return prevProps.route === nextProps.route
+const areEqual = (prevProps: { route?: any, title?: string }, nextProps: { route?: any, title?: string }) => {
+	return prevProps.route === nextProps.route && 
+	JSON.stringify(prevProps.title) === JSON.stringify(nextProps.title)
 	return true
 }
 
