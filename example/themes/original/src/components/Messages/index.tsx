@@ -76,7 +76,7 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false)
-	const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+	const previousStatus = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
 	const chatDisabled = previousStatus.includes(order?.status)
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
