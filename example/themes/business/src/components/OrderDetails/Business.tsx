@@ -81,6 +81,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const orderToComplete = [4, 20, 21]
   const orderToReady = [7, 14]
+  const deliveryTypes = [1, 7]
 
   if (order?.status === 7 || order?.status === 4) {
     if (drivers?.length > 0 && drivers) {
@@ -211,7 +212,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             ? t('EAT_IN', 'Eat in')
             : order.delivery_type === 4
               ? t('CURBSIDE', 'Curbside')
-              : t('DRIVER_THRU', 'Driver thru')
+              : order.delivery_type === 5
+                ? t('DRIVER_THRU', 'Driver thru')
+                : order.delivery_type === 7
+                  ? t('CATERING_DELIVERY', 'Catering delivery')
+                  : order.delivery_type === 8
+                    ? t('CATERING_PICKUP', 'Catering pickup')
+                    : t('DELIVERY', 'Delivery')
       }\n`
       : '';
 
@@ -497,7 +504,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <>
               <OrderContentComponent order={order} />
               {(order?.status === 7 || order?.status === 4) &&
-                order?.delivery_type === 1 && configs?.assign_driver_enabled?.value === '1' && (
+                deliveryTypes.includes(order?.delivery_type) && configs?.assign_driver_enabled?.value === '1' && (
                   <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="600">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
@@ -665,7 +672,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               disabled={loading}
             />
           )}
-          {orderToComplete.includes(order?.status) && ![1].includes(order?.delivery_type) && (
+          {orderToComplete.includes(order?.status) && !deliveryTypes.includes(order?.delivery_type) && (
             <FloatingButton
               btnText={t(
                 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',

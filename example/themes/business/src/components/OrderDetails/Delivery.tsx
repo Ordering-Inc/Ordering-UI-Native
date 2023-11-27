@@ -92,7 +92,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const pendingOrderStatus = [1, 4, 7, 13]
 
   const logisticOrderStatus = [4, 6, 7]
-
+  
+  const deliveryTypes = [1, 7]
+  
   const showFloatButtonsPickUp: any = {
     8: !isHideRejectButtons,
     3: true,
@@ -233,7 +235,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             ? t('EAT_IN', 'Eat in')
             : order.delivery_type === 4
               ? t('CURBSIDE', 'Curbside')
-              : t('DRIVER_THRU', 'Driver thru')
+              : order.delivery_type === 5
+                ? t('DRIVER_THRU', 'Driver thru')
+                : order.delivery_type === 7
+                  ? t('CATERING_DELIVERY', 'Catering delivery')
+                  : order.delivery_type === 8
+                    ? t('CATERING_PICKUP', 'Catering pickup')
+                    : t('DELIVERY', 'Delivery')
       }\n`
       : '';
 
@@ -500,7 +508,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           isOrderGroup={isOrderGroup}
           lastOrder={lastOrder}
         />
-        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && !props.order?.loading && (
+        {(order?.status === 8 || order?.status === 18) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
           <Pickup>
             <OButton
               style={styles.btnPickUp}
@@ -515,7 +523,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </Pickup>
         )}
 
-        {(order?.status === 9 || order?.status === 19) && order?.delivery_type === 1 && !props.order?.loading && (
+        {(order?.status === 9 || order?.status === 19) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -529,7 +537,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           </View>
         )}
-        {order?.status === 3 && order?.delivery_type === 1 && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
+        {order?.status === 3 && deliveryTypes?.includes(order?.delivery_type) && !isHideRejectButtons && isEnabledOrderNotReady && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
@@ -546,7 +554,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <View
           style={{
             height:
-              order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+              order?.status === 8 && deliveryTypes?.includes(order?.delivery_type) ? 50 : 35,
           }}
         />
 
