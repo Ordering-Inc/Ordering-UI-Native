@@ -30,6 +30,7 @@ import {
 } from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { monthsEnum, setLocalMoment } from '../../utils';
+import { TimeListItem } from './TimeListItem';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -161,6 +162,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
 	const [selectDate, setSelectedDate] = useState<any>(dateSelected)
 	const [timeList, setTimeList] = useState<any>(hoursList)
+	const [nextTime, setNextTime] = useState(null)
+
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
 	const _handleAsap = () => {
@@ -256,7 +259,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				setDateWhitelist([{ start: _minDate, end: _maxDate }])
 			}
 		}
-	}, [JSON.stringify(datesList), preorderMinimumDays, preorderMaximumDays, cateringPreorder])
+	}, [JSON.stringify(datesList), preorderMinimumDays, preorderMaximumDays])
 
 	useEffect(() => {
 		if (dateSelected) {
@@ -281,7 +284,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				return
 			}
 			_timeLists = hoursList
-				.filter(hour => (!business || schedule?.lapses?.some((lapse: any) =>
+				.filter(hour => (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some((lapse : any) =>
 					moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${lapse.open.hour}:${lapse.open.minute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${lapse.close.hour}:${lapse.close.minute}`))) &&
 					moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`) &&
 					(moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder))
@@ -321,11 +324,28 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				}
 			}))
 		}
-	}, [dateSelected, JSON.stringify(hoursList), JSON.stringify(datesWhitelist), JSON.stringify(business)])
+	}, [dateSelected, hoursList, JSON.stringify(datesWhitelist), JSON.stringify(business)])
 
 	useEffect(() => {
 		setLocalMoment(moment, t)
 	}, [])
+
+	useEffect(() => {
+		if (preorderMinimumDays === 0 && preorderLeadTime === 0) return
+		const isToday = dateSelected === moment().format('YYYY-MM-DD')
+		if (isCart && isToday && !orderState?.loading && timeList?.length > 0) {
+			setNextTime(timeList?.[0] ?? null)
+		}
+	}, [timeList?.length])
+
+	useEffect(() => {
+		if (nextTime?.value && timeList?.length > 0 && isCart && !orderState?.loading && !(preorderMinimumDays === 0 && preorderLeadTime === 0)) {
+			const notime = timeList?.filter((_ : any, i : number) => i !== 0)?.find?.((time : any) => time?.value === timeSelected)
+			if (!notime) {
+				handleChangeTime(nextTime?.value)
+			}
+		}
+	}, [nextTime?.value])
 
 	return (
 		<>
@@ -399,26 +419,18 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
 											scrollable
-											style={styles.calendar}
-											calendarHeaderContainerStyle={styles.calendarHeaderContainer}
-											calendarHeaderStyle={styles.calendarHeader}
-											dateNumberStyle={styles.dateNumber}
-											dateNameStyle={styles.dateName}
-											iconContainer={{ flex: 0.1 }}
-											highlightDateNameStyle={styles.highlightDateName}
-											highlightDateNumberStyle={styles.highlightDateNumber}
-											dayContainerStyle={{ height: '100%' }}
-											highlightDateContainerStyle={{ height: '100%' }}
 											calendarHeaderFormat='MMMM, YYYY'
 											iconStyle={{ borderWidth: 1 }}
 											selectedDate={dateSelected}
 											datesWhitelist={datesWhitelist}
+											highlightDateNumberStyle={styles.highlightDateNumber}
+											highlightDateNameStyle={styles.highlightDateName}
 											minDate={moment()}
 											maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
 											disabledDateNameStyle={styles.disabledDateName}
 											disabledDateNumberStyle={styles.disabledDateNumber}
 											disabledDateOpacity={0.6}
-											onDateSelected={(date) => onSelectDate(date)}
+											onDateSelected={(date : any) => onSelectDate(date)}
 											leftSelector={<LeftSelector />}
 											rightSelector={<RightSelector />}
 										/>
@@ -428,37 +440,13 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							<TimeListWrapper nestedScrollEnabled={true} cateringPreorder={cateringPreorder}>
 								<TimeContentWrapper>
 									{timeList.map((time: any, i: number) => (
-										<Pressable key={i} onPress={() => handleChangeTimeSelected(time.value)}>
-											<TimeItem
-												active={selectedTime === time.value}
-												cateringPreorder={cateringPreorder}
-											>
-												{cateringPreorder && (
-													<>
-														{selectedTime === time.value ? (
-															<OIcon
-																src={theme.images.general.option_checked}
-																width={18}
-																style={{ marginEnd: 24, bottom: 2 }}
-															/>
-														) : (
-															<OIcon
-																src={theme.images.general.option_normal}
-																width={18}
-																style={{ marginEnd: 24, bottom: 2 }}
-															/>
-														)}
-													</>
-												)}
-												<OText
-													size={cateringPreorder ? 18 : 16}
-													color={selectedTime === time.value ? theme.colors.primary : theme.colors.textNormal}
-													style={{
-														lineHeight: 24
-													}}
-												>{time.text} {cateringPreorder && `- ${time.endText}`}</OText>
-											</TimeItem>
-										</Pressable>
+										<TimeListItem
+											key={i}
+											time={time}
+											selectedTime={selectedTime}
+											handleChangeTimeSelected={handleChangeTimeSelected}
+											cateringPreorder={cateringPreorder}
+										/>
 									))}
 									{timeList.length % 3 === 2 && (
 										<TimeItem style={{ backgroundColor: 'transparent' }} />
