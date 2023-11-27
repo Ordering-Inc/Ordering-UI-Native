@@ -156,7 +156,7 @@ const NewOrderNotificationUI = (props: any) => {
         setCurrentEvent({ evt: 2, orderId: value?.id ?? value?.order_id })
       }
     }
-    if ((!orderStatus.includes(value.status) && evtType !== 1 && isBusinessApp && orderStatus?.length > 0) || value?.author_id === user.id) return    
+    if ((!orderStatus.includes(value.status) && evtType !== 1 && isBusinessApp && orderStatus?.length > 0) || value?.author_id === user.id) return
     setCurrentEvent({
       evt: evtType,
       orderId: value?.driver
@@ -178,21 +178,11 @@ const NewOrderNotificationUI = (props: any) => {
       handleEventNotification(3, o, orderStatus)
     }
 
-    if (!events?._events?.message_added_notification || events?._events?.message_added_notification?.length < 2) {
-      events.on('message_added_notification', handleEventTypeOne)
-    }
-    if (!events?._events?.order_added_notification || events?._events?.order_added_notification?.length < 2) {
-      events.on('order_added_notification', handleEventTypeTwo)
-    }
-    if (!events?._events?.order_updated_notification || events?._events?.order_updated_notification?.length < 2) {
-      events.on('order_updated_notification', handleEventTypeThree)
-    }
-    if (!events?._events?.request_register_notification || events?._events?.request_register_notification?.length < 2) {
-      events.on('request_register_notification', handleEventTypeTwo)
-    }
-    if (!events?._events?.request_update_notification || events?._events?.request_update_notification?.length < 2) {
-      events.on('request_update_notification', handleEventTypeThree)
-    }
+    events.on('message_added_notification', handleEventTypeOne)
+    events.on('order_added_notification', handleEventTypeTwo)
+    events.on('order_updated_notification', handleEventTypeThree)
+    events.on('request_register_notification', handleEventTypeTwo)
+    events.on('request_update_notification', handleEventTypeThree)
 
     return () => {
       events.off('message_added_notification', handleEventTypeOne)
