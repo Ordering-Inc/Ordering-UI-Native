@@ -68,6 +68,7 @@ export const OrderContentComponent = (props: OrderContent) => {
   })
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+  const deliveryTypes = [1, 7]
 
   const walletName: any = {
     cash: {
@@ -412,9 +413,9 @@ export const OrderContentComponent = (props: OrderContent) => {
             {t('ON_BEHALF_OF', 'On behalf of')}{': '} {order?.on_behalf_of}
           </OText>
         )}
-        {(order?.delivery_option !== undefined && order?.delivery_type === 1) && (
+        {(order?.delivery_option !== undefined && deliveryTypes.includes(order?.delivery_type)) && (
           <View style={{ marginTop: 10 }}>
-            {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+            {order?.delivery_option !== undefined && deliveryTypes.includes(order?.delivery_type) && (
               <OText>
                 {t(order?.delivery_option?.name?.toUpperCase?.()?.replace(/ /g, '_'), order?.delivery_option?.name)}
               </OText>

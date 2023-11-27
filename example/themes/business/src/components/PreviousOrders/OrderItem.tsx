@@ -64,9 +64,9 @@ export const OrderItem = React.memo((props: any) => {
       paddingVertical: (isIpad || isTablet) ? 20 : 15,
       marginBottom: IS_PORTRAIT ? 15 : 0,
       marginLeft: 3,
-      backgroundColor: order?.time_status === 'delayed' 
+      backgroundColor: order?.time_status === 'delayed'
         ? theme.colors.danger100
-        : order?.time_status === 'at_risk' 
+        : order?.time_status === 'at_risk'
           ? theme.colors.warning100
           : theme.colors.primaryContrast
     },
@@ -278,7 +278,13 @@ export const OrderItem = React.memo((props: any) => {
                       ? t('EAT_IN', 'Eat in')
                       : order.delivery_type === 4
                         ? t('CURBSIDE', 'Curbside')
-                        : t('DRIVER_THRU', 'Driver thru')}
+                        : order.delivery_type === 5
+                          ? t('DRIVER_THRU', 'Driver thru')
+                          : order.delivery_type === 7
+                            ? t('CATERING_DELIVERY', 'Catering delivery')
+                            : order.delivery_type === 8
+                              ? t('CATERING_PICKUP', 'Catering pickup')
+                              : t('DELIVERY', 'Delivery')}
                 {` · ${getOrderStatus(order.status)}`}
               </OText>
             </MyOrderOptions>

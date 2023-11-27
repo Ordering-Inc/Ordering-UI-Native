@@ -135,6 +135,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
   const reorderStatus = [1, 2, 5, 6, 10, 11, 12]
   const cateringTypes = [7, 8]
+  const deliveryTypes = [1, 7]
   const [isPickup, setIsPickup] = useState(order?.delivery_type === 2)
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const isGiftCardOrder = !order?.business_id
@@ -723,7 +724,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     )}
                   </InfoBlock>
                 </Customer>
-                {!isGiftCardOrder && order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+                {!isGiftCardOrder && order?.delivery_option !== undefined && deliveryTypes?.includes?.(order?.delivery_type) && (
                   <View style={{ marginTop: 15 }}>
                     <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
                       {t('DELIVERY_PREFERENCE', 'Delivery Preference')}
