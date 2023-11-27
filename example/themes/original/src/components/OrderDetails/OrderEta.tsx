@@ -10,13 +10,14 @@ export const OrderEta = (props: any) => {
 
   const [{ parseDate }] = useUtils()
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState(null)
-
+  const deliveryTypes = [1, 7]
+  
   const getEstimatedDeliveryTime = () => {
     let estimatedUtcTime = null
     let totalEta = 0
     if (order?.delivered_in) totalEta += order?.delivered_in
     if (order?.prepared_in) totalEta += order?.prepared_in
-    if (order?.delivery_type === 1 && order?.eta_drive_time) {
+    if (deliveryTypes?.includes?.(order?.delivery_type) && order?.eta_drive_time) {
       totalEta += order?.eta_drive_time
     }
 

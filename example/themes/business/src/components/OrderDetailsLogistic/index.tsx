@@ -44,6 +44,7 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
     }>({ open: false, content: [], key: null });
 
     const logisticOrderStatus = [4, 6, 7]
+    const deliveryTypes = [1, 7]
     const isHideRejectButtons = configs?.reject_orders_enabled && configs?.reject_orders_enabled?.value !== '1'
 
     const showFloatButtonsAcceptOrReject: any = {
@@ -99,7 +100,7 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
                 <View
                     style={{
                         height:
-                            order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+                            order?.status === 8 && deliveryTypes?.includes(order?.delivery_type) ? 50 : 35,
                     }}
                 />
 
@@ -170,7 +171,7 @@ export const OrderDetailsLogisticUI = (props: OrderDetailsLogisticParams) => {
                                         secondButton={true}
                                         firstColorCustom={theme.colors.red}
                                         secondColorCustom={theme.colors.green}
-                                        widthButton={isHideRejectButtons ? '100%': '45%'}
+                                        widthButton={isHideRejectButtons ? '100%' : '45%'}
                                         isHideRejectButtons={isHideRejectButtons}
                                     />
                                 )}

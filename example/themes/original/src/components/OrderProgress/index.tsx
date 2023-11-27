@@ -42,6 +42,7 @@ const OrderProgressUI = (props: any) => {
   const imageFails = theme.images.general.emptyActiveOrders
   const [initialLoaded, setInitialLoaded] = useState(false)
   const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+  const deliveryTypes = [1, 7]
 
   const styles = StyleSheet.create({
     main: {
@@ -172,7 +173,7 @@ const OrderProgressUI = (props: any) => {
               <ProgressTextWrapper>
                 <OText size={12} style={{ width: '50%' }}>{progressBarObjt(lastOrder.status)?.value}</OText>
                 <TimeWrapper>
-                  <OText size={11}>{lastOrder?.delivery_type === 1 ? t('ESTIMATED_DELIVERY', 'Estimated delivery') : t('ESTIMATED_TIME', 'Estimated time')}</OText>
+                  <OText size={11}>{deliveryTypes?.includes?.(lastOrder?.delivery_type) ? t('ESTIMATED_DELIVERY', 'Estimated delivery') : t('ESTIMATED_TIME', 'Estimated time')}</OText>
                   <OText size={11}>
                     {lastOrder?.delivery_datetime_utc
                       ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: configs?.general_hour_format?.value || 'HH:mm' })
