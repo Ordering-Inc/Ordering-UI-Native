@@ -85,16 +85,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
+  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected  && canSaveChangesOffline === false
 
   const validStatusComplete = [9, 19, 23, 26]
 
   const pendingOrderStatus = [1, 4, 7, 13]
 
   const logisticOrderStatus = [4, 6, 7]
-  
+
   const deliveryTypes = [1, 7]
-  
+
   const showFloatButtonsPickUp: any = {
     8: !isHideRejectButtons,
     3: true,
