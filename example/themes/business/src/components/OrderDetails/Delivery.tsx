@@ -85,7 +85,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const disabledActionsByInternet = !isNetConnected && canSaveChangesOffline === false
+  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected  && canSaveChangesOffline === false
 
   const validStatusComplete = [9, 19, 23, 26]
 
