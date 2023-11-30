@@ -36,6 +36,7 @@ import {
   useSession,
   useUtils,
   useLanguage,
+  useConfig
 } from 'ordering-components/native';
 import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles';
 import { OIcon, OIconButton, OText, OButton } from '../shared';
@@ -68,6 +69,7 @@ const ChatUI = (props: MessagesParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
+  const [{ configs }] = useConfig();
   const [messageList, setMessageList] = useState<any>([])
   const previousStatus = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
   const chatDisabled = previousStatus.includes(order?.status)
@@ -520,6 +522,7 @@ const ChatUI = (props: MessagesParams) => {
           text: message.type === 1 ? messageConsole(message) : message.comment,
           createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
           image: message.source,
+          type: message.type,
           system: message.type === 1,
           user: {
             _id: message.author?.id,
@@ -540,7 +543,12 @@ const ChatUI = (props: MessagesParams) => {
         newMessages = [...newMessages, newMessage];
       }
     });
-    setFormattedMessages([...newMessages.reverse()]);
+    let _arrayMessages = [...newMessages.reverse()]
+
+    if (configs?.order_logbook_enabled?.value === '0') {
+      _arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
+    }
+    setFormattedMessages(_arrayMessages);
   }, [messages?.messages?.length]);
 
   useEffect(() => {
