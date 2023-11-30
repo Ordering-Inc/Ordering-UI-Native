@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react'
-
 import { Platform, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -25,7 +24,8 @@ import {
   useLanguage,
   useUtils,
   useConfig,
-  useSession
+  useSession,
+  useApi
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ReviewCustomer } from '../ReviewCustomer'
@@ -46,6 +46,7 @@ interface OrderContent {
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
+  const [ordering] = useApi()
   const [{ user }] = useSession()
   const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
@@ -439,9 +440,19 @@ export const OrderContentComponent = (props: OrderContent) => {
         </OText>
 
         {!!order?.comment && (
-          <OText>
-            {`${t('ORDER_COMMENT', 'Order Comment')}: ${order?.comment}`}
-          </OText>
+          <>
+            <OText>
+              {`${t('ORDER_COMMENT', 'Order Comment')}: `}
+            </OText>
+            <OText
+              {...(ordering?.project?.includes('delosi') && {
+                color: theme.colors.primary,
+                weight: 'bold'
+              })}
+            >
+              {order?.comment}
+            </OText>
+          </>
         )}
 
         {order?.products?.length > 0 &&
