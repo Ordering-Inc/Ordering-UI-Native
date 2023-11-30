@@ -65,11 +65,10 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       return
     }
     const categoryFounded = subcategoriesSelected.find((_subcategory: any) => subCategory?.id === _subcategory?.id)
-    if (categoryFounded) {
-      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory: any) => subCategory?.id !== _subcategory?.id))
-    } else {
-      setSubcategoriesSelected?.([...subcategoriesSelected, subCategory])
-    }
+    setSubcategoriesSelected?.(categoryFounded
+      ? subcategoriesSelected.filter((_subcategory: any) => subCategory?.id !== _subcategory?.id)
+      : [...subcategoriesSelected, subCategory]
+    )
   }
 
   return (
