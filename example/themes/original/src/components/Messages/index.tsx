@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Clipboard from '@react-native-clipboard/clipboard';
-import { Messages as MessagesController, useSession, useUtils, useLanguage, ToastType, useToast } from 'ordering-components/native'
+import { Messages as MessagesController, useSession, useUtils, useLanguage, ToastType, useToast, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { launchImageLibrary } from 'react-native-image-picker'
 import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
@@ -70,6 +70,7 @@ const MessagesUI = (props: MessagesParams) => {
 	} = props
 
 	const [{ user }] = useSession()
+	const [{ configs }] = useConfig()
 	const [{ parseDate }] = useUtils()
 	const [, t] = useLanguage()
 	const [, { showToast }] = useToast();
@@ -145,23 +146,24 @@ const MessagesUI = (props: MessagesParams) => {
 	}
 
 	useEffect(() => {
-		let newMessages: Array<any> = []
+		const newMessages: Array<any> = []
 		const _console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
 		const firstMessage = {
 			_id: 0,
+			type: 0,
 			text: _console,
 			createdAt: parseDate(order?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 			system: true
 		}
-		const newMessage: any = [];
 		messages.messages.map((message: any) => {
 			if (message.change?.attribute === 'driver_group_id') return
 			if (business && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
-				newMessage.push({
+				newMessages.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
 					createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 					image: message.source,
+					type: message.type,
 					system: message.type === 1,
 					user: {
 						_id: message.author && message.author.id,
@@ -172,11 +174,12 @@ const MessagesUI = (props: MessagesParams) => {
 			}
 
 			if (driver && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('4'))) {
-				newMessage.push({
+				newMessages.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
 					createdAt: message.type !== 0 && parseDate(message?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
 					image: message.source,
+					type: message.type,
 					system: message.type === 1,
 					user: {
 						_id: message.author && message.author.id,
@@ -187,10 +190,15 @@ const MessagesUI = (props: MessagesParams) => {
 			}
 
 			if (message.type === 0) {
-				newMessage.push(firstMessage);
-			}
+        newMessages.push(firstMessage);
+      }
 		})
-		setFormattedMessages(newMessage.reverse())
+		let _arrayMessages = [...newMessages.reverse()]
+
+    if (configs?.order_logbook_enabled?.value === '0') {
+      _arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
+    }
+    setFormattedMessages(_arrayMessages);
 	}, [messages.messages.length, business, driver])
 
 	useEffect(() => {
