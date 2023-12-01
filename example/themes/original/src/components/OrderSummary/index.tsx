@@ -59,7 +59,7 @@ const OrderSummaryUI = (props: any) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const commentRef = useRef()
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
-  const isCouponEnabled = hideCouponByValidationCheckout
+  const hideCartDiscount = hideCouponByValidationCheckout
   const hideCartComments = hideCommentsByValidationCheckout
 
   const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
@@ -314,7 +314,7 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
                 </OSTable>
               ))}
-              {isCouponEnabled && !isCartPending && cart?.business_id && (
+              {!hideCartDiscount && !isCartPending && cart?.business_id && (
                 <View>
                   <View style={{ paddingVertical: 5 }}>
                     <CouponControl
