@@ -85,7 +85,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected  && canSaveChangesOffline === false
+  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected && canSaveChangesOffline === false
 
   const validStatusComplete = [9, 19, 23, 26]
 
@@ -470,6 +470,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   let isBusinessMarker = false;
   const customerStatusses = [3, 9, 19, 23, 26]
   const businessStatusses = [7, 8, 18]
+  const arrivedCustomerStatusses = [19, 23]
   if (businessStatusses?.includes(order?.status)) {
     const markerBusiness = 'Business';
     isBusinessMarker = true;
@@ -522,8 +523,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           </Pickup>
         )}
-
-        {(order?.status === 9 || order?.status === 19) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
+        {arrivedCustomerStatusses.includes(order?.status) && deliveryTypes?.includes(order?.delivery_type) && !props.order?.loading && (
           <View style={{ paddingVertical: 20, marginBottom: 20 }}>
             <OButton
               style={styles.btnPickUp}
