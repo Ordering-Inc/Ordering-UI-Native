@@ -12,7 +12,8 @@ import {
   useSession,
   ToastType,
   useUtils,
-  useConfig
+  useConfig,
+  useApi
 } from 'ordering-components/native';
 
 import Alert from '../../providers/AlertProvider';
@@ -58,8 +59,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, { showToast }] = useToast();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
-
+  const [ordering] = useApi()
   const { order } = props.order
+  const isDelosiProject = ['delosi', 'delosipruebas'].includes(ordering?.project)
 
   const hideTimer = configs?.hidden_driver_eta_time?.value === '1'
   const isAllowedDriverRejectOrder = configs?.allow_driver_reject_order?.value === '1'
@@ -85,7 +87,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected  && canSaveChangesOffline === false
+  const disabledActionsByInternet = isNetConnected !== null && !isNetConnected && canSaveChangesOffline === false
 
   const validStatusComplete = [9, 19, 23, 26]
 
@@ -94,6 +96,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const logisticOrderStatus = [4, 6, 7]
 
   const deliveryTypes = [1, 7]
+
 
   const showFloatButtonsPickUp: any = {
     8: !isHideRejectButtons,
@@ -646,7 +649,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     isHideRejectButtons={isHideRejectButtons || !isEnabledFailedPickupDriver}
                   />
                 )}
-                {(validStatusComplete.includes(order?.status)) && (
+                {(validStatusComplete.includes(order?.status)) && !(isDelosiProject && order?.status !== 26 && isHideRejectButtons) && (
                   <>
                     <FloatingButton
                       disabled={props.order?.loading || disabledActionsByInternet}
@@ -659,10 +662,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         handleViewActionOrder && handleViewActionOrder('deliveryFailed')
                       }
                       secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
-                      secondButton={true}
+                      secondButton={isDelosiProject ? order?.status === 26 : true}
                       firstColorCustom={theme.colors.red}
+                      principalButtonColor={theme.colors.red}
                       secondColorCustom={theme.colors.green}
-                      widthButton={isHideRejectButtons ? '100%' : '45%'}
+                      widthButton={isHideRejectButtons || (isDelosiProject && order?.status !== 26) ? '100%' : '45%'}
                       isHideRejectButtons={isHideRejectButtons}
                     />
                   </>
