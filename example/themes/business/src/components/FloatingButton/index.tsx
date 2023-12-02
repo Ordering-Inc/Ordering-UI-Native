@@ -25,14 +25,15 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     secondButton,
     widthButton,
     isPadding,
-    isHideRejectButtons
+    isHideRejectButtons,
+    principalButtonColor
   } = props;
 
   const theme = useTheme();
 
   const styles = StyleSheet.create({
     primaryBtn: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: principalButtonColor ?? theme.colors.primary,
     },
     secodaryBtn: {
       backgroundColor: theme.colors.textSecondary,

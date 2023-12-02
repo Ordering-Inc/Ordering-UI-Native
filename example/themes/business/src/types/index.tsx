@@ -503,7 +503,8 @@ export interface FloatingButtonParams {
   firstColorCustom?: string;
   secondColorCustom?: string;
   paddingBottomIos?: any;
-  isHideRejectButtons?: boolean
+  isHideRejectButtons?: boolean;
+  principalButtonColor?: string;
 }
 export interface MomentOptionParams {
   navigation: any;
