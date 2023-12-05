@@ -188,8 +188,8 @@ const UserVerificationUI = (props: any) => {
   const setupUserPhoneNumber = () => {
     if (!user || !user?.cellphone || !user?.country_phone_code) return
     setPhoneState({
-      cellphone: user?.cellphone,
-      country_phone_code: user?.country_phone_code,
+      cellphone: user?.country_code === "PR" ? user?.cellphone.replace('787', '') : user?.cellphone,
+      country_phone_code: user?.country_code === "PR" ? '1787' : user?.country_phone_code,
       formatted: `+${user?.country_phone_code} ${user?.cellphone}`
     })
   }
