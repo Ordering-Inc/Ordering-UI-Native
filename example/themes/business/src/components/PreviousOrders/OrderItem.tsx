@@ -68,7 +68,7 @@ export const OrderItem = React.memo((props: any) => {
         ? theme.colors.danger100
         : order?.time_status === 'at_risk'
           ? theme.colors.warning100
-          : theme.colors.primaryContrast
+          : '#fff'
     },
     icon: {
       borderRadius: 7.6,
