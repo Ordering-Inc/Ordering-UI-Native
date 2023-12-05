@@ -54,6 +54,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		: theme?.business_view?.components?.products?.components?.product?.components?.image?.hidden
 	const textSize = isChewLayout ? 12 : 10
 	const logoPosition = theme?.business_view?.components?.products?.components?.product?.components?.image?.position
+	const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.hidden
 
 	const styles = StyleSheet.create({
 		container: {
@@ -198,7 +199,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									style={{ ...styles.line18, flex: 1 }}>
 									{product?.name}
 								</OText>
-								{!isPreviously && (
+								{!isPreviously && !hideFavoriteIcon && (
 									<LottieAnimation
 										type='favorite'
 										onClick={handleChangeFavorite}
