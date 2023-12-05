@@ -503,6 +503,7 @@ const ChatUI = (props: MessagesParams) => {
 
     const firstMessage = {
       _id: 0,
+      type: 0,
       text: console,
       createdAt: parseDate(order?.created_at, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }),
       system: true,
