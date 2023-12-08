@@ -473,7 +473,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   let isBusinessMarker = false;
   const customerStatusses = [3, 9, 19, 23, 26]
   const businessStatusses = [7, 8, 18]
-  const arrivedCustomerStatusses = [19, 23]
+  const arrivedCustomerStatusses = [9, 19, 23]
   if (businessStatusses?.includes(order?.status)) {
     const markerBusiness = 'Business';
     isBusinessMarker = true;
