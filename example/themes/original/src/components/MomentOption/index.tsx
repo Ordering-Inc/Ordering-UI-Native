@@ -281,13 +281,21 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			let _timeLists = []
 			const schedule = business && getActualSchedule()
 			if (!schedule && business) {
+				setTimeList([])
 				return
 			}
 			_timeLists = hoursList
-				.filter(hour => (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some((lapse : any) =>
-					moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${lapse.open.hour}:${lapse.open.minute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${lapse.close.hour}:${lapse.close.minute}`))) &&
-					moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`) &&
-					(moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder))
+				.filter(hour => {
+					return (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some((lapse: any) => {
+						const openHour = lapse.open.hour < 10 ? `0${lapse.open.hour}` : lapse.open.hour
+						const openMinute = lapse.open.minute < 10 ? `0${lapse.open.minute}` : lapse.open.minute
+						const closeHour = lapse.close.hour < 10 ? `0${lapse.close.hour}` : lapse.close.hour
+						const closeMinute = lapse.close.minute < 10 ? `0${lapse.close.minute}` : lapse.close.minute
+						return moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${openHour}:${openMinute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${closeHour}:${closeMinute}`)
+					})) &&
+						(moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`)) &&
+						(moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder)
+				})
 				.map(hour => {
 					return {
 						value: hour.startTime,
@@ -324,7 +332,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				}
 			}))
 		}
-	}, [dateSelected, hoursList, JSON.stringify(datesWhitelist), JSON.stringify(business)])
+	}, [dateSelected, hoursList?.length, JSON.stringify(datesWhitelist), JSON.stringify(business)])
 
 	useEffect(() => {
 		setLocalMoment(moment, t)
@@ -340,7 +348,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 	useEffect(() => {
 		if (nextTime?.value && timeList?.length > 0 && isCart && !orderState?.loading && !(preorderMinimumDays === 0 && preorderLeadTime === 0)) {
-			const notime = timeList?.filter((_ : any, i : number) => i !== 0)?.find?.((time : any) => time?.value === timeSelected)
+			const notime = timeList?.filter((_: any, i: number) => i !== 0)?.find?.((time: any) => time?.value === timeSelected)
 			if (!notime) {
 				handleChangeTime(nextTime?.value)
 			}
@@ -430,7 +438,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 											disabledDateNameStyle={styles.disabledDateName}
 											disabledDateNumberStyle={styles.disabledDateNumber}
 											disabledDateOpacity={0.6}
-											onDateSelected={(date : any) => onSelectDate(date)}
+											dateNumberStyle={styles.dateNumber}
+											dateNameStyle={styles.dateName}
+											onDateSelected={(date: any) => onSelectDate(date)}
 											leftSelector={<LeftSelector />}
 											rightSelector={<RightSelector />}
 										/>
@@ -438,20 +448,34 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								</View>
 							)}
 							<TimeListWrapper nestedScrollEnabled={true} cateringPreorder={cateringPreorder}>
-								<TimeContentWrapper>
-									{timeList.map((time: any, i: number) => (
-										<TimeListItem
-											key={i}
-											time={time}
-											selectedTime={selectedTime}
-											handleChangeTimeSelected={handleChangeTimeSelected}
-											cateringPreorder={cateringPreorder}
-										/>
-									))}
-									{timeList.length % 3 === 2 && (
-										<TimeItem style={{ backgroundColor: 'transparent' }} />
-									)}
-								</TimeContentWrapper>
+								{timeList?.length > 0 ? (
+									<TimeContentWrapper>
+										{timeList.map((time: any, i: number) => (
+											<TimeListItem
+												key={i}
+												time={time}
+												selectedTime={selectedTime}
+												handleChangeTimeSelected={handleChangeTimeSelected}
+												cateringPreorder={cateringPreorder}
+											/>
+										))}
+										{timeList.length % 3 === 2 && (
+											<TimeItem style={{ backgroundColor: 'transparent' }} />
+										)}
+									</TimeContentWrapper>
+								) : (
+									<OText
+										size={16}
+										style={{
+											fontWeight: '600',
+											lineHeight: 24,
+											marginBottom: 12,
+											textAlign: 'center'
+										}}
+									>
+										{t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment')}
+									</OText>
+								)}
 							</TimeListWrapper>
 						</OrderTimeWrapper>
 					)}
