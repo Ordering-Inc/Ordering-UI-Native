@@ -37,6 +37,7 @@ import {
   WrapperActions
 } from './styles'
 
+const CONDITIONAL_CODES = [1787]
 const TIME_COUNTDOWN = 60 * 10 // 10 minutes
 
 const UserDetails = (props: any) => {
@@ -176,9 +177,18 @@ const UserVerificationUI = (props: any) => {
     setTimer(`${TIME_COUNTDOWN / 60}:00`)
     setIsSendCodeAgain(true)
     if (opt === 'phone') {
+      let cellphone = phoneState?.cellphone
+      let country_phone_code = phoneState?.country_phone_code
+
+      if (CONDITIONAL_CODES.includes(Number(country_phone_code))) {
+        if (Number(country_phone_code) === 1787) {
+          cellphone = `787${cellphone}`
+          country_phone_code = '1'
+        }
+      }
       sendVerifyPhoneCode({
-        cellphone: phoneState?.cellphone,
-        country_phone_code: phoneState?.country_phone_code
+        cellphone,
+        country_phone_code
       })
       return
     }
