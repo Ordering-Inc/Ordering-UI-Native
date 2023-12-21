@@ -713,13 +713,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         {order?.customer?.address}
                       </OText>
                     )}
-                    {(!!order?.customer?.cellphone && !hideCustomerPhone) && (
+                    {(!!(order?.customer?.cellphone || order?.customer?.guest_cellphone) && !hideCustomerPhone) && (
                       <OText
                         size={12}
                         lineHeight={18}
                         color={theme.colors.textNormal}
                         mBottom={2}>
-                        {`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
+                        {`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.guest_id ? order?.customer?.guest_cellphone : order?.customer?.cellphone}`}
                       </OText>
                     )}
                   </InfoBlock>

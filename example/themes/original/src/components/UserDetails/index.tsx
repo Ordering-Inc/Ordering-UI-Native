@@ -96,23 +96,23 @@ const UserDetailsUI = (props: any) => {
 				},
 			});
 			handleSendVerifyCode({
-			  cellphone: cellphone,
-			  country_phone_code: countryPhoneCode
+				cellphone: cellphone,
+				country_phone_code: countryPhoneCode
 			})
 		}
 	}
 
 	const handleSendPhoneCode = (values: any) => {
-    setWillVerifyOtpState(false)
+		setWillVerifyOtpState(false)
 		setIsModalVisible(false)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState?.changes,
-        verification_code: values?.code
-      }
-    })
-  }
+		setFormState({
+			...formState,
+			changes: {
+				...formState?.changes,
+				verification_code: values?.code
+			}
+		})
+	}
 
 	useEffect(() => {
 		if (willVerifyOtpState) handleVerifyCodeClick()
@@ -190,12 +190,12 @@ const UserDetailsUI = (props: any) => {
 								{userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
 							</OText>
 							<OText size={12} lineHeight={18} weight={'400'}>
-								{userData?.email}
+								{userData?.guest_id ? userData?.guest_email : userData?.email}
 							</OText>
-							{!!(userData?.cellphone || user?.cellphone) && (
+							{!!((userData?.cellphone ?? userData?.guest_cellphone) || (user?.cellphone ?? user?.guest_cellphone)) && (
 								<>
 									<OText size={12} lineHeight={18} weight={'400'}>
-										{(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
+										{(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.guest_id ? user?.guest_cellphone : userData?.cellphone)}
 									</OText>
 									{!!phoneUpdate && (
 										<OText color={theme.colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
