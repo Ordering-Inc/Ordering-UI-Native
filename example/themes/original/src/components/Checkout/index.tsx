@@ -180,11 +180,11 @@ const CheckoutUI = (props: any) => {
 	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
 	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 
-	const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field : any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
-	const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find((field : any) => field.order_type_id === 1 && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
-	const guestCheckoutComment = useMemo(() => checkoutFields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'comments'), [JSON.stringify(checkoutFields), options])
-	const guestCheckoutCoupon = useMemo(() => checkoutFields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'coupon'), [JSON.stringify(checkoutFields), options])
-	const guestCheckoutZipcode = useMemo(() => checkoutFields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'zipcode'), [JSON.stringify(checkoutFields), options])
+	const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
+	const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === 1 && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
+	const guestCheckoutComment = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'comments'), [JSON.stringify(checkoutFields), options])
+	const guestCheckoutCoupon = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'coupon'), [JSON.stringify(checkoutFields), options])
+	const guestCheckoutZipcode = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'zipcode'), [JSON.stringify(checkoutFields), options])
 
 	const placeSpotTypes = [3, 4, 5]
 	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
@@ -212,7 +212,7 @@ const CheckoutUI = (props: any) => {
 
 	const validateCommentsCartField = (guestCheckoutComment?.enabled && (user?.guest_id ? guestCheckoutComment?.required_with_guest : guestCheckoutComment?.required)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
 	const validateDriverTipField = options.type === 1 && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
-	const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some((offer : any) => offer?.type === 2)
+	const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some((offer: any) => offer?.type === 2)
 	const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
 
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
@@ -350,19 +350,29 @@ const CheckoutUI = (props: any) => {
 	const checkGuestValidationFields = () => {
 		const userSelected = user
 		const _requiredFields = checkoutFieldsState?.fields
-			.filter((field) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
+			.filter((field : any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
 				!notFields.includes(field?.validation_field?.code) &&
+				field?.validation_field?.code !== 'email' &&
 				userSelected && !userSelected[field?.validation_field?.code])
-		const requiredFieldsCode = _requiredFields.map((item) => item?.validation_field?.code)
-		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+		const requiredFieldsCode = _requiredFields.map((item : any) => item?.validation_field?.code)
+		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+		const guestCheckoutEmail = checkoutFieldsState?.fields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'email')
 		if (
 			userSelected &&
-			!userSelected?.cellphone &&
+			!userSelected?.guest_cellphone &&
 			((guestCheckoutCellPhone?.enabled &&
 				guestCheckoutCellPhone?.required_with_guest) ||
 				configs?.verification_phone_required?.value === '1')
 		) {
 			requiredFieldsCode.push('cellphone')
+		}
+		if (
+			userSelected &&
+			!userSelected?.guest_email &&
+			guestCheckoutEmail?.enabled &&
+			guestCheckoutEmail?.required_with_guest
+		) {
+			requiredFieldsCode.push('email')
 		}
 		setRequiredFields(requiredFieldsCode)
 	}
