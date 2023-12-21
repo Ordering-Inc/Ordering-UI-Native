@@ -134,7 +134,7 @@ export const UserFormDetailsUI = (props: any) => {
 	};
 
 	const cellphoneValue = () => {
-		let cellphone = user?.cellphone || null
+		let cellphone = user?.guest_id ? user?.guest_cellphone : user?.cellphone
 		if (cellphone && CONDITIONAL_CODES.includes(user?.country_code)) {
 			if (user?.country_code === 'PR') {
 				cellphone = user?.cellphone?.slice(3)
@@ -148,10 +148,12 @@ export const UserFormDetailsUI = (props: any) => {
 			setUserPhoneNumber(userPhoneNumber);
 			return;
 		}
-		if (user?.cellphone) {
+		const cellphone = user?.guest_id ? user?.guest_cellphone : user?.cellphone
+
+		if (cellphone) {
 			let phone = null;
 			if (user?.country_phone_code) {
-				phone = `+${user?.country_phone_code} ${user?.cellphone}`;
+				phone = `+${user?.country_phone_code} ${cellphone}`;
 			} else {
 				phone = user?.cellphone;
 			}
@@ -165,7 +167,7 @@ export const UserFormDetailsUI = (props: any) => {
 			});
 			return;
 		}
-		setUserPhoneNumber(user?.cellphone || '');
+		setUserPhoneNumber(cellphone || '');
 	};
 
 	const onSubmit = () => {
@@ -351,7 +353,7 @@ export const UserFormDetailsUI = (props: any) => {
 																isDisabled={false}
 																value={
 																	formState?.changes[field.code] ??
-																	(user && user[field.code]) ??
+																	(user && user?.guest_id ? user?.guest_email : user[field.code]) ??
 																	''
 																}
 																onChange={(val: any) => {
@@ -395,7 +397,7 @@ export const UserFormDetailsUI = (props: any) => {
 													)}
 													name={field.code}
 													rules={getInputRules(field)}
-													defaultValue={user && user[field.code]}
+													defaultValue={user && (field.code === 'email' && user?.guest_id ? user?.guest_email : user[field.code])}
 												/>
 											</React.Fragment>
 										))
