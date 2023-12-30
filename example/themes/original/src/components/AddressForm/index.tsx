@@ -690,7 +690,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 							)}
 
 							<View style={{ flexDirection: 'row', flexBasis: '50%' }}>
-								{((isRequiredField && isRequiredField('internal_number')) || showFieldWithTheme('internal_number')) && (
+								{showField?.('internal_number') && ((isRequiredField && isRequiredField('internal_number')) || showFieldWithTheme('internal_number')) && (
 									<Controller
 										control={control}
 										name="internal_number"
@@ -737,7 +737,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									/>
 								)}
 
-								{((isRequiredField && isRequiredField('zipcode')) || showFieldWithTheme('zipcode')) && (
+								{showField?.('zipcode') && ((isRequiredField && isRequiredField('zipcode')) || showFieldWithTheme('zipcode')) && (
 									<Controller
 										control={control}
 										name="zipcode"
@@ -782,7 +782,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								)}
 							</View>
 
-							{((isRequiredField && isRequiredField('address_notes')) || showFieldWithTheme('address_notes')) && (
+							{showField?.('address_notes') && ((isRequiredField && isRequiredField('address_notes')) || showFieldWithTheme('address_notes')) && (
 								<Controller
 									control={control}
 									name="address_notes"
