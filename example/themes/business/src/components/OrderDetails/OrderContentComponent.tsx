@@ -605,7 +605,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 <OText mBottom={4}>
                   {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
                   {offer.rate_type === 1 && (
-                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice, { currency: getCurrenySymbol(order?.currency) })}%)`}</OText>
                   )}
                 </OText>
               </OSRow>
