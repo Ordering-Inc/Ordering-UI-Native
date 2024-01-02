@@ -203,6 +203,7 @@ const CheckoutUI = (props: any) => {
 	const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find((b: any) => b.business_id === cart?.business_id && b.accumulates)
 	const methodsPay = ['google_pay', 'apple_pay']
 
+	const commentDelayTime = 1500
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
 		if (item?.type === 1)
@@ -950,6 +951,7 @@ const CheckoutUI = (props: any) => {
 											cart={cart}
 											isCartPending={cart?.status === 2}
 											onNavigationRedirect={onNavigationRedirect}
+											commentDelayTime={commentDelayTime}
 											placeSpotTypes={placeSpotTypes}
 											businessConfigs={businessConfigs}
 											maxDate={maxDate}
