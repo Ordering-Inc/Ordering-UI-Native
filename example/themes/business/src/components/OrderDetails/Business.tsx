@@ -31,7 +31,7 @@ import { FloatingButton } from '../FloatingButton';
 import { GoogleMap } from '../GoogleMap';
 import { OButton, OModal, OText, OIcon } from '../shared';
 import { OrderDetailsParams } from '../../types';
-import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
+import { verifyDecimals, getProductPrice, getOrderStatus, getCurrenySymbol } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
@@ -146,8 +146,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (name !== 'No') {
       const pos = position && position !== 'whole' ? `(${t(position.toUpperCase(), position)})` : '';
       return pos
-        ? `${quantity} x ${name} ${pos} +${parsePrice(price)}\n`
-        : `${quantity} x ${name} +${parsePrice(price)}\n`;
+        ? `${quantity} x ${name} ${pos} +${parsePrice(price, { currency: getCurrenySymbol(order?.currency) })}\n`
+        : `${quantity} x ${name} +${parsePrice(price, { currency: getCurrenySymbol(order?.currency) })}\n`;
     } else {
       return 'No\n';
     }
@@ -255,7 +255,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       order?.products.length &&
       order?.products.map((product: any, i: number) => {
         const string =
-          `${product?.quantity} X ${product?.name} ${parsePrice(product.total ?? getProductPrice(product))}\n${getOptions(product.options, product.comment)}`;
+          `${product?.quantity} X ${product?.name} ${parsePrice(product.total ?? getProductPrice(product), { currency: getCurrenySymbol(order?.currency) })}\n${getOptions(product.options, product.comment)}`;
 
         return i === 0 ? ` ${string}` : string
       });
@@ -267,20 +267,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )}:\n${productsInString}\n`;
 
     const subtotal = `${t('SUBTOTAL', 'Subtotal')}: ${parsePrice(
-      order?.subtotal,
+      order?.subtotal, 
+      { currency: getCurrenySymbol(order?.currency) }
     )}\n`;
 
     const drivertip = `${t('DRIVER_TIP', 'Driver tip')} ${parsePrice(
       order?.summary?.driver_tip || order?.totalDriverTip,
+      { currency: getCurrenySymbol(order?.currency) }
     )}\n`;
 
     const deliveryFee = `${t('DELIVERY_FEE', 'Delivery fee')} ${verifyDecimals(
       order?.service_fee,
       parseNumber,
-    )}% ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}\n`;
+    )}% ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0, { currency: getCurrenySymbol(order?.currency) })}\n`;
 
     const total = `${t('TOTAL', 'Total')} ${parsePrice(
       order?.summary?.total || order?.total,
+      { currency: getCurrenySymbol(order?.currency) }
     )}\n`;
 
     const orderStatus = `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
