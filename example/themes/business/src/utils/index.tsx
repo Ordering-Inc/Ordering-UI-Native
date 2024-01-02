@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CODES } from 'ordering-components/native';
+import { CURRENCY } from '../config/currency'
 
 export const flatArray = (arr: any) => [].concat(...arr);
 
@@ -158,11 +159,11 @@ export const findExitingCode = (countryCode: string) => {
  * @param {*} parser function fallback when is decimal
  * @returns string
  */
-export const verifyDecimals = (value: number, parser: any) => {
+export const verifyDecimals = (value: number, parser: any, options?: any) => {
   if (value % 1 === 0) {
     return value;
   } else {
-    return parser(value);
+    return options ? parser(value, options) : parser(value);
   }
 };
 
@@ -420,3 +421,8 @@ export const calculateDistance = (
   const distanceInKm = distance / 1000;
   return distanceInKm;
 };
+
+export const getCurrenySymbol = (code : string) => {
+  return CURRENCY?.[code]?.symbol ?? code
+}
+

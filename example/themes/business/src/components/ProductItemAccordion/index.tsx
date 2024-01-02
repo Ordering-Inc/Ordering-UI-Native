@@ -22,6 +22,7 @@ import {
 } from './styles';
 import { OText, OAlert } from '../shared';
 import { ProductItemAccordionParams } from '../../types';
+import { getCurrenySymbol } from '../../utils';
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const {
@@ -160,7 +161,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <OText size={12} color={theme.colors.textGray}>
-                  {parsePrice(getProductPrice(product), { currency })}
+                  {parsePrice(getProductPrice(product), { currency: getCurrenySymbol(currency) })}
                 </OText>
 
                 {(
@@ -281,7 +282,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                                   suboption.position,
                                 )
                                 : '',
-                            price: parsePrice(suboption.price, { currency }),
+                            price: parsePrice(suboption.price, { currency: getCurrenySymbol(currency) }),
                           })}
                         </OText>
                       </ProductSubOption>
