@@ -426,24 +426,30 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								<View style={{ flex: 1 }}>
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
-											scrollable
-											calendarHeaderFormat='MMMM, YYYY'
-											iconStyle={{ borderWidth: 1 }}
-											selectedDate={dateSelected}
-											datesWhitelist={datesWhitelist}
-											highlightDateNumberStyle={styles.highlightDateNumber}
-											highlightDateNameStyle={styles.highlightDateName}
-											minDate={moment()}
-											maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
-											disabledDateNameStyle={styles.disabledDateName}
-											disabledDateNumberStyle={styles.disabledDateNumber}
-											disabledDateOpacity={0.6}
-											dateNumberStyle={styles.dateNumber}
-											dateNameStyle={styles.dateName}
-											onDateSelected={(date: any) => onSelectDate(date)}
-											leftSelector={<LeftSelector />}
-											rightSelector={<RightSelector />}
-										/>
+										scrollable
+										style={styles.calendar}
+										calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+										calendarHeaderStyle={styles.calendarHeader}
+										dateNumberStyle={styles.dateNumber}
+										dateNameStyle={styles.dateName}
+										iconContainer={{ flex: 0.1 }}
+										highlightDateNameStyle={styles.highlightDateName}
+										highlightDateNumberStyle={styles.highlightDateNumber}
+										dayContainerStyle={{ height: '100%' }}
+										highlightDateContainerStyle={{ height: '100%' }}
+										calendarHeaderFormat='MMMM, YYYY'
+										iconStyle={{ borderWidth: 1 }}
+										selectedDate={dateSelected}
+										datesWhitelist={datesWhitelist}
+										disabledDateNameStyle={styles.disabledDateName}
+										disabledDateNumberStyle={styles.disabledDateNumber}
+										disabledDateOpacity={0.6}
+										onDateSelected={(date: any) => onSelectDate(date)}
+										minDate={moment()}
+										maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
+										leftSelector={<LeftSelector />}
+										rightSelector={<RightSelector />}
+									  />
 									)}
 								</View>
 							)}
