@@ -451,6 +451,12 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
               {selectDate && datesWhitelist[0]?.start !== null && (
                 <CalendarStrip
                   scrollable
+                  style={styles.calendar}
+                  calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+                  calendarHeaderStyle={styles.calendarHeader}
+                  iconContainer={{ flex: 0.1 }}
+                  dayContainerStyle={{ height: '100%' }}
+                  highlightDateContainerStyle={{ height: '100%' }}
                   calendarHeaderFormat='MMMM, YYYY'
                   iconStyle={{ borderWidth: 1 }}
                   selectedDate={selectDate}
@@ -464,7 +470,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
                   dateNumberStyle={styles.dateNumber}
                   dateNameStyle={styles.dateName}
                   disabledDateOpacity={0.6}
-                  onDateSelected={(date) => onSelectDate(date)}
+                  onDateSelected={(date: any) => onSelectDate(date)}
                   leftSelector={<LeftSelector />}
                   rightSelector={<RightSelector />}
                 />
