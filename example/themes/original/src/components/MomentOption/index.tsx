@@ -427,6 +427,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 									{selectDate && datesWhitelist[0]?.start !== null && (
 										<CalendarStrip
 											scrollable
+											style={styles.calendar}
+											calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+											calendarHeaderStyle={styles.calendarHeader}
+											iconContainer={{ flex: 0.1 }}
+											dayContainerStyle={{ height: '100%' }}
+											highlightDateContainerStyle={{ height: '100%' }}
 											calendarHeaderFormat='MMMM, YYYY'
 											iconStyle={{ borderWidth: 1 }}
 											selectedDate={dateSelected}
