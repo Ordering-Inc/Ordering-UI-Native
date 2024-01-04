@@ -9,9 +9,9 @@ import FastImage from 'react-native-fast-image'
 import CalendarStrip from 'react-native-calendar-strip'
 import { BusinessMenuList } from '../BusinessMenuList'
 import Spinner from 'react-native-loading-spinner-overlay'
-// import { BusinessPreorderParams } from '../../types'
+import { BusinessPreorderParams } from '../../types'
 import moment from 'moment'
-// import { setLocalMoment } from '../../utils';
+import { setLocalMoment } from '../../utils';
 
 import SelectDropdown from 'react-native-select-dropdown'
 import {
@@ -28,87 +28,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const windowHeight = Dimensions.get('window').height;
 
-export const setLocalMoment = (moment: any, t: any) => {
-  moment.locale('custom', {
-    months: [
-      t('MONTH1', 'January'),
-      t('MONTH2', 'February'),
-      t('MONTH3', 'March'),
-      t('MONTH4', 'April'),
-      t('MONTH5', 'May'),
-      t('MONTH6', 'June'),
-      t('MONTH7', 'July'),
-      t('MONTH8', 'August'),
-      t('MONTH9', 'September'),
-      t('MONTH10', 'October'),
-      t('MONTH11', 'November'),
-      t('MONTH12', 'December')
-    ],
-    monthsShort: [
-      t('MONTHSHORT1', 'Jan'),
-      t('MONTHSHORT2', 'Feb'),
-      t('MONTHSHORT3', 'Mar'),
-      t('MONTHSHORT4', 'Apr'),
-      t('MONTHSHORT5', 'May'),
-      t('MONTHSHORT6', 'Jun'),
-      t('MONTHSHORT7', 'Jul'),
-      t('MONTHSHORT8', 'Aug'),
-      t('MONTHSHORT9', 'Sep'),
-      t('MONTHSHORT10', 'Oct'),
-      t('MONTHSHORT11', 'Nov'),
-      t('MONTHSHORT12', 'Dec')
-    ],
-    weekdays: [
-      t('DAY7', 'Sunday'),
-      t('DAY1', 'Monday'),
-      t('DAY2', 'Tuesday'),
-      t('DAY3', 'Wednesday'),
-      t('DAY4', 'Thursday'),
-      t('DAY5', 'Friday'),
-      t('DAY6', 'Saturday')
-    ],
-    weekdaysShort: [
-      t('DAYSHORT7', 'Sun'),
-      t('DAYSHORT1', 'Mon'),
-      t('DAYSHORT2', 'Tue'),
-      t('DAYSHORT3', 'Wed'),
-      t('DAYSHORT4', 'Thu'),
-      t('DAYSHORT5', 'Fri'),
-      t('DAYSHORT6', 'Sat')
-    ],
-    weekdaysMin: [
-      t('DAYMIN7', 'Su'),
-      t('DAYMIN1', 'Mo'),
-      t('DAYMIN2', 'Tu'),
-      t('DAYMIN3', 'We'),
-      t('DAYMIN4', 'Th'),
-      t('DAYMIN5', 'Fr'),
-      t('DAYMIN6', 'Sa')
-    ],
-    meridiem: function (hours: any) {
-      return hours < 12 ? t('AM', 'AM') : t('PM', 'PM');
-    }
-  })
-}
-
-export interface BusinessPreorderParams {
-	navigation?: any;
-	datesList: Array<any>;
-	hoursList: Array<any>;
-	dateSelected?: any;
-	timeSelected?: any;
-	isAsap?: boolean;
-	handleAsap?: () => {};
-	handleChangeDate: (value: any) => {};
-	handleChangeTime: (value: any) => {};
-	goToBack: any;
-	business: any;
-	handleBusinessClick: (value: any) => {};
-	getActualSchedule?: any;
-	cateringPreorder?: boolean;
-	preorderLeadTime?: number
-}
-
 const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const {
     goToBack,
@@ -124,7 +43,8 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     getActualSchedule,
     isAsap,
     cateringPreorder,
-    preorderLeadTime
+    preorderLeadTime,
+    preorderMaximumDays
   } = props
 
   const theme = useTheme()
@@ -344,14 +264,23 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     if (cateringPreorder) {
       let _timeLists = []
       const schedule = business && getActualSchedule()
-      if (!schedule && cateringPreorder && Object.keys(business)?.length > 0) {
+      if (!schedule && business) {
+        setTimeList([])
         return
       }
+
       _timeLists = hoursList
-        .filter(hour => ((Object.keys(business || {})?.length === 0) || schedule?.lapses?.some((lapse: any) =>
-          moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${lapse.open.hour}:${lapse.open.minute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${lapse.close.hour}:${lapse.close.minute}`))) &&
-          moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`) &&
-          (moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder))
+        .filter(hour => {
+          return (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some((lapse: any) => {
+            const openHour = lapse.open.hour < 10 ? `0${lapse.open.hour}` : lapse.open.hour
+            const openMinute = lapse.open.minute < 10 ? `0${lapse.open.minute}` : lapse.open.minute
+            const closeHour = lapse.close.hour < 10 ? `0${lapse.close.hour}` : lapse.close.hour
+            const closeMinute = lapse.close.minute < 10 ? `0${lapse.close.minute}` : lapse.close.minute
+            return moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${openHour}:${openMinute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${closeHour}:${closeMinute}`)
+          })) &&
+            (moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`)) &&
+            (moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder)
+        })
         .map(hour => {
           return {
             value: hour.startTime,
@@ -379,7 +308,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       const _times = getTimes(selectDate, selectedMenu)
       setTimeList(_times)
     }
-  }, [selectDate, menu, business, cateringPreorder, hoursList, dateSelected])
+  }, [selectDate, menu, JSON.stringify(datesWhitelist), JSON.stringify(business), cateringPreorder, JSON.stringify(hoursList), dateSelected])
 
   useEffect(() => {
     if (selectedPreorderType === 0 && Object.keys(menu).length > 0) setMenu({})
@@ -395,8 +324,8 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   }, [dateSelected])
 
   useEffect(() => {
-		setLocalMoment(moment, t)
-	}, [])
+    setLocalMoment(moment, t)
+  }, [])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -522,22 +451,18 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
               {selectDate && datesWhitelist[0]?.start !== null && (
                 <CalendarStrip
                   scrollable
-                  style={styles.calendar}
-                  calendarHeaderContainerStyle={styles.calendarHeaderContainer}
-                  calendarHeaderStyle={styles.calendarHeader}
-                  dateNumberStyle={styles.dateNumber}
-                  dateNameStyle={styles.dateName}
-                  iconContainer={{ flex: 0.1 }}
-                  highlightDateNameStyle={styles.highlightDateName}
-                  highlightDateNumberStyle={styles.highlightDateNumber}
-                  dayContainerStyle={{ height: '100%' }}
-                  highlightDateContainerStyle={{ height: '100%' }}
                   calendarHeaderFormat='MMMM, YYYY'
                   iconStyle={{ borderWidth: 1 }}
                   selectedDate={selectDate}
                   datesWhitelist={datesWhitelist}
+                  highlightDateNameStyle={styles.highlightDateName}
+                  highlightDateNumberStyle={styles.highlightDateNumber}
+                  minDate={moment()}
+                  maxDate={cateringPreorder ? moment().add(preorderMaximumDays, 'days') : undefined}
                   disabledDateNameStyle={styles.disabledDateName}
                   disabledDateNumberStyle={styles.disabledDateNumber}
+                  dateNumberStyle={styles.dateNumber}
+                  dateNameStyle={styles.dateName}
                   disabledDateOpacity={0.6}
                   onDateSelected={(date) => onSelectDate(date)}
                   leftSelector={<LeftSelector />}
@@ -646,9 +571,10 @@ export const BusinessPreorder = (props: any) => {
 
   const splitCateringValue = (configName: string) =>
     Object.values(props?.business?.configs || {})
-      ?.find(config => config?.key === configName)
+      ?.find((config : any) => config?.key === configName)
       ?.value?.split('|')
-      ?.find(val => val.includes(cateringTypeString || ''))?.split(',')[1]
+      ?.find((val : any) => val.includes(cateringTypeString || ''))?.split(',')[1]
+
   const preorderSlotInterval = parseInt(splitCateringValue('preorder_slot_interval'))
   const preorderLeadTime = parseInt(splitCateringValue('preorder_lead_time'))
   const preorderTimeRange = parseInt(splitCateringValue('preorder_time_range'))
