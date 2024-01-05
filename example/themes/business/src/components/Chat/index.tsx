@@ -546,7 +546,7 @@ const ChatUI = (props: MessagesParams) => {
     });
     let _arrayMessages = [...newMessages.reverse()]
 
-    if (configs?.order_logbook_enabled?.value === '0') {
+    if (configs?.order_logbook_enabled?.value === '0' && user?.level === 4) {
       _arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
     }
     setFormattedMessages(_arrayMessages);
