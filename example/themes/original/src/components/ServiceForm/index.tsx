@@ -143,7 +143,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     const valid = busyTimes.some(item => {
       return (moment.utc(item?.start).local().valueOf() <= moment(selectedMoment).valueOf() &&
         moment(selectedMoment).valueOf() < moment.utc(item?.end).local().valueOf()) ||
-        (moment.utc(item?.start).local().valueOf() < moment(selectedMoment).add(duration, 'minutes').valueOf() &&
+        (moment.utc(item?.start).local().valueOf() < moment(selectedMoment).valueOf() &&
           moment(selectedMoment).add(duration, 'minutes').valueOf() < moment.utc(item?.end).local().valueOf())
     })
     return valid
