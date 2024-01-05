@@ -190,15 +190,13 @@ const MessagesUI = (props: MessagesParams) => {
 			}
 
 			if (message.type === 0) {
-        newMessages.push(firstMessage);
-      }
+				newMessages.push(firstMessage);
+			}
 		})
 		let _arrayMessages = [...newMessages.reverse()]
 
-    if (configs?.order_logbook_enabled?.value === '0') {
-      _arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
-    }
-    setFormattedMessages(_arrayMessages);
+		_arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
+		setFormattedMessages(_arrayMessages);
 	}, [messages.messages.length, business, driver])
 
 	useEffect(() => {
