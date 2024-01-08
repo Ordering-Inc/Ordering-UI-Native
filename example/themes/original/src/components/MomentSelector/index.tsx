@@ -5,7 +5,8 @@ import { useTheme } from 'styled-components/native'
 import {
   MomentOption as MomentOptionController,
   useConfig,
-  useUtils
+  useUtils,
+  useLanguage
 } from 'ordering-components/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -26,6 +27,7 @@ const MomentSelectorUI = (props: any) => {
   const { top } = useSafeAreaInsets()
   const [{ configs }] = useConfig()
   const [{ parseTime }] = useUtils()
+	const [, t] = useLanguage()
 
   const [customizedDateList, setCustomizedDateList] = useState([])
   const [customizedTimeList, setCustomizedTimeList] = useState([])
@@ -130,6 +132,7 @@ const MomentSelectorUI = (props: any) => {
       <View style={styles.selectWrapper}>
         <SelectDropdown
           defaultValue={customizedTimeList?.find((item: any) => item.key === timeSelected)}
+          defaultButtonText={t('SELECT_A_TIME_OPTION', 'Select an option')}
           data={customizedTimeList}
           onSelect={(selectedItem, index) => {
             handleChangeTime(selectedItem.key)
