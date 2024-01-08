@@ -295,6 +295,7 @@ const CheckoutUI = (props: any) => {
                 </Placeholder>
               ) : (
                 <AddressDetails
+                  cart={cart}
                   navigation={navigation}
                   location={businessDetails?.business?.location}
                   businessLogo={businessDetails?.business?.logo}
@@ -598,14 +599,14 @@ const CheckoutUI = (props: any) => {
                   validationFields?.fields?.checkout?.driver_tip?.enabled &&
                   validationFields?.fields?.checkout?.driver_tip?.required &&
                   (Number(cart?.driver_tip) <= 0) && (
-                  <OText
-                    style={{ textAlign: 'center' }}
-                    color={theme.colors.error}
-                    size={14}
-                  >
-                    {t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
-                  </OText>
-								)}
+                    <OText
+                      style={{ textAlign: 'center' }}
+                      color={theme.colors.error}
+                      size={14}
+                    >
+                      {t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
+                    </OText>
+                  )}
               </ChErrors>
             </ChSection>
           )}
@@ -617,15 +618,15 @@ const CheckoutUI = (props: any) => {
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
               isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal' ||
-                              (options.type === 1 &&
-                                validationFields?.fields?.checkout?.driver_tip?.enabled &&
-                                validationFields?.fields?.checkout?.driver_tip?.required &&
-                                (Number(cart?.driver_tip) <= 0))}
+                (options.type === 1 &&
+                  validationFields?.fields?.checkout?.driver_tip?.enabled &&
+                  validationFields?.fields?.checkout?.driver_tip?.required &&
+                  (Number(cart?.driver_tip) <= 0))}
               disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal' ||
-                        (options.type === 1 &&
-                          validationFields?.fields?.checkout?.driver_tip?.enabled &&
-                          validationFields?.fields?.checkout?.driver_tip?.required &&
-                          (Number(cart?.driver_tip) <= 0))}
+                (options.type === 1 &&
+                  validationFields?.fields?.checkout?.driver_tip?.enabled &&
+                  validationFields?.fields?.checkout?.driver_tip?.required &&
+                  (Number(cart?.driver_tip) <= 0))}
               btnText={cart?.subtotal_to_calculate >= cart?.minimum
                 ? (
                   placing
@@ -641,31 +642,31 @@ const CheckoutUI = (props: any) => {
         </>
       )}
       {webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
-          <PaymentOptionsWebView
-            onNavigationRedirect={onNavigationRedirect}
-            uri={`${ordering.root}/html/paypal_react_native`}
-            user={user}
-            token={token}
-            cart={cart}
-            currency={currency}
-            webviewPaymethod={webviewPaymethod}
-            setShowGateway={setShowGateway}
-            setOpenOrderCreating={setOpenOrderCreating}
-          />
+        <PaymentOptionsWebView
+          onNavigationRedirect={onNavigationRedirect}
+          uri={`${ordering.root}/html/paypal_react_native`}
+          user={user}
+          token={token}
+          cart={cart}
+          currency={currency}
+          webviewPaymethod={webviewPaymethod}
+          setShowGateway={setShowGateway}
+          setOpenOrderCreating={setOpenOrderCreating}
+        />
       )}
       {webviewPaymethod?.gateway === 'square' && showGateway.open && (
-          <PaymentOptionsWebView
-            onNavigationRedirect={onNavigationRedirect}
-            uri={`https://test-square-f50f7.web.app`}
-            user={user}
-            token={token}
-            cart={cart}
-            currency={currency}
-            webviewPaymethod={webviewPaymethod}
-            setShowGateway={setShowGateway}
-            setOpenOrderCreating={setOpenOrderCreating}
-            locationId={'L1NGAY5M6KJRX'}
-          />
+        <PaymentOptionsWebView
+          onNavigationRedirect={onNavigationRedirect}
+          uri={`https://test-square-f50f7.web.app`}
+          user={user}
+          token={token}
+          cart={cart}
+          currency={currency}
+          webviewPaymethod={webviewPaymethod}
+          setShowGateway={setShowGateway}
+          setOpenOrderCreating={setOpenOrderCreating}
+          locationId={'L1NGAY5M6KJRX'}
+        />
       )}
       {openOrderCreating && (
         <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
