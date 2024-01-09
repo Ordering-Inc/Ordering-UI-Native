@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useLanguage, useOrder } from 'ordering-components/native'
+import React from 'react'
+import { useLanguage, useOrder, useConfig } from 'ordering-components/native'
 import { ScrollView, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OButton, OModal, OText } from '../shared'
@@ -38,6 +38,7 @@ export const BusinessSearchFooter = (props: any) => {
     const [orderState] = useOrder()
 
     const [, t] = useLanguage()
+    const [{ configs }] = useConfig()
 
     const maxDeliveryFeeOptions = [15, 25, 35, 'default']
     // const maxProductPriceOptions = [5, 10, 15, 'default']
@@ -56,6 +57,8 @@ export const BusinessSearchFooter = (props: any) => {
         { level: '4', content: '$$$$' },
         { level: '5', content: '$$$$$' }
     ]
+
+    const filterOptionsEnabled = configs?.filter_search_options?.value?.split('|') || []
 
     const styles = StyleSheet.create({
         container: {
@@ -165,90 +168,97 @@ export const BusinessSearchFooter = (props: any) => {
                     >
                         {t('FILTER', 'Filter')}
                     </OText>
-                    <SortContainer>
-                        <OText weight='bold' mBottom={7} size={16}>
-                            {t('SORT', 'Sort')}
-                        </OText>
-                        {sortItems?.filter(item => !(orderState?.options?.type === 1 && item?.value === 'pickup_time') && !(orderState?.options?.type === 2 && item?.value === 'delivery_time'))?.map(item => (
-                            <TouchableOpacity
-                                key={item?.value}
-                                onPress={() => handleChangeFilters('orderBy', item?.value)}
-                                style={{ marginBottom: 7 }}
-                            >
-                                <OText
-                                    weight={filters?.orderBy?.includes(item?.value) ? 'bold' : '500'}
-                                    mBottom={filters?.orderBy?.includes(item?.value) ? 5 : 0}
+                    {filterOptionsEnabled.includes('sort') && (
+                        <SortContainer>
+                            <OText weight='bold' mBottom={7} size={16}>
+                                {t('SORT', 'Sort')}
+                            </OText>
+                            {sortItems?.filter(item => !(orderState?.options?.type === 1 && item?.value === 'pickup_time') && !(orderState?.options?.type === 2 && item?.value === 'delivery_time'))?.map(item => (
+                                <TouchableOpacity
+                                    key={item?.value}
+                                    onPress={() => handleChangeFilters('orderBy', item?.value)}
+                                    style={{ marginBottom: 7 }}
                                 >
-                                    {item?.text}  {(filters?.orderBy?.includes(item?.value)) && <>{filters?.orderBy?.includes('-') ? <AntDesignIcon name='caretup' /> : <AntDesignIcon name='caretdown' />}</>}
-                                </OText>
-                            </TouchableOpacity>
-                        ))}
-                    </SortContainer>
-                    <BrandContainer>
-                        <OText
-                            size={16}
-                            weight='bold'
-                            lineHeight={24}
-                            style={{ marginBottom: 10 }}
-                        >
-                            {t('BRANDS', 'Brands')}
-                        </OText>
-                        {!brandList?.loading && !brandList?.error && brandList?.brands?.length > 0 && (
-                            <ScrollView
-                                style={{ maxHeight: 300, marginBottom: 10 }}
-                                showsVerticalScrollIndicator={true}
-                                nestedScrollEnabled={true}
-                            >
-                                {brandList?.brands.map((brand: any, i: number) => brand?.enabled && (
-                                    <BrandItem
-                                        key={i}
-                                        onPress={() => handleChangeBrandFilter(brand?.id)}
+                                    <OText
+                                        weight={filters?.orderBy?.includes(item?.value) ? 'bold' : '500'}
+                                        mBottom={filters?.orderBy?.includes(item?.value) ? 5 : 0}
                                     >
-                                        <OText
-                                            size={14}
-                                            weight={'400'}
-                                            lineHeight={24}
-                                        >
-                                            {brand?.name}
-                                        </OText>
-                                        {filters?.franchise_ids?.includes(brand?.id) && (
-                                            <AntDesignIcon
-                                                name='check'
-                                                color={theme.colors.success500}
-                                                size={16}
-                                            />
-                                        )}
-                                    </BrandItem>
-                                ))}
-                            </ScrollView>
-                        )}
-                        {!brandList?.loading && ((brandList?.brands?.filter((brand: any) => brand?.enabled))?.length === 0) && (
-                            <OText size={14} weight='400'>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
-                        )}
-                    </BrandContainer>
-                    <PriceFilterWrapper>
-                        <OText
-                            size={16}
-                            weight='bold'
-                            lineHeight={24}
-                            style={{ marginBottom: 5 }}
-                        >
-                            {t('PRICE_RANGE', 'Price range')}
-                        </OText>
-                        <View style={styles.priceContainer}>
-                            {priceList.map((price: any, i: number) => (
-                                <OButton
-                                    key={i}
-                                    bgColor={(filters?.price_level === price?.level) ? theme.colors.primary : theme.colors.backgroundGray200}
-                                    onClick={() => handleChangePriceRange(price?.level)}
-                                    text={`${price.content} ${(filters?.price_level === price?.level) ? ' X' : ''}`}
-                                    style={styles.priceItem}
-                                    textStyle={{ fontSize: 10, color: (filters?.price_level === price?.level) ? theme.colors.white : theme.colors.textNormal }}
-                                />
+                                        {item?.text}  {(filters?.orderBy?.includes(item?.value)) && <>{filters?.orderBy?.includes('-') ? <AntDesignIcon name='caretup' /> : <AntDesignIcon name='caretdown' />}</>}
+                                    </OText>
+                                </TouchableOpacity>
                             ))}
-                        </View>
-                    </PriceFilterWrapper>
-                    {orderState?.options?.type === 1 && (
+                        </SortContainer>
+                    )}
+                    {filterOptionsEnabled.includes('brands') && (
+
+                        <BrandContainer>
+                            <OText
+                                size={16}
+                                weight='bold'
+                                lineHeight={24}
+                                style={{ marginBottom: 10 }}
+                            >
+                                {t('BRANDS', 'Brands')}
+                            </OText>
+                            {!brandList?.loading && !brandList?.error && brandList?.brands?.length > 0 && (
+                                <ScrollView
+                                    style={{ maxHeight: 300, marginBottom: 10 }}
+                                    showsVerticalScrollIndicator={true}
+                                    nestedScrollEnabled={true}
+                                >
+                                    {brandList?.brands.map((brand: any, i: number) => brand?.enabled && (
+                                        <BrandItem
+                                            key={i}
+                                            onPress={() => handleChangeBrandFilter(brand?.id)}
+                                        >
+                                            <OText
+                                                size={14}
+                                                weight={'400'}
+                                                lineHeight={24}
+                                            >
+                                                {brand?.name}
+                                            </OText>
+                                            {filters?.franchise_ids?.includes(brand?.id) && (
+                                                <AntDesignIcon
+                                                    name='check'
+                                                    color={theme.colors.success500}
+                                                    size={16}
+                                                />
+                                            )}
+                                        </BrandItem>
+                                    ))}
+                                </ScrollView>
+                            )}
+                            {!brandList?.loading && ((brandList?.brands?.filter((brand: any) => brand?.enabled))?.length === 0) && (
+                                <OText size={14} weight='400'>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
+                            )}
+                        </BrandContainer>
+                    )}
+                    {filterOptionsEnabled.includes('price_range') && (
+                        <PriceFilterWrapper>
+                            <OText
+                                size={16}
+                                weight='bold'
+                                lineHeight={24}
+                                style={{ marginBottom: 5 }}
+                            >
+                                {t('PRICE_RANGE', 'Price range')}
+                            </OText>
+                            <View style={styles.priceContainer}>
+                                {priceList.map((price: any, i: number) => (
+                                    <OButton
+                                        key={i}
+                                        bgColor={(filters?.price_level === price?.level) ? theme.colors.primary : theme.colors.backgroundGray200}
+                                        onClick={() => handleChangePriceRange(price?.level)}
+                                        text={`${price.content} ${(filters?.price_level === price?.level) ? ' X' : ''}`}
+                                        style={styles.priceItem}
+                                        textStyle={{ fontSize: 10, color: (filters?.price_level === price?.level) ? theme.colors.white : theme.colors.textNormal }}
+                                    />
+                                ))}
+                            </View>
+                        </PriceFilterWrapper>
+                    )}
+                    {orderState?.options?.type === 1 && filterOptionsEnabled.includes('max_delivery_fee') && (
                         <MaxSectionItem
                             filters={filters}
                             title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}
@@ -257,7 +267,7 @@ export const BusinessSearchFooter = (props: any) => {
                             handleChangeFilters={handleChangeFilters}
                         />
                     )}
-                    {[1, 2].includes(orderState?.options?.type) && (
+                    {[1, 2].includes(orderState?.options?.type) && filterOptionsEnabled.includes('max_delivery_time') && (
                         <MaxSectionItem
                             filters={filters}
                             title={orderState?.options?.type === 1 ? t('MAX_DELIVERY_TIME', 'Max delivery time') : t('MAX_PICKUP_TIME', 'Max pickup time')}
@@ -266,14 +276,16 @@ export const BusinessSearchFooter = (props: any) => {
                             handleChangeFilters={handleChangeFilters}
                         />
                     )}
-                    <MaxSectionItem
-                        filters={filters}
-                        title={t('MAX_DISTANCE', 'Max distance')}
-                        options={maxDistanceOptions}
-                        filter='max_distance'
-                        handleChangeFilters={handleChangeFilters}
-                    />
-                    {businessTypes?.length > 0 && (
+                    {filterOptionsEnabled.includes('max_distance') && (
+                        <MaxSectionItem
+                            filters={filters}
+                            title={t('MAX_DISTANCE', 'Max distance')}
+                            options={maxDistanceOptions}
+                            filter='max_distance'
+                            handleChangeFilters={handleChangeFilters}
+                        />
+                    )}
+                    {businessTypes?.length > 0 && filterOptionsEnabled.includes('business_categories') && (
                         <TagsContainer>
                             <OText weight='bold' mBottom={7} size={16}>{t('BUSINESS_CATEGORIES', 'Business categories')}</OText>
                             <View style={styles.businessTypesContainer}>
