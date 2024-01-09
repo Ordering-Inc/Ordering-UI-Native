@@ -55,7 +55,6 @@ const MessagesUI = (props: MessagesParams) => {
 		messages,
 		image,
 		message,
-		messagesToShow,
 		sendMessage,
 		setCanRead,
 		setMessage,
@@ -157,7 +156,7 @@ const MessagesUI = (props: MessagesParams) => {
 		}
 		messages.messages.map((message: any) => {
 			if (message.change?.attribute === 'driver_group_id') return
-			if (business && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
+			if (business && message.type !== 0 && (props?.messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
 				newMessages.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
@@ -173,7 +172,7 @@ const MessagesUI = (props: MessagesParams) => {
 				});
 			}
 
-			if (driver && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('4'))) {
+			if (driver && message.type !== 0 && (props?.messagesToShow?.messages?.length || message?.can_see?.includes('4'))) {
 				newMessages.push({
 					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
@@ -195,7 +194,6 @@ const MessagesUI = (props: MessagesParams) => {
 		})
 		let _arrayMessages = [...newMessages.reverse()]
 
-		_arrayMessages = _arrayMessages.filter(msg => msg.type !== 1 && msg.type !== 0)
 		setFormattedMessages(_arrayMessages);
 	}, [messages.messages.length, business, driver])
 
