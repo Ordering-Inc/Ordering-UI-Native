@@ -568,6 +568,14 @@ const CartUI = (props: any) => {
             />
           </View>
         )}
+        {!cart?.valid_address && cart?.status !== 2 && (
+          <OText
+            color={theme.colors.error}
+            size={12}
+          >
+            {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
+          </OText>
+        )}
         {(!isMultiCheckout || !cart?.business_id) && (
           <>
             {cart?.valid_products ? (
