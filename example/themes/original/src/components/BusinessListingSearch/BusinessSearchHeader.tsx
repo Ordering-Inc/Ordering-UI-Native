@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useLanguage } from 'ordering-components/native'
+import React from 'react'
+import { useLanguage, useConfig } from 'ordering-components/native'
 import { View, Platform, StyleSheet, Dimensions } from 'react-native'
 import { HeaderTitle, OButton, OText } from '../shared'
 import { SearchBar } from '../SearchBar';
@@ -20,6 +20,8 @@ export const BusinessSearchHeader = (props: any) => {
     } = props
     const theme = useTheme()
     const [, t] = useLanguage()
+    const [{ configs }] = useConfig()
+
     const noResults = (!businessesSearchList.loading && !businessesSearchList.lengthError && businessesSearchList?.businesses?.length === 0)
     const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
     const hideBrowse = theme?.bar_menu?.components?.browse?.hidden
@@ -61,7 +63,9 @@ export const BusinessSearchHeader = (props: any) => {
                     />
                 )}
                 <HeaderTitle ph={20} text={t('SEARCH', 'Search')} />
-                <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: Platform.OS === 'ios' ? 35 : 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
+                {configs?.filter_search_options?.value !== '' && (
+                    <AntDesignIcon name='filter' size={18} style={{ marginLeft: 'auto', marginTop: Platform.OS === 'ios' ? 35 : 55, paddingHorizontal: 20 }} onPress={() => handleOpenfilters()} />
+                )}
             </View>
             <BContainer
                 style={{ paddingHorizontal: 20 }}
