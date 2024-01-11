@@ -177,7 +177,7 @@ const CheckoutUI = (props: any) => {
 	const [isGiftCardCart, setIsGiftCardCart] = useState(!cart?.business_id)
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
-	const stripePaymethods: any = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+	const stripePaymethods: any = ['stripe', 'stripe_connect', 'stripe_redirect']
 	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 
 	const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
@@ -351,13 +351,13 @@ const CheckoutUI = (props: any) => {
 	const checkGuestValidationFields = () => {
 		const userSelected = user
 		const _requiredFields = checkoutFieldsState?.fields
-			.filter((field : any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
+			.filter((field: any) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
 				!notFields.includes(field?.validation_field?.code) &&
 				field?.validation_field?.code !== 'email' &&
 				userSelected && !userSelected[field?.validation_field?.code])
-		const requiredFieldsCode = _requiredFields.map((item : any) => item?.validation_field?.code)
-		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
-		const guestCheckoutEmail = checkoutFieldsState?.fields?.find((field : any) => field.order_type_id === options?.type && field?.validation_field?.code === 'email')
+		const requiredFieldsCode = _requiredFields.map((item: any) => item?.validation_field?.code)
+		const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+		const guestCheckoutEmail = checkoutFieldsState?.fields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'email')
 		if (
 			userSelected &&
 			!userSelected?.guest_cellphone &&
