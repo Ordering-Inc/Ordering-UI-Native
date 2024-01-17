@@ -148,7 +148,8 @@ export interface PhoneInputParams {
 	isDisabled?: any;
 	isStartValidation?: any;
 	changeCountry?: any;
-	updateStateWithSubmit?: boolean
+	updateStateWithSubmit?: boolean,
+	defaultCodeFallback?: number
 }
 
 export interface LanguageSelectorParams {
