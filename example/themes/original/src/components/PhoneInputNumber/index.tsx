@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PhoneInput from "react-native-phone-number-input";
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Wrapper } from './styles'
 
 import { PhoneInputParams } from '../../types';
 import { OIcon, OText } from '../shared';
+import { OModal } from '../../../../../src/components/shared'
 import { findExitingCode, transformCountryCode } from '../../utils'
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
@@ -25,7 +26,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		isDisabled,
 		isStartValidation,
 		changeCountry,
-		updateStateWithSubmit
+		updateStateWithSubmit,
+		defaultCodeFallback
 	} = props
 
 	const theme = useTheme();
@@ -34,7 +36,11 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 	const [{ configs }] = useConfig()
 	const phoneInput = useRef<PhoneInput>(null);
 	const [userphoneNumber, setUserphoneNumber] = useState('');
-
+	const [countryPhoneSuboptions, setCountryPhoneSuboptions] = useState({
+		open: false,
+		options: []
+	})
+	const countriesWithSubOptions = ['PR']
 	const style = StyleSheet.create({
 		input: {
 			backgroundColor: theme.colors.white,
@@ -109,6 +115,37 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		}
 	}, [defaultValue])
 
+	useEffect(() => {
+		if (defaultCodeFallback && countriesWithSubOptions.includes(defaultCode) && phoneInput.current) {
+			phoneInput.current?.setState({
+				...phoneInput.current.state,
+				code: `${defaultCodeFallback}`
+			})
+		}
+	}, [phoneInput.current])
+
+	const _changeCountry = (c) => {
+		changeCountry?.(c)
+		if (c.callingCode?.length > 1) {
+			setCountryPhoneSuboptions({
+				open: true,
+				options: c.callingCode
+			})
+		}
+	}
+
+	const handleSelectCallingCode = (option : any) => {
+		setCountryPhoneSuboptions({
+			open: false,
+			options: []
+		})
+		handleChangeNumber(`+${option}`)
+		phoneInput.current?.setState({
+			...phoneInput.current.state,
+			code: `${option}`
+		})
+	}
+
 	return (
 		<Wrapper onPress={() => forwardRef?.current?.focus?.()}>
 			{(isStartValidation && userphoneNumber === '') && (
@@ -130,7 +167,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					: findExitingCode(configs?.default_country_code?.value?.toUpperCase())}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
-				onChangeCountry={(country) => changeCountry?.(country)}
+				onChangeCountry={(country : any) => _changeCountry?.(country)}
 				countryPickerProps={{ withAlphaFilter: true }}
 				textContainerStyle={{ ...style.input, ...inputStyle ? inputStyle : {} }}
 				textInputStyle={textStyle}
@@ -151,6 +188,39 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					{data.error}
 				</OText>
 			)}
+			<OModal
+				open={countryPhoneSuboptions.open}
+				onClose={() => setCountryPhoneSuboptions({
+					open: false,
+					options: []
+				})}
+				title={t('SELECT_THE_PHONE_CODE', 'Select the phone code')}
+				entireModal
+			>
+				<View
+					style={{
+						alignItems: 'center'
+					}}
+				>
+					{countryPhoneSuboptions.options.map((option : any) => (
+						<Pressable
+							style={{
+								margin: 10,
+								padding: 10,
+								borderBottomColor: '#ccc',
+								borderBottomWidth: 1,
+								width: '100%'
+							}}
+							key={option}
+							onPress={() => handleSelectCallingCode(option)}
+						>
+							<OText>
+								{`+${option}`}
+							</OText>
+						</Pressable>
+					))}
+				</View>
+			</OModal>
 		</Wrapper>
 	)
 }

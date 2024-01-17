@@ -409,6 +409,7 @@ const UserVerificationUI = (props: any) => {
                       defaultCode={phoneState?.country_phone_code.replace('+', '')}
                       boxStyle={style.phoneSelect}
                       inputStyle={style.phoneInputStyle}
+                      defaultCodeFallback={phoneState?.country_phone_code.replace('+', '')}
                       textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
                       noDropIcon
                       isDisabled

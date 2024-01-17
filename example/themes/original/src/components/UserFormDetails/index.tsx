@@ -432,6 +432,7 @@ export const UserFormDetailsUI = (props: any) => {
 											changeCountry={(val: any) => changeCountry(val)}
 											defaultValue={phoneUpdate ? '' : cellphoneValue()}
 											defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
+											defaultCodeFallback={user?.country_phone_code}
 											boxStyle={styles.phoneSelect}
 											inputStyle={styles.phoneInputStyle}
 											textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
