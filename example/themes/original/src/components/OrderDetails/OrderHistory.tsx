@@ -19,6 +19,8 @@ export const OrderHistory = (props: any) => {
   const [{ parseDate }] = useUtils()
   const [{ configs }] = useConfig();
   const theme = useTheme()
+
+  const excludedMessages = ['manual_driver_assignment_comment', 'driver_group_id', 'manual_driver_assignment_author_id']
   const changeIdToExternalId = configs?.change_order_id?.value === '1'
 
   const styles = StyleSheet.create({
@@ -123,7 +125,7 @@ export const OrderHistory = (props: any) => {
           </View>
         </View>
       )}
-      {messages && messages?.messages.map((message: any, i: number) => message.type === 1 && (
+      {messages && messages?.messages.map((message: any, i: number) => (message.type === 1 && !excludedMessages.includes(message?.change?.attribute)) &&  (
         <View
           style={styles.historyItem}
           key={i}
