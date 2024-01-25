@@ -115,7 +115,7 @@ const BusinessProductListUI = (props: any) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}>
-        {!loading && business?.categories?.length === 0 && (
+        {!loading && categories?.length === 0 && (
           <NotFoundSource
             content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
             image={theme.images.general.notFound}
