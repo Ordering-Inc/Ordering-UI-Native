@@ -477,15 +477,6 @@ const CheckoutUI = (props: any) => {
 	}, [cartState?.error, cartState?.cart, cartState?.loading, isFocused])
 
 	useEffect(() => {
-		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-			containerRef?.current?.scrollToEnd && containerRef.current.scrollToEnd({ animated: true })
-		})
-		return () => {
-			keyboardDidShowListener.remove()
-		}
-	}, [])
-
-	useEffect(() => {
 		const onBackFunction = () => {
 			if (webviewPaymethod?.gateway === 'paypal' && showGateway.open) {
 				setShowGateway({ open: false, closedByUser: true })
