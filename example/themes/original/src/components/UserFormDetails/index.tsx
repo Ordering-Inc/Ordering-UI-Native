@@ -353,7 +353,7 @@ export const UserFormDetailsUI = (props: any) => {
 																isDisabled={false}
 																value={
 																	formState?.changes[field.code] ??
-																	(user && user?.guest_id ? user?.guest_email : user[field.code]) ??
+																	(user && user?.guest_id && field.code === 'email' ? user?.guest_email : user[field.code]) ??
 																	''
 																}
 																onChange={(val: any) => {
