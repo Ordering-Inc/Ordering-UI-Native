@@ -541,6 +541,7 @@ export interface Location {
   latitude: number;
   longitude: number;
   speed: number;
+  mocked?: boolean;
 }
 
 export interface GoogleMapsParams {
