@@ -1,24 +1,26 @@
 import { useEffect, useState, useRef } from 'react';
 import GeoLocation from 'react-native-geolocation-service';
 import { Location } from '../types';
-import {useApi, useSession, useLanguage} from 'ordering-components/native'
+import { useApi, useSession, useLanguage } from 'ordering-components/native'
 
 export const useLocation = () => {
-  const [,t] = useLanguage()
+  const [, t] = useLanguage()
   const [ordering] = useApi()
-  const [{token, user}] = useSession()
+  const [{ token, user }] = useSession()
   const [hasLocation, setHasLocation] = useState(false);
   const [initialPosition, setInitialPosition] = useState<Location>({
     longitude: 0,
     latitude: 0,
     speed: 0,
+    mocked: false
   });
   const [userLocation, setUserLocation] = useState<Location>({
     longitude: 0,
     latitude: 0,
     speed: 0,
+    mocked: false
   });
-  const [newLocation,setNewLocation] = useState<any>({ loading: false, error: null, newLocation: null })
+  const [newLocation, setNewLocation] = useState<any>({ loading: false, error: null, newLocation: null })
   const [routeLines, setRoutesLines] = useState<Location[]>([]);
   const isMounted = useRef(true);
 
@@ -37,7 +39,7 @@ export const useLocation = () => {
         if (!isMounted.current) return;
         setInitialPosition(location);
         setUserLocation(location);
-        setRoutesLines(routes => [...routes, location]);
+        setRoutesLines((routes: any) => [...routes, location]);
         setHasLocation(true);
       })
       .catch(err => console.log(err));
@@ -46,14 +48,15 @@ export const useLocation = () => {
   const getCurrentLocation = (): Promise<Location> => {
     return new Promise((resolve, reject) => {
       GeoLocation.getCurrentPosition(
-        ({ coords }) => {
+        ({ coords, mocked }: any) => {
           resolve({
             latitude: typeof coords.latitude === 'number' && !Number.isNaN(coords.latitude) ? coords.latitude : 0,
             longitude: typeof coords.longitude === 'number' && !Number.isNaN(coords.longitude) ? coords.longitude : 0,
             speed: coords.speed,
+            mocked
           });
         },
-        err => reject({ err }),
+        (err: any) => reject({ err }),
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     });
@@ -61,18 +64,19 @@ export const useLocation = () => {
 
   const followUserLocation = () => {
     watchId.current = GeoLocation.watchPosition(
-      ({ coords }) => {
+      ({ coords, mocked }: any) => {
         if (!isMounted.current) return;
         if (typeof coords.latitude !== 'number' || typeof coords.longitude !== 'number') return
         const location: Location = {
           latitude: coords.latitude || 0,
           longitude: coords.longitude || 0,
           speed: coords.speed,
+          mocked
         };
         setUserLocation(location);
-        setRoutesLines(routes => [...routes, location]);
+        setRoutesLines((routes: any) => [...routes, location]);
       },
-      err => console.log(err),
+      (err: any) => console.log(err),
       { enableHighAccuracy: true, distanceFilter: 3 },
     );
   };
@@ -83,14 +87,14 @@ export const useLocation = () => {
 
   const updateDriverPosition = async (newLocation = {}) => {
     try {
-      setNewLocation({...newLocation, loading: true})
+      setNewLocation({ ...newLocation, loading: true })
       const { content: { error, result } } = await ordering.setAccessToken(token).users(user?.id).driverLocations().save(newLocation)
       if (error) {
         setNewLocation({ ...newLocation, loading: false, error: [result[0] || result || t('ERROR_UPDATING_POSITION', 'Error updating position')] })
       } else {
         setNewLocation({ ...newLocation, loading: false, newLocation: { ...newLocation, ...result } })
       }
-    } catch (error : any) {
+    } catch (error: any) {
       setNewLocation({ ...newLocation, loading: false, error: [error?.message || t('NETWORK_ERROR', 'Network Error')] })
     }
   }
