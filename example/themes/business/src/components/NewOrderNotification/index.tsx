@@ -140,7 +140,8 @@ const NewOrderNotificationUI = (props: any) => {
             location: JSON.stringify({
               location: `{
                 lat: ${location.latitude},
-                lng: ${location.longitude}
+                lng: ${location.longitude},
+                mock: ${location.mocked}
               }`
             })
           }),
