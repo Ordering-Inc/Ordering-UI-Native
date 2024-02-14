@@ -34,3 +34,10 @@ export const Actions = styled.View`
   justify-content: space-between;
   align-items: flex-start;
 `;
+
+export const RemoveAccount = styled.TouchableOpacity`
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 24px;
+`
