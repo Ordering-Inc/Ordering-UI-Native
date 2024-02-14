@@ -40,6 +40,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		open: false,
 		options: []
 	})
+	const isDisableNumberValidation = parseInt(configs?.validation_phone_number_lib?.value ?? 1, 10)
 	const countriesWithSubOptions = ['PR']
 	const style = StyleSheet.create({
 		input: {
@@ -74,7 +75,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 				const regex = /^[0-9]*$/
 				const cellphone = userphoneNumber.slice(0, 0) + userphoneNumber.slice(1, userphoneNumber.length)
 				const validNumber = regex.test(cellphone)
-				if ((!checkValid && formattedNumber?.number) || !validNumber) {
+				if (((!checkValid && formattedNumber?.number) || !validNumber) && !!isDisableNumberValidation) {
 					handleData && handleData({
 						...data,
 						error: t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')
@@ -86,7 +87,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					error: '',
 					phone: {
 						country_phone_code: callingCode,
-						cellphone: formattedNumber?.number
+						cellphone: !isDisableNumberValidation ? userphoneNumber : formattedNumber?.number
 					}
 				})
 			} else {
@@ -134,7 +135,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		}
 	}
 
-	const handleSelectCallingCode = (option : any) => {
+	const handleSelectCallingCode = (option: any) => {
 		setCountryPhoneSuboptions({
 			open: false,
 			options: []
@@ -167,7 +168,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					: findExitingCode(configs?.default_country_code?.value?.toUpperCase())}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
-				onChangeCountry={(country : any) => _changeCountry?.(country)}
+				onChangeCountry={(country: any) => _changeCountry?.(country)}
 				countryPickerProps={{ withAlphaFilter: true }}
 				textContainerStyle={{ ...style.input, ...inputStyle ? inputStyle : {} }}
 				textInputStyle={textStyle}
@@ -202,7 +203,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 						alignItems: 'center'
 					}}
 				>
-					{countryPhoneSuboptions.options.map((option : any) => (
+					{countryPhoneSuboptions.options.map((option: any) => (
 						<Pressable
 							style={{
 								margin: 10,
