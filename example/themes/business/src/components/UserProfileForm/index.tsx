@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
+import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -20,6 +21,7 @@ import {
   UserData,
   EditButton,
   EnabledStatusDriver,
+  RemoveAccount
 } from './styles';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
@@ -36,6 +38,8 @@ import {
   OInput,
   OModal,
 } from '../../components/shared';
+import { OAlert } from '../../../../../src/components/shared'
+
 import { sortInputFields, getTraduction } from '../../utils';
 import { ProfileParams } from '../../types';
 import { NotFoundSource } from '../NotFoundSource';
@@ -49,6 +53,7 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
+    handleRemoveAccount,
     isAlsea,
     isShowDriverStatus,
     navigation
@@ -62,6 +67,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ loading }, { loadOriginalValidationFields }] = useValidationFields()
   const { errors } = useForm();
   const theme = useTheme();
+  const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
   const [phoneInputData, setPhoneInputData] = useState<any>({
     error: '',
@@ -76,13 +82,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [phoneToShow, setPhoneToShow] = useState('');
   const [openModal, setOpenModal] = useState(false)
   const allowDriverUpdateData = user?.level !== 4 || configs?.allow_driver_update_data?.value === "1"
-  useEffect(() => {
-    if (phoneInputData.phone.cellphone) {
-      const codeNumberPhone = phoneInputData.phone.country_phone_code
-      const numberPhone = phoneInputData.phone.cellphone
-      setPhoneToShow(`(${codeNumberPhone}) ${numberPhone}`);
-    }
-  }, [phoneInputData.phone.cellphone]);
+  const isAdmin = user?.level === 0
 
   const setUserCellPhone = (isEdit = false) => {
     if (userPhoneNumber && !userPhoneNumber.includes('null') && !isEdit) {
@@ -147,6 +147,28 @@ const ProfileUI = (props: ProfileParams) => {
       },
     });
   };
+
+  const onRemoveAccount = async () => {
+    setConfirm({
+      open: true,
+      content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
+      title: t('ACCOUNT_ALERT', 'Account alert'),
+      handleOnAccept: () => {
+        setConfirm({ ...confirm, open: false })
+        handleRemoveAccount && handleRemoveAccount(user?.id)
+        _clearStoreData({ excludedKeys: ['isTutorial', 'language'] });
+        props?.setRootState && props?.setRootState({ isAuth: false, token: null })
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (phoneInputData.phone.cellphone) {
+      const codeNumberPhone = phoneInputData.phone.country_phone_code
+      const numberPhone = phoneInputData.phone.cellphone
+      setPhoneToShow(`(${codeNumberPhone}) ${numberPhone}`);
+    }
+  }, [phoneInputData.phone.cellphone]);
 
   useEffect(() => {
     const isLoadingDriver = userState?.loadingDriver ?? true;
@@ -544,6 +566,10 @@ const ProfileUI = (props: ProfileParams) => {
 
             <LogoutButton setRootState={props.setRootState} />
           </Actions>
+          <RemoveAccount disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
+            <AntDesignIcon size={16} name='close' color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+            <OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger500}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+          </RemoveAccount>
           <OModal
             open={openModal}
             onClose={() => setOpenModal(false)}
@@ -554,6 +580,14 @@ const ProfileUI = (props: ProfileParams) => {
               <DriverSchedule schedule={user?.schedule} />
             )}
           </OModal>
+          <OAlert
+            open={confirm.open}
+            title={confirm.title}
+            content={confirm.content}
+            onAccept={confirm.handleOnAccept}
+            onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+            onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+          />
         </ScrollView>
       )}
     </>

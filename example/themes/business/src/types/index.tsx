@@ -43,6 +43,7 @@ export interface ProfileParams {
   navigation?: any;
   isEdit?: boolean;
   formState?: any;
+  setRootState?: any;
   userState?: any;
   toggleIsEdit?: any;
   cleanFormState?: any;
@@ -51,6 +52,7 @@ export interface ProfileParams {
   handleChangeInput?: any;
   handleButtonUpdateClick?: any;
   handleToggleAvalaibleStatusDriver?: any;
+  handleRemoveAccount?: any;
   onNavigationRedirect?: any;
   handlechangeImage?: any;
   validationFields?: any;
