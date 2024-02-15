@@ -87,7 +87,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 					error: '',
 					phone: {
 						country_phone_code: callingCode,
-						cellphone: !isDisableNumberValidation ? userphoneNumber : formattedNumber?.number
+						cellphone: !isDisableNumberValidation ? cellphone.slice(callingCode?.length) : formattedNumber?.number
 					}
 				})
 			} else {
