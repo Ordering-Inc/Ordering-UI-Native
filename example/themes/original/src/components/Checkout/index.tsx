@@ -266,7 +266,9 @@ const CheckoutUI = (props: any) => {
 			user,
 			token: user?.session?.access_token
 		})
-		openModal?.isGuest && handlePlaceOrderAsGuest()
+		if (openModal?.isGuest && requiredFields?.length === 0) {
+			openModal?.isGuest && handlePlaceOrderAsGuest()
+		}
 		setOpenModal({ ...openModal, signup: false, isGuest: false })
 	}
 
@@ -409,12 +411,14 @@ const CheckoutUI = (props: any) => {
 	}, [errors])
 
 	useEffect(() => {
-		if (cart?.products?.length === 0) {
-			if (cart?.business_id !== null) {
-				onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null, fromMulti: props.fromMulti })
-			} else if (isGiftCardCart) {
-				onNavigationRedirect('Wallets')
-			}
+		if (cart?.products?.length === 0 || !userLoading) return
+		if (cart?.business_id !== null) {
+			onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null, fromMulti: props.fromMulti })
+			return
+		}
+		if (isGiftCardCart) {
+			onNavigationRedirect('Wallets')
+			return
 		}
 	}, [cart?.products?.length])
 
