@@ -76,7 +76,8 @@ const PaymentOptionsUI = (props: any) => {
 		openUserModal,
 		paymethodClicked,
 		setPaymethodClicked,
-		androidAppId
+		androidAppId,
+		setUserHasCards
 	} = props
 
 	const theme = useTheme();
@@ -348,6 +349,7 @@ const PaymentOptionsUI = (props: any) => {
 						businessId={props.businessId}
 						onPaymentChange={onPaymentChange}
 						paySelected={props.paySelected}
+						setUserHasCards={setUserHasCards}
 					/>
 				</View>
 			)}
@@ -440,6 +442,7 @@ const PaymentOptionsUI = (props: any) => {
 						publicKey={isOpenMethod?.paymethod?.credentials.publishable}
 						publicKeyAddCard={isOpenMethod?.paymethod?.credentials?.stripe?.publishable || isOpenMethod?.paymethod?.credentials?.publishable}
 						paySelected={props.paySelected}
+						setUserHasCards={setUserHasCards}
 					/>
 				</View>
 			)}
