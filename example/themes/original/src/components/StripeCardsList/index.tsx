@@ -32,7 +32,8 @@ export const StripeCardsListUI = (props: any) => {
 		gateway,
 		paySelected,
 		newCardAdded,
-		addNewCardAsDefault
+		addNewCardAsDefault,
+		setUserHasCards
 	} = props;
 
 	const theme = useTheme();
@@ -61,6 +62,11 @@ export const StripeCardsListUI = (props: any) => {
 			handleCardSelected(newCardAdded)
 		}
 	}, [JSON.stringify(newCardAdded)])
+
+	useEffect(() => {
+		const hasCardSelected = cardsList?.cards?.some?.((card : any) => card?.id === paySelected?.data?.id)
+		setUserHasCards && setUserHasCards(cardsList?.cards?.length > 0 && hasCardSelected)
+	}, [cardsList?.cards?.length])
 
 	return (
 		<>
