@@ -175,9 +175,12 @@ const CheckoutUI = (props: any) => {
 	const [showTitle, setShowTitle] = useState(false)
 	const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
 	const [isGiftCardCart, setIsGiftCardCart] = useState(!cart?.business_id)
+	const [userHasCards, setUserHasCards] = useState(false)
 	const containerRef = useRef<any>()
 	const cardsMethods = ['credomatic']
 	const stripePaymethods: any = ['stripe', 'stripe_connect', 'stripe_redirect']
+	const cardsPaymethods: any = ['stripe', 'stripe_connect']
+
 	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 
 	const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
@@ -226,8 +229,8 @@ const CheckoutUI = (props: any) => {
 		validateCommentsCartField ||
 		validateDriverTipField ||
 		validateCouponField ||
-		validateZipcodeCard
-
+		validateZipcodeCard ||
+		(!userHasCards && cardsPaymethods.includes(paymethodSelected?.gateway))
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -868,6 +871,7 @@ const CheckoutUI = (props: any) => {
 									openUserModal={setIsOpen}
 									paymethodClicked={paymethodClicked}
 									setPaymethodClicked={setPaymethodClicked}
+									setUserHasCards={setUserHasCards}
 								/>
 							</ChPaymethods>
 						</ChSection>
