@@ -377,7 +377,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							titleWrapStyle={{ paddingHorizontal: 0 }}
 						/>
 					)}
-					{(preorderMinimumDays === 0 && preorderLeadTime === 0) || !cateringPreorder && (
+					{((preorderMinimumDays === 0 && preorderLeadTime === 0) || !cateringPreorder) && (
 						<WrapSelectOption
 							onPress={() => _handleAsap()}
 							disabled={orderState.loading} style={{ alignItems: 'flex-start' }}>
