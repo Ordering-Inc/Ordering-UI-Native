@@ -73,7 +73,8 @@ const LoginFormUI = (props: LoginParams) => {
 		generateOtpCode,
 		useLoginOtpEmail,
 		useLoginOtpCellphone,
-		isGuest
+		isGuest,
+		setCellphoneStartZero
 	} = props;
 
 	const [, { showToast }] = useToast();
@@ -298,6 +299,11 @@ const LoginFormUI = (props: LoginParams) => {
 		const categoryKey = opc
 		_tabLayouts[categoryKey] = event.nativeEvent.layout
 		setTabLayouts(_tabLayouts)
+	}
+
+	const handleChangePhoneNumber = (number : any, rawNumber: any) => {
+		setPhoneInputData(number)
+		setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
 	}
 
 	useEffect(() => {
@@ -586,7 +592,7 @@ const LoginFormUI = (props: LoginParams) => {
 							<View style={{ marginBottom: 28 }}>
 								<PhoneInputNumber
 									data={phoneInputData}
-									handleData={(val: any) => setPhoneInputData(val)}
+									handleData={handleChangePhoneNumber}
 									textInputProps={{
 										returnKeyType: 'next',
 										onSubmitEditing: () => passwordRef?.current?.focus?.(),
