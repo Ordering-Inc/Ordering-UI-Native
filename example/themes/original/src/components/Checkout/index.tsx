@@ -264,14 +264,11 @@ const CheckoutUI = (props: any) => {
 		ReactNativeHapticFeedback.trigger(impact || "impactLight", options);
 	}
 
-	const handleSuccessSignup = (user: any) => {
-		login({
+	const handleSuccessSignup = async (user: any) => {
+		await login({
 			user,
 			token: user?.session?.access_token
 		})
-		if (openModal?.isGuest && requiredFields?.length === 0) {
-			openModal?.isGuest && handlePlaceOrderAsGuest()
-		}
 		setOpenModal({ ...openModal, signup: false, isGuest: false })
 	}
 

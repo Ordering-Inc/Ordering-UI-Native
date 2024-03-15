@@ -66,7 +66,7 @@ export const StripeCardsListUI = (props: any) => {
 	useEffect(() => {
 		const hasCardSelected = cardsList?.cards?.some?.((card : any) => card?.id === paySelected?.data?.id)
 		setUserHasCards && setUserHasCards(cardsList?.cards?.length > 0 && hasCardSelected)
-	}, [cardsList?.cards?.length])
+	}, [cardsList?.cards?.length, paySelected])
 
 	return (
 		<>
