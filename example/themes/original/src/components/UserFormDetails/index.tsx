@@ -185,7 +185,7 @@ export const UserFormDetailsUI = (props: any) => {
 				formState.changes?.cellphone === null &&
 				((validationFields?.fields?.checkout?.cellphone?.enabled &&
 					validationFields?.fields?.checkout?.cellphone?.required) ||
-					(configs?.verification_phone_required?.value === '1' && !user?.guest_id)) 
+					(configs?.verification_phone_required?.value === '1' && !user?.guest_id))
 			) {
 				content = content + `${t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.',)}\n`
 				showToast(ToastType.Error, content);
