@@ -455,7 +455,8 @@ export interface ProductItemAccordionParams {
 	onEditProduct?: (product: any) => void,
 	offsetDisabled?: any,
 	isFromCheckout?: any,
-	isDisabledEdit?: any
+	isDisabledEdit?: any,
+	productInfo?: any
 }
 export interface ReviewOrderParams {
 	order?: { id: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
