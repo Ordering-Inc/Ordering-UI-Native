@@ -42,6 +42,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 	})
 	const isDisableNumberValidation = parseInt(configs?.validation_phone_number_lib?.value ?? 1, 10)
 	const countriesWithSubOptions = ['PR']
+	const codesStartsWithZero: any = ['44']
+
 	const style = StyleSheet.create({
 		input: {
 			backgroundColor: theme.colors.white,
@@ -69,13 +71,22 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 	useEffect(() => {
 		if ((defaultValue && userphoneNumber) || !defaultValue) {
 			if (userphoneNumber) {
-				const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
+				const validationsForUK = ['01', '02', '07', '0800', '0808', '0845', '0870', '0871']
+
+				let isPossibly = false
+				let numberWithoutCountryCode = ''
 				const callingCode = phoneInput.current?.getCallingCode();
+				const cellphone = userphoneNumber.slice(0, 0) + userphoneNumber.slice(1, userphoneNumber.length)
+				if (codesStartsWithZero.includes(callingCode)) {
+					numberWithoutCountryCode = cellphone.replace(callingCode || '', '')
+					const result = validationsForUK.some(areaCode => numberWithoutCountryCode?.startsWith(areaCode))
+					isPossibly = result && numberWithoutCountryCode?.length >= 10 && numberWithoutCountryCode?.length < 12
+				}
+				const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
 				const formattedNumber = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
 				const regex = /^[0-9]*$/
-				const cellphone = userphoneNumber.slice(0, 0) + userphoneNumber.slice(1, userphoneNumber.length)
 				const validNumber = regex.test(cellphone)
-				if (((!checkValid && formattedNumber?.number) || !validNumber) && !!isDisableNumberValidation) {
+				if (((!checkValid && formattedNumber?.number && !isPossibly) || !validNumber) && !!isDisableNumberValidation) {
 					handleData && handleData({
 						...data,
 						error: t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')
@@ -89,6 +100,9 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 						country_phone_code: callingCode,
 						cellphone: !isDisableNumberValidation ? cellphone.slice(callingCode?.length) : formattedNumber?.number
 					}
+				}, {
+					countryCallingCode: callingCode,
+					number: numberWithoutCountryCode,
 				})
 			} else {
 				handleData && handleData({
