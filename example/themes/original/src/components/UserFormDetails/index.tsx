@@ -42,7 +42,8 @@ export const UserFormDetailsUI = (props: any) => {
 		isGuest,
 		isOrderTypeValidationField,
 		checkoutFields,
-		isCheckoutPlace
+		isCheckoutPlace,
+		setCellphoneStartZero
 	} = props;
 
 	const theme = useTheme();
@@ -185,7 +186,7 @@ export const UserFormDetailsUI = (props: any) => {
 				formState.changes?.cellphone === null &&
 				((validationFields?.fields?.checkout?.cellphone?.enabled &&
 					validationFields?.fields?.checkout?.cellphone?.required) ||
-					(configs?.verification_phone_required?.value === '1' && !user?.guest_id)) 
+					(configs?.verification_phone_required?.value === '1' && !user?.guest_id))
 			) {
 				content = content + `${t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.',)}\n`
 				showToast(ToastType.Error, content);
@@ -207,7 +208,7 @@ export const UserFormDetailsUI = (props: any) => {
 		}
 	};
 
-	const handleChangePhoneNumber = (number: any) => {
+	const handleChangePhoneNumber = (number: any, rawNumber : any) => {
 		setPhoneInputData(number);
 		setIsChanged(true)
 		let phoneNumber = {
@@ -220,6 +221,7 @@ export const UserFormDetailsUI = (props: any) => {
 				value: number.phone.cellphone,
 			},
 		};
+		setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
 		handleChangeInput(phoneNumber, true);
 	};
 
@@ -428,7 +430,7 @@ export const UserFormDetailsUI = (props: any) => {
 										<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
 										<PhoneInputNumber
 											data={phoneInputData}
-											handleData={(val: any) => handleChangePhoneNumber(val)}
+											handleData={handleChangePhoneNumber}
 											changeCountry={(val: any) => changeCountry(val)}
 											defaultValue={phoneUpdate ? '' : cellphoneValue()}
 											defaultCode={user?.country_code ?? user?.country_phone_code ?? null}

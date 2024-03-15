@@ -83,7 +83,8 @@ const SignupFormUI = (props: SignupParams) => {
 		useSignUpFullDetails,
 		useSignUpOtpEmail,
 		useSignUpOtpCellphone,
-		isGuest
+		isGuest,
+		setCellphoneStartZero
 	} = props;
 
 	const theme = useTheme();
@@ -364,6 +365,19 @@ const SignupFormUI = (props: SignupParams) => {
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
 		handleReCaptcha && handleReCaptcha({ code: token, version: recaptchaConfig?.version })
+	}
+
+	const handleChangePhoneNumber = (number : any, rawNumber: any) => {
+		setPhoneInputData({
+			...phoneInputData,
+			...number,
+			phone: {
+				...phoneInputData.phone,
+				...number.phone,
+				country_code: phoneInputData.phone.country_code
+			}
+		})
+		setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
 	}
 
 	useEffect(() => {
@@ -657,15 +671,7 @@ const SignupFormUI = (props: SignupParams) => {
 								<View style={{ marginBottom: 25 }}>
 									<PhoneInputNumber
 										data={phoneInputData}
-										handleData={(val: any) => setPhoneInputData({
-											...phoneInputData,
-											...val,
-											phone: {
-												...phoneInputData.phone,
-												...val.phone,
-												country_code: phoneInputData.phone.country_code
-											}
-										})}
+										handleData={handleChangePhoneNumber}
 										forwardRef={phoneRef}
 										changeCountry={(val: any) => setPhoneInputData({
 											...phoneInputData,

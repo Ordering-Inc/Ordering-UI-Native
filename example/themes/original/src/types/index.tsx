@@ -25,7 +25,8 @@ export interface LoginParams {
 	generateOtpCode: (values?: any) => void,
 	useLoginOtpEmail?: boolean,
 	useLoginOtpCellphone?: boolean,
-	useLoginOtp?: boolean
+	useLoginOtp?: boolean,
+	setCellphoneStartZero?: any
 }
 export interface ProfileParams {
 	navigation?: any;
@@ -131,6 +132,7 @@ export interface SignupParams {
 	setSignUpTab?: (in1: string) => void;
 	setWillVerifyOtpState?: (in1: boolean) => void;
 	setOtpState?: (in1: string) => void;
+	setCellphoneStartZero?: any
 }
 
 export interface PhoneInputParams {
