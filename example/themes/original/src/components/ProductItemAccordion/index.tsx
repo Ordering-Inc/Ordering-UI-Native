@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native'
-import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
+import { useUtils, useLanguage, useOrder, ProductItemAccordion as ProductItemAccordionController } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -24,7 +24,7 @@ import { OIcon, OText, OAlert, OModal } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
 
-export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
+export const ProductItemAccordionUI = (props: ProductItemAccordionParams) => {
 
 	const {
 		isDisabledEdit,
@@ -36,6 +36,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		onDeleteProduct,
 		onEditProduct,
 		isFromCheckout,
+		productInfo
 	} = props
 
 	const theme = useTheme();
@@ -45,6 +46,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 	const hideProductCommentHide = isFromCheckout && theme?.checkout?.components?.cart?.components?.product?.components?.comments?.hidden
+
+	const styles = StyleSheet.create({
+		productImage: {
+			borderRadius: 7.6,
+			width: 48,
+			height: 48
+		}
+	})
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
@@ -91,24 +100,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	const [isServiceOpen, setIsServiceOpen] = useState(false)
 	const [productQuantityState, setProductQuantityState] = useState<any>(product.quantity.toString())
 
-	const productInfo = () => {
-		if (isCartProduct) {
-			const ingredients = JSON.parse(JSON.stringify(Object.values(product.ingredients ?? {})))
-			let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
-
-			options = options.map((option: any) => {
-				option.suboptions = Object.values(option.suboptions ?? {})
-				return option
-			})
-			return {
-				...productInfo,
-				ingredients,
-				options
-			}
-		}
-		return product
-	}
-
 	const handleEditProduct = (curProduct: any) => {
 		if (!curProduct?.calendar_event) {
 			onEditProduct && onEditProduct(curProduct)
@@ -154,8 +145,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 					isValid={product?.valid ?? true}
 					onPress={
 						(!product?.valid_menu && isCartProduct) ||
-						!(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || !!product.comment)
-						? null : () => setActiveState(!isActive)
+							!(productInfo.ingredients.length > 0 || productInfo.options.length > 0 || !!product.comment)
+							? null : () => setActiveState(!isActive)
 					}
 				>
 					<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
@@ -246,7 +237,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', maxWidth: 100 }}>
 								<View style={{ flexDirection: 'row' }}>
 									<OText size={12} lineHeight={18} weight={'400'}>{parsePrice(product.total || product.price)}</OText>
-									{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || !!product.comment) && (
+									{(productInfo.ingredients.length > 0 || productInfo.options.length > 0 || !!product.comment) && (
 										<MaterialCommunityIcon name='chevron-down' size={18} />
 									)}
 								</View>
@@ -290,17 +281,17 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				<View style={{ display: isActive ? 'flex' : 'none', paddingStart: isFromCheckout ? 100 : 40, marginTop: isFromCheckout ? -80 : -30 }}>
 					<Animated.View>
 						<AccordionContent>
-							{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
+							{productInfo.ingredients.length > 0 && productInfo.ingredients.some((ingredient: any) => !ingredient.selected) && (
 								<ProductOptionsList>
 									<OText size={10} color={theme.colors.textSecondary}>{t('INGREDIENTS', 'Ingredients')}</OText>
-									{productInfo().ingredients.map((ingredient: any, i) => !ingredient.selected && (
+									{productInfo.ingredients.map((ingredient: any, i) => !ingredient.selected && (
 										<OText size={10} color={theme.colors.textThird} key={ingredient.id + i} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
 									))}
 								</ProductOptionsList>
 							)}
-							{productInfo().options.length > 0 && (
+							{productInfo.options.length > 0 && (
 								<ProductOptionsList>
-									{productInfo().options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => (
+									{productInfo.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => (
 										<ProductOption key={option.id}>
 											<OText size={10} color={theme.colors.textSecondary}>{option.name}</OText>
 											{option.suboptions.map((suboption: any) => (
@@ -350,13 +341,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 	)
 }
 
-const styles = StyleSheet.create({
-	productImage: {
-		borderRadius: 7.6,
-		width: 48,
-		height: 48
-	},
-	test: {
-		overflow: 'hidden',
+export const ProductItemAccordion = (props: any) => {
+	const productItemAccordionProps = {
+		...props,
+		UIComponent: ProductItemAccordionUI
 	}
-})
+
+	return (
+		<ProductItemAccordionController {...productItemAccordionProps} />
+	)
+}
