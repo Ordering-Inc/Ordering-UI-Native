@@ -291,10 +291,10 @@ export const ProductItemAccordionUI = (props: ProductItemAccordionParams) => {
 							)}
 							{productInfo.options.length > 0 && (
 								<ProductOptionsList>
-									{productInfo.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => (
+									{productInfo.options.map((option: any) => (
 										<ProductOption key={option.id}>
 											<OText size={10} color={theme.colors.textSecondary}>{option.name}</OText>
-											{option.suboptions.map((suboption: any) => (
+											{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map((suboption: any) => (
 												<ProductSubOption key={suboption.id}>
 													<OText size={10} color={theme.colors.textThird}>
 														{getFormattedSubOptionName({
