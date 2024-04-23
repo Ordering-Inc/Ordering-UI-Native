@@ -643,8 +643,13 @@ export const OrderContentComponent = (props: OrderContent) => {
         </Total>
 
         {order?.payment_events?.length > 0 && (
-          <View>
-            <OText size={14} color={theme.colors.textNormal}>{t('PAYMENTS', 'Payments')}</OText>
+          <View
+            style={{
+              backgroundColor: theme?.colors?.primary,
+              padding: 10
+            }}
+          >
+            <OText size={14} color={theme?.colors?.white}>{t('PAYMENTS', 'Payments')}</OText>
             <View
               style={{
                 width: '100%',
@@ -668,7 +673,9 @@ export const OrderContentComponent = (props: OrderContent) => {
                       flexDirection: 'column',
                     }}
                   >
-                    <OText>
+                    <OText
+                      color={theme?.colors?.white}
+                    >
                       {event?.wallet_event
                         ? walletName[event?.wallet_event?.wallet?.type]?.name
                         : event?.paymethod?.gateway
@@ -678,7 +685,9 @@ export const OrderContentComponent = (props: OrderContent) => {
                             : ''}
                     </OText>
                   </View>
-                  <OText>
+                  <OText
+                    color={theme?.colors?.white}
+                  >
                     {(event?.paymethod?.gateway === 'cash' && order?.cash)
                       ? parsePrice(order?.cash, { currency: getCurrenySymbol(order?.currency) })
                       : `-${parsePrice(event?.amount, { currency: getCurrenySymbol(order?.currency) })}`}
@@ -689,7 +698,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           </View>
         )}
 
-      </OrderBill >
+      </OrderBill>
 
       {!!order?.spot_number && (
         <OrderSpot vehicleExists={!!order?.vehicle}>
