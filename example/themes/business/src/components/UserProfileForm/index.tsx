@@ -177,8 +177,8 @@ const ProfileUI = (props: ProfileParams) => {
       if (userState?.result?.error) {
         const messageError =
           userState.result.error || userState.result.error[0];
-        showToast(ToastType.Error, getTraduction(messageError, t));
-      } else {
+          showToast(ToastType.Error, typeof messageError === 'string' ? getTraduction(messageError, t) : t('CANNOT_UPDATE_AVAILABLE_STATE', 'Cannot update available state'));
+        } else {
         showToast(
           ToastType.Success,
           t('AVAILABLE_STATE_IS_UPDATED', 'Available state is updated'),
