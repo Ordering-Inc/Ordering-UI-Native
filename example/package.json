@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.23.62",
+  "version": "0.23.63",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -52,7 +52,7 @@
     "@segment/analytics-react-native": "2.1.11",
     "@segment/sovran-react-native": "0.2.6",
     "@sentry/react-native": "^2.6.0",
-		"@stripe/stripe-react-native": "0.23.0",
+    "@stripe/stripe-react-native": "0.23.0",
     "@types/react-native-loading-spinner-overlay": "^0.5.2",
     "@types/react-native-snap-carousel": "^3.8.4",
     "@types/styled-components": "^5.1.3",
