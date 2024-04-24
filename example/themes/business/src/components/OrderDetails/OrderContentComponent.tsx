@@ -71,6 +71,10 @@ export const OrderContentComponent = (props: OrderContent) => {
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
   const deliveryTypes = [1, 7]
 
+  const commentDivide = ordering?.project?.includes('delosi')
+  ? order?.comment?.split('Total')
+  : [order?.comment]
+
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
@@ -440,19 +444,29 @@ export const OrderContentComponent = (props: OrderContent) => {
         </OText>
 
         {!!order?.comment && (
-          <>
+          <View>
             <OText>
               {`${t('ORDER_COMMENT', 'Order Comment')}: `}
             </OText>
-            <OText
-              {...(ordering?.project?.includes('delosi') && {
-                color: theme.colors.primary,
-                weight: 'bold'
-              })}
-            >
-              {order?.comment}
-            </OText>
-          </>
+            {commentDivide?.map((fragment: string, i: number) => (
+              <View
+                {...(ordering?.project?.includes('delosi') && i === 1 && {
+                  backgroundColor: theme.colors.primary,
+                  weight: 'bold',
+                  padding: 10
+                })}
+              >
+                <OText
+                  {...(ordering?.project?.includes('delosi') && i === 1 && {
+                    color: theme.colors.white,
+                    weight: 'bold'
+                  })}
+                >
+                  {ordering?.project?.includes('delosi') && i === 1 ? t('TOTAL', 'Total') : ''}{fragment}
+                </OText>
+              </View>
+            ))}
+          </View>
         )}
 
         {order?.products?.length > 0 &&
