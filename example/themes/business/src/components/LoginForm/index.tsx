@@ -6,6 +6,9 @@ import {
   View,
   Dimensions,
   ScrollView,
+  Platform,
+  NativeModules,
+  Alert as AlertReactNative
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Recaptcha from 'react-native-recaptcha-that-works'
@@ -62,11 +65,12 @@ const LoginFormUI = (props: LoginParams) => {
     enableReCaptcha,
 
     useLoginOtp,
-		otpType,
-		setOtpType,
-		generateOtpCode,
-		useLoginOtpEmail,
-		useLoginOtpCellphone,
+    otpType,
+    setOtpType,
+    generateOtpCode,
+    useLoginOtpEmail,
+    useLoginOtpCellphone,
+    validateDeveloperMode
   } = props;
 
   const [ordering, { setOrdering }] = useApi();
@@ -112,7 +116,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [willVerifyOtpState, setWillVerifyOtpState] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
   const isOtpEmail = loginTab === 'otp' && otpType === 'email'
-	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+  const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
 
 
   const handleOpenRecaptcha = () => {
@@ -229,37 +233,58 @@ const LoginFormUI = (props: LoginParams) => {
 
   const mainLogin = (values) => {
     if (loginTab === 'otp') {
-			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
-				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
-				return
-			}
-			if (loginTab === 'otp') {
-				generateOtpCode({
-					...values,
-					...phoneInputData.phone
-				})
-			}
-			setWillVerifyOtpState(true)
-		} else {
-			if (phoneInputData.error) {
-				showToast(ToastType.Error, phoneInputData.error);
-				return;
-			}
-			handleButtonLoginClick({
-				...values,
-				...phoneInputData.phone,
-			});
-		}
+      if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
+        showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+        return
+      }
+      if (loginTab === 'otp') {
+        generateOtpCode({
+          ...values,
+          ...phoneInputData.phone
+        })
+      }
+      setWillVerifyOtpState(true)
+    } else {
+      if (phoneInputData.error) {
+        showToast(ToastType.Error, phoneInputData.error);
+        return;
+      }
+      handleButtonLoginClick({
+        ...values,
+        ...phoneInputData.phone,
+      });
+    }
   }
 
-  const onSubmit = (values: any) => {
+  const isDeveloperModeEnabled = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+      return NativeModules.DeveloperOptions?.isDeveloperModeEnabled?.();
+    }
+    return false
+  }
+
+  const onSubmit = async (values: any) => {
     Keyboard.dismiss();
 
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return;
     }
-
+    if (validateDeveloperMode) {
+      const isDeveloperMode = await isDeveloperModeEnabled()
+      if (isDeveloperMode) {
+        AlertReactNative.alert(
+          t('DEVELOPER_MODE', 'Developer mode'),
+          t('PLEASE_DISABLE_DEVELOPER_MODE', 'Please disable developer mode for sign in'),
+          [{
+            text: t('GO_TO_SETTINGS', 'Go to settings'),
+            onPress: async () => await NativeModules.DeveloperOptions?.openDeveloperSettings(),
+          },
+          { text: 'OK', onPress: () => { } },]
+        )
+        return
+      }
+    }
     if (values?.project_name) {
       setOrdering({
         ...ordering,
@@ -274,21 +299,21 @@ const LoginFormUI = (props: LoginParams) => {
   };
 
   const handleChangeOtpType = (type: string) => {
-		handleChangeTab('otp', type)
-		setOtpType(type)
-	}
+    handleChangeTab('otp', type)
+    setOtpType(type)
+  }
 
-	const handleLoginOtp = (code: string) => {
-		handleButtonLoginClick({ code })
-	}
+  const handleLoginOtp = (code: string) => {
+    handleButtonLoginClick({ code })
+  }
 
-	const closeAlert = () => {
-		setAlertState({
-			open: false,
-			title: '',
-			content: []
-		})
-	}
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      title: '',
+      content: []
+    })
+  }
 
   const handleVerifyCodeClick = () => {
     if (phoneInputData.error) {
@@ -411,14 +436,14 @@ const LoginFormUI = (props: LoginParams) => {
   }, [ordering, submitted])
 
   useEffect(() => {
-		if (checkPhoneCodeState?.result?.error) {
-			setAlertState({
-				open: true,
-				content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
-				title: ''
-			})
-		}
-	}, [checkPhoneCodeState])
+    if (checkPhoneCodeState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
+        title: ''
+      })
+    }
+  }, [checkPhoneCodeState])
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowWidth(
@@ -477,7 +502,7 @@ const LoginFormUI = (props: LoginParams) => {
       borderColor: theme.colors.inputSignup,
       backgroundColor: theme.colors.transparent,
       minHeight: 50,
-      maxHeight : 50
+      maxHeight: 50
     },
     btn: {
       borderRadius: 7.6,
@@ -506,23 +531,23 @@ const LoginFormUI = (props: LoginParams) => {
     },
 
     borderStyleBase: {
-			width: 30,
-			height: 45
-		},
-		borderStyleHighLighted: {
-			borderColor: "#03DAC6",
-		},
-		underlineStyleBase: {
-			width: 45,
-			height: 60,
-			borderWidth: 1,
-			fontSize: 16
-		},
-		underlineStyleHighLighted: {
-			borderColor: theme.colors.primary,
-			color: theme.colors.primary,
-			fontSize: 16
-		},
+      width: 30,
+      height: 45
+    },
+    borderStyleHighLighted: {
+      borderColor: "#03DAC6",
+    },
+    underlineStyleBase: {
+      width: 45,
+      height: 60,
+      borderWidth: 1,
+      fontSize: 16
+    },
+    underlineStyleHighLighted: {
+      borderColor: theme.colors.primary,
+      color: theme.colors.primary,
+      fontSize: 16
+    },
   });
 
   return (
@@ -602,7 +627,7 @@ const LoginFormUI = (props: LoginParams) => {
               )}
 
               {useLoginOtpEmail && (
-								<Pressable
+                <Pressable
                   style={styles.btnTab}
                   onPress={() => handleChangeOtpType('email')}>
                   <OText
@@ -624,10 +649,10 @@ const LoginFormUI = (props: LoginParams) => {
                           : theme.colors.tabBar,
                       borderBottomWidth: 2,
                     }} />
-								</Pressable>
-							)}
-							{useLoginOtpCellphone && (
-								<Pressable
+                </Pressable>
+              )}
+              {useLoginOtpCellphone && (
+                <Pressable
                   style={styles.btnTab}
                   onPress={() => handleChangeOtpType('cellphone')}>
                   <OText
@@ -644,13 +669,13 @@ const LoginFormUI = (props: LoginParams) => {
                     style={{
                       width: '100%',
                       borderBottomColor:
-                      isOtpCellphone
+                        isOtpCellphone
                           ? theme.colors.textGray
                           : theme.colors.tabBar,
                       borderBottomWidth: 2,
                     }} />
-								</Pressable>
-							)}
+                </Pressable>
+              )}
             </TabsContainer>
           </ScrollView>
         </LoginWith>
@@ -908,28 +933,28 @@ const LoginFormUI = (props: LoginParams) => {
         />
       </OModal>
       <OModal
-				open={willVerifyOtpState}
-				onClose={() => setWillVerifyOtpState(false)}
-				entireModal
+        open={willVerifyOtpState}
+        onClose={() => setWillVerifyOtpState(false)}
+        entireModal
         hideIcons
-				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
-			>
-				<Otp
-					willVerifyOtpState={willVerifyOtpState}
-					setWillVerifyOtpState={setWillVerifyOtpState}
-					handleLoginOtp={handleLoginOtp}
-					onSubmit={handleLogin}
-					setAlertState={setAlertState}
+        title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+      >
+        <Otp
+          willVerifyOtpState={willVerifyOtpState}
+          setWillVerifyOtpState={setWillVerifyOtpState}
+          handleLoginOtp={handleLoginOtp}
+          onSubmit={handleLogin}
+          setAlertState={setAlertState}
           formState={formState}
-				/>
-			</OModal>
-			<Alert
-				open={alertState.open}
-				content={alertState.content}
-				title={alertState.title || ''}
-				onAccept={closeAlert}
-				onClose={closeAlert}
-			/>
+        />
+      </OModal>
+      <Alert
+        open={alertState.open}
+        content={alertState.content}
+        title={alertState.title || ''}
+        onAccept={closeAlert}
+        onClose={closeAlert}
+      />
     </View>
   );
 };
