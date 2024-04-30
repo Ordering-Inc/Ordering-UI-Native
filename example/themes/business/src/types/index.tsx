@@ -29,7 +29,8 @@ export interface LoginParams {
   generateOtpCode: (values?: any) => void,
   useLoginOtpEmail?: boolean,
   useLoginOtpCellphone?: boolean,
-  useLoginOtp?: boolean
+  useLoginOtp?: boolean,
+  validateDeveloperMode: boolean
 }
 export interface otpParams {
   willVerifyOtpState: boolean,
