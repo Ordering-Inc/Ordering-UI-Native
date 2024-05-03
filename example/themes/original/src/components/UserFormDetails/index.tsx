@@ -85,7 +85,7 @@ export const UserFormDetailsUI = (props: any) => {
 	const [, { showToast }] = useToast();
 	const { handleSubmit, control, errors, setValue } = useForm();
 
-	const [{ user }, { login }] = useSession();
+	const [{ user }, { login, logout }] = useSession();
 	const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
 	const [isValid, setIsValid] = useState(false)
 	const [isChanged, setIsChanged] = useState(false)
@@ -247,9 +247,12 @@ export const UserFormDetailsUI = (props: any) => {
 			open: true,
 			content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
 			title: t('ACCOUNT_ALERT', 'Account alert'),
-			handleOnAccept: () => {
+			handleOnAccept: async () => {
 				setConfirm({ ...confirm, open: false })
-				handleRemoveAccount && handleRemoveAccount(user?.id)
+				const response = await handleRemoveAccount?.(user?.id)
+				if (response === 'OK'){
+					logout()
+				}
 			}
 		})
 	}
@@ -355,7 +358,7 @@ export const UserFormDetailsUI = (props: any) => {
 																isDisabled={false}
 																value={
 																	formState?.changes[field.code] ??
-																	(user && user?.guest_id && field.code === 'email' ? user?.guest_email : user[field.code]) ??
+																	(user && user?.guest_id && field.code === 'email' ? user?.guest_email : user?.[field.code]) ??
 																	''
 																}
 																onChange={(val: any) => {
@@ -399,7 +402,7 @@ export const UserFormDetailsUI = (props: any) => {
 													)}
 													name={field.code}
 													rules={getInputRules(field)}
-													defaultValue={user && (field.code === 'email' && user?.guest_id ? user?.guest_email : user[field.code])}
+													defaultValue={user && (field.code === 'email' && user?.guest_id ? user?.guest_email : user?.[field.code])}
 												/>
 											</React.Fragment>
 										))
