@@ -65,7 +65,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   const messagesReadIds = messagesReadList?.map((message: any) => message?.order_message_id)
 
   const filteredMessages = messagesReadList?.length > 0 ? messages?.messages?.filter((message: any) => !messagesReadIds?.includes(message?.id)) : messages?.messages
-  const cateringTypes = [7, 8]
+  const cateringTypes : any = [7, 8]
 
   const styles = StyleSheet.create({
     icons: {
@@ -154,17 +154,6 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     return paymethodsList.join(', ')
   }
 
-  const deliveryDate = () => {
-    const dateString = order?.delivery_datetime_utc ?? order?.delivery_datetime
-    const currentDate = new Date();
-    const receivedDate: any = new Date(order?.delivery_datetime);
-
-    const formattedDate = receivedDate <= currentDate
-      ? `${t('ASAP_ABBREVIATION', 'ASAP')}(${parseDate(dateString, { utc: !!order?.delivery_datetime_utc })})`
-      : parseDate(dateString, { utc: !!order?.delivery_datetime_utc })
-    return formattedDate
-  }
-
   return (
     <>
       {!props.isCustomView && (
@@ -231,7 +220,12 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
           <OText size={13} style={{ marginBottom: 5 }}>
             <>
               {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
-              {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}: ` : ''}{deliveryDate()}
+              {order?.delivery_datetime_utc && (
+                <>{cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} {parseDate(order?.delivery_datetime_utc)}</>
+              )}
+              {order?.delivery_datetime && (
+                <>{'\n'}{cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} {parseDate(order?.delivery_datetime, { utc: false })}  {`(${t('BUSINESS_TIME', 'Business time')})`}</>
+              )}
             </>
           </OText>
         ) : (
@@ -239,7 +233,12 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             <OText size={13} style={{ marginBottom: 5 }}>
               <>
                 {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
-                {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}: ` : ''}{deliveryDate()}
+                {order?.delivery_datetime_utc && (
+                  <>{cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} {parseDate(order?.delivery_datetime_utc)}</>
+                )}
+                {order?.delivery_datetime && (
+                  <>{'\n'}{cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} {parseDate(order?.delivery_datetime, { utc: false })}  {`(${t('BUSINESS_TIME', 'Business time')})`}</>
+                )}
               </>
             </OText>
 
