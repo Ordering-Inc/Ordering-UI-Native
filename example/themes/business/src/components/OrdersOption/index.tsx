@@ -470,7 +470,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   }, [isNetConnected, JSON.stringify(offlineActionsState.orders)]);
 
-
   const handleInitAnimation = () => {
     Animated.timing(
       spinValue,
@@ -682,6 +681,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           {!currentOrdersGroup?.error?.length &&
             currentOrdersGroup?.orders?.length > 0 &&
             currentTabSelected !== 'logisticOrders' &&
+            !currentOrdersGroup?.loading &&
             (
               <PreviousOrders
                 orders={ordersFormatted}
@@ -701,6 +701,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             )}
           {!logisticOrders?.error?.length &&
             logisticOrders && logisticOrders?.orders?.length > 0 &&
+            !logisticOrders?.loading &&
             currentTabSelected === 'logisticOrders' && (
               <PreviousOrders
                 orders={logisticOrders?.orders?.filter((order: any) => !order?.expired).map((order: any) => ({ ...order, isLogistic: true }))}
@@ -719,11 +720,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 (currentOrdersGroup?.pagination?.total === null && isNetConnected) ||
                 logisticOrders?.loading
               ) &&
-              !currentOrdersGroup?.error?.length &&
-              !currentOrdersGroup?.orders?.length
+              !currentOrdersGroup?.error?.length
             ) || internetLoading
           ) && (
-              <View>
+              <View style={{ marginTop: 10 }}>
                 {[...Array(5)].map((_, i) => (
                   <Placeholder key={i} Animation={Fade}>
                     <View
@@ -775,7 +775,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               (currentOrdersGroup?.error?.length ||
                 currentOrdersGroup?.orders?.length === 0)) ||
               (currentTabSelected === 'logisticOrders' &&
-                (logisticOrders && logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
+                (logisticOrders && !logisticOrders?.loading && (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired))))
             ) &&
             (
               <NotFoundSource
