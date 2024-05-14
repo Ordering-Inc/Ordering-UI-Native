@@ -153,7 +153,7 @@ export const OrderItem = React.memo((props: any) => {
             timeState={order?.time_status}
           />
         )}
-        <Logo style={styles.logo}>
+        <Logo style={styles.logo} hasExternalAndGroup={showExternalId && order?.order_group_id}>
           <FastImage
             style={styles.icon}
             source={order.business?.logo?.includes('https') ? {
@@ -164,7 +164,7 @@ export const OrderItem = React.memo((props: any) => {
             resizeMode={FastImage.resizeMode.cover}
           />
         </Logo>
-        <Information>
+        <Information hasExternalAndGroup={showExternalId && order?.order_group_id}>
           {!!order?.order_group_id && (
             <OText>
               <OText>{(t('INVOICE_GROUP_NO', 'Group No.') + order?.order_group_id)}</OText>
@@ -185,7 +185,7 @@ export const OrderItem = React.memo((props: any) => {
             </NotificationIcon>
           )}
           <View>
-            {!order?.order_group_id && showExternalId && !order?.order_group && (
+            {showExternalId && (
               <OText
                 style={styles.date}
                 color={theme.colors.unselectText}

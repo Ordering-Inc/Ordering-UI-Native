@@ -10,6 +10,7 @@ export const Card = styled.View`
 export const Logo = styled.View`
   height: 65px;
   width: 65px;
+  align-self: ${({ hasExternalAndGroup }: any) => hasExternalAndGroup ? 'center' : 'auto'};
 `;
 
 export const Information = styled.View`
@@ -17,7 +18,7 @@ export const Information = styled.View`
   justify-content: flex-start;
   margin-horizontal: 5px;
   flex: 1;
-  max-height: 60px;
+  max-height: ${({ hasExternalAndGroup }: any) => hasExternalAndGroup ? '75px' : '60px'};
 `;
 
 export const MyOrderOptions = styled.View`
