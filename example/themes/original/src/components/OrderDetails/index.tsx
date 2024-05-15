@@ -474,10 +474,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {activeStatus.includes(order?.status) ? (
                     <>
                       {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
-                      {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} />
+                      {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`}  />
                     </>
                   ) : (
-                    parseDate(order?.reporting_data?.at[`status:${order.status}`])
+                    parseDate(order?.reporting_data?.at[`status:${order.status}`], { outputFormat: `YYYY-MM-DD ${configs?.general_hour_format?.value}` })
                   )}
                 </OText>}
               />
