@@ -49,7 +49,7 @@ export const BusinessItemAccordion = (props: any) => {
 		if (cartsLength === 1) {
 			changeActiveState && changeActiveState(!isClosed, cart?.uuid)
 		}
-	}, [orderState?.carts, isClosed])
+	}, [orderState?.carts?.length, isClosed])
 
 	const subtotalWithTaxes = cart?.taxes?.reduce((acc: any, item: any) => {
 		if (item?.type === 1)
