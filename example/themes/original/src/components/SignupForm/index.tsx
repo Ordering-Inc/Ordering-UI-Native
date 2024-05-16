@@ -154,9 +154,9 @@ const SignupFormUI = (props: SignupParams) => {
 	const recaptchaRef = useRef<any>({});
 
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
-	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
-	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-	const appleLoginEnabled = Platform.OS === 'ios' && (configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled)
+	const googleLoginEnabled = configs?.google_login_enabled?.value === '1'
+	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1'
+	const appleLoginEnabled = Platform.OS === 'ios' && configs?.apple_login_enabled?.value === '1'
 
 	const closeAlert = () => {
 		setAlertState({
@@ -367,7 +367,7 @@ const SignupFormUI = (props: SignupParams) => {
 		handleReCaptcha && handleReCaptcha({ code: token, version: recaptchaConfig?.version })
 	}
 
-	const handleChangePhoneNumber = (number : any, rawNumber: any) => {
+	const handleChangePhoneNumber = (number: any, rawNumber: any) => {
 		setPhoneInputData({
 			...phoneInputData,
 			...number,
