@@ -38,7 +38,8 @@ import {
   ItemContent,
   TimerInputWrapper,
   OverLine,
-  InputContainer
+  InputContainer,
+  FilterAlert
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
@@ -501,6 +502,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   return (
     <>
+      {hasSearchFilters && (
+        <FilterAlert>
+          <AntDesignIcon
+            name='warning'
+            color='#FFC700'
+            size={12}
+            onPress={() => setOpenSearchModal(true)}
+          />
+          <OText size={10} mLeft={5} mRight={5}>
+            {t('WARNING_FILTER_APPLIED', 'Filters applied. You may miss new orders.')}
+          </OText>
+          <Pressable onPress={() => handleClearFilters()}>
+            <OText textDecorationLine='underline' size={10} color='rgb(44, 123, 229)'>{t('CLEAR_FILTERS', 'Clear filters')}</OText>
+          </Pressable>
+        </FilterAlert>
+      )}
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
         <IconWrapper>
