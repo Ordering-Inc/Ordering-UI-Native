@@ -288,8 +288,8 @@ export interface OrdersOptionParams {
   rememberOrderStatus?: any;
   titleContent?: string;
   customArray?: Array<any>;
-  loadMoreOrders?: () => {};
-  loadOrders?: ({ }: any) => {};
+  loadMoreOrders?: (options ?: any) => {};
+  loadOrders?: ({ }: any, options?: any) => {};
   messages?: any;
   setMessages?: () => {};
   loadMessages?: () => {};
@@ -328,6 +328,7 @@ export interface OrdersOptionParams {
   isDriverApp?: boolean;
   combineTabs?: boolean;
   setCombineTabsState?: any;
+  ordersFiltered?: any
 }
 export interface ActiveOrdersParams {
   orders?: any;
