@@ -154,3 +154,17 @@ export const Actions = styled.View`
 export const InputContainer = styled.View`
   position: relative;
 `
+
+export const FilterAlert = styled.View`
+  position: absolute;
+  z-index: 1000;
+  flex-direction: row;
+  top: 50px;
+  background-color: #FFF9E2;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  right: 10px;
+  padding: 5px;
+  border-radius: 10px
+`

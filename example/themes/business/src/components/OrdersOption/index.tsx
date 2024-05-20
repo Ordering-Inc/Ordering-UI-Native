@@ -37,7 +37,8 @@ import {
   ItemContent,
   TimerInputWrapper,
   OverLine,
-  InputContainer
+  InputContainer,
+  FilterAlert
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
@@ -75,7 +76,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadLogisticOrders,
     isLogisticActivated,
     handleChangeOrderStatus,
-    handleSendCustomerReview
+    handleSendCustomerReview,
+    ordersFiltered
   } = props;
 
   const defaultSearchList = {
@@ -106,6 +108,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [slaSettingTime, setSlaSettingTime] = useState(6000)
   const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
+  const hasSearchFilters = JSON.stringify(defaultSearchList) !== JSON.stringify(search)
+
   const deliveryStatus = [
     {
       key: t('OK', 'Ok'),
@@ -288,13 +292,27 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const tagsList = ordersGroup[currentTabSelected]?.defaultFilter ?? []
   const currentOrdersGroup = ordersGroup[currentTabSelected]
+  const ordersValidation = hasSearchFilters ? ordersFiltered : currentOrdersGroup
+
+  const paginationValidation =
+    !ordersValidation?.error?.length &&
+    !ordersValidation?.loading &&
+    ordersValidation?.pagination?.totalPages &&
+    ordersValidation?.pagination?.currentPage < ordersValidation?.pagination?.totalPages &&
+    ordersValidation?.orders?.length > 0
+
+  const loadingValidation = (
+    ordersValidation?.loading ||
+    (ordersValidation?.pagination?.total === null && isNetConnected) ||
+    logisticOrders?.loading
+  ) && !ordersValidation?.error?.length
 
   const isEqual = (array1: any, array2: any) => {
     return array1?.every((item: any) => array2.includes(item)) && array2?.every((item: any) => array1.includes(item))
   }
 
   const handleLoadMore = () => {
-    loadMoreOrders && loadMoreOrders();
+    loadMoreOrders && loadMoreOrders({ allStatusses: hasSearchFilters });
   };
 
   const getOrderStatus = (key: number) => {
@@ -302,13 +320,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   const applyFilters = () => {
-    setOrdersGroup({
-      ...ordersGroup,
-      [currentTabSelected]: {
-        ...ordersGroup[currentTabSelected],
-        orders: []
-      }
-    })
     const dateRange = calculateDate(search.date.type, search.date.from, search.date.to)
     onFiltered && onFiltered({ ...search, date: { ...dateRange } })
     setOpenSearchModal(false)
@@ -378,6 +389,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   }
 
   const handleClose = () => {
+    setSearch(defaultSearchList)
     setOpenSearchModal(false)
     setOpenSLASettingModal(false)
   }
@@ -459,6 +471,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   return (
     <>
+      {hasSearchFilters && (
+        <FilterAlert>
+          <AntDesignIcon
+            name='warning'
+            color='#FFC700'
+            size={12}
+            onPress={() => setOpenSearchModal(true)}
+          />
+          <OText size={10} mLeft={5} mRight={5}>
+            {t('WARNING_FILTER_APPLIED', 'Filters applied. You may miss new orders.')}
+          </OText>
+          <Pressable onPress={() => handleClearFilters()}>
+            <OText textDecorationLine='underline' size={10} color='rgb(44, 123, 229)'>{t('CLEAR_FILTERS', 'Clear filters')}</OText>
+          </Pressable>
+        </FilterAlert>
+      )}
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
         <IconWrapper>
@@ -470,75 +498,95 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               name='refresh-cw'
               color={theme.colors.backgroundDark}
               size={24}
-              onPress={() => currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })}
+              onPress={() => currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true, }, { allStatusses: hasSearchFilters })}
               style={{
                 marginRight: 20
               }}
             />
           )}
-          <FontistoIcon
-            name='search'
-            color={theme.colors.backgroundDark}
-            size={24}
-            onPress={() => setOpenSearchModal(true)}
-          />
+          {currentTabSelected !== 'logisticOrders' && (
+            <View>
+              {hasSearchFilters && (
+                <AntDesignIcon
+                  name='exclamationcircle'
+                  color={theme.colors.primary}
+                  size={16}
+                  style={{
+                    position: 'absolute',
+                    zIndex: 1000,
+                    right: -8,
+                    top: -5
+                  }}
+                  onPress={() => setOpenSearchModal(true)}
+                />
+              )}
+              <FontistoIcon
+                name='filter'
+                color={theme.colors.backgroundDark}
+                size={24}
+                onPress={() => setOpenSearchModal(true)}
+              />
+            </View>
+          )}
         </IconWrapper>
       </View>
-      <FiltersTab>
-        <ScrollView
-          ref={scrollRefTab}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          nestedScrollEnabled={true}
-        >
-          <TabsContainer>
-            {(isLogisticActivated && !isBusinessApp && !combineTabs) && (
-              <Pressable
-                style={styles.pressable}
-                onPress={() => setCurrentTabSelected('logisticOrders')}>
-                <OIcon
-                  src={theme.images?.general?.chronometer}
-                  borderBottomWidth={currentTabSelected === 'logisticOrders' ? 1 : 0}
-                  width={currentTabSelected === 'logisticOrders' ? 26 : 24}
-                  height={currentTabSelected === 'logisticOrders' ? 26 : 24}
-                  color={
-                    currentTabSelected === 'logisticOrders'
-                      ? theme.colors.textGray
-                      : theme.colors.unselectText
-                  }
-                  style={styles.icon}
-                />
-              </Pressable>
-            )}
-            {tabs.map((tab: any) => (
-              <TabPressable
-                key={tab.key}
-                onPress={() => setCurrentTabSelected(tab?.title)}
-                isSelected={tab.title === currentTabSelected ? 1 : 0}
-              >
-                <OText
-                  style={{
-                    ...styles.tab,
-                    fontSize: tab.title === currentTabSelected ? 16 : 14,
-                    borderBottomWidth: Platform.OS === 'ios' && tab.title === currentTabSelected ? 1 : 0,
-                  }}
-                  color={
-                    tab.title === currentTabSelected
-                      ? theme.colors.textGray
-                      : theme.colors.unselectText
-                  }
-                  weight={tab.title === currentTabSelected ? '600' : 'normal'}
+      {!hasSearchFilters && (
+        <FiltersTab>
+          <ScrollView
+            ref={scrollRefTab}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            nestedScrollEnabled={true}
+          >
+            <TabsContainer>
+              {(isLogisticActivated && !isBusinessApp && !combineTabs) && (
+                <Pressable
+                  style={styles.pressable}
+                  onPress={() => setCurrentTabSelected('logisticOrders')}>
+                  <OIcon
+                    src={theme.images?.general?.chronometer}
+                    borderBottomWidth={currentTabSelected === 'logisticOrders' ? 1 : 0}
+                    width={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                    height={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                    color={
+                      currentTabSelected === 'logisticOrders'
+                        ? theme.colors.textGray
+                        : theme.colors.unselectText
+                    }
+                    style={styles.icon}
+                  />
+                </Pressable>
+              )}
+              {!hasSearchFilters && tabs.map((tab: any) => (
+                <TabPressable
+                  key={tab.key}
+                  onPress={() => setCurrentTabSelected(tab?.title)}
+                  isSelected={tab.title === currentTabSelected ? 1 : 0}
                 >
-                  {tab.text}
-                </OText>
-              </TabPressable>
-            ))}
-          </TabsContainer>
-        </ScrollView>
-      </FiltersTab>
+                  <OText
+                    style={{
+                      ...styles.tab,
+                      fontSize: tab.title === currentTabSelected ? 16 : 14,
+                      borderBottomWidth: Platform.OS === 'ios' && tab.title === currentTabSelected ? 1 : 0,
+                    }}
+                    color={
+                      tab.title === currentTabSelected
+                        ? theme.colors.textGray
+                        : theme.colors.unselectText
+                    }
+                    weight={tab.title === currentTabSelected ? '600' : 'normal'}
+                  >
+                    {tab.text}
+                  </OText>
+                </TabPressable>
+              ))}
+            </TabsContainer>
+          </ScrollView>
+        </FiltersTab>
+      )}
       <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 450 }}>
-        {showTagsList && (
+        {showTagsList && !hasSearchFilters && (
           <View
             style={{
               display: 'flex',
@@ -629,17 +677,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={() => { isNetConnected && (currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true })) }}
+              onRefresh={() => { isNetConnected && (currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }, { allStatusses: hasSearchFilters })) }}
             />
           }
         >
-          {!currentOrdersGroup?.error?.length &&
-            currentOrdersGroup?.orders?.length > 0 &&
+          {!ordersValidation?.error?.length &&
+            (ordersValidation?.orders?.length > 0 || ordersFiltered?.orders?.length > 0) &&
             currentTabSelected !== 'logisticOrders' &&
-            !currentOrdersGroup?.loading &&
+            !ordersValidation?.loading &&
             (
               <PreviousOrders
-                orders={ordersFormatted}
+                orders={hasSearchFilters ? ordersFiltered?.orders : ordersFormatted}
                 navigation={props.navigation}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
@@ -669,14 +717,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             )
           }
           {(
-            (
-              (
-                currentOrdersGroup?.loading ||
-                (currentOrdersGroup?.pagination?.total === null && isNetConnected) ||
-                logisticOrders?.loading
-              ) &&
-              !currentOrdersGroup?.error?.length
-            ) || internetLoading
+            loadingValidation || internetLoading
           ) && (
               <View style={{ marginTop: 10 }}>
                 {[...Array(5)].map((_, i) => (
@@ -708,11 +749,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             )}
 
           {isNetConnected &&
-            !currentOrdersGroup?.error?.length &&
-            !currentOrdersGroup?.loading &&
-            currentOrdersGroup?.pagination?.totalPages &&
-            currentOrdersGroup?.pagination?.currentPage < currentOrdersGroup?.pagination?.totalPages &&
-            currentOrdersGroup?.orders?.length > 0 &&
+            paginationValidation &&
             (
               <OButton
                 onClick={handleLoadMore}
@@ -726,9 +763,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             )}
 
           {!internetLoading &&
-            ((!currentOrdersGroup?.loading &&
-              (currentOrdersGroup?.error?.length ||
-                currentOrdersGroup?.orders?.length === 0)) ||
+            ((!ordersValidation?.loading &&
+              (ordersValidation?.error?.length ||
+                ordersValidation?.orders?.length === 0)) ||
               (currentTabSelected === 'logisticOrders' &&
                 (logisticOrders && !logisticOrders?.loading && (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired))))
             ) &&
@@ -736,11 +773,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               <NotFoundSource
                 content={
                   !isNetConnected ? t('NETWORK_ERROR', 'Network Error') :
-                    ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
+                    ((currentTabSelected !== 'logisticOrders' && !ordersValidation?.error?.length) ||
                       (currentTabSelected === 'logisticOrders' && (!logisticOrders?.error?.length || (logisticOrders?.orders?.length > 0 && !logisticOrders?.orders?.some(order => !order?.expired)))))
                       ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                      : currentOrdersGroup?.error?.[0]?.message ||
-                      currentOrdersGroup?.error?.[0] ||
+                      : ordersValidation?.error?.[0]?.message ||
+                      ordersValidation?.error?.[0] ||
                       (currentTabSelected === 'logisticOrders' && logisticOrders?.error) ||
                       t('NETWORK_ERROR', 'Network Error')
                 }
