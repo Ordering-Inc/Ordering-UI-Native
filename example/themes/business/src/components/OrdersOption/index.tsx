@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform, TouchableOpacity, Animated, Easing } from 'react-native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Platform, TouchableOpacity } from 'react-native';
 import { useLanguage, useUtils, OrderListGroups, useConfig } from 'ordering-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -143,8 +143,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
   const showTagsList = !props.isAlsea && !props.isDriverApp && currentTabSelected !== 'logisticOrders'
-  const AnimatedFeatherIcon = Animated.createAnimatedComponent(FeatherIcon);
-  const spinValue = new Animated.Value(0);
 
   const preorderTypeList = [
     { key: null, name: t('SLA', 'SLA\'s') },
@@ -482,24 +480,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   }, [isNetConnected, JSON.stringify(offlineActionsState.orders)]);
 
-  const handleInitAnimation = () => {
-    Animated.timing(
-      spinValue,
-      {
-        toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
-        useNativeDriver: true
-      }
-    ).start()
-  }
-
-  useEffect(() => {
-    if (ordersValidation?.loading || logisticOrders?.loading) {
-      handleInitAnimation()
-    }
-  }, [ordersValidation?.loading, logisticOrders?.loading])
-
   return (
     <>
       {hasSearchFilters && (
@@ -525,19 +505,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             <WebsocketStatus />
           </View>
           {isNetConnected && (
-            <AnimatedFeatherIcon
+            <FeatherIcon
               name='refresh-cw'
               color={theme.colors.backgroundDark}
               size={24}
               onPress={() => currentTabSelected === 'logisticOrders' ? loadLogisticOrders && loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true, }, { allStatusses: hasSearchFilters })}
               style={{
-                marginRight: 20,
-                transform: [{
-                  rotate: spinValue.interpolate({
-                    inputRange: [0, 0.3],
-                    outputRange: ['0deg', '360deg'],
-                  })
-                }]
+                marginRight: 20
               }}
             />
           )}
