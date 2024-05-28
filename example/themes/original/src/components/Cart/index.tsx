@@ -524,7 +524,7 @@ const CartUI = (props: any) => {
                   <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>
                   <View style={{ flex: 1, width: '100%' }}>
                     <OInput
-                      value={comment ?? cart?.comment}
+                      value={comment || cart?.comment}
                       placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
                       onChange={(value: string) => handleChangeComment(value)}
                       style={{
@@ -650,6 +650,7 @@ const CartUI = (props: any) => {
 export const Cart = (props: any) => {
   const cartProps = {
     ...props,
+    disablePreviousComment: true,
     UIComponent: CartUI
   }
 
