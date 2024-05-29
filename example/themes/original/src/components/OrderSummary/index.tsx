@@ -59,6 +59,7 @@ const OrderSummaryUI = (props: any) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const commentRef = useRef()
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
+  const [comment] = useState<any>(orderState?.carts?.[`businessId:${props.cart.business_id}`].comment ?? '')
   const hideCartDiscount = hideCouponByValidationCheckout
   const hideCartComments = hideCommentsByValidationCheckout
 
@@ -349,7 +350,7 @@ const OrderSummaryUI = (props: any) => {
                     <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
                     <View style={{ flex: 1, width: '100%' }}>
                       <OInput
-                        value={cart?.comment}
+                        value={comment || cart?.comment}
                         placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
                         onChange={(value: string) => handleChangeComment(value)}
                         style={{
@@ -416,6 +417,7 @@ const OrderSummaryUI = (props: any) => {
 export const OrderSummary = (props: any) => {
   const orderSummaryProps = {
     ...props,
+    disablePreviousComment: true,
     UIComponent: OrderSummaryUI
   }
 
