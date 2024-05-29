@@ -73,6 +73,7 @@ const CartUI = (props: any) => {
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [openPlaceModal, setOpenPlaceModal] = useState(false)
   const [maxDate, setMaxDate] = useState<any>(null)
+  const [comment] = useState<any>(cart?.comment ?? '')
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
@@ -523,7 +524,7 @@ const CartUI = (props: any) => {
                   <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>
                   <View style={{ flex: 1, width: '100%' }}>
                     <OInput
-                      value={cart?.comment}
+                      value={comment || cart?.comment}
                       placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
                       onChange={(value: string) => handleChangeComment(value)}
                       style={{
@@ -649,6 +650,7 @@ const CartUI = (props: any) => {
 export const Cart = (props: any) => {
   const cartProps = {
     ...props,
+    disablePreviousComment: true,
     UIComponent: CartUI
   }
 
