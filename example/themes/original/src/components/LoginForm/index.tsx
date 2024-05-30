@@ -107,9 +107,9 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const [isCheckingCode, setCheckingCode] = useState(false)
 
-	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
-	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-	const appleLoginEnabled = Platform.OS === 'ios' && (configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled)
+	const googleLoginEnabled = configs?.google_login_enabled?.value === '1'
+	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1'
+	const appleLoginEnabled = Platform.OS === 'ios' && (configs?.apple_login_enabled?.value === '1')
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
@@ -301,7 +301,7 @@ const LoginFormUI = (props: LoginParams) => {
 		setTabLayouts(_tabLayouts)
 	}
 
-	const handleChangePhoneNumber = (number : any, rawNumber: any) => {
+	const handleChangePhoneNumber = (number: any, rawNumber: any) => {
 		setPhoneInputData(number)
 		setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
 	}
