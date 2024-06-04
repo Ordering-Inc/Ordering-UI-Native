@@ -24,6 +24,7 @@ const MapViewComponent = (props: MapViewParams) => {
     setDriverLocation,
     onNavigationRedirect,
     getBusinessLocations,
+    isDeliveryApp
   } = props;
 
   const theme = useTheme();
@@ -177,7 +178,7 @@ const MapViewComponent = (props: MapViewParams) => {
             longitude: coordinateLng
           })
         }
-        ref={(ref) => markerRef.current = ref}
+        ref={(ref: any) => markerRef.current = ref}
       >
         <Icon
           name="map-marker"
@@ -250,7 +251,7 @@ const MapViewComponent = (props: MapViewParams) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        {!isLoadingBusinessMarkers && isFocused && (
+        {(isDeliveryApp || (!isLoadingBusinessMarkers && isFocused)) && (
           <View style={{ flex: 1 }}>
             <MapView
               ref={mapRef}
