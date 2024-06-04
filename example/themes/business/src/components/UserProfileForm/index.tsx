@@ -82,6 +82,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [phoneToShow, setPhoneToShow] = useState('');
   const [openModal, setOpenModal] = useState(false)
   const allowDriverUpdateData = user?.level !== 4 || configs?.allow_driver_update_data?.value === "1"
+  const allowDeleteDriverAccount = user?.level !== 4 || configs?.allow_delete_driver_account?.value === "1"
   const isAdmin = user?.level === 0
 
   const setUserCellPhone = (isEdit = false) => {
@@ -566,10 +567,12 @@ const ProfileUI = (props: ProfileParams) => {
 
             <LogoutButton setRootState={props.setRootState} />
           </Actions>
-          <RemoveAccount disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
-            <AntDesignIcon size={16} name='close' color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-            <OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger500}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
-          </RemoveAccount>
+          {allowDeleteDriverAccount && (
+            <RemoveAccount disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
+              <AntDesignIcon size={16} name='close' color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+              <OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger500}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+            </RemoveAccount>
+          )}
           <OModal
             open={openModal}
             onClose={() => setOpenModal(false)}
