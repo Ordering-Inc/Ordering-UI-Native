@@ -288,7 +288,7 @@ export interface OrdersOptionParams {
   rememberOrderStatus?: any;
   titleContent?: string;
   customArray?: Array<any>;
-  loadMoreOrders?: (options ?: any) => {};
+  loadMoreOrders?: (options?: any) => {};
   loadOrders?: ({ }: any, options?: any) => {};
   messages?: any;
   setMessages?: () => {};
@@ -618,6 +618,7 @@ export interface MapViewParams {
   getBusinessLocations: () => void,
   setDriverLocation: (location: any) => void,
   isLoadingBusinessMarkers?: boolean,
+  isDeliveryApp: boolean,
   markerGroups: Array<any>,
   customerMarkerGroups: Array<any>,
   alertState: { open: boolean, content: Array<string>, key?: string | null },
