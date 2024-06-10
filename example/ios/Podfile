@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '15.0'
 
 target 'delivery' do
   # Pods for google signin
@@ -10,7 +10,7 @@ target 'delivery' do
   # React Native Maps dependencies
     permissions_path = '../node_modules/react-native-permissions/ios'
     pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
-    
+
     rn_maps_path = '../node_modules/react-native-maps'
     pod 'react-native-google-maps', :path => rn_maps_path
     pod 'GoogleMaps'

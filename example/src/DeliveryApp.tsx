@@ -8,7 +8,6 @@
 
 import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
-import * as Sentry from "@sentry/react-native";
 import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
@@ -22,47 +21,6 @@ import settings from './config.json';
 import theme from './theme.json';
 import AppContainer from './AppContainer';
 import { FacebookPixel } from './components/FacebookPixel';
-
-Sentry.init({
-  environment: Platform.OS === 'ios' ? 'ios' : 'android',
-  dsn: 'https://e5e1115dc93b49109f4ab65f2098bef9@o460529.ingest.sentry.io/5722123',
-  release: 'ordering-ui-native@' + process.env.npm_package_version,
-  ignoreErrors: [
-    'is not defined',
-    'is not a function',
-    'can\'t find variable',
-    'objects are not valid',
-    'element type is invalid',
-    'requiring module',
-    'has not been registered',
-    'failed to connect to debugger!',
-    'rendered more hooks than',
-    'rendered fewer hooks than',
-    'should have a queue',
-    'the OS most likely terminated',
-    'Connection timed out',
-    'java.io.EOFException',
-    'Abort',
-    'Segfault',
-    'Failed to allocate a',
-    'Application Not Responding',
-    'connection no longer valid',
-    'IllegalInstruction',
-    'React.Children.only expected to receive a single React element child.',
-    'unrecognized selector sent to instance'
-  ],
-  tracesSampleRate: 0.2,
-  // Release health
-  enableAutoSessionTracking: true,
-  // Sessions close after app is 10 seconds in the background.
-  sessionTrackingIntervalMillis: 10000,
-
-  integrations: [
-    new Sentry.ReactNativeTracing({
-      routingInstrumentation: reactNavigationV5Instrumentation,
-    })
-  ]
-});
 
 LogBox.ignoreLogs([
   'Sending \`onAnimatedValueUpdate` with no listeners registered.',
