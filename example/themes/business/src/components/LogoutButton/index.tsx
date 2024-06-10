@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { LogoutAction } from 'ordering-components/native';
-import { useLanguage } from 'ordering-components/native';
+import { LogoutAction, ToastType, useToast } from 'ordering-components/native';
+import { useLanguage, useSession } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText } from '../shared';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 const LogoutButtonUI = (props: any) => {
-  const { handleLogoutClick } = props;
+  const { handleLogoutClick, formState } = props;
   const [, t] = useLanguage();
+  const [, { showToast }] = useToast()
   const theme = useTheme();
 
   const handleClick = async () => {
@@ -18,6 +19,12 @@ const LogoutButtonUI = (props: any) => {
       _clearStoreData({ excludedKeys: ['isTutorial', 'language'] });
     }
   };
+
+  useEffect(() => {
+    if (formState?.result?.error) {
+      showToast(ToastType.Error, t(formState?.result?.result))
+    }
+  }, [formState?.result])
 
   const styles = StyleSheet.create({
     container: {
@@ -53,9 +60,11 @@ const LogoutButtonUI = (props: any) => {
 };
 
 export const LogoutButton = (props: any) => {
+  const [{ user }] = useSession()
   const logoutProps = {
     ...props,
     isNative: true,
+    isDriverApp: user?.level === 4,
     UIComponent: LogoutButtonUI,
   };
 
