@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native'
 import MapView, {
   PROVIDER_GOOGLE,
@@ -265,8 +265,8 @@ const MapViewComponent = (props: MapViewParams) => {
               style={{ flex: 1 }}
               zoomTapEnabled
               zoomEnabled
-              zoomControlEnabled
-              cacheEnabled
+              zoomControlEnabled={!(isDeliveryApp && Platform.OS === 'android')}
+              cacheEnabled={(isDeliveryApp && Platform.OS === 'android' && isFocused) || Platform.OS === 'ios' || !isDeliveryApp}
               moveOnMarkerPress
               onTouchStart={() => (following.current = false)}
             >
