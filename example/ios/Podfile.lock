@@ -558,9 +558,6 @@ PODS:
     - React-Core
   - RNScreens (2.18.1):
     - React-Core
-  - RNSentry (2.6.2):
-    - React-Core
-    - Sentry (= 7.1.4)
   - RNSound (0.11.2):
     - React-Core
     - RNSound/Core (= 0.11.2)
@@ -577,9 +574,6 @@ PODS:
   - segment-analytics-react-native (2.2.0):
     - React-Core
     - sovran-react-native
-  - Sentry (7.1.4):
-    - Sentry/Core (= 7.1.4)
-  - Sentry/Core (7.1.4)
   - sovran-react-native (0.2.7):
     - React-Core
   - Stripe (21.11.1):
@@ -689,7 +683,6 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSound (from `../node_modules/react-native-sound`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "segment-analytics-react-native (from `../node_modules/@segment/analytics-react-native`)"
@@ -736,7 +729,6 @@ SPEC REPOS:
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
-    - Sentry
     - Stripe
     - StripeCore
     - StripeUICore
@@ -865,8 +857,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  RNSentry:
-    :path: "../node_modules/@sentry/react-native"
   RNSound:
     :path: "../node_modules/react-native-sound"
   RNVectorIcons:
@@ -977,13 +967,11 @@ SPEC CHECKSUMS:
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNReanimated: c1b56d030d1616239861534d9adb531f8cffab68
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
-  RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   segment-analytics-react-native: d0b24d7b7e6e6968a3558a2c41f61e94420b6797
-  Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
   sovran-react-native: 8d549886ad24ab51f8d471a7db83d1a3ace36358
   Stripe: f2bed8369154c35c8ec794704e042e05240d6f21
   stripe-react-native: 2ba5ddd91db057546757ad88bea950d9bfd4cacc

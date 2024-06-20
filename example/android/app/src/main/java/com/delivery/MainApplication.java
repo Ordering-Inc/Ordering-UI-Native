@@ -10,8 +10,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
-import io.sentry.react.RNSentryPackage;
-import io.sentry.react.RNSentryPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactInstanceManager;
