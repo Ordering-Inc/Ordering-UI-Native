@@ -496,7 +496,9 @@ const UserVerificationUI = (props: any) => {
           <UserDetails
             user={user}
             isEdit
-            isVerifiedPhone
+            isPhoneVerifyRequired={isPhoneVerifyRequired}
+            cellphoneOtpSent={verificationState.phone}
+            setPhoneState={setPhoneState}
             dontToggleEditMode
           />
         </View>
