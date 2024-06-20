@@ -43,7 +43,10 @@ export const UserFormDetailsUI = (props: any) => {
 		isOrderTypeValidationField,
 		checkoutFields,
 		isCheckoutPlace,
-		setCellphoneStartZero
+		setCellphoneStartZero,
+		setPhoneState,
+		isPhoneVerifyRequired,
+		cellphoneOtpSent
 	} = props;
 
 	const theme = useTheme();
@@ -321,6 +324,15 @@ export const UserFormDetailsUI = (props: any) => {
 		setIsValid(_isValid)
 	}, [formState?.changes, requiredFields])
 
+	useEffect(() => {
+		if (!isPhoneVerifyRequired || cellphoneOtpSent || formState?.changes?.length === 0) return
+		setPhoneState?.({
+      cellphone: formState?.changes?.country_code === "PR" ? formState?.changes?.cellphone.replace('787', '') : formState?.changes?.cellphone,
+      country_phone_code: formState?.changes?.country_code === "PR" ? '1787' : formState?.changes?.country_phone_code,
+      formatted: `+${formState?.changes?.country_phone_code} ${formState?.changes?.cellphone}`
+    })
+	}, [formState?.changes, cellphoneOtpSent])
+
 	return (
 		<>
 			<UDForm>
@@ -505,7 +517,7 @@ export const UserFormDetailsUI = (props: any) => {
 					</UDLoader>
 				)}
 			</UDForm>
-			{!hideUpdateButton && (
+			{!hideUpdateButton && !isVerifiedPhone && (
 				<>
 					{((formState &&
 						Object.keys(formState?.changes).length > 0 &&
