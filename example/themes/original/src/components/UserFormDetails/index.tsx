@@ -517,7 +517,7 @@ export const UserFormDetailsUI = (props: any) => {
 					</UDLoader>
 				)}
 			</UDForm>
-			{!hideUpdateButton && !isVerifiedPhone && (
+			{!hideUpdateButton && !isPhoneVerifyRequired && (
 				<>
 					{((formState &&
 						Object.keys(formState?.changes).length > 0 &&
