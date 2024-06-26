@@ -8,7 +8,8 @@ interface Props {
   title: string,
   content: Array<string>,
   onClose: () => void,
-  onAccept: () => void
+  onAccept: () => void,
+  onCancel: () => void
 }
 
 const Alert = (props: Props) => {
@@ -38,6 +39,7 @@ const Alert = (props: Props) => {
       confirmText={t('ACCEPT', 'Accept')}
       confirmButtonColor={theme.colors.primary}
       onCancelPressed={() => onClose()}
+      showCancelButton={!!props.onCancel}
       onConfirmPressed={() => onAccept()}
     />
   )

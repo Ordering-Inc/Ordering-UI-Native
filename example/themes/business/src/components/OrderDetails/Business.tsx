@@ -3,8 +3,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  ActivityIndicator,
-  Alert,
+  ActivityIndicator
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { StarPRNT } from 'react-native-star-prnt';
@@ -39,6 +38,7 @@ import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
 import { _retrieveStoreData } from '../../providers/StoreUtil'
 import { usePrinterCommands } from './usePrinterCommands'
+import Alert from '../../../../../src/providers/AlertProvider'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -78,6 +78,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
   const [printerSettings, setPrinterSettings] = useState<any>('')
   const [autoPrintEnabled, setAutoPrintEnabled] = useState<boolean>(false)
+  const [alertState, setAlertState] = useState<any>({ open: false, title: '', content: [] })
 
   const orderToComplete = [4, 20, 21]
   const orderToReady = [7, 14]
@@ -139,6 +140,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       if (order?.status === 7 && autoPrintEnabled && printerSettings) {
         handleViewSummaryOrder()
       }
+      return order
     }
   }
 
@@ -267,7 +269,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )}:\n${productsInString}\n`;
 
     const subtotal = `${t('SUBTOTAL', 'Subtotal')}: ${parsePrice(
-      order?.subtotal, 
+      order?.subtotal,
       { currency: getCurrenySymbol(order?.currency) }
     )}\n`;
 
@@ -315,9 +317,41 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setUnreadAlert({ ...unreadAlert, business: false });
   };
 
-  const handleViewActionOrder = (action: string) => {
+  const handleViewActionOrder = (action: string, options?: any) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
+    }
+    if (options?.alert) {
+      let bodyToSend: any = {};
+      const orderStatus: any = {
+        acceptByBusiness: {
+          status: 7,
+        },
+      };
+
+      if (actions && action === 'accept') {
+        bodyToSend = orderStatus[actions.accept];
+      }
+      bodyToSend.id = order?.id;
+      setAlertState({
+        open: true,
+        content: options?.content,
+        title: t('ORDER_STATUS', 'Order status'),
+        onAccept: async () => {
+          setAlertState({
+            open: false,
+            content: []
+          })
+          const order = await handleChangeOrderStatus(bodyToSend?.status, bodyToSend)
+          if (order?.id) {
+            setActionOrder(action);
+            setOpenModalForAccept(true);
+          } else {
+            showToast(ToastType.Error, t('FAILED_TO_UPDATE_ORDER', 'Failed to update order'), 5000)
+          }
+        }
+      })
+      return
     }
     setActionOrder(action);
     setOpenModalForAccept(true);
@@ -366,6 +400,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     navigation?.canGoBack() && navigation.goBack();
   };
 
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      title: '',
+      content: []
+    })
+  }
+
   useEffect(() => {
     if (messagesReadList?.length) {
       openModalForBusiness
@@ -408,7 +450,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   ];
 
   useEffect(() => {
-    if (openModalForAccept) {
+    if (openModalForAccept && !loading) {
       setOpenModalForAccept(false);
     }
 
@@ -656,7 +698,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <FloatingButton
                 btnText={t('REJECT', 'Reject')}
                 isSecondaryBtn={false}
-                secondButtonClick={() => handleViewActionOrder('accept')}
+                secondButtonClick={() => handleViewActionOrder('accept', { alert: true, content: t('DO_YOU_WANT_ACCEPT_ORDER', 'Do you want to accept the order?') })}
                 firstButtonClick={() => handleViewActionOrder('reject')}
                 secondBtnText={t('ACCEPT', 'Accept')}
                 secondButton={true}
@@ -698,6 +740,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           )}
         </View>
       )}
+      <Alert
+        open={alertState.open}
+        content={alertState.content}
+        title={alertState.title || ''}
+        onAccept={alertState.onAccept}
+        onClose={closeAlert}
+        onCancel={closeAlert}
+      />
     </>
   );
 };
