@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { OText, OIconButton } from '../shared';
-import { StyleSheet, View, Platform, Alert } from 'react-native';
+import { OText, OIcon } from '../shared';
+import { StyleSheet, View, Platform, Alert, TouchableOpacity } from 'react-native';
 import {
   Content,
   OrderCustomer,
@@ -15,7 +15,7 @@ import {
   ContentInfo,
 } from './styles';
 import { useUtils, useLanguage, useConfig } from 'ordering-components/native';
-import { verifyDecimals, getProductPrice } from '../../utils';
+import { verifyDecimals, getProductPrice, getCurrenySymbol } from '../../utils';
 import { FloatingButton } from '../FloatingButton';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
@@ -152,10 +152,10 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
           </br>
 
           ${!!order?.delivery_option
-            ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)
-            } </br>`
-            : ''
-          }
+        ? `${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: ${t(order?.delivery_option?.name?.toUpperCase()?.replace(/ /g, '_'), order?.delivery_option?.name)
+        } </br>`
+        : ''
+      }
 
           ${t('DELIVERY_DATE', 'Delivery Date')}: ${deliveryDate(order)}
           </br>
@@ -168,9 +168,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         ${t('EMAIL', 'Email')}: ${order?.customer?.email}
         </br>
          ${!!order?.customer?.cellphone
-          ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
-          } </br>`
-          : ''}
+        ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone
+        } </br>`
+        : ''}
 
          ${!!order?.customer?.phone
         ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone
@@ -196,10 +196,10 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         ${order?.business?.email}
         </br>
         ${!!order?.business?.cellphone
-          ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone
-          } </br>`
-          : ''
-        }
+        ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone
+        } </br>`
+        : ''
+      }
         ${!!order?.business?.phone
         ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.phone
         } </br>`
@@ -216,7 +216,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
 
-        ${order?.comment ? ('</br>'+ t('ORDER_COMMENT', 'Order Comment') + ':' + order?.comment) : ''}
+        ${order?.comment ? ('</br>' + t('ORDER_COMMENT', 'Order Comment') + ':' + order?.comment) : ''}
 
         ${order?.products.length &&
       order?.products.map(
@@ -301,7 +301,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
           </div>
 
           <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.delivery_price ?? 0)}
+            ${parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true), { currency: getCurrenySymbol(order?.currency) })}
           </div>` :
         ''}
 
@@ -352,28 +352,28 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
         `}
 
         ${order?.payment_events.length &&
-          order?.payment_events.map(
-            (event: any, i: number) =>
-              `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
+      order?.payment_events.map(
+        (event: any, i: number) =>
+          `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
                     <div style="display:flex;width:100%">
                       <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
                       ${event?.wallet_event
-                        ? walletName[event?.wallet_event?.wallet?.type]?.name
-                        : event?.paymethod?.gateway && event?.paymethod?.gateway === 'cash' && order?.cash > 0
-                          ? `${t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)} (${t('CASH_CHANGE_OF', 'Change of :amount:').replace(':amount:', parsePrice(order?.cash))})`
-                          : event?.paymethod?.gateway
-                            ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
-                            : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}
+            ? walletName[event?.wallet_event?.wallet?.type]?.name
+            : event?.paymethod?.gateway && event?.paymethod?.gateway === 'cash' && order?.cash > 0
+              ? `${t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)} (${t('CASH_CHANGE_OF', 'Change of :amount:').replace(':amount:', parsePrice(order?.cash))})`
+              : event?.paymethod?.gateway
+                ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+                : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}
                       </div>
 
                       <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
                         ${(event?.paymethod?.gateway === 'cash' && order?.cash)
-                          ? parsePrice(order?.cash, { currency: order?.currency })
-                          : `-${parsePrice(event?.amount, { currency: order?.currency })}`}
+            ? parsePrice(order?.cash, { currency: order?.currency })
+            : `-${parsePrice(event?.amount, { currency: order?.currency })}`}
                       </div>
                     </div>
                   </div>`
-        )}
+      )}
     </div>`;
   };
 
@@ -418,8 +418,16 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
   const styles = StyleSheet.create({
     btnBackArrow: {
-      maxWidth: 40,
-      height: 25,
+      borderWidth: 0,
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.textGray,
+      backgroundColor: theme.colors.clear,
+      borderColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginTop: 10
     },
     textBold: {
       fontWeight: '600',
@@ -445,18 +453,27 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
     }
   };
 
+  const getIncludedTaxes = (isDeliveryFee?: boolean) => {
+    if (!order?.taxes) return 0
+    if (order?.taxes?.length === 0) {
+      return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
+    } else {
+      return order?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded +
+          (((!isDeliveryFee && tax.type === 1 && tax.target === 'product') ||
+            (isDeliveryFee && tax.type === 1 && tax.target === 'delivery_fee')) ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
   return (
     <>
       <Content>
         <OrderContent>
           <OrderHeader>
-            <OIconButton
-              icon={theme.images.general.arrow_left}
-              iconStyle={{ width: 20, height: 20 }}
-              borderColor={theme.colors.clear}
-              style={{ maxWidth: 40, justifyContent: 'flex-end' }}
-              onClick={() => handleArrowBack()}
-            />
+            <TouchableOpacity onPress={() => handleArrowBack()} style={styles.btnBackArrow}>
+              <OIcon src={theme.images.general.arrow_left} color={theme.colors.textGray} />
+            </TouchableOpacity>
             <OText
               style={{ marginBottom: 5 }}
               size={15}
@@ -489,7 +506,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
             </OText>
 
             <OText style={{ marginBottom: 5 }}>
-              {`${t(`${paymethodsLength > 1? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${order?.payment_events?.length > 0 ? handlePaymethodsListString() : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}`}
+              {`${t(`${paymethodsLength > 1 ? 'PAYMENT_METHODS' : 'PAYMENT_METHOD'}`, `${paymethodsLength > 1 ? 'Payment methods' : 'Payment method'}`)}: ${order?.payment_events?.length > 0 ? handlePaymethodsListString() : t(order?.paymethod?.gateway?.toUpperCase(), order?.paymethod?.name)}`}
             </OText>
 
           </OrderHeader>
@@ -744,7 +761,9 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                   {t('DELIVERY_FEE', 'Delivery Fee')}
                 </OText>
 
-                <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
+                <OText>
+                  {parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true), { currency: getCurrenySymbol(order?.currency) })}
+                </OText>
               </Table>
             )}
 
