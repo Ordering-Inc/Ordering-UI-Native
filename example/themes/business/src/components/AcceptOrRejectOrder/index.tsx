@@ -215,7 +215,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     const orderStatus: any = {
       acceptByBusiness: {
         prepared_in: time,
-        status: 7,
       },
       rejectByBusiness: {
         reasons: comments,
