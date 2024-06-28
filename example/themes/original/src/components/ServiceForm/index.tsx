@@ -259,7 +259,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   }
 
   useEffect(() => {
-    if (selectDate === null || currentProfessional === null) return
+    if (selectDate === null || currentProfessional?.schedule) return
     const _times = getTimes(selectDate, currentProfessional)
     setTimeList(_times)
   }, [selectDate, currentProfessional])
