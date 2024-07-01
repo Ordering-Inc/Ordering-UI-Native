@@ -242,57 +242,89 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               </div>`
       )
       }
-        <div style="display: flex;">
-
-            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
-            ${t('SUBTOTAL', 'Subtotal')}
-            </div>
-
-            <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-              ${parsePrice(
-        order.tax_type === 1
-          ? order?.summary?.subtotal + order?.summary?.tax ?? 0
-          : order?.summary?.subtotal ?? 0,
-      )}
-            </div>
-
+      <div style="display: flex;">
+        <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+          ${t('SUBTOTAL', 'Subtotal')}
         </div>
 
-        <div style="display: flex">
+        <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+          ${parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: getCurrenySymbol(order?.currency) })}
+        </div>
+      </div>
+
+      <div style="display: flex">
         ${order?.summary?.discount > 0
         ? order?.offer_type === 1
           ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
-                  ${t('DISCOUNT', 'Discount')} (${verifyDecimals(
-            order?.offer_rate,
-            parsePrice,
-          )}%)
-                </div>`
-          : `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%"> ${t(
-            'DISCOUNT',
-            'Discount',
-          )}
-                 </div>`
-        : ''
-      }
-        ${order?.summary?.discount > 0
-        ? `<div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">- ${parsePrice(
-          order?.summary?.discount,
-        )}
+                ${t('DISCOUNT', 'Discount')} (${verifyDecimals(order?.offer_rate, parsePrice)}%)
               </div>`
+          : `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%"> ${t('DISCOUNT', 'Discount')}</div>`
         : ''
       }
-        </div>
+          ${order?.summary?.discount > 0
+        ? `<div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+              - ${parsePrice(order?.summary?.discount ?? order?.discount, { currency: getCurrenySymbol(order?.currency) })}
+            </div>`
+        : ''
+      }
+      </div>
 
-        ${order?.tax_type !== 1
-        ? `<div style="font-size: 25px">
-                ${t('TAX', 'Tax')}
-                ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
-                ${parsePrice(order?.summary?.tax ?? 0)}
-                ${t('TAX', 'Tax')}
-                ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
-              </div>`
-        : ''
-      }
+      ${order?.offers?.length > 0 ? order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+        `<div style="display: flex">
+          ${order?.rate_type === 1
+          ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+                  ${t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)} (${verifyDecimals(offer?.rate, parsePrice)}%)
+                </div>`
+          : `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">${t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}</div>`}
+          <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+            - ${parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
+          </div>
+        </div>`
+      )) : ''}
+
+      ${order?.taxes?.length === 0 && order?.tax_type === 2
+        ? `<div style="display: flex;">
+            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+              ${t('TAX', 'Tax')} (${verifyDecimals(order?.tax, parseNumber)}%)}
+            </div>
+            <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+              ${parsePrice(order?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}
+            </div>
+          </div>`
+        : ''}
+
+      ${order?.fees?.length === 0 && order?.summary?.service_fee > 0 ? (
+        `<div style="display: flex;">
+            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+              ${t('SERVICE_FEE', 'Service fee')} (${verifyDecimals(order?.service_fee, parseNumber)}%)}
+            </div>
+            <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+              ${parsePrice(order?.summary?.service_fee ?? 0, { currency: getCurrenySymbol(order?.currency) })}
+            </div>
+          </div>`
+      ) : ''}
+
+      ${order?.taxes?.length > 0 ? order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'product').map((tax: any) => (
+        `<div style="display: flex;">
+            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+              ${t(tax?.name?.toUpperCase?.()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} (${verifyDecimals(tax?.rate, parseNumber)}%)
+            </div>
+            <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+              ${parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}
+            </div>
+          </div>`
+      )) : ''}
+
+      ${order?.offers?.length > 0 ? order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+        `<div style="display: flex;">
+            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+              ${t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)} ${offer.rate_type === 1 ? `(${verifyDecimals(offer?.rate, parsePrice)}%)` : ''}
+            </div>
+            <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+              - ${parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
+            </div>
+          </div>`
+      )) : ''}
 
       ${order?.summary?.delivery_price > 0 && order.delivery_type !== 2 ?
         ` <div style="display: flex">
@@ -303,55 +335,58 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
           <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
             ${parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true), { currency: getCurrenySymbol(order?.currency) })}
           </div>` :
-        ''}
+        ''
+      }
+    </div>
 
+    <div style="display: flex">
+      <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
+        ${t('DRIVER_TIP', 'Driver tip')}
+        ${percentTip ? `(${percentTip}%)` : ''}
+      </div>
+      <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
+        ${parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: getCurrenySymbol(order?.currency) })}
+      </div>
+    </div>
+
+    ${order?.taxes?.length > 0 ? order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
+        `<div style="display: flex;">
+        <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+          ${tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} (${verifyDecimals(tax?.rate, parsePrice)}%)
         </div>
-        <div style="display: flex">
-
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
-            ${t('DRIVER_TIP', 'Driver tip')}
-            ${percentTip ? `(${percentTip}%)` : ''}
-          </div>
-
-          <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.driver_tip ?? 0)}
-          </div>
-
+        <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+          ${parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}
         </div>
+      </div>`
+      )) : ''}
 
-        ${order?.summary?.service_fee > 0 && `
-          <div style="display: flex">
-            <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start">
-              ${t('SERVICE_FEE', 'Service Fee')}
-            (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)
-            </div>
-
-            <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-              ${parsePrice(order?.summary?.service_fee ?? 0)}
-            </div>
-
-          </div>
-        `}
-
-        <div style="display: flex">
-
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
-            ${t('TOTAL', 'Total')}
-          </div>
-
-          <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.total ?? 0)}
-          </div>
-
+    ${order?.offers?.length > 0 ? order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+        `<div style="display: flex;">
+        <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+          ${t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)} ${offer.rate_type === 1 ? `(${verifyDecimals(offer?.rate, parsePrice, { currency: getCurrenySymbol(order?.currency) })}%)` : ''}
         </div>
+        <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+          - ${parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
+        </div>
+      </div>`
+      )) : ''}
 
-        ${order?.payment_events.length && `
-          <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
-            ${t('PAYMENTS', 'Payments')}
-          </div>
-        `}
+    <div style="display: flex">
+      <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
+        ${t('TOTAL', 'Total')}
+      </div>
+      <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
+        ${parsePrice(order?.summary?.total ?? 0)}
+      </div>
+    </div>
 
-        ${order?.payment_events.length &&
+    ${order?.payment_events.length && `
+      <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start; font-weight: bold">
+        ${t('PAYMENTS', 'Payments')}
+      </div>
+    `}
+
+    ${order?.payment_events.length &&
       order?.payment_events.map(
         (event: any, i: number) =>
           `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
@@ -374,7 +409,7 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                     </div>
                   </div>`
       )}
-    </div>`;
+      </div> `;
   };
 
   const deliveryStatus: any = {
@@ -709,38 +744,17 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
               </OText>
 
               <OText style={{ marginBottom: 5 }}>
-                {parsePrice(
-                  order.tax_type === 1
-                    ? order?.summary?.subtotal + order?.summary?.tax ?? 0
-                    : order?.summary?.subtotal ?? 0,
-                )}
+                {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: getCurrenySymbol(order?.currency) })}
               </OText>
             </Table>
 
-            {order?.tax_type !== 1 && (
-              <Table>
-                <OText style={{ marginBottom: 5 }}>
-                  {t('TAX', 'Tax')}
-                  {`(${verifyDecimals(
-                    order?.summary?.tax_rate,
-                    parseNumber,
-                  )}%)`}
-                </OText>
-
-                <OText style={{ marginBottom: 5 }}>
-                  {parsePrice(order?.summary?.tax ?? 0)}
-                </OText>
-              </Table>
-            )}
-
-            {order?.summary?.discount > 0 && (
+            {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
               <Table>
                 {order?.offer_type === 1 ? (
                   <OText style={{ marginBottom: 5 }}>
                     <OText>{t('DISCOUNT', 'Discount')}</OText>
-
                     <OText>
-                      {`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}
+                      {`(${verifyDecimals(order?.offer_rate, parsePrice)} %)`}
                     </OText>
                   </OText>
                 ) : (
@@ -750,18 +764,75 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
                 )}
 
                 <OText style={{ marginBottom: 5 }}>
-                  - {parsePrice(order?.summary?.discount)}
+                  - {parsePrice(order?.summary?.discount ?? order?.discount, { currency: getCurrenySymbol(order?.currency) })}
                 </OText>
               </Table>
             )}
 
-            {order?.summary?.delivery_price > 0 && order.delivery_type !== 2 && (
+            {order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+              <Table key={offer.id}>
+                <OText mBottom={4}>
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)} %)`}</OText>
+                  )}
+                </OText>
+                <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}</OText>
+              </Table>
+            ))}
+
+            {order?.taxes?.length === 0 && order?.tax_type === 2 && order?.summary?.tax > 0 && (
               <Table>
-                <OText style={{ marginBottom: 5 }}>
+                <OText mBottom={4}>
+                  {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)} %)`}
+                </OText>
+                <OText mBottom={4}>
+                  {parsePrice(order?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}
+                </OText>
+              </Table>
+            )}
+
+            {order?.fees?.length === 0 && order?.summary?.service_fee > 0 && (
+              <Table>
+                <OText mBottom={4}>
+                  {t('SERVICE_FEE', 'Service fee')}
+                  {`(${verifyDecimals(order?.service_fee, parseNumber)} %)`}
+                </OText>
+                <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0, { currency: getCurrenySymbol(order?.currency) })}</OText>
+              </Table>
+            )}
+
+            {order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'product').map((tax: any) => (
+              <Table key={tax.id}>
+                <OText mBottom={4}>
+                  {t(tax?.name?.toUpperCase?.()?.replace(/ /g, '_'), tax?.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {`(${verifyDecimals(tax?.rate, parseNumber)} %)`}{' '}
+                </OText>
+                <OText mBottom={4}>
+                  {parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}
+                </OText>
+              </Table>
+            ))}
+
+            {order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+              <Table key={offer.id}>
+                <OText mBottom={4}>
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)} %)`}</OText>
+                  )}
+                </OText>
+                <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}</OText>
+              </Table>
+            ))}
+
+            {typeof order?.summary?.delivery_price === 'number' && order.delivery_type !== 2 && (
+              <Table>
+                <OText mBottom={4}>
                   {t('DELIVERY_FEE', 'Delivery Fee')}
                 </OText>
 
-                <OText>
+                <OText mBottom={4}>
                   {parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true), { currency: getCurrenySymbol(order?.currency) })}
                 </OText>
               </Table>
@@ -769,38 +840,41 @@ export const OrderSummary = ({ order, navigation, orderStatus, askBluetoothPermi
 
             {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && order.delivery_type !== 2 && (
               <Table>
-                <OText style={{ marginBottom: 5 }}>
+                <OText mBottom={4}>
                   {t('DRIVER_TIP', 'Driver tip')}
-                  {order?.summary?.driver_tip > 0 &&
-                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                  {order?.driver_tip > 0 && parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                    `(${verifyDecimals(
-                      order?.summary?.driver_tip,
-                      parseNumber,
-                    )}%)`}
+                    (
+                      `(${verifyDecimals(order?.driver_tip, parseNumber)} %)`
+                    )}
                 </OText>
-
-                <OText style={{ marginBottom: 5 }}>
-                  {parsePrice(order?.summary?.driver_tip ?? 0)}
+                <OText mBottom={4}>
+                  {parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: getCurrenySymbol(order?.currency) })}
                 </OText>
               </Table>
             )}
 
-            {order?.summary?.service_fee > 0 && (
-              <Table>
-                <OText style={{ marginBottom: 5 }}>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(
-                    order?.summary?.service_fee,
-                    parseNumber,
-                  )}%)`}
+            {order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0 && tax?.target === 'delivery_fee').map((tax: any, i: number) => (
+              <Table key={`${tax.description}_${i} `}>
+                <OText mBottom={4}>
+                  {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {`(${verifyDecimals(tax?.rate, parseNumber)} %)`}
                 </OText>
-
-                <OText style={{ marginBottom: 5 }}>
-                  {parsePrice(order?.summary?.service_fee)}
-                </OText>
+                <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}</OText>
               </Table>
-            )}
+            ))}
+
+            {order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+              <Table key={offer.id}>
+                <OText mBottom={4}>
+                  {t(offer.name?.toUpperCase?.()?.replace(/ /g, '_'), offer.name)}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice, { currency: getCurrenySymbol(order?.currency) })}%)`}</OText>
+                  )}
+                </OText>
+                <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}</OText>
+              </Table>
+            ))}
 
             <Total>
               <Table>
