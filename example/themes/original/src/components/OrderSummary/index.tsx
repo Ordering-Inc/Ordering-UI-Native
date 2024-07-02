@@ -59,7 +59,7 @@ const OrderSummaryUI = (props: any) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const commentRef = useRef()
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
-  const [comment] = useState<any>(orderState?.carts?.[`businessId:${props.cart.business_id}`].comment ?? '')
+  const [comment] = useState<any>(orderState?.carts?.[`businessId:${props.cart.business_id}`]?.comment ?? '')
   const hideCartDiscount = hideCouponByValidationCheckout
   const hideCartComments = hideCommentsByValidationCheckout
 
