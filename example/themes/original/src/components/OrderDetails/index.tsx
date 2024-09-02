@@ -129,7 +129,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [showTitle, setShowTitle] = useState(false)
 
   const { order, businessData } = props.order;
-  const mapValidStatuses = [9, 19, 23, 26]
+  const mapValidStatuses = [9, 18, 19, 23, 26]
   const placeSpotTypes = [3, 4, 5]
   const directionTypes = [2, 3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
@@ -474,7 +474,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {activeStatus.includes(order?.status) ? (
                     <>
                       {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
-                      {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`}  />
+                      {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`} />
                     </>
                   ) : (
                     parseDate(order?.reporting_data?.at[`status:${order.status}`], { outputFormat: `YYYY-MM-DD ${configs?.general_hour_format?.value}` })
