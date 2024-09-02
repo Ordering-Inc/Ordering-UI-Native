@@ -40,6 +40,8 @@ function BusinessControllerPropsAreEqual(prevProps: any, nextProps: any) {
 		prevProps.isBusinessOpen === nextProps.isBusinessOpen
 }
 
+const deliveryTypes = [1, 7]
+
 export const BusinessControllerUI = React.memo((props: BusinessControllerParams) => {
 	const {
 		business,
@@ -321,14 +323,14 @@ export const BusinessControllerUI = React.memo((props: BusinessControllerParams)
 								</View>
 							) : (
 								<View style={styles.bullet}>
-									{orderState?.options?.type === 1 && !hideBusinessFee && (
+									{deliveryTypes.includes(orderState?.options?.type) && !hideBusinessFee && (
 										<OText size={textSize} color={theme.colors.textSecondary}>
 											{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
 										</OText>
 									)}
 									{!hideBusinessTime && (
 										<OText size={textSize} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
-											orderState?.options?.type === 1
+											deliveryTypes.includes(orderState?.options?.type)
 												? (businessDeliveryTime ?? business?.delivery_time)
 												: (businessPickupTime ?? business?.pickup_time),
 										)} \u2022 `}</OText>
