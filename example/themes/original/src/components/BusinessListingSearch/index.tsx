@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
 import { ScrollView, StyleSheet, Dimensions, FlatList } from 'react-native'
 import { useTheme } from 'styled-components/native'
@@ -164,10 +164,14 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     handleChangeTermValue('')
   }, [isFocused])
 
+  const businessFiltered = useMemo(() => {
+    return businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0)
+  }, [businessesSearchList.businesses])
+
   return (
     <>
       <FlatList
-        data={businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0)}
+        data={businessFiltered}
         ListFooterComponent={<BusinessSearchFooter
           businessesSearchList={businessesSearchList}
           handleCloseFilters={handleCloseFilters}
