@@ -16,7 +16,6 @@ import {
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
 import { BusinessSearchParams } from '../../types'
-import { useIsFocused } from '@react-navigation/native';
 
 import { BusinessSearchHeader } from './BusinessSearchHeader'
 import { BusinessSearchFooter } from './BusinessSearchFooter'
@@ -48,8 +47,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
 
   const [openFilters, setOpenFilters] = useState(false)
-
-  const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
     productsContainer: {
@@ -158,11 +155,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   useEffect(() => {
     handleSearchbusinessAndProducts(true)
   }, [])
-
-
-  useEffect(() => {
-    handleChangeTermValue('')
-  }, [isFocused])
 
   const businessFiltered = useMemo(() => {
     return businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0)
