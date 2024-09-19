@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
 import { ScrollView, StyleSheet, Dimensions, FlatList } from 'react-native'
 import { useTheme } from 'styled-components/native'
@@ -127,17 +127,16 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     })
   }
 
-  const handleScroll = ({ nativeEvent }: any) => {
+  const handleScroll = useCallback(({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y;
     const height = nativeEvent.contentSize.height;
     const hasMore = !(
       paginationProps.totalPages === paginationProps.currentPage
     );
-
-    if (y + PIXELS_TO_SCROLL > height && !businessesSearchList.loading && hasMore && businessesSearchList?.businesses?.length > 0) {
+    if (height > 1000 && y + PIXELS_TO_SCROLL > height && !businessesSearchList.loading && hasMore && businessesSearchList?.businesses?.length > 0) {
       handleSearchbusinessAndProducts();
     }
-  };
+  }, [businessesSearchList.loading, businessesSearchList?.businesses?.length]);
 
   const onChangeTermValue = (query: any) => {
     handleChangeTermValue(query)
