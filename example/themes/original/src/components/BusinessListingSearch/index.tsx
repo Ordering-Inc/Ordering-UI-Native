@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils, useEvent, showToast, ToastType } from 'ordering-components/native'
 import { ScrollView, StyleSheet, Dimensions, FlatList } from 'react-native'
 import { useTheme } from 'styled-components/native'
@@ -16,7 +16,6 @@ import {
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
 import { BusinessSearchParams } from '../../types'
-import { useIsFocused } from '@react-navigation/native';
 
 import { BusinessSearchHeader } from './BusinessSearchHeader'
 import { BusinessSearchFooter } from './BusinessSearchFooter'
@@ -48,8 +47,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
 
   const [openFilters, setOpenFilters] = useState(false)
-
-  const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
     productsContainer: {
@@ -130,17 +127,16 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     })
   }
 
-  const handleScroll = ({ nativeEvent }: any) => {
+  const handleScroll = useCallback(({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y;
     const height = nativeEvent.contentSize.height;
     const hasMore = !(
       paginationProps.totalPages === paginationProps.currentPage
     );
-
-    if (y + PIXELS_TO_SCROLL > height && !businessesSearchList.loading && hasMore && businessesSearchList?.businesses?.length > 0) {
+    if (height > 1000 && y + PIXELS_TO_SCROLL > height && !businessesSearchList.loading && hasMore && businessesSearchList?.businesses?.length > 0) {
       handleSearchbusinessAndProducts();
     }
-  };
+  }, [businessesSearchList.loading, businessesSearchList?.businesses?.length]);
 
   const onChangeTermValue = (query: any) => {
     handleChangeTermValue(query)
@@ -158,11 +154,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   useEffect(() => {
     handleSearchbusinessAndProducts(true)
   }, [])
-
-
-  useEffect(() => {
-    handleChangeTermValue('')
-  }, [isFocused])
 
   const businessFiltered = useMemo(() => {
     return businessesSearchList.businesses?.filter((business: any) => business?.categories?.length > 0)
