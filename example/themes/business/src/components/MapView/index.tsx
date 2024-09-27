@@ -1,20 +1,37 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Dimensions, Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native'
 import MapView, {
   PROVIDER_GOOGLE,
-  Marker,
-  Callout
+  Marker
 } from 'react-native-maps';
+import FastImage from 'react-native-fast-image'
 import { useLanguage, useSession, MapView as MapViewController } from 'ordering-components/native';
 import { MapViewParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { OIcon, OText, OFab } from '../shared'
-const MapViewComponent = (props: MapViewParams) => {
+import { OFab } from '../shared'
+import { RenderMarker } from './RenderMarker'
 
+const styles = StyleSheet.create({
+  image: {
+    borderRadius: 50,
+    width: 25,
+    height: 25
+  },
+  view: {
+    width: 25,
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    bottom: 0,
+    right: 0,
+  },
+});
+
+const MapViewComponent = (props: MapViewParams) => {
   const {
     isLoadingBusinessMarkers,
     markerGroups,
@@ -36,6 +53,7 @@ const MapViewComponent = (props: MapViewParams) => {
   const following = useRef<boolean>(true);
   const [isFocused, setIsFocused] = useState(false)
   const [locationSelected, setLocationSelected] = useState<any>(null)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const {
     initialPosition,
     userLocation,
@@ -43,7 +61,10 @@ const MapViewComponent = (props: MapViewParams) => {
     followUserLocation
   } = useLocation();
 
-  const location = { lat: userLocation?.latitude, lng: userLocation?.longitude }
+  const location = useMemo(() => {
+    return { lat: userLocation?.latitude, lng: userLocation?.longitude }
+  }, [userLocation?.latitude, userLocation?.longitude])
+
   const haveOrders = Object.values(markerGroups)?.length > 0 && Object.values(customerMarkerGroups)?.length > 0
   const closeAlert = () => {
     setAlertState({
@@ -124,120 +145,6 @@ const MapViewComponent = (props: MapViewParams) => {
     }, [])
   )
 
-  const styles = StyleSheet.create({
-    image: {
-      borderRadius: 50,
-    },
-    view: {
-      width: 25,
-      position: 'absolute',
-      top: 6,
-      left: 6,
-      bottom: 0,
-      right: 0,
-    },
-  });
-
-  const RenderMarker = ({ marker, customer, orderIds }: { marker: any, customer?: boolean, orderIds?: Array<number> }) => {
-    const markerRef = useRef<any>()
-
-    let coordinateLat = (customer
-      ? typeof marker?.customer?.location?.lat === 'number' && !Number.isNaN(marker?.customer?.location?.lat)
-        ? marker?.customer?.location?.lat
-        : 0
-      : typeof marker?.business?.location?.lat === 'number' && !Number.isNaN(marker?.business?.location?.lat)
-        ? marker?.business?.location?.lat
-        : 0) ?? (initialPosition?.latitude || 0)
-    let coordinateLng = (customer
-      ? typeof marker?.customer?.location?.lng === 'number' && !Number.isNaN(marker?.customer?.location?.lng)
-        ? marker?.customer?.location?.lng
-        : 0
-      : typeof marker?.business?.location?.lng === 'number' && !Number.isNaN(marker?.business?.location?.lng)
-        ? marker?.business?.location?.lng
-        : 0) ?? (initialPosition?.longitude || 0)
-
-    useEffect(() => {
-      if (
-        markerRef?.current?.props?.coordinate?.latitude === locationSelected?.latitude &&
-        markerRef?.current?.props?.coordinate?.longitude === locationSelected?.longitude
-      ) {
-        markerRef?.current?.showCallout()
-      }
-    }, [locationSelected])
-
-    return (
-      <Marker
-        key={customer ? marker?.customer?.id : marker?.business?.id}
-        coordinate={{
-          latitude: coordinateLat,
-          longitude: coordinateLng
-        }}
-        onPress={() =>
-          setLocationSelected({
-            latitude: coordinateLat,
-            longitude: coordinateLng
-          })
-        }
-        ref={(ref: any) => markerRef.current = ref}
-      >
-        <Icon
-          name="map-marker"
-          size={50}
-          color={theme.colors.primary}
-        />
-        {(!!marker?.customer?.photo || !!marker?.business?.logo) && (
-          <View style={styles.view}>
-            <OIcon
-              style={styles.image}
-              src={{ uri: customer ? marker?.customer?.photo : marker?.business?.logo }}
-              width={25}
-              height={25}
-            />
-          </View>
-        )}
-        <Callout
-          onPress={() => !!orderIds && orderIds.toString().includes(',') ? onNavigationRedirect('Orders') : onNavigationRedirect('OrderDetails', { order: marker })}
-        >
-          <View style={{ flex: 1, width: 200, padding: 5 }}>
-            <OText weight='bold'>{customer ? `${marker?.customer?.name} ${marker?.customer?.lastname}` : marker?.business?.name}</OText>
-            <OText>
-              {!!orderIds && orderIds.toString().includes(',') ? (
-                <>
-                  {t('ORDER_NUMBERS', 'Order Numbers')} {orderIds}
-                </>
-              ) : (
-                <>
-                  {t('ORDER_NUMBER', 'Order No.')} {marker?.id}
-                </>
-              )}
-            </OText>
-            <OText>{customer ? marker?.customer?.address : marker?.business?.address}</OText>
-            {((customer && marker?.customer?.city?.address_notes) || !customer) && (
-              <OText>{customer ? marker?.customer?.city?.address_notes : marker?.business?.city?.name}</OText>
-            )}
-            {((customer && !!marker?.business?.zipcode) || (!customer && !!marker?.business?.zipcode)) && (
-              <OText>{customer ? marker?.customer?.zipcode ?? '' : marker?.business?.zipcode ?? ''}</OText>
-            )}
-            {customer && !!marker?.customer?.internal_number && (
-              <OText>{marker?.customer?.internal_number}</OText>
-            )}
-            <OText textDecorationLine='underline' color={theme.colors.primary}>
-              {!!orderIds && orderIds.toString().includes(',') ? (
-                <>
-                  {t('SHOW_ORDERS', 'Show orders')}
-                </>
-              ) : (
-                <>
-                  {t('MORE_INFO', 'More info')}
-                </>
-              )}
-            </OText>
-          </View>
-        </Callout>
-      </Marker>
-    )
-  }
-
   useEffect(() => {
     if (userLocation?.latitude !== 0 && userLocation?.longitude !== 0) {
       const location = {
@@ -248,17 +155,24 @@ const MapViewComponent = (props: MapViewParams) => {
     }
   }, [userLocation])
 
+  const renderMarkerDefaultProps = {
+    onNavigationRedirect: onNavigationRedirect,
+    initialPosition: initialPosition,
+    locationSelected: locationSelected,
+    setLocationSelected: setLocationSelected
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        {(isDeliveryApp || (!isLoadingBusinessMarkers && isFocused)) && (
+        {(isDeliveryApp || (!isLoadingBusinessMarkers && isFocused)) && !!initialPosition?.latitude && !!initialPosition?.longitude && (
           <View style={{ flex: 1 }}>
             <MapView
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
               initialRegion={{
-                latitude: initialPosition?.latitude || 0,
-                longitude: initialPosition?.longitude || 0,
+                latitude: initialPosition?.latitude,
+                longitude: initialPosition?.longitude,
                 latitudeDelta: haveOrders ? 0.01 : 0.1,
                 longitudeDelta: haveOrders ? 0.01 * ASPECT_RATIO : 0.1 * ASPECT_RATIO,
               }}
@@ -273,6 +187,7 @@ const MapViewComponent = (props: MapViewParams) => {
               <>
                 {Object.values(markerGroups).map((marker: any) => (
                   <RenderMarker
+                    {...renderMarkerDefaultProps}
                     key={marker[0]?.business_id}
                     marker={marker[0]}
                     orderIds={marker.map((order: any) => order.id).join(', ')}
@@ -280,6 +195,7 @@ const MapViewComponent = (props: MapViewParams) => {
                 ))}
                 {Object.values(customerMarkerGroups).map((marker: any) => (
                   <RenderMarker
+                    {...renderMarkerDefaultProps}
                     key={marker[0]?.customer_id}
                     marker={marker[0]}
                     orderIds={marker.map((order: any) => order.id).join(', ')}
@@ -287,6 +203,7 @@ const MapViewComponent = (props: MapViewParams) => {
                   />
                 ))}
                 <Marker
+                  tracksViewChanges={!imageLoaded}
                   coordinate={{
                     latitude: typeof location.lat === 'number' && !Number.isNaN(location.lat) ? location.lat : 0,
                     longitude: typeof location.lng === 'number' && !Number.isNaN(location.lng) ? location.lng : 0,
@@ -299,11 +216,15 @@ const MapViewComponent = (props: MapViewParams) => {
                     color={theme.colors.primary}
                   />
                   <View style={styles.view}>
-                    <OIcon
+                    <FastImage
                       style={styles.image}
-                      src={{ uri: user.photo }}
-                      width={25}
-                      height={25}
+                      source={user.photo?.includes('https') ? {
+                        uri: user.photo,
+                        priority: FastImage.priority.high,
+                        cache: FastImage.cacheControl.immutable
+                      } : user.photo ?? theme?.images?.dummies?.driverPhoto}
+                      resizeMode={FastImage.resizeMode.cover}
+                      onLoadEnd={() => setImageLoaded(true)}
                     />
                   </View>
                 </Marker>
