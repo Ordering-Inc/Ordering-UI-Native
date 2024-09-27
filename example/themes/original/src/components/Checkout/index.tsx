@@ -201,7 +201,7 @@ const CheckoutUI = (props: any) => {
 	const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
 	const hideBusinessMap = theme?.checkout?.components?.business?.components?.map?.hidden
 	const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
-
+	const isGuestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
 	const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
 	const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find((b: any) => b.business_id === cart?.business_id && b.accumulates)
 	const methodsPay = ['google_pay', 'apple_pay']
@@ -230,7 +230,8 @@ const CheckoutUI = (props: any) => {
 		validateDriverTipField ||
 		validateCouponField ||
 		validateZipcodeCard ||
-		(!userHasCards && cardsPaymethods.includes(paymethodSelected?.gateway))
+		(!userHasCards && cardsPaymethods.includes(paymethodSelected?.gateway)) ||
+		(!isGuestCheckoutEnabled && !!user?.guest_id)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -275,6 +276,10 @@ const CheckoutUI = (props: any) => {
 	const handleSuccessLogin = (user: any) => {
 		if (user) setOpenModal({ ...openModal, login: false })
 	}
+
+	const handleOpenGuestSignup = () => {
+    setOpenModal({ ...openModal, signup: true, isGuest: true })
+  }
 
 	const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
 		if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
@@ -671,14 +676,16 @@ const CheckoutUI = (props: any) => {
 												style={{ borderRadius: 7.6, marginTop: 20 }}
 												onClick={() => setOpenModal({ ...openModal, login: true })}
 											/>
-											<OButton
-												text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
-												textStyle={{ color: theme.colors.black }}
-												bgColor={theme.colors.white}
-												borderColor={theme.colors.black}
-												style={{ borderRadius: 7.6, marginTop: 20 }}
-												onClick={() => setAllowedGuest(true)}
-											/>
+											{isGuestCheckoutEnabled && (
+                        <OButton
+                          text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                          textStyle={{ color: theme.colors.black }}
+                          bgColor={theme.colors.white}
+                          borderColor={theme.colors.black}
+                          style={{ borderRadius: 7.6, marginTop: 20 }}
+                          onClick={() => setAllowedGuest(true)}
+                        />
+                      )}
 										</View>
 									) : (
 										<UserDetails
@@ -869,6 +876,8 @@ const CheckoutUI = (props: any) => {
 									paymethodClicked={paymethodClicked}
 									setPaymethodClicked={setPaymethodClicked}
 									setUserHasCards={setUserHasCards}
+									handleOpenGuestSignup={handleOpenGuestSignup}
+									guestDisabledError={(!isGuestCheckoutEnabled && !!user?.guest_id)}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -1038,6 +1047,14 @@ const CheckoutUI = (props: any) => {
 											{t('WARNING_INVALID_COUPON_FIELD', 'Coupon is required.')}
 										</OText>
 									)}
+									{(!isGuestCheckoutEnabled && !!user?.guest_id) && (
+                    <OText
+                      color={theme.colors.error}
+                      size={12}
+                    >
+                      {t('LOGIN_SIGN_UP_COMPLETE_ORDER', 'Login/Sign up to complete your order.')}
+                    </OText>
+                  )}
 							</ChErrors>
 						</View>
 					)}

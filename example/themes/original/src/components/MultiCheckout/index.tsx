@@ -103,6 +103,7 @@ const MultiCheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
+  const isGuestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const cartsToShow = openCarts?.length > 0 ? openCarts : cartsInvalid
@@ -123,7 +124,7 @@ const MultiCheckoutUI = (props: any) => {
 
   const creditPointGeneralPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
   const loyalBusinessAvailable = creditPointGeneralPlan?.businesses?.filter((b: any) => b.accumulates) ?? []
-  const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field : any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
+  const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
 
   const accumulationRateBusiness = (businessId: number) => {
     const value = loyalBusinessAvailable?.find((loyal: any) => loyal.business_id === businessId)?.accumulation_rate ?? 0
@@ -162,7 +163,8 @@ const MultiCheckoutUI = (props: any) => {
   const isDisablePlaceOrderButton = cartGroup?.loading || placing || (!(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) && cartGroup?.result?.balance > 0) ||
     (paymethodSelected?.paymethod?.gateway === 'stripe' && !paymethodSelected?.paymethod_data) ||
     walletCarts.length > 0
-    || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading)) || openCarts?.length === 0
+    || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading)) || openCarts?.length === 0 ||
+    (!isGuestCheckoutEnabled && !!user?.guest_id)
 
   const handleMomentClick = () => {
     if (isPreOrder) {
@@ -428,14 +430,16 @@ const MultiCheckoutUI = (props: any) => {
                     style={{ borderRadius: 7.6, marginTop: 20 }}
                     onClick={() => setOpenModal({ ...openModal, login: true })}
                   />
-                  <OButton
-                    text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
-                    textStyle={{ color: theme.colors.black }}
-                    bgColor={theme.colors.white}
-                    borderColor={theme.colors.black}
-                    style={{ borderRadius: 7.6, marginTop: 20 }}
-                    onClick={() => setAllowedGuest(true)}
-                  />
+                  {isGuestCheckoutEnabled && (
+                    <OButton
+                      text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                      textStyle={{ color: theme.colors.black }}
+                      bgColor={theme.colors.white}
+                      borderColor={theme.colors.black}
+                      style={{ borderRadius: 7.6, marginTop: 20 }}
+                      onClick={() => setAllowedGuest(true)}
+                    />
+                  )}
                 </View>
               ) : (
                 <UserDetails
@@ -641,6 +645,14 @@ const MultiCheckoutUI = (props: any) => {
               size={12}
             >
               {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+            </OText>
+          )}
+          {(!isGuestCheckoutEnabled && !!user?.guest_id) && (
+            <OText
+              color={theme.colors.error}
+              size={12}
+            >
+              {t('LOGIN_SIGN_UP_COMPLETE_ORDER', 'Login/Sign up to complete your order.')}
             </OText>
           )}
         </ChContainer>
