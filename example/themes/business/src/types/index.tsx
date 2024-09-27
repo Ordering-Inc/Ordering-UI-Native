@@ -1,4 +1,5 @@
 import { TextInputProps, ViewStyle } from 'react-native';
+import { LatLng } from 'react-native-maps';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -653,4 +654,15 @@ export interface SessionsParams {
   actionState: any,
   handleDeleteSession: any,
   handleDeleteAllSessions: any
+}
+
+export interface RenderMarkerParams {
+  key?: number,
+  marker: any,
+  customer?: boolean,
+  orderIds?: Array<number>
+  onNavigationRedirect?: any,
+  initialPosition?: LatLng,
+  locationSelected?: LatLng,
+  setLocationSelected ?: any
 }
