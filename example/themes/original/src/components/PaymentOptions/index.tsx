@@ -48,6 +48,8 @@ const stripeDirectMethods = ['stripe_direct']
 const webViewPaymentGateway: any = ['paypal', 'square']
 const multiCheckoutMethods = ['global_google_pay', 'global_apple_pay']
 const cardsPaymethods = ['credomatic']
+const guestNotSupportedMethods = ['stripe', 'stripe_connect', 'stripe_redirect']
+const popupMethods = [...guestNotSupportedMethods, 'stripe_direct', 'paypal']
 
 const PaymentOptionsUI = (props: any) => {
   const {
@@ -77,7 +79,9 @@ const PaymentOptionsUI = (props: any) => {
     paymethodClicked,
     setPaymethodClicked,
     androidAppId,
-    setUserHasCards
+    setUserHasCards,
+    guestDisabledError,
+    handleOpenGuestSignup
   } = props
 
   const theme = useTheme();
@@ -125,6 +129,11 @@ const PaymentOptionsUI = (props: any) => {
   const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
 
   const handlePaymentMethodClick = (paymethod: any) => {
+    const _guestNotSupportedMethods = guestDisabledError ? popupMethods : guestNotSupportedMethods
+    if (handleOpenGuestSignup && _guestNotSupportedMethods.includes(paymethod?.gateway) && !!user?.guest_id) {
+      handleOpenGuestSignup()
+      return
+    }
     if (cart?.balance > 0 || !!user?.guest_id) {
       if (paymethodsFieldRequired.includes(paymethod?.gateway) && requiredFields.length > 0) {
         openUserModal && openUserModal(true)
