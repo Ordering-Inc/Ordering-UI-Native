@@ -84,6 +84,7 @@ const CartUI = (props: any) => {
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
+  const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && orderState?.options?.type === 2
 
   const momentFormatted = !orderState?.option?.moment
     ? t('RIGHT_NOW', 'Right Now')
@@ -465,7 +466,7 @@ const CartUI = (props: any) => {
             {!isMultiCheckout &&
               cart &&
               cart?.valid &&
-              orderState?.options?.type === 1 &&
+              (orderState?.options?.type === 1 || allowDriverTipPickup) &&
               cart?.status !== 2 &&
               validationFields?.fields?.checkout?.driver_tip?.enabled &&
               driverTipsOptions && driverTipsOptions?.length > 0 &&
