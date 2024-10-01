@@ -71,6 +71,8 @@ const mapConfigs = {
 	}
 };
 
+const driverTipsTypes = [1, 2]
+
 const manageErrorsToShow = (array = []) => {
 	let stringError = ''
 	const list = Array.isArray(array) ? array : Object.values(array)
@@ -184,7 +186,7 @@ const CheckoutUI = (props: any) => {
 	const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 
 	const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
-	const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === 1 && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
+	const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find((field: any) => driverTipsTypes.includes(field.order_type_id) && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
 	const guestCheckoutComment = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'comments'), [JSON.stringify(checkoutFields), options])
 	const guestCheckoutCoupon = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'coupon'), [JSON.stringify(checkoutFields), options])
 	const guestCheckoutZipcode = useMemo(() => checkoutFields?.find((field: any) => field.order_type_id === options?.type && field?.validation_field?.code === 'zipcode'), [JSON.stringify(checkoutFields), options])
@@ -213,9 +215,9 @@ const CheckoutUI = (props: any) => {
 			return acc = acc + item?.summary?.tax
 		return acc = acc
 	}, cart?.subtotal)
-
+	const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && options?.type === 2
 	const validateCommentsCartField = (guestCheckoutComment?.enabled && (user?.guest_id ? guestCheckoutComment?.required_with_guest : guestCheckoutComment?.required)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
-	const validateDriverTipField = options.type === 1 && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
+	const validateDriverTipField = (options.type === 1 || allowDriverTipPickup) && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
 	const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some((offer: any) => offer?.type === 2)
 	const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
 
@@ -236,7 +238,7 @@ const CheckoutUI = (props: any) => {
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
 		: configs?.driver_tip_options?.value || []
-	const driverTipsField = !cartState.loading && cart && cart?.business_id && options.type === 1 && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0
+	const driverTipsField = !cartState.loading && cart && cart?.business_id && (options.type === 1 || allowDriverTipPickup) && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0
 
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
