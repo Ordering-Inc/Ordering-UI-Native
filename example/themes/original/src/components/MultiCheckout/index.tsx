@@ -103,6 +103,7 @@ const MultiCheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
+  const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && options?.type === 2
   const isGuestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
   const isChewLayout = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
@@ -494,7 +495,7 @@ const MultiCheckoutUI = (props: any) => {
           )}
           {
             isMultiDriverTips &&
-            options?.type === 1 &&
+            (options?.type === 1 || allowDriverTipPickup) &&
             validationFields?.fields?.checkout?.driver_tip?.enabled &&
             openCarts.every((cart: any) => cart.business_id && cart.status !== 2) &&
             driverTipsOptions && driverTipsOptions?.length > 0 &&
