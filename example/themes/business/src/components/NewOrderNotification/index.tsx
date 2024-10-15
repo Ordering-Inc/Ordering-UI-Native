@@ -4,10 +4,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
-  NativeModules,
-  PermissionsAndroid,
-  Platform
+  TouchableOpacity
 } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import moment from 'moment'
@@ -20,7 +17,6 @@ import {
   useEvent,
   useLanguage,
   useSession,
-  useConfig,
   useToast,
   ToastType
 } from 'ordering-components/native'
@@ -36,48 +32,25 @@ const SoundPlayerComponent = (props: any) => {
   const { evtList, currentEvent, handleCloseEvents } = props
 
   const theme = useTheme()
-  const [count, setCount] = useState(0);
-  const [isEnabledReadStorage, setIsEnabledReadStorage] = useState(true)
-  const URL_SOUND = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3' ?? theme.sounds.notification
+  const URL_SOUND = 'https://d33aymufw4jvwf.cloudfront.net/notification.mp3'
 
   useEffect(() => {
-    const id = setInterval(() => setCount(count + 1), 2500)
-
-    const playSound = async () => {
+    if (!currentEvent?.orderId) return
+    const playSound = () => {
       try {
         SoundPlayer.playUrl(URL_SOUND)
-        await new Promise(resolve => setTimeout(resolve, DELAY_SOUND))
-        SoundPlayer.stop()
-      } catch (err: any) {
+      } catch (e) {
         console.log('Sound Error - ', err.message)
       }
     }
-    if (NativeModules?.RNSoundPlayer?.playUrl && typeof URL_SOUND === 'string' && isEnabledReadStorage) {
+
+    const interval = setInterval(() => {
       playSound()
-    }
+    }, DELAY_SOUND)
 
-    return () => {
-      clearInterval(id);
-      try {
-        SoundPlayer.stop()
-      } catch (err: any) {
-        console.log('Sound Error - ', err.message)
-      }
-    }
-  }, [count, isEnabledReadStorage])
+    return () => clearInterval(interval)
+  }, [currentEvent?.orderId])
 
-  useEffect(() => {
-    const checkSoundMedia = async () => {
-      if (Platform.OS === 'android') {
-        const enabled = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
-        setIsEnabledReadStorage(enabled)
-      } else {
-        setIsEnabledReadStorage(true)
-      }
-    }
-    // checkSoundMedia()
-
-  }, [])
   return (
     <Modal
       animationType='slide'
@@ -129,7 +102,7 @@ const NewOrderNotificationUI = (props: any) => {
   const handleEventNotification = async (evtType: number, value: any, orderStatus?: any) => {
     if (value?.driver) {
       try {
-        const location = await getCurrentLocation()
+        const location: any = await getCurrentLocation()
         if (!location?.latitude || !location?.longitude) {
           showToast(t('ERROR_UPDATING_COORDS', 'Error updating coords'), ToastType.Error)
           return
@@ -154,18 +127,18 @@ const NewOrderNotificationUI = (props: any) => {
       const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
       const assignedSecondsDiff = duration.asSeconds()
       if (assignedSecondsDiff < 5 && !isBusinessApp && !value?.logistic_status) {
-        setCurrentEvent({ evt: 2, orderId: value?.id ?? value?.order_id })
+        setCurrentEvent(() => ({ evt: 2, orderId: value?.id ?? value?.order_id }))
       }
     }
     if ((!orderStatus.includes(value.status) && evtType !== 1 && isBusinessApp && orderStatus?.length > 0) || value?.author_id === user.id) return
-    setCurrentEvent({
+    setCurrentEvent(() => ({
       evt: evtType,
       orderId: value?.driver
         ? value?.order_id ?? value?.id
         : evtList(currentEvent)[evtType].event === 'messages'
           ? value?.order?.id
           : value?.order_id ?? value?.id
-    })
+    }))
   }
 
   useEffect(() => {
