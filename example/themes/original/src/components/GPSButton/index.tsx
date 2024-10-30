@@ -34,7 +34,8 @@ export const GPSButton = (props: any) => {
         }
         let data : any
         const details = {
-          geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
+          geometry: { location: { lat: pos.latitude, lng: pos.longitude } },
+          address_components: results[0]?.address_components
         }
         // if (isSetInputs) {
           data = {
