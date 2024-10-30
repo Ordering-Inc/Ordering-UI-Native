@@ -82,7 +82,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           place_id: results[0]?.place_id,
         }
         const details = {
-          geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
+          geometry: { location: { lat: pos.latitude, lng: pos.longitude } },
+          address_components: results[0]?.address_components,
         }
         handleChangeAddressMap && handleChangeAddressMap(address, details)
         setSaveLocation && setSaveLocation(false)
