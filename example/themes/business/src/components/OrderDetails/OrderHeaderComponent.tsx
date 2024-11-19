@@ -163,8 +163,8 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
           </TouchableOpacity>
           {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
             <Actions>
-              {getOrderStatus(order?.status, t)?.value !==
-                t('PENDING', 'Pending') && (
+              {getOrderStatus(order?.status, t)?.slug !==
+                'PENDING' && (
                   <>
                     <TouchableOpacity onPress={() => handleCopyClipboard?.()}>
                       <MaterialCommunityIcons
@@ -244,8 +244,8 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
 
             {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
               <Actions>
-                {getOrderStatus(order?.status, t)?.value !==
-                  t('PENDING', 'Pending') && (
+                {getOrderStatus(order?.status, t)?.slug !==
+                  'PENDING' && (
                     <>
                       <TouchableOpacity onPress={() => handleCopyClipboard?.()}>
                         <MaterialCommunityIcons

@@ -534,7 +534,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <LinearGradient
                             start={{ x: 0.0, y: 0.0 }}
                             end={{
-                              x: progressBarObjt(order?.status)?.percentage || 0,
+                              x: progressBarObjt(order?.status, t)?.percentage || 0,
                               y: 0,
                             }}
                             locations={[0.9999, 0.9999]}
@@ -547,7 +547,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           lineHeight={24}
                           weight={'600'}
                           color={theme.colors.textNormal}>
-                          {progressBarObjt(order?.status)?.value}
+                          {progressBarObjt(order?.status, t)?.value}
                         </OText>
                       </>
                     )}
