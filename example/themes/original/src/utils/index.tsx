@@ -1,11 +1,9 @@
 import React from 'react';
-import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CODES } from 'ordering-components/native'
 import { ORDER_TYPES } from '../config/constants';
 import { useTheme } from 'styled-components/native';
 
-const [languageState, t] = useLanguage();
 const theme = useTheme()
 
 export const flatArray = (arr: any) => [].concat(...arr)
@@ -19,8 +17,7 @@ export const orderTypeList = ['delivery', 'pickup', 'eatin', 'curbside', 'drivet
  * Function to return the traduction depending of a key 't'
  * @param {string} key for traduction
  */
-export const getTraduction = (key: string) => {
-  const [, t] = useLanguage()
+export const getTraduction = (key: string, t: any) => {
   const keyList: any = {
     // Add the key and traduction that you need below
     ERROR_ORDER_WITHOUT_CART: 'The order was placed without a cart',
@@ -130,32 +127,34 @@ export const monthsEnum: any = {
   Dec: 'MONTHSHORT12',
 }
 
-export const locale = {
-  name: languageState?.language?.code?.slice(0, 2),
-  config: {
-    months: [
-      t('MONTH1', 'January'),
-      t('MONTH2', 'February'),
-      t('MONTH3', 'March'),
-      t('MONTH4', 'April'),
-      t('MONTH5', 'May'),
-      t('MONTH6', 'June'),
-      t('MONTH7', 'July'),
-      t('MONTH8', 'August'),
-      t('MONTH9', 'September'),
-      t('MONTH10', 'October'),
-      t('MONTH11', 'November'),
-      t('MONTH12', 'December')
-    ],
-    weekdaysShort: [
-      t('DAYSHORT7', 'Sun'),
-      t('DAYSHORT1', 'Mon'),
-      t('DAYSHORT2', 'Tue'),
-      t('DAYSHORT3', 'Wed'),
-      t('DAYSHORT4', 'Thu'),
-      t('DAYSHORT5', 'Fri'),
-      t('DAYSHORT6', 'Sat')
-    ],
+export const locale = (languageState: any, t: any) => {
+  return {
+    name: languageState?.language?.code?.slice(0, 2),
+    config: {
+      months: [
+        t('MONTH1', 'January'),
+        t('MONTH2', 'February'),
+        t('MONTH3', 'March'),
+        t('MONTH4', 'April'),
+        t('MONTH5', 'May'),
+        t('MONTH6', 'June'),
+        t('MONTH7', 'July'),
+        t('MONTH8', 'August'),
+        t('MONTH9', 'September'),
+        t('MONTH10', 'October'),
+        t('MONTH11', 'November'),
+        t('MONTH12', 'December')
+      ],
+      weekdaysShort: [
+        t('DAYSHORT7', 'Sun'),
+        t('DAYSHORT1', 'Mon'),
+        t('DAYSHORT2', 'Tue'),
+        t('DAYSHORT3', 'Wed'),
+        t('DAYSHORT4', 'Thu'),
+        t('DAYSHORT5', 'Fri'),
+        t('DAYSHORT6', 'Sat')
+      ],
+    }
   }
 };
 
@@ -365,7 +364,7 @@ export const priceList = [
   { level: '5', content: '$$$$$' }
 ]
 
-export const getLogisticTag = (status: any) => {
+export const getLogisticTag = (status: any, t: any) => {
   const keyList: any = {
     0: t('PENDING', 'Pending'),
     1: t('IN_PROGRESS', 'In progress'),
@@ -376,7 +375,7 @@ export const getLogisticTag = (status: any) => {
   return keyList[status] ? keyList[status] : t('UNKNOWN', 'Unknown')
 }
 
-export const getOrderStatus = (s: string) => {
+export const getOrderStatus = (s: string, t: any) => {
   const status = parseInt(s);
   const orderStatus = [
     {
@@ -593,7 +592,7 @@ export const getOrderStatus = (s: string) => {
   return objectStatus && objectStatus;
 }
 
-export const getOrderStatuPickUp = (s: any) => {
+export const getOrderStatuPickUp = (s: any, t: any) => {
   const status = parseInt(s);
   const orderStatus = [
     {

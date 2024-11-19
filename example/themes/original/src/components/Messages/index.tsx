@@ -133,9 +133,9 @@ const MessagesUI = (props: MessagesParams) => {
 				? `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}`
 				: `${message.change?.attribute !== 'logistic_status'
 					? message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])
-					: message.change.old !== null && getLogisticTag(message.change.old)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
+					: message.change.old !== null && getLogisticTag(message.change.old, t)} ${t('TO', 'to')} ${message.change?.attribute !== 'logistic_status'
 						? t(ORDER_STATUS[parseInt(message.change.new, 10)])
-						: getLogisticTag(message.change.new)}`
+						: getLogisticTag(message.change.new, t)}`
 			}`
 			: message.change.new
 				?

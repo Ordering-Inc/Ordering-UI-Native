@@ -645,7 +645,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 											onFail={(error) =>
 												setAlertState({
 													open: true,
-													content: getTraduction(error),
+													content: getTraduction(error, t),
 												})
 											}
 											styles={{

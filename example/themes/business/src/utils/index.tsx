@@ -301,19 +301,19 @@ export const getOrderStatus = (s: string, t: any) => {
     {
       key: 18,
       value: t(
-        'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
+        'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
         'Driver almost arrived to business',
       ),
-      slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
+      slug: 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
       percentage: 0.15,
     },
     {
       key: 19,
       value: t(
-        'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
+        'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
         'Driver almost arrived to customer',
       ),
-      slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
+      slug: 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
       percentage: 0.9,
     },
     {
