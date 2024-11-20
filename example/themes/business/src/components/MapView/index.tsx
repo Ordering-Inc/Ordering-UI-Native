@@ -33,9 +33,7 @@ const styles = StyleSheet.create({
 
 const MapViewComponent = (props: MapViewParams) => {
   const {
-    isLoadingBusinessMarkers,
-    markerGroups,
-    customerMarkerGroups,
+    assingnedOrders,
     alertState,
     setAlertState,
     setDriverLocation,
@@ -65,7 +63,7 @@ const MapViewComponent = (props: MapViewParams) => {
     return { lat: userLocation?.latitude, lng: userLocation?.longitude }
   }, [userLocation?.latitude, userLocation?.longitude])
 
-  const haveOrders = Object.values(markerGroups)?.length > 0 && Object.values(customerMarkerGroups)?.length > 0
+  const haveOrders = Object.values(assingnedOrders?.orders)?.length > 0 && assingnedOrders?.orders?.some(order => order?.customer?.id)
   const closeAlert = () => {
     setAlertState({
       open: false,
@@ -165,7 +163,7 @@ const MapViewComponent = (props: MapViewParams) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        {(isDeliveryApp || (!isLoadingBusinessMarkers && isFocused)) && !!initialPosition?.latitude && !!initialPosition?.longitude && (
+        {(isDeliveryApp || (!assingnedOrders?.loading && isFocused)) && !!initialPosition?.latitude && !!initialPosition?.longitude && (
           <View style={{ flex: 1 }}>
             <MapView
               ref={mapRef}
@@ -185,20 +183,18 @@ const MapViewComponent = (props: MapViewParams) => {
               onTouchStart={() => (following.current = false)}
             >
               <>
-                {Object.values(markerGroups).map((marker: any) => (
+                {assingnedOrders?.orders.map((marker: any) => (
                   <RenderMarker
                     {...renderMarkerDefaultProps}
-                    key={marker[0]?.business_id}
-                    marker={marker[0]}
-                    orderIds={marker.map((order: any) => order.id).join(', ')}
+                    key={`${marker?.id}_${marker?.business_id}`}
+                    marker={marker}
                   />
                 ))}
-                {Object.values(customerMarkerGroups).map((marker: any) => (
+                {assingnedOrders?.orders.map((marker: any) => (
                   <RenderMarker
                     {...renderMarkerDefaultProps}
-                    key={marker[0]?.customer_id}
-                    marker={marker[0]}
-                    orderIds={marker.map((order: any) => order.id).join(', ')}
+                    key={`${marker?.id}_${marker?.customer_id}`}
+                    marker={marker}
                     customer
                   />
                 ))}
