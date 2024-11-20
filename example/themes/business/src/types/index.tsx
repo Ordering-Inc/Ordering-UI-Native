@@ -623,7 +623,8 @@ export interface MapViewParams {
   markerGroups: Array<any>,
   customerMarkerGroups: Array<any>,
   alertState: { open: boolean, content: Array<string>, key?: string | null },
-  setAlertState: ({ open, content, key }: { open: boolean, content: Array<string>, key?: string | null }) => void
+  setAlertState: ({ open, content, key }: { open: boolean, content: Array<string>, key?: string | null }) => void,
+  assingnedOrders?: any
 }
 
 export interface ReviewCustomerParams {
@@ -657,7 +658,7 @@ export interface SessionsParams {
 }
 
 export interface RenderMarkerParams {
-  key?: number,
+  key?: string,
   marker: any,
   customer?: boolean,
   orderIds?: Array<number>
