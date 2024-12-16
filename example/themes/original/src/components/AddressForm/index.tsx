@@ -76,6 +76,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 	const [autoCompleteInputFocused, setAutoCompleteInputFocused] = useState(false)
 
+	const isEmptyField = (key: any, str: any) => isRequiredField && isRequiredField(key) && (!str || str.trim().length === 0)
+
 	const tagsName = [
 		{ icon: theme.images.general.tag_home, value: 'home' },
 		{ icon: theme.images.general.tag_building, value: 'office' },
@@ -743,9 +745,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 											<OInput
 												name="internal_number"
 												placeholder={t('INTERNAL_NUMBER', 'Internal number')}
-												onChange={(text: string) => {
-													handleChangeInput(text);
-													setValue('internal_number', text);
+												onChange={(data: any) => {
+													handleChangeInput(data);
+													setValue('internal_number', isEmptyField('internal_number', data?.target?.value) ? null : data);
 												}}
 												value={
 													address?.internal_number ||
@@ -790,9 +792,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 											<OInput
 												name="zipcode"
 												placeholder={t('ZIP_CODE', 'Zip code')}
-												onChange={(text: string) => {
-													handleChangeInput(text);
-													setValue('zipcode', text);
+												onChange={(data: any) => {
+													handleChangeInput(data);
+													setValue('zipcode', isEmptyField('zipcode', data?.target?.value) ? null : data);
 												}}
 												value={
 													address?.zipcode ||
