@@ -96,6 +96,7 @@ export interface AddressFormParams {
   afterSignup?: boolean
   isGuestFromStore?: boolean,
   businessSlug?: number | string
+  onNavigationRedirect?: any
 }
 export interface SignupParams {
   navigation?: any;
