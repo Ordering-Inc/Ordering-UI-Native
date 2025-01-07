@@ -351,50 +351,50 @@ const AddressFormUI = (props: AddressFormParams) => {
 	};
 
 	const handleChangeAddress = (data: any, details: any) => {
-		const addressObj : any = {}
-    if (details?.address_components) {
-      details.address_components.map((component: any) => {
-        const addressType = component.types[0]
-        if (addressType === 'postal_code') {
-          addressObj.zipcode = component.short_name
-        }
-        if (addressType === 'street_number') {
-          addressObj.street_number = component.long_name
-        }
-        if (addressType === 'neighborhood') {
-          addressObj.neighborhood = component.long_name
-        }
-        if (addressType === 'route') {
-          addressObj.route = component.short_name
-        }
-        if (addressType === 'locality') {
-          addressObj.locality = component.long_name
-        }
-        if (component.types?.includes('sublocality')) {
-          addressObj.sublocality = component.long_name
-        }
-        if (addressType === 'country') {
-          addressObj.country = component.long_name
-          addressObj.country_code = component.short_name
-        }
-        if (addressType === 'administrative_area_level_1') {
-          addressObj.state = component.long_name
-        }
-        if (addressType === 'administrative_area_level_2') {
-          addressObj.city = component.long_name
-        }
-      })
-    }
-    const addressSelected = {
-      address: data?.description || data?.address,
-      location: details?.geometry?.location,
-      utc_offset: details?.utc_offset || null,
-      map_data: { library: 'google', place_id: data.place_id },
-      zipcode: data?.zipcode || null,
-      ...addressObj
-    };
-    updateChanges(addressSelected);
-  };
+		const addressObj: any = {}
+		if (details?.address_components) {
+			details.address_components.map((component: any) => {
+				const addressType = component.types[0]
+				if (addressType === 'postal_code') {
+					addressObj.zipcode = component.short_name
+				}
+				if (addressType === 'street_number') {
+					addressObj.street_number = component.long_name
+				}
+				if (addressType === 'neighborhood') {
+					addressObj.neighborhood = component.long_name
+				}
+				if (addressType === 'route') {
+					addressObj.route = component.short_name
+				}
+				if (addressType === 'locality') {
+					addressObj.locality = component.long_name
+				}
+				if (component.types?.includes('sublocality')) {
+					addressObj.sublocality = component.long_name
+				}
+				if (addressType === 'country') {
+					addressObj.country = component.long_name
+					addressObj.country_code = component.short_name
+				}
+				if (addressType === 'administrative_area_level_1') {
+					addressObj.state = component.long_name
+				}
+				if (addressType === 'administrative_area_level_2') {
+					addressObj.city = component.long_name
+				}
+			})
+		}
+		const addressSelected = {
+			address: data?.description || data?.address,
+			location: details?.geometry?.location,
+			utc_offset: details?.utc_offset || null,
+			map_data: { library: 'google', place_id: data.place_id },
+			zipcode: data?.zipcode || null,
+			...addressObj
+		};
+		updateChanges(addressSelected);
+	};
 
 	const handleAddressTag = (tag: string) => {
 		setAddressTag(tag);
@@ -499,9 +499,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}, [formState]);
 
 	useEffect(() => {
-		if (formState?.result?.result && !formState?.loading) {
-			if (formState.result?.error) {
-				showToast(ToastType.Error, formState.result.result);
+		if (formState?.result && !formState?.loading) {
+			if (formState?.error) {
+				showToast(ToastType.Error, formState.error[0]);
 			} else {
 				showToast(
 					ToastType.Success,
