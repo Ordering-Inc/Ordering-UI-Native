@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.24.6",
+  "version": "0.24.7",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -36,7 +36,7 @@
     "@fatnlazycat/react-native-recaptcha-v3": "^1.0.3",
     "@invertase/react-native-apple-authentication": "^2.1.5",
     "@react-native-async-storage/async-storage": "^1.15.5",
-    "@react-native-clipboard/clipboard": "^1.8.4",
+    "@react-native-clipboard/clipboard": "1.14.0",
     "@react-native-community/checkbox": "^0.5.8",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
