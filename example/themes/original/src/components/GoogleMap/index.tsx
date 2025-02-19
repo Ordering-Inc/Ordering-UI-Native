@@ -87,7 +87,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         }
         handleChangeAddressMap && handleChangeAddressMap(address, details)
         setSaveLocation && setSaveLocation(false)
-        if (!isMovingRegion) {
+        if (isMovingRegion) {
           handleToggleMap && handleToggleMap()
         }
       } else {
