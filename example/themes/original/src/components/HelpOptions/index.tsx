@@ -1,17 +1,25 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Dimensions, Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { useLanguage } from 'ordering-components/native'
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Container } from '../../layouts/Container'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 
-const HEIGHT_SCREEN = Dimensions.get('screen').height
-
 export const HelpOptions = (props: any) => {
   const { item, goToBack } = props
   const [, t] = useLanguage()
+
+  const insets = useSafeAreaInsets()
+
+  const containerHeight = useMemo(() => {
+    const windowHeight = Dimensions.get('window').height
+    const bottomPadding = Platform.OS === 'ios' ? insets.bottom : 0
+    const navigationBarHeight = Platform.OS === 'android' ? 48 : 0
+    const topPadding = (Platform.OS === 'ios' ? 20 : 10) + 48
+    return windowHeight - bottomPadding - navigationBarHeight - topPadding
+  }, [insets.bottom])
 
   return (
     <Container
@@ -30,7 +38,8 @@ export const HelpOptions = (props: any) => {
           originWhitelist={['*']}
           automaticallyAdjustContentInsets={false}
           source={{ html: item.body }}
-          style={{ flex: 1, height: HEIGHT_SCREEN }}
+          style={{ flex: 1, height: containerHeight }}
+          nestedScrollEnabled
         />
       )}
       {!item?.body && (
