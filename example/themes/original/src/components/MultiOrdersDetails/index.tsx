@@ -208,7 +208,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
               <LinearGradient
                 start={{ x: 0.0, y: 0.0 }}
                 end={{
-                  x: getOrderStatus(orders[0]?.status)?.percentage || 0,
+                  x: getOrderStatus(orders[0]?.status, t)?.percentage || 0,
                   y: 0,
                 }}
                 locations={[0.9999, 0.9999]}
@@ -218,7 +218,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
             </StaturBar>
           )}
           <OText size={14} lineHeight={18} weight={'400'} color={theme.colors.textNormal} mBottom={10}>
-            {getOrderStatus(orders[0]?.status)?.value}
+            {getOrderStatus(orders[0]?.status, t)?.value}
           </OText>
           {orders.map((order: any) => (
             <Row key={order.id}>
