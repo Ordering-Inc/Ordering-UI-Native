@@ -143,7 +143,7 @@ const SingleOrderCardUI = (props: any) => {
             <LinearGradient
               start={{ x: 0.0, y: 0.0 }}
               end={{
-                x: getOrderStatus(order?.status)?.percentage || 0,
+                x: getOrderStatus(order?.status, t)?.percentage || 0,
                 y: 0,
               }}
               locations={[0.9999, 0.9999]}
@@ -152,7 +152,7 @@ const SingleOrderCardUI = (props: any) => {
             />
           </StaturBar>
           <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-            {getOrderStatus(order?.status)?.value}
+            {getOrderStatus(order?.status, t)?.value}
           </OText>
         </>
       )}

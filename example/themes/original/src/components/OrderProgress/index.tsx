@@ -114,7 +114,7 @@ const OrderProgressUI = (props: any) => {
     setInitialLoaded(true)
   }, [orderList.loading, initialLoaded])
 
-  const progressBarObjt = (s: any) => lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp(s, t) : getOrderStatus(s, t)
+  const progressBarObjt = (s: any) => lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp(s) : getOrderStatus(s, t)
 
   return (
     <>
