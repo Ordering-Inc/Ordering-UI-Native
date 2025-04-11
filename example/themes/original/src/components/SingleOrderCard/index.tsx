@@ -370,7 +370,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                     size={10}
                     lineHeight={15}
                     numberOfLines={1}>
-                    {getOrderStatus(order.status)?.value}
+                    {getOrderStatus(order.status, t)?.value}
                   </OText>
                 )}
               </View>
