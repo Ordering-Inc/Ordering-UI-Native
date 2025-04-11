@@ -112,7 +112,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 				orders.map((order: any) =>
 					<ItemWrap imageStyle={{ opacity: 0.7 }} source={order.business?.header ? { uri: order.business?.header } : theme.images.dummies.product} key={order.id}>
 						<OText color={theme.colors.white} size={12} lineHeight={18} weight={'600'}>{order?.business?.name}</OText>
-						<OText color={theme.colors.white} size={10} lineHeight={15}>{`${getOrderStatus(order.status)?.value} on ${formatDate(order?.created_at)}`}</OText>
+						<OText color={theme.colors.white} size={10} lineHeight={15}>{`${getOrderStatus(order.status, t)?.value} on ${formatDate(order?.created_at)}`}</OText>
 					</ItemWrap>)
 			)}
 		</>

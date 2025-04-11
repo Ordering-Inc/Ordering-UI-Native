@@ -376,7 +376,7 @@ export const getLogisticTag = (status: any) => {
   return keyList[status] ? keyList[status] : t('UNKNOWN', 'Unknown')
 }
 
-export const getOrderStatus = (s: string) => {
+export const getOrderStatus = (s: string, t: any) => {
   const status = parseInt(s);
   const orderStatus = [
     {
