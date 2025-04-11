@@ -177,7 +177,7 @@ export const VerifyPhone = (props: any) => {
 								size={16}
 								color={theme.colors.error}
 							>
-								{`* ${t(getTraduction(e))}`}
+								{`* ${t(getTraduction(e, t))}`}
 							</OText>
 						))}
 					</ErrorSection>

@@ -814,14 +814,14 @@ export const OrdersListManager = (props: OrdersOptionParams) => {
       {
         key: 18,
         text: t(
-          'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
+          'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
           'Driver almost arrived to business',
         ),
       },
       {
         key: 19,
         text: t(
-          'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
+          'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
           'Driver almost arrived to customer',
         ),
       },
