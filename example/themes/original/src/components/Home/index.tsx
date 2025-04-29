@@ -47,7 +47,7 @@ export const Home = (props: any) => {
 	return (
 		<View style={styles.container}>
 			<View>
-				<View style={{paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0 }}>
+				<View style={{ paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0 }}>
 					<LanguageSelector />
 				</View>
 				<OIcon

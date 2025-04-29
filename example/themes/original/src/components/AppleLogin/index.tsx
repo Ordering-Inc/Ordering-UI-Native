@@ -79,7 +79,6 @@ export const AppleLogin = (props: any) => {
         identityToken,
         authorizationCode
       } = appleAuthRequestResponse;
-
       user = newUser;
 
       fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(error =>

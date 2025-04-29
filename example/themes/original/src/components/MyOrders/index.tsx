@@ -203,9 +203,9 @@ export const MyOrders = (props: any) => {
           setOrdersLength={setOrdersLength}
         />
       )}
-      
+
       {selectedOption === 'giftCards' && (
-        <View style={{ paddingHorizontal: 20  }}>
+        <View style={{ paddingHorizontal: 20 }}>
           <GiftCardOrdersList
             onNavigationRedirect={props?.onNavigationRedirect}
           />

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -45,7 +46,7 @@ const PaymentOptionWalletUI = (props: any) => {
     new Array(walletsState.result?.length).fill(false)
   );
 
-  const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate)}`
+  const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate, { isTruncable: true })}`
 
   const walletName: any = {
     cash: {
@@ -87,65 +88,65 @@ const PaymentOptionWalletUI = (props: any) => {
       {!walletsState.loading &&
         !walletsState.error &&
         walletsState.result?.length > 0 &&
-      (
-        <>
-          {walletsState.result?.map((wallet: any, idx: any) => wallet.valid && wallet.balance >= 0 && walletName[wallet.type]?.isActive && (
-            <Container
-              key={wallet.id}
-              isBottomBorder={idx === walletsState.result?.filter((wallet: any) => wallet.valid)?.length - 1}
-              onPress={() => handleOnChange(idx, wallet)}
-              disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
-            >
-              <SectionLeft>
-                {checkedState[idx] ? (
-                  <MaterialCommunityIcons
-                    name="checkbox-marked"
-                    size={25}
-                    color={theme.colors.primary}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="checkbox-blank-outline"
-                    size={25}
-                    color={theme.colors.disabled}
-                  />
-                )}
-                <View style={{ alignItems: 'baseline', marginLeft: 5 }}>
-                  <View>
-                    <OText
-                      style={((cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0) ?{
-                        color: theme.colors.disabled
-                      } : {}}
-                    >
-                      {walletName[wallet.type]?.name}
-                    </OText>
+        (
+          <>
+            {walletsState.result?.map((wallet: any, idx: any) => wallet.valid && wallet.balance >= 0 && walletName[wallet.type]?.isActive && (
+              <Container
+                key={wallet.id}
+                isBottomBorder={idx === walletsState.result?.filter((wallet: any) => wallet.valid)?.length - 1}
+                onPress={() => handleOnChange(idx, wallet)}
+                disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
+              >
+                <SectionLeft>
+                  {checkedState[idx] ? (
+                    <MaterialCommunityIcons
+                      name="checkbox-marked"
+                      size={25}
+                      color={theme.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="checkbox-blank-outline"
+                      size={25}
+                      color={theme.colors.disabled}
+                    />
+                  )}
+                  <View style={{ alignItems: 'baseline', marginLeft: 5 }}>
+                    <View>
+                      <OText
+                        style={((cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0) ? {
+                          color: theme.colors.disabled
+                        } : {}}
+                      >
+                        {walletName[wallet.type]?.name}
+                      </OText>
+                    </View>
                   </View>
-              </View>
-              </SectionLeft>
+                </SectionLeft>
 
-              <View style={{maxWidth: '35%', alignItems: 'flex-end' }}>
-                {wallet.type === 'cash' && (
-                  <OText>
-                    {parsePrice(wallet?.balance)}
-                  </OText>
-                )}
-                {wallet.type === 'credit_point' && (
-                  <OText>
-                    <OText color={theme.colors.primary} weight='bold'>
-                    {`${wallet?.balance} ${t('POINTS', 'Points')}`}
-                    </OText>
+                <View style={{ maxWidth: '35%', alignItems: 'flex-end' }}>
+                  {wallet.type === 'cash' && (
                     <OText>
-                      {wallet?.balance > 0
-                        ? creditBalance(wallet)
-                        : null}
+                      {parsePrice(wallet?.balance, { isTruncable: true })}
                     </OText>
-                  </OText>
-                )}
-              </View>
-            </Container>
-          ))}
-        </>
-      )}
+                  )}
+                  {wallet.type === 'credit_point' && (
+                    <OText>
+                      <OText color={theme.colors.primary} weight='bold'>
+                        {`${wallet?.balance} ${t('POINTS', 'Points')}`}
+                      </OText>
+                      <OText>
+                        {wallet?.balance > 0
+                          ? creditBalance(wallet)
+                          : null}
+                      </OText>
+                    </OText>
+                  )}
+                </View>
+              </Container>
+            ))}
+          </>
+        )}
 
       {walletsState?.loading && (
         <View>
