@@ -72,18 +72,20 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const parseOptions = typeof productInfo().options === 'string' ? JSON.parse(productInfo().options) : productInfo().options
 
   const getProductPrice = (product: any) => {
-    let subOptionPrice = 0;
-    if (product?.options?.length > 0 && product?.options[0]?.suboptions?.length > 0) {
-      for (const option of product?.options) {
-        for (const suboption of option?.suboptions) {
-          subOptionPrice += suboption.quantity * suboption.price;
+    let subOptionPrice = 0
+    if (Array.isArray(product?.options)) {
+      if (product.options?.length > 0) {
+        for (const option of product.options) {
+          for (const suboption of option.suboptions) {
+            subOptionPrice += suboption.quantity * ((['left', 'right'].includes(suboption.position)) ? (suboption.half_price ?? suboption.price) : suboption.price)
+          }
         }
       }
     }
 
-    const price = product.quantity * (product.price + subOptionPrice);
-    return parseFloat(price.toFixed(2));
-  };
+    const price = product.quantity * (product.price + subOptionPrice)
+    return parseFloat(price.toFixed(2))
+  }
 
   const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
     if (name !== 'No') {
