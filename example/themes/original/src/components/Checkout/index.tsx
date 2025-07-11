@@ -255,7 +255,7 @@ const CheckoutUI = (props: any) => {
 
 	const handleMomentClick = () => {
 		if (isPreOrder) {
-			navigation.navigate('MomentOption')
+			navigation.navigate('MomentOption', { business: businessDetails?.business })
 		}
 	}
 

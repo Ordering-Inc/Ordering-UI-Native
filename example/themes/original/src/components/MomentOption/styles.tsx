@@ -40,7 +40,7 @@ export const TimeItem = styled.View`
   border-radius: 7.6px;
   justify-content: center;
   align-items: center;
-  margin: 10px 0px;
+  margin: 10px 5px;
   ${({ cateringPreorder }: any) => cateringPreorder && css`
     background: #fff;
     width: 100%;
