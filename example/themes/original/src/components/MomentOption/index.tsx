@@ -184,56 +184,56 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	const validateSelectedDate = (curdate: any, menu: any) => {
 		const day = moment(curdate).format('d')
 		setIsEnabled(menu?.schedule?.[day]?.enabled || false)
-	  }
-	
-	  const getTimes = (curdate: any, menu: any) => {
+	}
+
+	const getTimes = (curdate: any, menu: any) => {
 		validateSelectedDate(curdate, menu)
 		const date = new Date()
 		var dateSeleted = new Date(curdate)
 		var times = []
 		for (var k = 0; k < menu.schedule[dateSeleted.getDay()].lapses.length; k++) {
-		  var open = {
-			hour: menu.schedule[dateSeleted.getDay()].lapses[k].open.hour,
-			minute: menu.schedule[dateSeleted.getDay()].lapses[k].open.minute
-		  }
-		  var close = {
-			hour: menu.schedule[dateSeleted.getDay()].lapses[k].close.hour,
-			minute: menu.schedule[dateSeleted.getDay()].lapses[k].close.minute
-		  }
-		  for (var i = open.hour; i <= close.hour; i++) {
-			if (date.getDate() !== dateSeleted.getDate() || i >= date.getHours()) {
-			  let hour = ''
-			  let meridian = ''
-			  if (is12hours) {
-				if (i === 0) {
-				  hour = '12'
-				  meridian = ' ' + t('AM', 'AM')
-				} else if (i > 0 && i < 12) {
-				  hour = (i < 10 ? '0' + i : i)
-				  meridian = ' ' + t('AM', 'AM')
-				} else if (i === 12) {
-				  hour = '12'
-				  meridian = ' ' + t('PM', 'PM')
-				} else {
-				  hour = ((i - 12 < 10) ? '0' + (i - 12) : `${(i - 12)}`)
-				  meridian = ' ' + t('PM', 'PM')
-				}
-			  } else {
-				hour = i < 10 ? '0' + i : i
-			  }
-			  for (let j = (i === open.hour ? open.minute : 0); j <= (i === close.hour ? close.minute : 59); j += 15) {
-				if (i !== date.getHours() || j >= date.getMinutes() || date.getDate() !== dateSeleted.getDate()) {
-				  times.push({
-					text: hour + ':' + (j < 10 ? '0' + j : j) + meridian,
-					value: (i < 10 ? '0' + i : i) + ':' + (j < 10 ? '0' + j : j)
-				  })
-				}
-			  }
+			var open = {
+				hour: menu.schedule[dateSeleted.getDay()].lapses[k].open.hour,
+				minute: menu.schedule[dateSeleted.getDay()].lapses[k].open.minute
 			}
-		  }
+			var close = {
+				hour: menu.schedule[dateSeleted.getDay()].lapses[k].close.hour,
+				minute: menu.schedule[dateSeleted.getDay()].lapses[k].close.minute
+			}
+			for (var i = open.hour; i <= close.hour; i++) {
+				if (date.getDate() !== dateSeleted.getDate() || i >= date.getHours()) {
+					let hour = ''
+					let meridian = ''
+					if (is12hours) {
+						if (i === 0) {
+							hour = '12'
+							meridian = ' ' + t('AM', 'AM')
+						} else if (i > 0 && i < 12) {
+							hour = (i < 10 ? '0' + i : i)
+							meridian = ' ' + t('AM', 'AM')
+						} else if (i === 12) {
+							hour = '12'
+							meridian = ' ' + t('PM', 'PM')
+						} else {
+							hour = ((i - 12 < 10) ? '0' + (i - 12) : `${(i - 12)}`)
+							meridian = ' ' + t('PM', 'PM')
+						}
+					} else {
+						hour = i < 10 ? '0' + i : i
+					}
+					for (let j = (i === open.hour ? open.minute : 0); j <= (i === close.hour ? close.minute : 59); j += 15) {
+						if (i !== date.getHours() || j >= date.getMinutes() || date.getDate() !== dateSeleted.getDate()) {
+							times.push({
+								text: hour + ':' + (j < 10 ? '0' + j : j) + meridian,
+								value: (i < 10 ? '0' + i : i) + ':' + (j < 10 ? '0' + j : j)
+							})
+						}
+					}
+				}
+			}
 		}
 		return times
-	  }
+	}
 
 	const momento = moment(
 		`${dateSelected} ${timeSelected}`,
@@ -374,8 +374,25 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				setTimeList(_timeLists)
 			}
 		} else {
-			const _times = getTimes(selectDate, business)
-      		setTimeList(_times)
+			let _times: any = []
+			if (business) {
+				_times = getTimes(selectDate, business)
+			} else {
+				_times = hoursList.map(hour => {
+					return {
+						value: hour.startTime,
+						text: is12hours ? (
+							hour.startTime.includes('12')
+								? `${hour.startTime}PM`
+								: parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
+						) : (
+							parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'HH:mm' })
+						)
+					}
+				})
+				setIsEnabled(true)
+			}
+			setTimeList(_times)
 		}
 	}, [dateSelected, hoursList?.length, JSON.stringify(datesWhitelist), JSON.stringify(business)])
 
