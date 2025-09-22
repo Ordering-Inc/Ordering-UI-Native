@@ -54,6 +54,7 @@ export const WrapMomentOption = styled.TouchableOpacity`
 export const HeaderWrapper = styled.ImageBackground`
 	width: 100%;
 	height: 370px;
+  max-height: 370px;
 	padding: 20px;
 	background-color: transparent;
 `;
