@@ -937,7 +937,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 							text={t('SAVE', 'Save')}
 							imgRightSrc={null}
 							style={{ marginHorizontal: 30, marginBottom: 10 }}
-							onClick={() => setSaveMapLocation(true)}
+							onClick={() => {
+								setSaveMapLocation(true)
+								handleToggleMap && handleToggleMap()
+							}}
 						/>
 					</OModal>
 					<Spinner visible={saveMapLocation} />
