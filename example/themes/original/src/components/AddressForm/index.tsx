@@ -916,14 +916,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 						entireModal
 						customClose>
 						{(locationChange || formState.changes?.location) && (
-							<GoogleMapContainer>
+							<GoogleMapContainer style={{ minHeight: HEIGHT_SCREEN - 50 }}>
 								<GoogleMap
 									location={locationChange || formState.changes?.location}
 									handleChangeAddressMap={handleChangeAddress}
 									maxLimitLocation={maxLimitLocation}
 									saveLocation={saveMapLocation}
 									setSaveLocation={setSaveMapLocation}
-									handleToggleMap={handleToggleMap}
 									isIntGeoCoder
 								/>
 							</GoogleMapContainer>
