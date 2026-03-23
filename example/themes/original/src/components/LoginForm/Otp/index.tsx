@@ -121,7 +121,7 @@ export const Otp = (props: otpParams) => {
         {!isCheckingCode && (
           <OtpInputs
             ref={inputRef}
-            autofillFromClipboard={false}
+            autofillFromClipboard={true}
             numberOfInputs={pinCount}
             style={loginStyle.container}
             returnKeyType={'done'}
