@@ -136,6 +136,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const [configState] = useConfig();
 	const [orderState] = useOrder();
 	const { handleSubmit, errors, control, setValue } = useForm();
+	const [autoCompleteAddress, setAutoCompleteAddress] = useState(false)
 
 	const [toggleMap, setToggleMap] = useState(false);
 	const [alertState, setAlertState] = useState<{
@@ -393,6 +394,14 @@ const AddressFormUI = (props: AddressFormParams) => {
 			...addressObj
 		};
 		updateChanges(addressSelected);
+
+		const zipcodeValue = addressObj.zipcode || addressSelected.zipcode;
+		if (zipcodeValue) {
+			setValue('zipcode', zipcodeValue);
+		}
+		if (addressSelected.address) {
+			setValue('address', addressSelected.address);
+		}
 	};
 
 	const handleAddressTag = (tag: string) => {
@@ -459,6 +468,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 		setValue(
 			'address',
 			formState?.changes?.address ?? addressState.address?.address ?? '',
+		);
+		setValue(
+			'zipcode',
+			formState?.changes?.zipcode ?? addressState.address?.zipcode ?? '',
+		);
+		setValue(
+			'internal_number',
+			formState?.changes?.internal_number ?? addressState.address?.internal_number ?? '',
+		);
+		setValue(
+			'address_notes',
+			formState?.changes?.address_notes ?? addressState.address?.address_notes ?? '',
 		);
 		if (!isEditing) {
 			formState?.changes?.address &&
@@ -615,6 +636,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 											placeholder={t('ADD_ADDRESS', 'Add a address')}
 											onPress={(data, details: any) => {
 												handleChangeAddress(data, details);
+												setAutoCompleteAddress(true);
 											}}
 											query={{
 												key: googleMapsApiKey,
@@ -629,6 +651,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 															target: { name: 'address', value: text },
 														});
 														setValue('address', text);
+														setAutoCompleteAddress(true)
 													}
 													setIsFirstTime(false);
 													setAddressEditing(text.length == 0);
@@ -716,6 +739,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 											setSaveLocation={setSaveMapLocation}
 											handleToggleMap={handleToggleMap}
 											isIntGeoCoder
+											setAutoCompleteAddress={setAutoCompleteAddress}
+											autoCompleteAddress={autoCompleteAddress}
 										/>
 									</GoogleMapContainer>
 								</View>
