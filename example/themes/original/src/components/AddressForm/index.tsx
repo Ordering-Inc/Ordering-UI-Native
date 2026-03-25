@@ -394,6 +394,14 @@ const AddressFormUI = (props: AddressFormParams) => {
 			...addressObj
 		};
 		updateChanges(addressSelected);
+
+		const zipcodeValue = addressObj.zipcode || addressSelected.zipcode;
+		if (zipcodeValue) {
+			setValue('zipcode', zipcodeValue);
+		}
+		if (addressSelected.address) {
+			setValue('address', addressSelected.address);
+		}
 	};
 
 	const handleAddressTag = (tag: string) => {
@@ -460,6 +468,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 		setValue(
 			'address',
 			formState?.changes?.address ?? addressState.address?.address ?? '',
+		);
+		setValue(
+			'zipcode',
+			formState?.changes?.zipcode ?? addressState.address?.zipcode ?? '',
+		);
+		setValue(
+			'internal_number',
+			formState?.changes?.internal_number ?? addressState.address?.internal_number ?? '',
+		);
+		setValue(
+			'address_notes',
+			formState?.changes?.address_notes ?? addressState.address?.address_notes ?? '',
 		);
 		if (!isEditing) {
 			formState?.changes?.address &&
