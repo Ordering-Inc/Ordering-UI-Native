@@ -61,6 +61,7 @@ const UserVerificationUI = (props: any) => {
     checkVerifyEmailCode,
     checkVerifyPhoneCode,
     cleanErrorsState,
+    useWhatsappVerification,
   } = props
 
   const theme = useTheme();
@@ -84,6 +85,7 @@ const UserVerificationUI = (props: any) => {
 
   const [phoneState, setPhoneState] = useState<any>(null)
   const [verificationState, setVerificationState] = useState({ email: false, phone: false })
+  const [selectedChannel, setSelectedChannel] = useState(2)
 
   const codeDigitsArray = new Array(CODE_LENGTH).fill(0);
 
@@ -173,10 +175,12 @@ const UserVerificationUI = (props: any) => {
     );
   };
 
-  const handleSendOtp = (opt: string = '') => {
+  const handleSendOtp = (opt: string = '', channel?: number) => {
     setTimer(`${TIME_COUNTDOWN / 60}:00`)
     setIsSendCodeAgain(true)
     if (opt === 'phone') {
+      const ch = channel || 2
+      setSelectedChannel(ch)
       let cellphone = phoneState?.cellphone
       let country_phone_code = phoneState?.country_phone_code
 
@@ -188,7 +192,8 @@ const UserVerificationUI = (props: any) => {
       }
       sendVerifyPhoneCode({
         cellphone,
-        country_phone_code
+        country_phone_code,
+        channel: ch
       })
       return
     }
@@ -460,7 +465,7 @@ const UserVerificationUI = (props: any) => {
 
                 <WrapperText>
                   <TouchableOpacity
-                    onPress={() => handleSendOtp('phone')}
+                    onPress={() => handleSendOtp('phone', selectedChannel)}
                     disabled={verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
                   >
                     <OText color={theme.colors.primary}>
@@ -475,21 +480,49 @@ const UserVerificationUI = (props: any) => {
         </Container>
         {!!phoneState?.cellphone && (
           <ButtonsActions>
-            <View style={{ width: '100%' }}>
-              <OButton
-                onClick={(verificationState.email || verificationState.phone)
-                  ? () => setVerificationState({ email: false, phone: false })
-                  : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
-                }
-                text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
-                bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-                borderColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-                textStyle={{ color: (verificationState.email || verificationState.phone) ? 'black' : 'white' }}
-                imgRightSrc={null}
-                isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
-                style={(verificationState.email || verificationState.phone) ? style.btnStyle : { borderRadius: 7.6 }}
-              />
-            </View>
+            {(verificationState.email || verificationState.phone) ? (
+              <View style={{ width: '100%' }}>
+                <OButton
+                  onClick={() => setVerificationState({ email: false, phone: false })}
+                  text={t('CANCEL', 'Cancel')}
+                  bgColor={theme.colors.secundary}
+                  borderColor={theme.colors.secundary}
+                  textStyle={{ color: 'black' }}
+                  imgRightSrc={null}
+                  isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+                  style={style.btnStyle}
+                />
+              </View>
+            ) : useWhatsappVerification && isPhoneVerifyRequired && !isEmailVerifyRequired ? (
+              <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
+                <OButton
+                  onClick={() => handleSendOtp('phone', 2)}
+                  text={t('SEND_BY_SMS', 'Send by SMS')}
+                  imgRightSrc={null}
+                  isLoading={verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+                  parentStyle={{ flex: 1 }}
+                  style={{ borderRadius: 7.6 }}
+                />
+                <OButton
+                  onClick={() => handleSendOtp('phone', 4)}
+                  text={t('SEND_BY_WHATSAPP', 'Send by WhatsApp')}
+                  imgRightSrc={null}
+                  isLoading={verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+                  parentStyle={{ flex: 1 }}
+                  style={{ borderRadius: 7.6 }}
+                />
+              </View>
+            ) : (
+              <View style={{ width: '100%' }}>
+                <OButton
+                  onClick={() => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')}
+                  text={t('SEND_CODE', 'Send code')}
+                  imgRightSrc={null}
+                  isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+                  style={{ borderRadius: 7.6 }}
+                />
+              </View>
+            )}
           </ButtonsActions>
         )}
         <View style={{ paddingHorizontal: 20, paddingBottom: 80 }}>
