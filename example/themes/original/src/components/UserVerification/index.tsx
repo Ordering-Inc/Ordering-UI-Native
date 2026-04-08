@@ -254,7 +254,8 @@ const UserVerificationUI = (props: any) => {
         checkVerifyPhoneCode({
           cellphone: phoneState?.cellphone,
           country_phone_code: +(phoneState?.country_phone_code),
-          code: otpState
+          code: otpState,
+          channel: selectedChannel
         })
         return
       }
