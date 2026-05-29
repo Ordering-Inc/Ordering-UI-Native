@@ -218,7 +218,7 @@ const OrderSummaryUI = (props: any) => {
                   <OSTable key={fee?.id + i}>
                     <OSRow>
                       <OText size={12} numberOfLines={1}>
-                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                        {t(fee.name?.toUpperCase()?.replace(/ /g, '_'), fee.name) || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
                         ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)}${fee.percentage > 0 ? ' + ' : ''}`}{fee.percentage > 0 && `${fee.percentage}%`}){' '}
                       </OText>
                       <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })} >
